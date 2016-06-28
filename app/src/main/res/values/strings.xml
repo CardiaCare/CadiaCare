@@ -1,0 +1,47 @@
+<resources>
+    <string name="app_name">SmartCarePatient</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_home">Home</string>
+    <string name="nav_item_friends">Friends</string>
+    <string name="nav_item_notifications">Messages</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_home</item>
+        <item>@string/nav_item_friends</item>
+        <item>@string/nav_item_notifications</item>
+    </string-array>
+
+    <string name="title_messages">Messages</string>
+    <string name="title_friends">Friends</string>
+    <string name="title_home">Home</string>
+
+    <string name="dialog_title">Incorrect name</string>
+    <string name="auth_dialog_title">Authentication failed</string>
+    <string name="auth_dialog_message">You are not registred</string>
+    <string name="dialog_message">Check data</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancle">Cancle</string>
+
+    <string name="enter_name">Introduce!</string>
+    <string name="send_alarm">Press button!</string>
+
+    <string name="title_activity_user_account">Account</string>
+    <string name="FirstName">First name</string>
+    <string name="SecondName">Second name</string>
+    <string name="PhoneNumber">Phone number</string>
+    <string name="Height">Height</string>
+    <string name="Weight">Weight</string>
+    <string name="Age">Age</string>
+    <string name="sign">Sign in</string>
+
+     <string name="menu_refresh">Refresh</string>
+
+
+</resources>
