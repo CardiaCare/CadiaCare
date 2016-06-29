@@ -13,29 +13,29 @@ int init_global_instances(JNIEnv* env, jobject obj) {
     GlobalMainActivityClassObject = (jobject * )(*env)->NewGlobalRef(env, obj);
     if (NULL == GlobalMainActivityClassObject) { return -1; }
 
-    jclass localMainActivityClass = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcarequestionnaire/MainActivity");
+    jclass localMainActivityClass = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/SmartCareLibrary");
     if (NULL == localMainActivityClass) { return -1; }
     GlobalMainActivityClass = (jclass * )(*env)->NewGlobalRef(env, localMainActivityClass);
     if (NULL == GlobalMainActivityClass) { return -1; }
 
 
-    jclass _class_questionnaire = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcarequestionnaire/Questionnaire");
+    jclass _class_questionnaire = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/Questionnaire");
     if (_class_questionnaire == NULL) { return -1;  }
     class_questionnaire = (jclass * )(*env)->NewGlobalRef(env, _class_questionnaire);
     if (class_questionnaire == NULL) { return -1; }
 
 
-    jclass _class_question = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcarequestionnaire/Question");
+    jclass _class_question = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/Question");
     if (_class_question == NULL) { return -1; }
     class_question = (jclass * )(*env)->NewGlobalRef(env, _class_question);
     if (NULL == class_question) { return -1; }
 
-    jclass _class_answer = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcarequestionnaire/Answer");
+    jclass _class_answer = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/Answer");
     if (_class_answer == NULL) { return -1; }
     class_answer = (jclass * )(*env)->NewGlobalRef(env, _class_answer);
     if (NULL == class_answer) { return -1; }
 
-    jclass _class_answer_item = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcarequestionnaire/AnswerItem");
+    jclass _class_answer_item = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/AnswerItem");
     if (_class_answer_item == NULL) { return -1; }
     class_answer_item = (jclass * )(*env)->NewGlobalRef(env, _class_answer_item);
     if (NULL == class_answer_item) { return -1; }
@@ -43,7 +43,7 @@ int init_global_instances(JNIEnv* env, jobject obj) {
     questionnaire_constructor = (*env)->GetMethodID(env, class_questionnaire, "<init>", "(Ljava/lang/String;)V");
     if (questionnaire_constructor == NULL) { return -1; }
 
-    add_question = (*env)->GetMethodID(env, class_questionnaire, "addQuestion", "(Lcom/petrsu/cardiacare/smartcarequestionnaire/Question;)V");
+    add_question = (*env)->GetMethodID(env, class_questionnaire, "addQuestion", "(Lcom/petrsu/cardiacare/smartcare/Question;)V");
     if (add_question == NULL) { return -1; }
 
     question_constructor = (*env)->GetMethodID(env, class_question, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
@@ -52,16 +52,16 @@ int init_global_instances(JNIEnv* env, jobject obj) {
     answer_constructor = (*env)->GetMethodID(env, class_answer, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
     if (answer_constructor == NULL) { return -1; }
 
-    add_answer = (*env)->GetMethodID(env, class_question, "setAnswer", "(Lcom/petrsu/cardiacare/smartcarequestionnaire/Answer;)V");
+    add_answer = (*env)->GetMethodID(env, class_question, "setAnswer", "(Lcom/petrsu/cardiacare/smartcare/Answer;)V");
     if (add_answer == NULL) { return -1; }
 
-    add_subanswer = (*env)->GetMethodID(env, class_answer_item, "addSubAnswer", "(Lcom/petrsu/cardiacare/smartcarequestionnaire/Answer;)V");
+    add_subanswer = (*env)->GetMethodID(env, class_answer_item, "addSubAnswer", "(Lcom/petrsu/cardiacare/smartcare/Answer;)V");
     if (add_subanswer == NULL) { return -1; }
 
     item_constructor = (*env)->GetMethodID(env, class_answer_item, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
     if ( item_constructor == NULL) { return -1; }
 
-    add_answer_item_i = (*env)->GetMethodID(env,  class_answer, "addAnswerItem", "(Lcom/petrsu/cardiacare/smartcarequestionnaire/AnswerItem;)V");
+    add_answer_item_i = (*env)->GetMethodID(env,  class_answer, "addAnswerItem", "(Lcom/petrsu/cardiacare/smartcare/AnswerItem;)V");
     if (add_answer_item_i == NULL) { return -1; }
 
 }
