@@ -10,6 +10,7 @@
 
 *~
 smartcare/src/main/obj/
+smartcare/src/main/obj/local/
 
 # Generated files
 bin/
