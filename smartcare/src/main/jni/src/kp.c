@@ -35,7 +35,7 @@
  *   Подключаемся к Интелектуальному пространству
  *  SmartSpace node initialization by hostname_, ip_,port
  */
-JNIEXPORT jlong JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_connectSmartSpace( JNIEnv* env,
+JNIEXPORT jlong JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_connectSmartSpace( JNIEnv* env,
                                                   jobject thiz , jstring hostname, jstring ip, jint port) {
 
     const char *hostname_ = (*env)->GetStringUTFChars(env, hostname, NULL);
@@ -79,7 +79,7 @@ JNIEXPORT jlong JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_connectSm
  *  Disconnect from smartspace
  *
  */
-JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_disconnectSmartSpace( JNIEnv* env,
+JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_disconnectSmartSpace( JNIEnv* env,
                                                   jobject thiz , jlong nodeDescriptor){
     int result = kp_disconnect_smartspace(nodeDescriptor);
 
@@ -95,21 +95,27 @@ JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_disconnect
  * Удаляем произвольного индивида по uri
  *
 */
-JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_removeIndividual
+JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeIndividual
 ( JNIEnv* env, jobject thiz , jlong nodeDescriptor, jstring individualUri)
-{   const char * individual_uri= (*env)->GetStringUTFChars(env, individualUri, 0);
+{
+
+    if (individualUri == NULL)
+        return;
+    const char * individual_uri= (*env)->GetStringUTFChars(env, individualUri, 0);
+
+
 
     int result = kp_remove_individual(nodeDescriptor, individual_uri);
 
     if (result == -1){
-        __android_log_print(ANDROID_LOG_INFO, TAG, "Node Error");
+        __android_log_print(ANDROID_LOG_INFO, TAG, "Individual already removed");
     }
     else{
         __android_log_print(ANDROID_LOG_INFO, TAG, "remove Individual");
     }
 }
 
-JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_removeAlarm
+JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeAlarm
 ( JNIEnv* env, jobject thiz , jlong nodeDescriptor, jstring individualUri)
 {
     const char * individual_uri= (*env)->GetStringUTFChars(env, individualUri, 0);
@@ -128,7 +134,7 @@ JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_removeAlar
  *
  */
 
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initPatient
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatient
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor)
 {
     //TODO: корректно выделить память!!!
@@ -142,7 +148,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initPat
     free(patient_uri);
 }
 
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initAuthRequest
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initAuthRequest
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri)
 {
 
@@ -154,7 +160,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initAut
     return (*env)->NewStringUTF(env, auth_request_uri);
 }
 
-JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_getAuthResponce
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getAuthResponce
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring authDescriptor)
 {
     //get node from SmartSpace
@@ -178,7 +184,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_getAuthRes
  * Инициализируем индивид локации (возвращает сгенерированный ЮРИ локации)
  *
  */
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initLocation
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initLocation
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring individualUri)
 {
     //get individual from SmartSpace
@@ -195,7 +201,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_initLoc
  *
  * Отпраляем аларм  ТУДУ
  */
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_sendAlarm
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendAlarm
         ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri )
 {
     const char *patient_uri = (*env)->GetStringUTFChars(env, patientUri, 0);
@@ -211,7 +217,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_sendAla
  *
  * Отпралвяем локацию. В разработке
  */
-JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_sendLocation
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendLocation
             (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri, jstring locationUri, jstring latitudeJ, jstring longitudeJ)
 {
     const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
@@ -234,7 +240,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_sendLocati
  * Инициализируем индивид локации (возвращает сгенерированный ЮРИ локации)
  *
  */
-JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_insertPersonName
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_insertPersonName
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri, jstring name)
 {
     const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
@@ -251,7 +257,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_insertPers
     }
 }
 
-JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_updatePersonName
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_updatePersonName
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri, jstring name)
 {
     const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
@@ -272,7 +278,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_updatePers
 /***********************************************************************************************************/
 
 
-JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCare_getQuestionnaire
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaire
         (JNIEnv* env, jobject thiz , jlong nodeDescriptor){
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;

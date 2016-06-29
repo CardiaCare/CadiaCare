@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity{
 
     // Native code part end
 
-
     Toolbar mToolbar;
     Button alarmButton;
     Button nextButton;
