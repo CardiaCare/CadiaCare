@@ -1,11 +1,12 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
-import android.content.SharedPreferences;
+/**
+ * Created by Iuliia Zavialova on 17.09.15.
+ */
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,7 @@ public class UserAccount extends AppCompatActivity {
     EditText etWeight;
     EditText etAge;
 
-    AccountStorage storage;
+    com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +34,12 @@ public class UserAccount extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
 
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
@@ -50,7 +49,7 @@ public class UserAccount extends AppCompatActivity {
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
 
-        storage = new AccountStorage();
+        storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
 
 
@@ -58,7 +57,7 @@ public class UserAccount extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
+        //MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
 
         super.onBackPressed();
     }

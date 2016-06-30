@@ -1,12 +1,14 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -16,84 +18,85 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.LinkedList;
 
-public class MainActivity extends AppCompatActivity{
-
+public class MainActivity extends AppCompatActivity {
 
     static SmartCareLibrary smart;
-
     static protected long nodeDescriptor;
     static protected String patientUri;
     static protected String authUri;
     static protected String locationUri;
     static protected String alarmUri;
 
-    // Native code part end
-
     Toolbar mToolbar;
     Button alarmButton;
     Button nextButton;
     EditText etFirstName;
     EditText etSecondName;
-    AccountStorage storage;
+    com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
 
     public static boolean registratedState = false;
-
     protected static final String TAG = "location";
 
-    LocationService gps;
+    com.petrsu.cardiacare.smartcarepatient.LocationService gps;
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private GoogleApiClient client;
+
+    public MainActivity() {}
+
+    //String TAG = "SS-main";
+    //static protected long nodeDescriptor;
+    //SmartCareLibrary smart;
+
+    static protected Questionnaire questionnaire;
+    // Save answer
+    static protected Feedback feedback;
+
+    //Toolbar mToolbar;
+    //AccountStorage storage;
+
+    String filename = "questionnaire.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*****************************
-         * SS init
-         *****************************/
-        smart = new SmartCareLibrary();
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+        smart = new SmartCareLibrary();
         nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
         if (nodeDescriptor == -1){
             return;
         }
 
+        questionnaire = smart.getQuestionnaire(nodeDescriptor);
+        printQuestionnaire(questionnaire);
+        // id, personName, guestionnaire
+        feedback = new Feedback("1 test", "Student", questionnaire.getUri());
 
         patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null){
             return;
         }
 
-        //authUri = initAuthRequest(nodeDescriptor, patientUri);
-        //if (authUri == null){
-        //    return;
-        //}
-
-        //if (getAuthResponce(nodeDescriptor, authUri) != 0){
-        //    AlertDialog.Builder builder =
-        //            new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-        //    builder.setTitle(R.string.auth_dialog_title);
-         //   builder.setMessage(R.string.auth_dialog_message);
-        //    builder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
-        //        @Override
-        //        public void onClick(DialogInterface dialog, int which) {
-        //            onDestroy();
-        //        }
-        //    });
-        //    builder.show();
-        //}
-
         locationUri = smart.initLocation(nodeDescriptor,patientUri);
         if (locationUri == null) {
             return;
         }
 
-
-        /*****************************
-         * get lastKnown location
-         *****************************/
-        gps = new LocationService(MainActivity.this);
+        gps = new com.petrsu.cardiacare.smartcarepatient.LocationService(MainActivity.this);
         if(gps.canGetLocation() != false) {
             double latitude = gps.getLatitude();
             double longitude = gps.getLongitude();
@@ -102,21 +105,143 @@ public class MainActivity extends AppCompatActivity{
             gps.showSettingsAlert();
         }
 
+        setContentView(R.layout.activity_main);
 
-        //
-        storage = new AccountStorage();
+/*       Button loadFromSS = (Button)findViewById(R.id.buttonSSLoad);
+        loadFromSS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questionnaire = getQuestionnaire(nodeDescriptor);
+                printQuestionnaire(questionnaire);
+            }
+        });
+*/
+
+        Button saveToJson = (Button)findViewById(R.id.buttonSJson);
+        saveToJson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson json = new Gson();
+                //String jsonStr = json.toJson(questionnaire);
+                String jsonStr = json.toJson(feedback);
+                System.out.println(jsonStr);
+                writeData(jsonStr);
+            }
+        });
+
+        Button loadFromJson = (Button)findViewById(R.id.buttonLJson);
+        loadFromJson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                String jsonFromFile = readSavedData();
+//                    Gson json = new Gson();
+//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
+//                    questionnaire = qst;
+//                    printQuestionnaire(questionnaire);
+            }
+        });
+
+        Button AboutLoad = (Button)findViewById(R.id.AboutLoad);
+        AboutLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intentq);
+            }
+        });
+
+        Button ButtonExit = (Button) findViewById(R.id.ButtonExit);
+        ButtonExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Button QuestionnaireLoad = (Button) findViewById(R.id.QuestionnaireLoad);
+        QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
+                startActivity(intentq);
+            }
+        });
+
+        storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
 
         if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()){
-           setUnregisteredActivity();
-        }else{
+            setUnregisteredActivity();
+        } else {
             setRegisteredActivity();
         }
     }
 
-    public void setRegisteredActivity(){
-        setContentView(R.layout.activity_main);
+    public void writeData ( String data ){
+        try {
+            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write(data);
+            osw.flush();
+            osw.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    public String readSavedData(){
+        StringBuffer datax = new StringBuffer("");
+        try {
+            FileInputStream fIn = openFileInput(filename);
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader buffreader = new BufferedReader(isr);
+
+            String readString = buffreader.readLine();
+            while ( readString != null ) {
+                datax.append(readString);
+                readString = buffreader.readLine();
+            }
+            isr.close();
+        } catch ( IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return datax.toString();
+    }
+
+    public void printQuestionnaire(Questionnaire questionnaire){
+        LinkedList<Question> q = questionnaire.getQuestions();
+
+        for (int i = 0; i < q.size(); i++) {
+            Question qst = q.get(i);
+            Log.i(TAG, qst.getDescription());
+            Answer a = qst.getAnswer();
+            //if (a.size()>0) {
+            //for(int h = 0; h < a.size(); h++) {
+            Log.i(TAG, a.getType());
+            LinkedList<AnswerItem> ai = a.getItems();
+            if (ai.size() > 0) {
+                Log.i(TAG, "AnswerItem");
+                for (int j = 0; j < ai.size(); j++) {
+                    AnswerItem item = ai.get(j);
+                    Log.i(TAG, item.getItemText());
+                    LinkedList<Answer> suba = item.getSubAnswers();
+                    if (suba.size() > 0) {
+                        for (int k = 0; k < suba.size(); k++) {
+                            Log.i(TAG, "subAnswer");
+                            Answer sitem = suba.get(k);
+                            Log.i(TAG, sitem.getType());
+                            LinkedList<AnswerItem> sai = sitem.getItems();
+                        }
+                    }
+                    // }
+                    //}
+                }
+            }
+        }
+    }
+
+    public void setRegisteredActivity() {
+        setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -125,16 +250,15 @@ public class MainActivity extends AppCompatActivity{
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics metricsB = new DisplayMetrics();
         display.getMetrics(metricsB);
-        alarmButton.setWidth(Math.round(metricsB.widthPixels / 2.5f));
-        alarmButton.setHeight(metricsB.heightPixels / 5);
+        //alarmButton.setWidth(Math.round(metricsB.widthPixels / 2.5f));
+        //alarmButton.setHeight(metricsB.heightPixels / 5);
         alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alarmButton.setBackgroundColor(0x77a71000);
+                //alarmButton.setBackgroundColor(0x77a71000);
                 alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
             }
         });
-
 
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         smart.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
@@ -142,15 +266,11 @@ public class MainActivity extends AppCompatActivity{
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 mSwipeRefreshLayout.setRefreshing(true);
                 refreshAll();
                 mSwipeRefreshLayout.setRefreshing(false);
             }
-
         });
-
-
     }
 
     public void setUnregisteredActivity(){
@@ -174,7 +294,6 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             }
         });
-
 
         nextButton = (Button)findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +343,6 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-
     public void refreshAll() {
 
         //TODO delete alarm
@@ -248,4 +366,43 @@ public class MainActivity extends AppCompatActivity{
         System.exit(0);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.petrsu.cardiacare.smartcarepatient/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.petrsu.cardiacare.smartcarepatient/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }

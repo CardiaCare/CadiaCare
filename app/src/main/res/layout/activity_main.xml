@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context="com.petrsu.cardiacare.smartcarepatient.MainActivity">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -10,10 +11,9 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical"
         android:id="@+id/linearLayout">
-
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -30,32 +30,62 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/send_alarm"
-        android:id="@+id/textView2"
+        android:textAlignment="center"
         android:layout_gravity="center_horizontal"
         android:padding="20dp"
+        android:text="@string/send_alarm"
+        android:id="@+id/textView2"
         android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center" />
+        android:layout_centerHorizontal="true"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SOS"
         android:id="@+id/alarmButton"
-        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save in Json"
+        android:id="@+id/buttonSJson"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:background="@color/colorSuperAccent"
-        android:textColor="@color/textColorPrimary"
-        android:layout_gravity="center_horizontal"
-        android:textSize="40dp" />
+        android:layout_below="@+id/alarmButton"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Load from JSON"
+        android:id="@+id/buttonLJson"
+        android:layout_below="@+id/buttonSJson"
+        android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About"
+        android:id="@+id/AboutLoad"
+        android:layout_below="@+id/QuestionnaireLoad"
+        android:layout_centerHorizontal="true" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PASS SURVEY"
+        android:id="@+id/QuestionnaireLoad"
+        android:layout_below="@+id/buttonLJson"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:id="@+id/ButtonExit"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

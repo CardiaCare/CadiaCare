@@ -15,7 +15,7 @@ public class Questionnaire {
         questions = new LinkedList<Question>();
     }
     // Получение идентификатора вопросника из ИП
-    String getUri(){
+    public String getUri(){
         return uri;
     }
 

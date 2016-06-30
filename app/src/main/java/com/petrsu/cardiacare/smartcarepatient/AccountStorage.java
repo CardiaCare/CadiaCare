@@ -1,10 +1,10 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
-import android.app.Activity;
+
 import android.content.SharedPreferences;
 
 /**
- * Created by cardiacare on 17.09.15.
+ * Created by Iuliia Zavialova on 17.09.15.
  */
 public class AccountStorage {
 
@@ -74,7 +74,7 @@ public class AccountStorage {
         if (sPref.contains(ACCOUNT_PREFERENCES_HEIGHT)) {
             strHeight = sPref.getString(ACCOUNT_PREFERENCES_HEIGHT, "");
         }else strHeight = "";
-    return strHeight;
+        return strHeight;
     }
 
     public String getAccountWeight(){
@@ -82,7 +82,7 @@ public class AccountStorage {
         if (sPref.contains(ACCOUNT_PREFERENCES_WEIGHT)) {
             strWeight = sPref.getString(ACCOUNT_PREFERENCES_WEIGHT, "");
         } else strWeight = "";
-    return strWeight;
+        return strWeight;
     }
     public String getAccountAge(){
         //sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_PRIVATE);

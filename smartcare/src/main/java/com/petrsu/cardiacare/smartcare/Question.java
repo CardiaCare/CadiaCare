@@ -18,7 +18,7 @@ public class Question {
     }
 
     // Получение идентификатора вопроса из ИП
-    String getUri(){
+    public String getUri(){
         return uri;
     }
     // Получение вопроса

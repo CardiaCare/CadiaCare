@@ -17,6 +17,8 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.petrsu.cardiacare.smartcarepatient.MainActivity;
+
 public class LocationService extends Service implements LocationListener {
 
     private static final String TAG = "LocationService";
@@ -193,9 +195,9 @@ public class LocationService extends Service implements LocationListener {
             MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
                     MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
         }else{
-        // can't get location
-        // GPS or Network is not enabled
-        // Ask user to enable GPS/network in settings
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
             showSettingsAlert();
         }
     }
