@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             gps.showSettingsAlert();
         }
 
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
 /*       Button loadFromSS = (Button)findViewById(R.id.buttonSSLoad);
         loadFromSS.setOnClickListener(new View.OnClickListener() {
@@ -116,56 +116,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-
-        Button saveToJson = (Button)findViewById(R.id.buttonSJson);
-        saveToJson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Gson json = new Gson();
-                //String jsonStr = json.toJson(questionnaire);
-                String jsonStr = json.toJson(feedback);
-                System.out.println(jsonStr);
-                writeData(jsonStr);
-            }
-        });
-
-        Button loadFromJson = (Button)findViewById(R.id.buttonLJson);
-        loadFromJson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                String jsonFromFile = readSavedData();
-//                    Gson json = new Gson();
-//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
-//                    questionnaire = qst;
-//                    printQuestionnaire(questionnaire);
-            }
-        });
-
-        Button AboutLoad = (Button)findViewById(R.id.AboutLoad);
-        AboutLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(intentq);
-            }
-        });
-
-        Button ButtonExit = (Button) findViewById(R.id.ButtonExit);
-        ButtonExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-
-        Button QuestionnaireLoad = (Button) findViewById(R.id.QuestionnaireLoad);
-        QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
-                startActivity(intentq);
-            }
-        });
 
         storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
@@ -255,8 +205,58 @@ public class MainActivity extends AppCompatActivity {
         alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //alarmButton.setBackgroundColor(0x77a71000);
+                alarmButton.setBackgroundColor(0x77a71000);
                 alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
+            }
+        });
+
+        Button saveToJson = (Button)findViewById(R.id.buttonSJson);
+        saveToJson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson json = new Gson();
+                //String jsonStr = json.toJson(questionnaire);
+                String jsonStr = json.toJson(feedback);
+                System.out.println(jsonStr);
+                writeData(jsonStr);
+            }
+        });
+
+        Button loadFromJson = (Button)findViewById(R.id.buttonLJson);
+        loadFromJson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                String jsonFromFile = readSavedData();
+//                    Gson json = new Gson();
+//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
+//                    questionnaire = qst;
+//                    printQuestionnaire(questionnaire);
+            }
+        });
+
+        Button AboutLoad = (Button)findViewById(R.id.AboutLoad);
+        AboutLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intentq);
+            }
+        });
+
+        Button ButtonExit = (Button) findViewById(R.id.ButtonExit);
+        ButtonExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        Button QuestionnaireLoad = (Button) findViewById(R.id.QuestionnaireLoad);
+        QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
+                startActivity(intentq);
             }
         });
 
