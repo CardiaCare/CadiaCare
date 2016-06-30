@@ -2,6 +2,7 @@ package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -81,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        questionnaire = smart.getQuestionnaire(nodeDescriptor);
-        printQuestionnaire(questionnaire);
+        //questionnaire = smart.getQuestionnaire(nodeDescriptor);
+        //printQuestionnaire(questionnaire);
         // id, personName, guestionnaire
-        feedback = new Feedback("1 test", "Student", questionnaire.getUri());
+        //feedback = new Feedback("1 test", "Student", questionnaire.getUri());
 
         patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null){
@@ -190,6 +192,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public class NewTask extends AsyncTask<Void, Integer, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //Проверка
+        }
+
+        @Override
+        public Void doInBackground(Void... params) {
+            //Загрузка анкеты
+            questionnaire = smart.getQuestionnaire(nodeDescriptor);
+            printQuestionnaire(questionnaire);
+            feedback = new Feedback("1 test", "Student", questionnaire.getUri());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            //Всё ОК
+            Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
+            startActivity(intentq);
+        }
+    }
+
+
     public void setRegisteredActivity() {
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -255,10 +283,15 @@ public class MainActivity extends AppCompatActivity {
         QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
-                startActivity(intentq);
+                NewTask newTask = new NewTask();
+                newTask.execute();
             }
         });
+
+        ProgressBar mProgressBar;
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
 
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         smart.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
@@ -344,7 +377,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void refreshAll() {
-
         //TODO delete alarm
         smart.removeAlarm(nodeDescriptor, alarmUri);
         alarmButton.setBackgroundColor(getResources().getColor(R.color.colorSuperAccent));
