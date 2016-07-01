@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     Button nextButton;
     EditText etFirstName;
     EditText etSecondName;
+    ProgressBar mProgressBar;
     com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
 
     public static boolean registratedState = false;
@@ -60,15 +61,9 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity() {}
 
     //String TAG = "SS-main";
-    //static protected long nodeDescriptor;
-    //SmartCareLibrary smart;
 
     static protected Questionnaire questionnaire;
-    // Save answer
     static protected Feedback feedback;
-
-    //Toolbar mToolbar;
-    //AccountStorage storage;
 
     String filename = "questionnaire.json";
 
@@ -82,11 +77,6 @@ public class MainActivity extends AppCompatActivity {
         if (nodeDescriptor == -1){
             return;
         }
-
-        //questionnaire = smart.getQuestionnaire(nodeDescriptor);
-        //printQuestionnaire(questionnaire);
-        // id, personName, guestionnaire
-        //feedback = new Feedback("1 test", "Student", questionnaire.getUri());
 
         patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null){
@@ -106,18 +96,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
             gps.showSettingsAlert();
         }
-
-        //setContentView(R.layout.activity_main);
-
-/*       Button loadFromSS = (Button)findViewById(R.id.buttonSSLoad);
-        loadFromSS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                questionnaire = getQuestionnaire(nodeDescriptor);
-                printQuestionnaire(questionnaire);
-            }
-        });
-*/
 
         storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
@@ -197,6 +175,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             //Проверка
+            mProgressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -204,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
             //Загрузка анкеты
             questionnaire = smart.getQuestionnaire(nodeDescriptor);
             printQuestionnaire(questionnaire);
+            // id, personName, guestionnaire
             feedback = new Feedback("1 test", "Student", questionnaire.getUri());
             return null;
         }
@@ -212,11 +192,11 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             //Всё ОК
+            mProgressBar.setVisibility(View.INVISIBLE);
             Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
             startActivity(intentq);
         }
     }
-
 
     public void setRegisteredActivity() {
         setContentView(R.layout.activity_main);
@@ -228,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics metricsB = new DisplayMetrics();
         display.getMetrics(metricsB);
-        //alarmButton.setWidth(Math.round(metricsB.widthPixels / 2.5f));
-        //alarmButton.setHeight(metricsB.heightPixels / 5);
         alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,10 +264,10 @@ public class MainActivity extends AppCompatActivity {
                 NewTask newTask = new NewTask();
                 newTask.execute();
             }
+
         });
 
-        ProgressBar mProgressBar;
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar); mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
 
 
