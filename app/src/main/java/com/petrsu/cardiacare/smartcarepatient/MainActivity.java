@@ -29,8 +29,11 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
 
     public static boolean registratedState = false;
-    protected static final String TAG = "location";
+    //protected static final String TAG = "location";
 
     com.petrsu.cardiacare.smartcarepatient.LocationService gps;
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
     public MainActivity() {}
 
-    //String TAG = "SS-main";
+    String TAG = "SS-main";
 
     static protected Questionnaire questionnaire;
     static protected Feedback feedback;
@@ -171,20 +174,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class NewTask extends AsyncTask<Void, Integer, Void> {
+        HttpURLConnection urlConnection = null;
+        BufferedReader reader = null;
+        String resultJson = "";
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             //Проверка
             mProgressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         public Void doInBackground(Void... params) {
             //Загрузка анкеты
+            /*
             questionnaire = smart.getQuestionnaire(nodeDescriptor);
             printQuestionnaire(questionnaire);
             // id, personName, guestionnaire
             feedback = new Feedback("1 test", "Student", questionnaire.getUri());
+            return null;
+            */
+            try {
+                URL url = new URL("http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1");
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                resultJson = buffer.toString();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Log.i(TAG, resultJson);
+            Gson json = new Gson();
+            Questionnaire qst = json.fromJson(resultJson,Questionnaire.class);
+            questionnaire = qst;
+            printQuestionnaire(questionnaire);
             return null;
         }
 
@@ -263,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 NewTask newTask = new NewTask();
                 newTask.execute();
+
             }
 
         });
