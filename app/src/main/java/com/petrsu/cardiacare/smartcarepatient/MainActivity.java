@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            
+
             Gson json = new Gson();
             questionnaire = json.fromJson(resultJson,Questionnaire.class);
             printQuestionnaire(questionnaire);
@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         } else {
             storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            storage.setAccountPreferences(first,second, "", "", "", "");
+            storage.setAccountPreferences(first,second, "", "", "", "","");
             setRegisteredActivity();
         }
     }

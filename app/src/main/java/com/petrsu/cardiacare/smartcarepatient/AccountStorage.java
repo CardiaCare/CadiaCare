@@ -18,6 +18,7 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
+    public static final String ACCOUNT_PREFERENCES_URI = "uri";
 
     String strFirstName;
     String strSecondName;
@@ -25,9 +26,10 @@ public class AccountStorage {
     String strHeight;
     String strWeight;
     String strAge;
+    String strUri;
 
 
-    public void setAccountPreferences(String name, String second, String phone, String heih, String weig, String age){
+    public void setAccountPreferences(String name, String second, String phone, String heih, String weig, String age, String uri){
 
 
         SharedPreferences.Editor editor = sPref.edit();
@@ -38,6 +40,7 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_HEIGHT, heih);
         editor.putString(ACCOUNT_PREFERENCES_WEIGHT, weig);
         editor.putString(ACCOUNT_PREFERENCES_AGE, age);
+        editor.putString(ACCOUNT_PREFERENCES_URI, uri);
         editor.commit();
     }
 
@@ -90,5 +93,13 @@ public class AccountStorage {
             strAge = sPref.getString(ACCOUNT_PREFERENCES_AGE, "");
         }else strAge = "";
         return strAge;
+    }
+
+    public String getQuestionnaireUri(){
+        //sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        if (sPref.contains(ACCOUNT_PREFERENCES_URI)) {
+            strAge = sPref.getString(ACCOUNT_PREFERENCES_URI, "");
+        }else strUri = "";
+        return strUri;
     }
 }
