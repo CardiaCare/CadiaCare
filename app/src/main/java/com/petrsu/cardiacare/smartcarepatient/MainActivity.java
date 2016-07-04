@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     EditText etSecondName;
     ProgressBar mProgressBar;
     com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
+    public String serverUri;
+
 
     public static boolean registratedState = false;
     //protected static final String TAG = "location";
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     String TAG = "SS-main";
 
-    static protected Questionnaire questionnaire;
+    static public Questionnaire questionnaire;
     static protected Feedback feedback;
 
     String filename = "questionnaire.json";
@@ -180,14 +182,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //Проверка
             mProgressBar.setVisibility(View.VISIBLE);
-
         }
 
         @Override
         public Void doInBackground(Void... params) {
-            //Загрузка анкеты
             /*
             questionnaire = smart.getQuestionnaire(nodeDescriptor);
             printQuestionnaire(questionnaire);
@@ -197,8 +196,7 @@ public class MainActivity extends AppCompatActivity {
             */
 
             try {
-                URL url = new URL("http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1");
-
+                URL url = new URL(serverUri);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
@@ -221,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
             Gson json = new Gson();
             questionnaire = json.fromJson(resultJson,Questionnaire.class);
+            writeData(resultJson);
             printQuestionnaire(questionnaire);
             return null;
         }
@@ -228,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            //Всё ОК
             mProgressBar.setVisibility(View.INVISIBLE);
             Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
             startActivity(intentq);
@@ -298,9 +296,34 @@ public class MainActivity extends AppCompatActivity {
         QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewTask newTask = new NewTask();
-                newTask.execute();
-
+                //Если опросник ни разу не скачивался(версия==null)  - качаем
+                //Если скачивался, то проверяем версию
+                //Если вресия на сервере > текущей версии, то заружаем заново
+                //Иначе открываем текущую версию
+                //storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+                String QuestionnaireVersion = storage.getQuestionnaireVersion();
+                Log.i(TAG, "qversion" + QuestionnaireVersion);
+                String qst = smart.getQuestionnaire(nodeDescriptor);
+                String QuestionnaireServerVersion = smart.getQuestionnaireVersion(nodeDescriptor,qst);
+                if((QuestionnaireVersion == "") || (!QuestionnaireServerVersion.equals(QuestionnaireVersion))) {
+                    serverUri = smart.getQuestionnaireSeverUri(nodeDescriptor, qst);
+                    storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+                    storage.setVersion(QuestionnaireServerVersion);
+                    Log.i(TAG, QuestionnaireServerVersion + "=" + QuestionnaireVersion);
+                    Log.i(TAG, "if");
+                    NewTask newTask = new NewTask();
+                    newTask.execute();
+                } else {
+                    String jsonFromFile = readSavedData();
+                    Gson json = new Gson();
+                    Log.i(TAG, "else");
+                    Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);
+                    questionnaire = qst1;
+                    printQuestionnaire(questionnaire);
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
+                    startActivity(intentq);
+                }
             }
 
         });

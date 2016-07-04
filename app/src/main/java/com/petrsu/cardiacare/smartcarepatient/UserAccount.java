@@ -82,14 +82,14 @@ public class UserAccount extends AppCompatActivity {
         // TODO Auto-generated method stub
         super.onPause();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        String uri = storage.getQuestionnaireUri();
+        String version = storage.getQuestionnaireVersion();
         storage.setAccountPreferences(etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
                 etPhoneNumber.getText().toString(),
                 etHeight.getText().toString(),
                 etWeight.getText().toString(),
                 etAge.getText().toString(),
-                uri);
+                version);
     }
 
 

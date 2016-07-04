@@ -323,12 +323,12 @@ const char * questionnire_uri= (*env)->GetStringUTFChars(env, questionnireUri, 0
 sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, questionnire_uri);
 
     char *version;
-    version = (char *) sslog_get_property(questionnaire, PROPERTY_VERSION);
+    version = (char *) sslog_node_get_property(node, questionnaire, PROPERTY_VERSION);
 
     return (*env)->NewStringUTF(env, version);
 }
 
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaireServerUri
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaireSeverUri
 (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring questionnireUri){
 
  sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
@@ -340,6 +340,6 @@ const char * questionnire_uri= (*env)->GetStringUTFChars(env, questionnireUri, 0
 sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, questionnire_uri);
 
     char *server_uri;
-    server_uri = (char *) sslog_get_property(questionnaire, PROPERTY_QUESTIONNAIREURI);
+    server_uri = (char *) sslog_node_get_property(node, questionnaire, PROPERTY_QUESTIONNAIREURI);
     return (*env)->NewStringUTF(env, server_uri);
 }

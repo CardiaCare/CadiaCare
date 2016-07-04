@@ -18,7 +18,7 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
-    public static final String ACCOUNT_PREFERENCES_URI = "uri";
+    public static final String ACCOUNT_PREFERENCES_VERSION = "version";
 
     String strFirstName;
     String strSecondName;
@@ -26,10 +26,10 @@ public class AccountStorage {
     String strHeight;
     String strWeight;
     String strAge;
-    String strUri;
+    String strVersion;
 
 
-    public void setAccountPreferences(String name, String second, String phone, String heih, String weig, String age, String uri){
+    public void setAccountPreferences(String name, String second, String phone, String heih, String weig, String age, String version){
 
 
         SharedPreferences.Editor editor = sPref.edit();
@@ -40,7 +40,13 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_HEIGHT, heih);
         editor.putString(ACCOUNT_PREFERENCES_WEIGHT, weig);
         editor.putString(ACCOUNT_PREFERENCES_AGE, age);
-        editor.putString(ACCOUNT_PREFERENCES_URI, uri);
+        editor.putString(ACCOUNT_PREFERENCES_VERSION, version);
+        editor.commit();
+    }
+
+    public void setVersion(String version){
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_VERSION, version);
         editor.commit();
     }
 
@@ -95,11 +101,11 @@ public class AccountStorage {
         return strAge;
     }
 
-    public String getQuestionnaireUri(){
+    public String getQuestionnaireVersion(){
         //sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        if (sPref.contains(ACCOUNT_PREFERENCES_URI)) {
-            strAge = sPref.getString(ACCOUNT_PREFERENCES_URI, "");
-        }else strUri = "";
-        return strUri;
+        if (sPref.contains(ACCOUNT_PREFERENCES_VERSION)) {
+            strVersion = sPref.getString(ACCOUNT_PREFERENCES_VERSION, "");
+        }else strVersion = "";
+        return strVersion;
     }
 }
