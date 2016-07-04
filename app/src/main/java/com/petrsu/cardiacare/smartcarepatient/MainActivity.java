@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void printQuestionnaire(Questionnaire questionnaire){
         LinkedList<Question> q = questionnaire.getQuestions();
-
         for (int i = 0; i < q.size(); i++) {
             Question qst = q.get(i);
             Log.i(TAG, qst.getDescription());
@@ -192,10 +191,11 @@ public class MainActivity extends AppCompatActivity {
             /*
             questionnaire = smart.getQuestionnaire(nodeDescriptor);
             printQuestionnaire(questionnaire);
-            // id, personName, guestionnaire
+            // id, personName, questionnaire
             feedback = new Feedback("1 test", "Student", questionnaire.getUri());
             return null;
             */
+
             try {
                 URL url = new URL("http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1");
 
@@ -218,11 +218,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            Log.i(TAG, resultJson);
+            
             Gson json = new Gson();
-            Questionnaire qst = json.fromJson(resultJson,Questionnaire.class);
-            questionnaire = qst;
+            questionnaire = json.fromJson(resultJson,Questionnaire.class);
             printQuestionnaire(questionnaire);
             return null;
         }
@@ -260,8 +258,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Gson json = new Gson();
-                //String jsonStr = json.toJson(questionnaire);
-                String jsonStr = json.toJson(feedback);
+                String jsonStr = json.toJson(questionnaire);
+                //String jsonStr = json.toJson(feedback);
                 System.out.println(jsonStr);
                 writeData(jsonStr);
             }
@@ -271,11 +269,11 @@ public class MainActivity extends AppCompatActivity {
         loadFromJson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String jsonFromFile = readSavedData();
-//                    Gson json = new Gson();
-//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
-//                    questionnaire = qst;
-//                    printQuestionnaire(questionnaire);
+                String jsonFromFile = readSavedData();
+                    Gson json = new Gson();
+                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
+                    questionnaire = qst;
+                    printQuestionnaire(questionnaire);
             }
         });
 
