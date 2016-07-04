@@ -13,7 +13,9 @@ public class SmartCareLibrary {
 
     public native void disconnectSmartSpace(long nodeDescriptor);
 
-    public native Questionnaire getQuestionnaire(long nodeDescriptor);
+    public native String getQuestionnaire(long nodeDescriptor);
+    public native String getQuestionnaireVersion(long nodeDescriptor,String questionnaireUri);
+    public native String getQuestionnaireSeverUri(long nodeDescriptor,String questionnaireUri);
 
     public native String initPatient (long nodeDescriptor);
     public native String initAuthRequest (long nodeDescriptor, String patientUri);

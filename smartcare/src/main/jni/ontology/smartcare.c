@@ -190,6 +190,9 @@ sslog_property_t *PROPERTY_ISPATIENTDRUGADDICTED;
 #if INCLUDE_PROPERTY_RESPONSEFILEURI
 sslog_property_t *PROPERTY_RESPONSEFILEURI;
 #endif
+#if INCLUDE_PROPERTY_QUESTIONNAIREURI
+sslog_property_t *PROPERTY_QUESTIONNAIREURI;
+#endif
 #if INCLUDE_PROPERTY_LEFTBIPOLAR
 sslog_property_t *PROPERTY_LEFTBIPOLAR;
 #endif
@@ -246,6 +249,9 @@ sslog_property_t *PROPERTY_SENDALARM;
 #endif
 #if INCLUDE_PROPERTY_HASDRUGTOMEDICINE
 sslog_property_t *PROPERTY_HASDRUGTOMEDICINE;
+#endif
+#if INCLUDE_PROPERTY_FEEDBACKURI
+sslog_property_t *PROPERTY_FEEDBACKURI;
 #endif
 #if INCLUDE_PROPERTY_SPECIALLITY
 sslog_property_t *PROPERTY_SPECIALLITY;
@@ -451,11 +457,17 @@ sslog_property_t *PROPERTY_MBOX;
 #if INCLUDE_PROPERTY_HASPORTABLEEQUIPMENT
 sslog_property_t *PROPERTY_HASPORTABLEEQUIPMENT;
 #endif
+#if INCLUDE_PROPERTY_VERSION
+sslog_property_t *PROPERTY_VERSION;
+#endif
 #if INCLUDE_PROPERTY_NEXTQUESTION
 sslog_property_t *PROPERTY_NEXTQUESTION;
 #endif
 #if INCLUDE_PROPERTY_WORKAMBULANCE
 sslog_property_t *PROPERTY_WORKAMBULANCE;
+#endif
+#if INCLUDE_PROPERTY_FEEDBACKDATE
+sslog_property_t *PROPERTY_FEEDBACKDATE;
 #endif
 #if INCLUDE_PROPERTY_NAME
 sslog_property_t *PROPERTY_NAME;
@@ -499,6 +511,9 @@ PROPERTY_ISPATIENTDRUGADDICTED =  sslog_new_property("http://oss.fruct.org/smart
 #endif
 #if INCLUDE_PROPERTY_RESPONSEFILEURI
 PROPERTY_RESPONSEFILEURI =  sslog_new_property("http://oss.fruct.org/smartcare#responseFileUri", SSLOG_PROPERTY_TYPE_DATA);
+#endif
+#if INCLUDE_PROPERTY_QUESTIONNAIREURI
+PROPERTY_QUESTIONNAIREURI =  sslog_new_property("http://oss.fruct.org/smartcare#questionnaireURI", SSLOG_PROPERTY_TYPE_DATA);
 #endif
 #if INCLUDE_PROPERTY_LEFTBIPOLAR
 PROPERTY_LEFTBIPOLAR =  sslog_new_property("http://oss.fruct.org/smartcare#leftBipolar", SSLOG_PROPERTY_TYPE_OBJECT);
@@ -556,6 +571,9 @@ PROPERTY_SENDALARM =  sslog_new_property("http://oss.fruct.org/smartcare#sendAla
 #endif
 #if INCLUDE_PROPERTY_HASDRUGTOMEDICINE
 PROPERTY_HASDRUGTOMEDICINE =  sslog_new_property("http://oss.fruct.org/smartcare#hasDrugToMedicine", SSLOG_PROPERTY_TYPE_OBJECT);
+#endif
+#if INCLUDE_PROPERTY_FEEDBACKURI
+PROPERTY_FEEDBACKURI =  sslog_new_property("http://oss.fruct.org/smartcare#feedbackURI", SSLOG_PROPERTY_TYPE_DATA);
 #endif
 #if INCLUDE_PROPERTY_SPECIALLITY
 PROPERTY_SPECIALLITY =  sslog_new_property("http://oss.fruct.org/smartcare#speciallity", SSLOG_PROPERTY_TYPE_DATA);
@@ -761,11 +779,17 @@ PROPERTY_MBOX =  sslog_new_property("http://oss.fruct.org/smartcare#mbox", SSLOG
 #if INCLUDE_PROPERTY_HASPORTABLEEQUIPMENT
 PROPERTY_HASPORTABLEEQUIPMENT =  sslog_new_property("http://oss.fruct.org/smartcare#hasPortableEquipment", SSLOG_PROPERTY_TYPE_OBJECT);
 #endif
+#if INCLUDE_PROPERTY_VERSION
+PROPERTY_VERSION =  sslog_new_property("http://oss.fruct.org/smartcare#version", SSLOG_PROPERTY_TYPE_DATA);
+#endif
 #if INCLUDE_PROPERTY_NEXTQUESTION
 PROPERTY_NEXTQUESTION =  sslog_new_property("http://oss.fruct.org/smartcare#nextQuestion", SSLOG_PROPERTY_TYPE_OBJECT);
 #endif
 #if INCLUDE_PROPERTY_WORKAMBULANCE
 PROPERTY_WORKAMBULANCE =  sslog_new_property("http://oss.fruct.org/smartcare#workAmbulance", SSLOG_PROPERTY_TYPE_OBJECT);
+#endif
+#if INCLUDE_PROPERTY_FEEDBACKDATE
+PROPERTY_FEEDBACKDATE =  sslog_new_property("http://oss.fruct.org/smartcare#feedbackDate", SSLOG_PROPERTY_TYPE_DATA);
 #endif
 #if INCLUDE_PROPERTY_NAME
 PROPERTY_NAME =  sslog_new_property("http://oss.fruct.org/smartcare#name", SSLOG_PROPERTY_TYPE_DATA);

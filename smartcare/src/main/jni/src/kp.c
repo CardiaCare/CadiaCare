@@ -278,7 +278,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_upd
 /***********************************************************************************************************/
 
 
-JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaire
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaire
         (JNIEnv* env, jobject thiz , jlong nodeDescriptor){
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
@@ -290,23 +290,56 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     sslog_individual_t *questionnaire_ss =  kp_get_questionnaire(node, &questionnaire_uri);
 
     /**************/
-    jobject *questionnaire;
-    questionnaire = (*env)->NewObject(env, class_questionnaire, questionnaire_constructor, (*env)->NewStringUTF(env, questionnaire_uri) );
+    //jobject *questionnaire;
+    //questionnaire = (*env)->NewObject(env, class_questionnaire, questionnaire_constructor, (*env)->NewStringUTF(env, questionnaire_uri) );
 
-    char* question_uri;
-    char* next_question_uri;
+    //char* question_uri;
+    //char* next_question_uri;
 
-    jobject first_question;
-    first_question = kp_get_first_question(env, questionnaire, node, questionnaire_ss, &next_question_uri);
-    question_uri = next_question_uri;
-    (*env)->CallVoidMethod(env, questionnaire, add_question, first_question);
+    //jobject first_question;
+    //first_question = kp_get_first_question(env, questionnaire, node, questionnaire_ss, &next_question_uri);
+    //question_uri = next_question_uri;
+    //(*env)->CallVoidMethod(env, questionnaire, add_question, first_question);
 
-    jobject next_question;
-    while (next_question_uri != NULL) {
-        next_question = kp_get_next_question(env, questionnaire, node, questionnaire_ss, question_uri, &next_question_uri);
-        (*env)->CallVoidMethod(env, questionnaire, add_question, next_question);
-        question_uri = next_question_uri;
-    }
+    //jobject next_question;
+   // while (next_question_uri != NULL) {
+      //  next_question = kp_get_next_question(env, questionnaire, node, questionnaire_ss, question_uri, &next_question_uri);
+    //    (*env)->CallVoidMethod(env, questionnaire, add_question, next_question);
+  //      question_uri = next_question_uri;
+//    }
     /**************/
-    return questionnaire;
+    return (*env)->NewStringUTF(env, questionnaire_uri);
+}
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaireVersion
+(JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring questionnireUri){
+
+ sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+const char * questionnire_uri= (*env)->GetStringUTFChars(env, questionnireUri, 0);
+
+sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, questionnire_uri);
+
+    char *version;
+    version = (char *) sslog_get_property(questionnaire, PROPERTY_VERSION);
+
+    return (*env)->NewStringUTF(env, version);
+}
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaireServerUri
+(JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring questionnireUri){
+
+ sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+const char * questionnire_uri= (*env)->GetStringUTFChars(env, questionnireUri, 0);
+
+sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, questionnire_uri);
+
+    char *server_uri;
+    server_uri = (char *) sslog_get_property(questionnaire, PROPERTY_QUESTIONNAIREURI);
+    return (*env)->NewStringUTF(env, server_uri);
 }
