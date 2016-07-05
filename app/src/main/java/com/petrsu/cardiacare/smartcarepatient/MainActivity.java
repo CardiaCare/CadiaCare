@@ -1,8 +1,8 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -29,55 +29,50 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static SmartCareLibrary smart;
-    static protected long nodeDescriptor;
+    static public SmartCareLibrary smart;
+    static public long nodeDescriptor;
     static protected String patientUri;
     static protected String authUri;
     static protected String locationUri;
     static protected String alarmUri;
+    static public String serverUri;
+    private GoogleApiClient client;
+    public Context context = this;
 
     Toolbar mToolbar;
     Button alarmButton;
     Button nextButton;
     EditText etFirstName;
     EditText etSecondName;
-    ProgressBar mProgressBar;
+    static public ProgressBar mProgressBar;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
-    public String serverUri;
-
+    static public com.petrsu.cardiacare.smartcarepatient.LocationService gps;
 
     public static boolean registratedState = false;
     //protected static final String TAG = "location";
 
-    com.petrsu.cardiacare.smartcarepatient.LocationService gps;
-    SwipeRefreshLayout mSwipeRefreshLayout;
-
-    private GoogleApiClient client;
-
     public MainActivity() {}
 
-    String TAG = "SS-main";
+    static String TAG = "SS-main";
 
     static public Questionnaire questionnaire;
     static protected Feedback feedback;
 
-    String filename = "questionnaire.json";
+    static String filename = "questionnaire.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-        smart = new SmartCareLibrary();
+       smart = new SmartCareLibrary();
         nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
         if (nodeDescriptor == -1){
             return;
@@ -93,14 +88,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        gps = new com.petrsu.cardiacare.smartcarepatient.LocationService(MainActivity.this);
-        if(gps.canGetLocation() != false) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            smart.sendLocation(nodeDescriptor, patientUri, locationUri, Double.toString(latitude), Double.toString(longitude));
-        }else{
-            gps.showSettingsAlert();
-        }
+        GPSLoad gpsLoad = new GPSLoad(context);
+        gpsLoad.execute();
 
         storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
@@ -114,7 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void writeData ( String data ){
         try {
-            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            FileOutputStream fOut = context.openFileOutput(filename, context.MODE_PRIVATE );
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -143,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         return datax.toString();
     }
 
-    public void printQuestionnaire(Questionnaire questionnaire){
+    static public void printQuestionnaire(Questionnaire questionnaire){
         LinkedList<Question> q = questionnaire.getQuestions();
         for (int i = 0; i < q.size(); i++) {
             Question qst = q.get(i);
@@ -171,65 +161,6 @@ public class MainActivity extends AppCompatActivity {
                     //}
                 }
             }
-        }
-    }
-
-    public class NewTask extends AsyncTask<Void, Integer, Void> {
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
-        String resultJson = "";
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public Void doInBackground(Void... params) {
-            /*
-            questionnaire = smart.getQuestionnaire(nodeDescriptor);
-            printQuestionnaire(questionnaire);
-            // id, personName, questionnaire
-            feedback = new Feedback("1 test", "Student", questionnaire.getUri());
-            return null;
-            */
-
-            try {
-                URL url = new URL(serverUri);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-
-                InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
-
-                reader = new BufferedReader(new InputStreamReader(inputStream));
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    buffer.append(line);
-                }
-
-                resultJson = buffer.toString();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Gson json = new Gson();
-            questionnaire = json.fromJson(resultJson,Questionnaire.class);
-            writeData(resultJson);
-            printQuestionnaire(questionnaire);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            mProgressBar.setVisibility(View.INVISIBLE);
-            Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
-            startActivity(intentq);
         }
     }
 
@@ -296,27 +227,19 @@ public class MainActivity extends AppCompatActivity {
         QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Если опросник ни разу не скачивался(версия==null)  - качаем
-                //Если скачивался, то проверяем версию
-                //Если вресия на сервере > текущей версии, то заружаем заново
-                //Иначе открываем текущую версию
-                //storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
                 String QuestionnaireVersion = storage.getQuestionnaireVersion();
-                Log.i(TAG, "qversion" + QuestionnaireVersion);
                 String qst = smart.getQuestionnaire(nodeDescriptor);
                 String QuestionnaireServerVersion = smart.getQuestionnaireVersion(nodeDescriptor,qst);
                 if((QuestionnaireVersion == "") || (!QuestionnaireServerVersion.equals(QuestionnaireVersion))) {
                     serverUri = smart.getQuestionnaireSeverUri(nodeDescriptor, qst);
                     storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
                     storage.setVersion(QuestionnaireServerVersion);
-                    Log.i(TAG, QuestionnaireServerVersion + "=" + QuestionnaireVersion);
-                    Log.i(TAG, "if");
-                    NewTask newTask = new NewTask();
-                    newTask.execute();
+
+                    QuestionnaireLoad questionnaireLoad = new QuestionnaireLoad(context);
+                    questionnaireLoad.execute();
                 } else {
                     String jsonFromFile = readSavedData();
                     Gson json = new Gson();
-                    Log.i(TAG, "else");
                     Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);
                     questionnaire = qst1;
                     printQuestionnaire(questionnaire);
