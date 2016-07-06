@@ -3,6 +3,7 @@ package com.petrsu.cardiacare.smartcarepatient;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -26,12 +27,18 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.*;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.LinkedList;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -210,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         AboutLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                smart.sendFeedback(nodeDescriptor, patientUri, "050716");
                 Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intentq);
             }
@@ -235,9 +243,12 @@ public class MainActivity extends AppCompatActivity {
                     storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
                     storage.setVersion(QuestionnaireServerVersion);
 
-                    QuestionnaireLoad questionnaireLoad = new QuestionnaireLoad(context);
-                    questionnaireLoad.execute();
+                    QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
+                    questionnaireGET.execute();
                 } else {
+                    FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+                    feedbackPOST.execute();
+
                     String jsonFromFile = readSavedData();
                     Gson json = new Gson();
                     Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);

@@ -343,3 +343,25 @@ sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, quest
     server_uri = (char *) sslog_node_get_property(node, questionnaire, PROPERTY_QUESTIONNAIREURI);
     return (*env)->NewStringUTF(env, server_uri);
 }
+
+/*
+ *
+ * Отправляем Feedback
+ */
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendFeedback
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri, jstring feedbackDate )
+{
+    const char *patient_uri = (*env)->GetStringUTFChars(env, patientUri, 0);
+    const char *feedback_date = (*env)->GetStringUTFChars(env, feedbackDate, 0);
+
+    //char * alarm_uri = (char *) malloc(30);
+    int result = kp_send_feedback(nodeDescriptor, patient_uri, feedback_date);
+    if (result == -1) {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "Node Error");
+        return -1;
+    }
+    else {
+        __android_log_print(ANDROID_LOG_INFO, TAG, "Send Feedback");
+        return 0;
+    }
+}

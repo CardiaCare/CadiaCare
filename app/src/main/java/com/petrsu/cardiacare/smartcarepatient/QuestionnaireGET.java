@@ -20,12 +20,12 @@ import java.net.URL;
  * Created by Kiribaz on 05.07.16.
  */
 
-public class QuestionnaireLoad extends AsyncTask<Void, Integer, Void> {
+public class QuestionnaireGET extends AsyncTask<Void, Integer, Void> {
         Context context;
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String resultJson = "";
-        public QuestionnaireLoad(Context context) {
+        public QuestionnaireGET(Context context) {
             this.context = context;
         }
 

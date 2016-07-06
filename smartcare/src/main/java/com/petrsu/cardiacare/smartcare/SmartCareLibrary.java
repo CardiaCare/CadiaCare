@@ -23,7 +23,9 @@ public class SmartCareLibrary {
     public native void removeIndividual (long nodeDescriptor, String individualUri);
     public native void removeAlarm (long nodeDescriptor, String individualUri);
     public native String  sendAlarm(long nodeDescriptor, String patientUri);
-    static public native int  sendLocation(long nodeDescriptor, String patientUri , String locationUri ,String latitude, String longitude);
+    static public native int sendLocation(long nodeDescriptor, String patientUri, String locationUri ,String latitude, String longitude);
+    static public native int sendFeedback(long nodeDescriptor, String patientUri, String feedbackDate);
+
 
     static public native int insertPersonName(long nodeDescriptor, String patientUri, String name);
     static public native int updatePersonName(long nodeDescriptor, String patientUri, String name);

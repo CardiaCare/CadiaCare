@@ -32,6 +32,8 @@ int kp_send_location(long, char *, char *, char *, char *);
 
 int kp_send_alarm(long, char *, char**);
 
+int kp_send_feedback(long, char *, char *);
+
 int kp_insert_person_name(long, char *, char *);
 
 int kp_update_person_name(long, char *, char *);

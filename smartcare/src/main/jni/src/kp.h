@@ -41,6 +41,9 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendLocation
         (JNIEnv *, jobject, jlong, jstring, jstring, jstring, jstring);
 
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendFeedback
+         (JNIEnv *, jobject, jlong, jstring, jstring);
+
 JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeIndividual
         (JNIEnv*, jobject, jlong, jstring);
 
