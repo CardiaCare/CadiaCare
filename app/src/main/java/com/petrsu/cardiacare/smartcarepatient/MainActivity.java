@@ -2,6 +2,8 @@ package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -43,7 +47,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends AppCompatActivity {
 
     static public SmartCareLibrary smart;
-    static public long nodeDescriptor;
+    static public long nodeDescriptor = -1;
     static protected String patientUri;
     static protected String authUri;
     static protected String locationUri;
@@ -51,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     static public String serverUri;
     private GoogleApiClient client;
     public Context context = this;
+    public int k = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
+    static public int gpsflag = 1; //включена ли передача геоданных
 
     Toolbar mToolbar;
     Button alarmButton;
@@ -79,21 +85,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-       smart = new SmartCareLibrary();
-        nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
-        if (nodeDescriptor == -1){
-            return;
-        }
+        smart = new SmartCareLibrary();
 
-        patientUri = smart.initPatient(nodeDescriptor);
-        if (patientUri == null){
-            return;
-        }
-
-        locationUri = smart.initLocation(nodeDescriptor,patientUri);
-        if (locationUri == null) {
-            return;
-        }
+        ConnectToSmartSpace();
 
         GPSLoad gpsLoad = new GPSLoad(context);
         gpsLoad.execute();
@@ -235,31 +229,41 @@ public class MainActivity extends AppCompatActivity {
         QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String QuestionnaireVersion = storage.getQuestionnaireVersion();
-                String qst = smart.getQuestionnaire(nodeDescriptor);
-                String QuestionnaireServerVersion = smart.getQuestionnaireVersion(nodeDescriptor,qst);
-                if((QuestionnaireVersion == "") || (!QuestionnaireServerVersion.equals(QuestionnaireVersion))) {
-                    serverUri = smart.getQuestionnaireSeverUri(nodeDescriptor, qst);
-                    storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-                    storage.setVersion(QuestionnaireServerVersion);
-
-                    QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
-                    questionnaireGET.execute();
-                } else {
-                    FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-                    feedbackPOST.execute();
-
-                    String jsonFromFile = readSavedData();
-                    Gson json = new Gson();
-                    Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);
-                    questionnaire = qst1;
-                    printQuestionnaire(questionnaire);
-                    mProgressBar.setVisibility(View.INVISIBLE);
-                    Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
-                    startActivity(intentq);
+                Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+                if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
+                    Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+                    ShowQuestionnaire();
+                } else if ((!isNetworkAvailable(context)) && (k > 0)) {
+                    Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
+                    smart.disconnectSmartSpace(nodeDescriptor);
+                    nodeDescriptor = -1;
+                    boolean flag;
+                    do {
+                        flag = ConnectToSmartSpace();
+                        Toast toast2 = Toast.makeText(getApplicationContext(),
+                                "SIB reconnect", Toast.LENGTH_SHORT);
+                        toast2.show();
+                    } while (flag == false);
+                } else if ((!isNetworkAvailable(context)) && (k == 0)) {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
+                    toast.show();
+                    k++;
+                    smart.disconnectSmartSpace(nodeDescriptor);
+                    nodeDescriptor = -1;
+                } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
+                    boolean flag;
+                    do {
+                        flag = ConnectToSmartSpace();
+                        Toast toast2 = Toast.makeText(getApplicationContext(),
+                                "SIB reconnect", Toast.LENGTH_SHORT);
+                        toast2.show();
+                    } while (flag == false);
+                    if (flag == true) {
+                        ShowQuestionnaire();
+                    }
                 }
             }
-
         });
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar); mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -410,4 +414,60 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
+
+    //Проверка подключения к сети (есть или нет)
+    public static boolean isNetworkAvailable(Context context) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+    public boolean ConnectToSmartSpace() {
+        nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
+        if (nodeDescriptor == -1){
+            return false;
+        }
+
+        patientUri = smart.initPatient(nodeDescriptor);
+        if (patientUri == null){
+            return false;
+        }
+
+        locationUri = smart.initLocation(nodeDescriptor,patientUri);
+        if (locationUri == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void ShowQuestionnaire() {
+        String QuestionnaireVersion = storage.getQuestionnaireVersion();
+        String qst = smart.getQuestionnaire(nodeDescriptor);
+        String QuestionnaireServerVersion = smart.getQuestionnaireVersion(nodeDescriptor,qst);
+        if((QuestionnaireVersion == "") || (!QuestionnaireServerVersion.equals(QuestionnaireVersion))) {
+            serverUri = smart.getQuestionnaireSeverUri(nodeDescriptor, qst);
+            storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+            storage.setVersion(QuestionnaireServerVersion);
+            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
+            questionnaireGET.execute();
+        } else {
+            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+            feedbackPOST.execute();
+
+            String jsonFromFile = readSavedData();
+            Gson json = new Gson();
+            Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);
+            questionnaire = qst1;
+            printQuestionnaire(questionnaire);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
+            startActivity(intentq);
+        }
+    }
 }
+
