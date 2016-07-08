@@ -1,12 +1,14 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +20,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +46,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.LinkedList;
-
+import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.app.Activity;
 import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public Context context = this;
     public int k = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
     static public int gpsflag = 1; //включена ли передача геоданных
+    static public int alarmflag = 0; //была ли нажата кнопка SOS
 
     Toolbar mToolbar;
     Button alarmButton;
@@ -79,27 +89,29 @@ public class MainActivity extends AppCompatActivity {
     static protected Feedback feedback;
 
     static String filename = "questionnaire.json";
+    ImageView icon2;
+    ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
         smart = new SmartCareLibrary();
+        setLoadingActivity();
 
-        ConnectToSmartSpace();
-
-        GPSLoad gpsLoad = new GPSLoad(context);
-        gpsLoad.execute();
-
-        storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
-        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-
-        if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()){
-            setUnregisteredActivity();
-        } else {
-            setRegisteredActivity();
-        }
+//        ConnectToSmartSpace();
+//
+//        GPSLoad gpsLoad = new GPSLoad(context);
+//        gpsLoad.execute();
+//
+//        storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
+//        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+//
+//        if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+//            setUnregisteredActivity();
+//        } else {
+//            setRegisteredActivity();
+//        }
     }
 
     public void writeData ( String data ){
@@ -165,6 +177,76 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setLoadingActivity() {
+        setContentView(R.layout.activity_loading);
+        ProgressBar mLoadingProgressBar;
+        mLoadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
+        mLoadingProgressBar.setVisibility(View.VISIBLE);
+        final Button WifiButton = (Button) findViewById(R.id.WifiButton);
+        WifiButton.setVisibility(View.INVISIBLE);
+        WifiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLoadingActivity();
+            }
+        });
+        Log.i(TAG, "Loading, DO IF");
+        if (isNetworkAvailable(this)) {
+            ConnectToSmartSpace();
+
+            GPSLoad gpsLoad = new GPSLoad(context);
+            gpsLoad.execute();
+
+            storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
+            storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+
+            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+                setUnregisteredActivity();
+            } else {
+                setRegisteredActivity();
+            }
+        } else {
+            Log.i(TAG, "Loading, IF");
+            //startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+                    this);
+
+            // Setting Dialog Title
+            alertDialog.setTitle("Отсутствует подключение к сети");
+
+            // Setting Dialog Message
+            alertDialog.setMessage("Включите wifi и перезапустите приложение");
+
+            // Setting Icon to Dialog
+            // alertDialog.setIcon(R.drawable.ic_launcher);
+
+            // Setting Positive "Yes" Button
+            alertDialog.setPositiveButton("Перейти к настройкам wifi",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            // Activity transfer to wifi settings
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+
+                            WifiButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+            // Setting Negative "NO" Button
+            alertDialog.setNegativeButton("Перезапустить приложение",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Write your code here to invoke NO event
+//                            dialog.cancel();
+//                            System.exit(0);
+                            setLoadingActivity();
+                        }
+                    });
+            // Showing Alert Message
+            alertDialog.show();
+        }
+    }
+
     public void setRegisteredActivity() {
         setContentView(R.layout.activity_main);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -180,6 +262,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 alarmButton.setBackgroundColor(0x77a71000);
                 alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
+                alarmflag = 1;
             }
         });
 
@@ -211,7 +294,9 @@ public class MainActivity extends AppCompatActivity {
         AboutLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smart.sendFeedback(nodeDescriptor, patientUri, "050716");
+                Long timestamp = System.currentTimeMillis()/1000;
+                String ts = timestamp.toString();
+                //smart.sendFeedback(nodeDescriptor, patientUri, ts);
                 Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intentq);
             }
@@ -266,9 +351,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar); mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         smart.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
@@ -355,8 +440,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void refreshAll() {
         //TODO delete alarm
-        smart.removeAlarm(nodeDescriptor, alarmUri);
-        alarmButton.setBackgroundColor(getResources().getColor(R.color.colorSuperAccent));
+        if (alarmflag == 1) {
+            smart.removeAlarm(nodeDescriptor, alarmUri);
+            alarmflag = 0;
+        }
+        alarmButton.setBackgroundResource(R.color.colorSuperAccent);
     }
 
     public void onDestroy() {

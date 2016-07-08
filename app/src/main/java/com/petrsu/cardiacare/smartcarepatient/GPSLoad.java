@@ -28,7 +28,9 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
             Log.i(MainActivity.TAG,"ПотокИФЭкзекуция");
             double latitude = MainActivity.gps.getLatitude();
             double longitude = MainActivity.gps.getLongitude();
-            MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+            if (MainActivity.isNetworkAvailable(context)) {
+                MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+            }
         } else {
 //            MainActivity.gps.showSettingsAlert();
             MainActivity.gpsflag = 0;
