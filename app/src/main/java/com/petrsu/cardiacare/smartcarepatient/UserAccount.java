@@ -1,8 +1,5 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
-/**
- * Created by Iuliia Zavialova on 17.09.15.
- */
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+/* Регистрация пользователя */
 
 public class UserAccount extends AppCompatActivity {
 
@@ -33,14 +32,13 @@ public class UserAccount extends AppCompatActivity {
         // кнопка назад в ActionBar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        assert toolbar != null;
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
-
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
@@ -50,15 +48,12 @@ public class UserAccount extends AppCompatActivity {
         etAge = (EditText) findViewById(R.id.etAge);
 
         storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
-        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
-
-
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
     }
 
     @Override
     public void onBackPressed() {
         //MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
-
         super.onBackPressed();
     }
 
@@ -81,7 +76,7 @@ public class UserAccount extends AppCompatActivity {
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
         storage.setAccountPreferences(etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
@@ -92,24 +87,15 @@ public class UserAccount extends AppCompatActivity {
                 version);
     }
 
-
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-
-        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
         etFirstName.setText(storage.getAccountFirstName());
-
         etSecondName.setText(storage.getAccountSecondName());
-
         etPhoneNumber.setText(storage.getAccountPhoneNumber());
-
         etHeight.setText(storage.getAccountHeight());
-
         etWeight.setText(storage.getAccountWeight());
-
         etAge.setText(storage.getAccountAge());
-
-
     }
 }

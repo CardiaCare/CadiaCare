@@ -1,9 +1,5 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
-/**
- * Created by cardiacare on 08.09.15.
- */
-
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -17,7 +13,9 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.petrsu.cardiacare.smartcarepatient.MainActivity;
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
+
+/* Работа с геоданными */
 
 public class LocationService extends Service implements LocationListener {
 
@@ -53,16 +51,13 @@ public class LocationService extends Service implements LocationListener {
 
     public Location getLocation() {
         try {
-            locationManager = (LocationManager) mContext
-                    .getSystemService(LOCATION_SERVICE);
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
             // getting GPS status
-            isGPSEnabled = locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
             // getting network status
-            isNetworkEnabled = locationManager
-                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
@@ -70,14 +65,10 @@ public class LocationService extends Service implements LocationListener {
                 this.canGetLocation = true;
                 // First get location from Network Provider
                 if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     Log.d("Network", "Network");
                     if (locationManager != null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
@@ -87,28 +78,21 @@ public class LocationService extends Service implements LocationListener {
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
-                            location = locationManager
-                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
-
                             }
                         }
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return location;
     }
 
@@ -116,8 +100,8 @@ public class LocationService extends Service implements LocationListener {
      * Stop using GPS listener
      * Calling this function will stop using GPS in your app
      * */
-    public void stopUsingGPS(){
-        if(locationManager != null){
+    public void stopUsingGPS() {
+        if(locationManager != null) {
             locationManager.removeUpdates(LocationService.this);
         }
     }
@@ -125,11 +109,10 @@ public class LocationService extends Service implements LocationListener {
     /**
      * Function to get latitude
      * */
-    public double getLatitude(){
-        if(location != null){
+    public double getLatitude() {
+        if(location != null) {
             latitude = location.getLatitude();
         }
-
         // return latitude
         return latitude;
     }
@@ -137,7 +120,7 @@ public class LocationService extends Service implements LocationListener {
     /**
      * Function to get longitude
      * */
-    public double getLongitude(){
+    public double getLongitude() {
         if(location != null){
             longitude = location.getLongitude();
         }
@@ -158,7 +141,7 @@ public class LocationService extends Service implements LocationListener {
      * Function to show settings alert dialog
      * On pressing Settings button will lauch Settings Options
      * */
-    public void showSettingsAlert(){
+    public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
@@ -189,12 +172,12 @@ public class LocationService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "onLocationChanged");
-        if(canGetLocation() != false) {
+        if(canGetLocation()) {
             double latitude = getLatitude();
             double longitude = getLongitude();
-            MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
+            SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
                     MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
-        }else{
+        } else {
             // can't get location
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
@@ -203,20 +186,16 @@ public class LocationService extends Service implements LocationListener {
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
-    }
+    public void onProviderDisabled(String provider) {}
 
     @Override
-    public void onProviderEnabled(String provider) {
-    }
+    public void onProviderEnabled(String provider) {}
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
 }

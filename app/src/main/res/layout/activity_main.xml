@@ -6,19 +6,19 @@
     tools:context="com.petrsu.cardiacare.smartcarepatient.MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:orientation="vertical"
-        android:id="@+id/linearLayout">
+        android:orientation="vertical">
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swiperefresh"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayout">
@@ -27,77 +27,78 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textAlignment="center"
-        android:layout_gravity="center_horizontal"
-        android:padding="20dp"
-        android:text="@string/send_alarm"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/linearLayout"
-        android:layout_centerHorizontal="true"/>
+    <!--<TextView-->
+        <!--android:id="@+id/textView2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+        <!--android:textAlignment="center"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:padding="20dp"-->
+        <!--android:text="@string/send_alarm"-->
+        <!--android:layout_below="@+id/linearLayout"-->
+        <!--android:layout_centerHorizontal="true"/>-->
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SOS"
         android:id="@+id/alarmButton"
+        android:layout_below="@+id/linearLayout"
+        android:text="SOS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView2"
         android:background="@color/colorSuperAccent"/>
+    <!--android:layout_below="@+id/textView2"-->
+
+    <!--<Button-->
+        <!--android:id="@+id/SaveInJsonButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Save in Json"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_below="@+id/alarmButton"/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/LoadToJsonButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Load from JSON"-->
+        <!--android:layout_below="@+id/SaveInJsonButton"-->
+        <!--android:layout_centerHorizontal="true" />-->
 
     <Button
+        android:id="@+id/QuestionnaireButton"
+        android:layout_below="@+id/alarmButton"
+        android:text="PASS SURVEY"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Save in Json"
-        android:id="@+id/buttonSJson"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/alarmButton"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Load from JSON"
-        android:id="@+id/buttonLJson"
-        android:layout_below="@+id/buttonSJson"
         android:layout_centerHorizontal="true" />
+    <!--android:layout_below="@+id/LoadToJsonButton"-->
 
     <Button
+        android:id="@+id/AboutButton"
+        android:layout_below="@+id/QuestionnaireButton"
+        android:text="About"
         android:onClick="onClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="About"
-        android:id="@+id/AboutLoad"
-        android:layout_below="@+id/QuestionnaireLoad"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PASS SURVEY"
-        android:id="@+id/QuestionnaireLoad"
-        android:layout_below="@+id/buttonLJson"
         android:layout_centerHorizontal="true" />
 
     <ProgressBar
         android:id="@+id/progressBar"
+        android:layout_below="@+id/AboutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/AboutLoad"
         android:layout_centerHorizontal="true">
     </ProgressBar>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Exit"
-        android:id="@+id/ButtonExit"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+    <!--<Button-->
+        <!--android:id="@+id/ExitButton"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Exit"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true" />-->
 
 </RelativeLayout>

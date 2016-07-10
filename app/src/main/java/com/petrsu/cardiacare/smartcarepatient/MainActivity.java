@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,18 +13,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,25 +28,10 @@ import android.widget.Toast;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.gson.Gson;
+
 import com.petrsu.cardiacare.smartcare.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.LinkedList;
-import android.os.Bundle;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
-import android.app.Activity;
-import javax.net.ssl.HttpsURLConnection;
+
+/* Главный экран */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,36 +41,32 @@ public class MainActivity extends AppCompatActivity {
     static protected String authUri;
     static protected String locationUri;
     static protected String alarmUri;
-    static public String serverUri;
+
+    static public com.petrsu.cardiacare.smartcarepatient.LocationService gps;
+    static String TAG = "SS-main";
+    static public Questionnaire questionnaire;
+    static protected Feedback feedback;
+
+    public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
+    static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
+    static public int alarmButtonFlag = 0; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
+
+    static public ProgressBar mProgressBar;
+
     private GoogleApiClient client;
+
     public Context context = this;
-    public int k = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
-    static public int gpsflag = 1; //включена ли передача геоданных
-    static public int alarmflag = 0; //была ли нажата кнопка SOS
 
     Toolbar mToolbar;
     Button alarmButton;
     Button nextButton;
     EditText etFirstName;
     EditText etSecondName;
-    static public ProgressBar mProgressBar;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
-    static public com.petrsu.cardiacare.smartcarepatient.LocationService gps;
 
-    public static boolean registratedState = false;
-    //protected static final String TAG = "location";
+    static com.petrsu.cardiacare.smartcarepatient.AccountStorage storage;
 
     public MainActivity() {}
-
-    static String TAG = "SS-main";
-
-    static public Questionnaire questionnaire;
-    static protected Feedback feedback;
-
-    static String filename = "questionnaire.json";
-    ImageView icon2;
-    ImageView icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,91 +74,33 @@ public class MainActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         smart = new SmartCareLibrary();
         setLoadingActivity();
+    }
 
-//        ConnectToSmartSpace();
-//
-//        GPSLoad gpsLoad = new GPSLoad(context);
-//        gpsLoad.execute();
-//
-//        storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
-//        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-//
-//        if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-//            setUnregisteredActivity();
-//        } else {
-//            setRegisteredActivity();
+    // Запись в файл
+//    public void writeData ( String data ) {
+//        try {
+//            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+//            FileOutputStream fOut = context.openFileOutput(filename, context.MODE_PRIVATE );
+//            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+//            osw.write(data);
+//            osw.flush();
+//            osw.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-    }
+//    }
 
-    public void writeData ( String data ){
-        try {
-            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-            FileOutputStream fOut = context.openFileOutput(filename, context.MODE_PRIVATE );
-            OutputStreamWriter osw = new OutputStreamWriter(fOut);
-            osw.write(data);
-            osw.flush();
-            osw.close();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public String readSavedData(){
-        StringBuffer datax = new StringBuffer("");
-        try {
-            FileInputStream fIn = openFileInput(filename);
-            InputStreamReader isr = new InputStreamReader(fIn);
-            BufferedReader buffreader = new BufferedReader(isr);
-
-            String readString = buffreader.readLine();
-            while ( readString != null ) {
-                datax.append(readString);
-                readString = buffreader.readLine();
-            }
-            isr.close();
-        } catch ( IOException ioe) {
-            ioe.printStackTrace();
-        }
-        return datax.toString();
-    }
-
-    static public void printQuestionnaire(Questionnaire questionnaire){
-        LinkedList<Question> q = questionnaire.getQuestions();
-        for (int i = 0; i < q.size(); i++) {
-            Question qst = q.get(i);
-            Log.i(TAG, qst.getDescription());
-            Answer a = qst.getAnswer();
-            //if (a.size()>0) {
-            //for(int h = 0; h < a.size(); h++) {
-            Log.i(TAG, a.getType());
-            LinkedList<AnswerItem> ai = a.getItems();
-            if (ai.size() > 0) {
-                Log.i(TAG, "AnswerItem");
-                for (int j = 0; j < ai.size(); j++) {
-                    AnswerItem item = ai.get(j);
-                    Log.i(TAG, item.getItemText());
-                    LinkedList<Answer> suba = item.getSubAnswers();
-                    if (suba.size() > 0) {
-                        for (int k = 0; k < suba.size(); k++) {
-                            Log.i(TAG, "subAnswer");
-                            Answer sitem = suba.get(k);
-                            Log.i(TAG, sitem.getType());
-                            LinkedList<AnswerItem> sai = sitem.getItems();
-                        }
-                    }
-                    // }
-                    //}
-                }
-            }
-        }
-    }
-
+    // Подготовка к работе
     public void setLoadingActivity() {
         setContentView(R.layout.activity_loading);
+
         ProgressBar mLoadingProgressBar;
         mLoadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
+        assert mLoadingProgressBar != null;
         mLoadingProgressBar.setVisibility(View.VISIBLE);
+
         final Button WifiButton = (Button) findViewById(R.id.WifiButton);
+        assert WifiButton != null;
         WifiButton.setVisibility(View.INVISIBLE);
         WifiButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 setLoadingActivity();
             }
         });
-        Log.i(TAG, "Loading, DO IF");
+
         if (isNetworkAvailable(this)) {
             ConnectToSmartSpace();
 
@@ -198,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             gpsLoad.execute();
 
             storage = new com.petrsu.cardiacare.smartcarepatient.AccountStorage();
-            storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
 
             if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
                 setUnregisteredActivity();
@@ -206,49 +124,37 @@ public class MainActivity extends AppCompatActivity {
                 setRegisteredActivity();
             }
         } else {
-            Log.i(TAG, "Loading, IF");
-            //startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                    this);
-
-            // Setting Dialog Title
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Отсутствует подключение к сети");
-
-            // Setting Dialog Message
             alertDialog.setMessage("Включите wifi и перезапустите приложение");
 
             // Setting Icon to Dialog
             // alertDialog.setIcon(R.drawable.ic_launcher);
 
-            // Setting Positive "Yes" Button
             alertDialog.setPositiveButton("Перейти к настройкам wifi",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
-                            // Activity transfer to wifi settings
                             startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-
                             WifiButton.setVisibility(View.VISIBLE);
                         }
                     });
 
-            // Setting Negative "NO" Button
             alertDialog.setNegativeButton("Перезапустить приложение",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // Write your code here to invoke NO event
-//                            dialog.cancel();
-//                            System.exit(0);
+                            //dialog.cancel();
                             setLoadingActivity();
                         }
                     });
-            // Showing Alert Message
+
             alertDialog.show();
         }
     }
 
+    // Интерфейс для зарегистрированного пользователя
     public void setRegisteredActivity() {
         setContentView(R.layout.activity_main);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -257,106 +163,92 @@ public class MainActivity extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics metricsB = new DisplayMetrics();
         display.getMetrics(metricsB);
+
         alarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alarmButton.setBackgroundColor(0x77a71000);
                 alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
-                alarmflag = 1;
+                alarmButtonFlag = 1;
             }
         });
 
-        Button saveToJson = (Button)findViewById(R.id.buttonSJson);
-        saveToJson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Gson json = new Gson();
-                String jsonStr = json.toJson(questionnaire);
-                //String jsonStr = json.toJson(feedback);
-                System.out.println(jsonStr);
-                writeData(jsonStr);
-            }
-        });
+//        Button SaveInJsonButton = (Button)findViewById(R.id.SaveInJsonButton);
+//        SaveInJsonButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Gson json = new Gson();
+//                String jsonStr = json.toJson(questionnaire);
+//                //String jsonStr = json.toJson(feedback);
+//                System.out.println(jsonStr);
+//                writeData(jsonStr);
+//            }
+//        });
 
-        Button loadFromJson = (Button)findViewById(R.id.buttonLJson);
-        loadFromJson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String jsonFromFile = readSavedData();
-                    Gson json = new Gson();
-                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
-                    questionnaire = qst;
-                    printQuestionnaire(questionnaire);
-            }
-        });
+//        Button LoadToJsonButton = (Button)findViewById(R.id.LoadToJsonButton);
+//        LoadToJsonButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String jsonFromFile = readSavedData();
+//                    Gson json = new Gson();
+//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
+//                    questionnaire = qst;
+//                    printQuestionnaire(questionnaire);
+//            }
+//        });
 
-        Button AboutLoad = (Button)findViewById(R.id.AboutLoad);
-        AboutLoad.setOnClickListener(new View.OnClickListener() {
+        Button AboutButton = (Button)findViewById(R.id.AboutButton);
+        assert AboutButton != null;
+        AboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Long timestamp = System.currentTimeMillis()/1000;
                 String ts = timestamp.toString();
-                //smart.sendFeedback(nodeDescriptor, patientUri, ts);
+                SmartCareLibrary.sendFeedback(nodeDescriptor, patientUri, ts);
                 Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intentq);
             }
         });
 
-        Button ButtonExit = (Button) findViewById(R.id.ButtonExit);
-        ButtonExit.setOnClickListener(new View.OnClickListener() {
+        Button QuestionnaireButton = (Button) findViewById(R.id.QuestionnaireButton);
+        assert QuestionnaireButton != null;
+        QuestionnaireButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-            }
-        });
-
-        Button QuestionnaireLoad = (Button) findViewById(R.id.QuestionnaireLoad);
-        QuestionnaireLoad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+                //Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
                 if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
-                    Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-                    ShowQuestionnaire();
-                } else if ((!isNetworkAvailable(context)) && (k > 0)) {
-                    Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
+                    //Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+                    QuestionnaireHelper.showQuestionnaire(context);
+                } else if (!isNetworkAvailable(context)) {
+                    //Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
                     smart.disconnectSmartSpace(nodeDescriptor);
                     nodeDescriptor = -1;
-                    boolean flag;
-                    do {
-                        flag = ConnectToSmartSpace();
-                        Toast toast2 = Toast.makeText(getApplicationContext(),
-                                "SIB reconnect", Toast.LENGTH_SHORT);
-                        toast2.show();
-                    } while (flag == false);
-                } else if ((!isNetworkAvailable(context)) && (k == 0)) {
-                    Toast toast = Toast.makeText(getApplicationContext(),
-                            "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
+                    setLoadingActivity();
+                } else if ((!isNetworkAvailable(context)) && (passSurveyButtonClickCount == 0)) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
                     toast.show();
-                    k++;
+                    passSurveyButtonClickCount++;
                     smart.disconnectSmartSpace(nodeDescriptor);
                     nodeDescriptor = -1;
                 } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
                     boolean flag;
                     do {
                         flag = ConnectToSmartSpace();
-                        Toast toast2 = Toast.makeText(getApplicationContext(),
-                                "SIB reconnect", Toast.LENGTH_SHORT);
+                        Toast toast2 = Toast.makeText(getApplicationContext(), "SIB reconnect", Toast.LENGTH_SHORT);
                         toast2.show();
-                    } while (flag == false);
-                    if (flag == true) {
-                        ShowQuestionnaire();
-                    }
+                    } while (!flag);
+                    QuestionnaireHelper.showQuestionnaire(context);
                 }
             }
         });
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
+        assert mProgressBar != null;
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        smart.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -368,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // Интерфейс для незарегистрированного пользователя
     public void setUnregisteredActivity(){
         setContentView(R.layout.activity_main_account_connection);
 
@@ -399,17 +292,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void registration(String first, String second){
+    // Регистрация
+    public void registration(String first, String second) {
         if (first.isEmpty() ||second.isEmpty()) {
-            AlertDialog.Builder builder =
-                    new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
             builder.setTitle(R.string.dialog_title);
             builder.setMessage(R.string.dialog_message);
             builder.setPositiveButton(R.string.dialog_ok, null);
             builder.setNegativeButton(R.string.dialog_cancle, null);
             builder.show();
         } else {
-            storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
             storage.setAccountPreferences(first,second, "", "", "", "","");
             setRegisteredActivity();
         }
@@ -438,11 +331,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Обновить страницу (свайп сверху вниз). Отменяет сигнал тревоги (нажатие кнопки SOS)
     public void refreshAll() {
         //TODO delete alarm
-        if (alarmflag == 1) {
+        if (alarmButtonFlag == 1) {
             smart.removeAlarm(nodeDescriptor, alarmUri);
-            alarmflag = 0;
+            alarmButtonFlag = 0;
         }
         alarmButton.setBackgroundResource(R.color.colorSuperAccent);
     }
@@ -453,7 +347,6 @@ public class MainActivity extends AppCompatActivity {
 
         smart.removeIndividual(nodeDescriptor, locationUri);
         smart.removeIndividual(nodeDescriptor, authUri);
-        //TODO delete alarm
         smart.removeIndividual(nodeDescriptor, alarmUri);
         smart.removeIndividual(nodeDescriptor, patientUri);
 
@@ -466,16 +359,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.petrsu.cardiacare.smartcarepatient/http/host/path")
@@ -486,15 +374,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.petrsu.cardiacare.smartcarepatient/http/host/path")
@@ -503,17 +386,18 @@ public class MainActivity extends AppCompatActivity {
         client.disconnect();
     }
 
-    //Проверка подключения к сети (есть или нет)
+    // Проверка подключения к сети (есть или нет)
     public static boolean isNetworkAvailable(Context context) {
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected()) {
-                return true;
-            } else {
-                return false;
-            }
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
         }
+    }
 
+    // Подключение к интеллектуальному пространству
     public boolean ConnectToSmartSpace() {
         nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
         if (nodeDescriptor == -1){
@@ -532,30 +416,4 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-    public void ShowQuestionnaire() {
-        String QuestionnaireVersion = storage.getQuestionnaireVersion();
-        String qst = smart.getQuestionnaire(nodeDescriptor);
-        String QuestionnaireServerVersion = smart.getQuestionnaireVersion(nodeDescriptor,qst);
-        if((QuestionnaireVersion == "") || (!QuestionnaireServerVersion.equals(QuestionnaireVersion))) {
-            serverUri = smart.getQuestionnaireSeverUri(nodeDescriptor, qst);
-            storage.sPref = getSharedPreferences(storage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            storage.setVersion(QuestionnaireServerVersion);
-            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
-            questionnaireGET.execute();
-        } else {
-            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-            feedbackPOST.execute();
-
-            String jsonFromFile = readSavedData();
-            Gson json = new Gson();
-            Questionnaire qst1 = json.fromJson(jsonFromFile,Questionnaire.class);
-            questionnaire = qst1;
-            printQuestionnaire(questionnaire);
-            mProgressBar.setVisibility(View.INVISIBLE);
-            Intent intentq = new Intent(MainActivity.this, QuestionnaireActivity.class);
-            startActivity(intentq);
-        }
-    }
 }
-

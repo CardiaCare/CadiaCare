@@ -19,11 +19,10 @@ import com.petrsu.cardiacare.smartcare.Question;
 
 import java.util.LinkedList;
 
-/**
- * Kristina Shevtsova
- * Kirill Orloff
- */
+/* Подстановка вопросов на соответствующие карточки */
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
     LinkedList <Question> Questions;
     int[] TypesQuestions;
     Context context;
@@ -183,8 +182,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Item = answeritem.get(1);
                 int Max = Integer.parseInt(Item.getItemText().replaceAll("[\\D]", ""));
                 holder.ContinuousScaleSeekBar.setMax(Max);
-                //Item = answeritem.get(2);
-                //int Step = Integer.parseInt(Item.getItemText().replaceAll("[\\D]", ""));
                 int Step = 10;
                 TextView[] ContinuousScaleAnswers = new TextView[Step + 1];
                 for (int j = 0; j < Step + 1; j++) {
@@ -209,12 +206,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+
         public ViewHolder(View itemView) {
             super(itemView);
         }
     }
 
     public class DichotomousViewHolder extends ViewHolder {
+
         TextView DichotomousQuestion;
         RadioButton DichotomousAnswer1, DichotomousAnswer2;
 
@@ -227,6 +226,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class SingleChoiceViewHolder extends ViewHolder {
+
         TextView SingleChoiceQuestion;
         RadioGroup SingleChoiceGroup;
         RadioButton SingleChoiceAnswer;
@@ -240,6 +240,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class TextFieldViewHolder extends ViewHolder {
+
         TextView TextFieldQuestion;
         EditText TextFieldAnswer;
         public TextFieldViewHolder(View v) {
@@ -251,6 +252,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class MultipleChoiceViewHolder extends ViewHolder {
+
         TextView MultipleChoiceQuestion;
         LinearLayout MultipleChoiceLayout;
         CheckBox MultipleChoiceAnswer;
@@ -264,6 +266,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class BipolarQuestionViewHolder extends ViewHolder {
+
         TextView BipolarQuestionQuestion;
         TextView BipolarQuestionValue;
         SeekBar BipolarQuestionSeekBar;
@@ -282,9 +285,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         progress = progressValue;
                     }
 
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
 
                     public void onStopTrackingTouch(SeekBar seekBar) {
                         BipolarQuestionValue.setText(String.valueOf(progress));
@@ -295,6 +296,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class LikertScaleViewHolder extends ViewHolder {
+
         TextView LikertScaleQuestion;
         RadioGroup LikertScaleGroup;
         RadioButton LikertScaleAnswer;
@@ -308,6 +310,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class GuttmanScaleViewHolder extends ViewHolder {
+
         TextView GuttmanScaleQuestion;
         RadioGroup GuttmanScaleGroup;
         RadioButton GuttmanScaleAnswer;
@@ -321,6 +324,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     public class ContinuousScaleViewHolder extends ViewHolder {
+
         TextView ContinuousScaleQuestion;
         TextView ContinuousScaleAnswer;
         TextView ContinuousScaleValue;
@@ -339,22 +343,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.ContinuousScaleValue = (TextView) v.findViewById(R.id.ContinuousScaleValue);
             this.ContinuousScaleValue.setText(String.valueOf(ContinuousScaleSeekBar.getProgress()));
             ContinuousScaleSeekBar.setOnSeekBarChangeListener(
-                    new SeekBar.OnSeekBarChangeListener() {
-                        int Step = 10;
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            progress = ((int)Math.round(progress/Step))*Step;
-                            seekBar.setProgress(progress);
-                            ContinuousScaleValue.setText(progress + "");
-                        }
+                new SeekBar.OnSeekBarChangeListener() {
+                    int Step = 10;
 
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                        }
-
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        }
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        progress = Math.round(progress/Step) * Step;
+                        seekBar.setProgress(progress);
+                        ContinuousScaleValue.setText(progress + "");
                     }
+
+                    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+                    public void onStopTrackingTouch(SeekBar seekBar) {}
+                }
             );
         }
     }
