@@ -1,21 +1,32 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.Answer;
 import com.petrsu.cardiacare.smartcare.AnswerItem;
+import com.petrsu.cardiacare.smartcare.Feedback;
 import com.petrsu.cardiacare.smartcare.Question;
 import com.petrsu.cardiacare.smartcare.Response;
 import com.petrsu.cardiacare.smartcare.ResponseItem;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
 /* Отображение опросника */
@@ -29,13 +40,22 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            FileInputStream fIn = openFileInput("feedback.json");
+            String jsonFromFile = readSavedData();
+            Gson json = new Gson();
+            Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
+            MainActivity.feedback = qst;
+        }catch( Exception e ){
+
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         QuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        QuestionnaireLayoutManager= new LinearLayoutManager(getApplicationContext());
+        QuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
         QuestionnaireRecyclerView.setLayoutManager(QuestionnaireLayoutManager);
 
         LinkedList<Question> questionnaire = MainActivity.questionnaire.getQuestions();
@@ -44,7 +64,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         for (int i = 0; i < questionnaire.size(); i++) {
             Question question = questionnaire.get(i);
             Answer answer = question.getAnswer();
-            switch(answer.getType()) {
+            switch (answer.getType()) {
                 case "Text":
                     Types[i] = RecyclerViewAdapter.TextField;
                     break;
@@ -76,53 +96,63 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
         QuestionnaireAdapter = new RecyclerViewAdapter(MainActivity.questionnaire.getQuestions(), Types, context);
         QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+
+        //Clean
+        Button buttonClean; // Clean
+        buttonClean = (Button) findViewById(R.id.buttonClean);// Clean
+        buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
+            @Override // Clean
+            public void onClick(View v) {// Clean
+                MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
+                Gson json = new Gson();
+                String jsonStr = json.toJson(MainActivity.feedback);
+                System.out.println(jsonStr);
+                writeData(jsonStr);
+                Intent i = new Intent( QuestionnaireActivity.this , QuestionnaireActivity.this.getClass() );
+                finish();
+                QuestionnaireActivity.this.startActivity(i);
+            }// Clean
+        });// Clean
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        LinkedList<Question> questionnnaire = MainActivity.questionnaire.getQuestions();
+        Gson json = new Gson();
+        String jsonStr = json.toJson(MainActivity.feedback);
+        System.out.println(jsonStr);
+        writeData(jsonStr);
+    }
 
-        for (int i = 0; i < QuestionnaireRecyclerView.getChildCount(); i++) {
-            Question question = questionnnaire.get(i);
-            Answer answer = question.getAnswer();
-            Response resp = new Response(questionnnaire.get(i).getUri(), questionnnaire.get(i).getUri());
-
-            switch(answer.getType()) {
-                case "Text":
-                    ResponseItem TextAnswer = new ResponseItem(answer.getUri(), "textItem", "fileUri");
-                    AnswerItem AnswerItemForTextField = new AnswerItem(answer.getItems().get(0));
-                    AnswerItem AnswerText = new AnswerItem(AnswerItemForTextField.getUri(), AnswerItemForTextField.getItemScore(), ((EditText)QuestionnaireRecyclerView.getChildAt(i).findViewById(R.id.editText)).getText().toString());
-                    TextAnswer.addLinkedAnswerItem(AnswerText);
-                    resp.addResponseItem(TextAnswer);
-                    MainActivity.feedback.addResponse(resp);
-                    break;
-                case "MultipleChoise":
-                    ResponseItem MultipleChoiseAnswer = new ResponseItem(answer.getUri(), "textItem", "fileUri");
-                    for(int j = 0; j < answer.getItems().size(); j++) {
-                        AnswerItem AnswerItemForMultipleChoise = new AnswerItem(answer.getItems().get(j));
-                        if(( (CheckBox) ((LinearLayout)QuestionnaireRecyclerView.getChildAt(i).findViewById(R.id.LinearMultiple)).getChildAt(j)).isChecked()) {
-                            AnswerItem AnswerMultipleChoise = new AnswerItem(AnswerItemForMultipleChoise.getUri(), AnswerItemForMultipleChoise.getItemScore(), AnswerItemForMultipleChoise.getItemText()/**/);
-                            MultipleChoiseAnswer.addLinkedAnswerItem(AnswerMultipleChoise);
-                            resp.addResponseItem(MultipleChoiseAnswer);
-                        }
-                    }
-                    MainActivity.feedback.addResponse(resp);
-                    break;
-                case "SingleChoise":
-                    break;
-                case "BipolarQuestion":
-                    break;
-                case "Dichotomous":
-                    break;
-                case "GuttmanScale":
-                    break;
-                case "LikertScale":
-                    break;
-                case "ContinuousScale":
-                    break;
-                default:
-            }
+    public void writeData ( String data ) {
+        try {
+            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE );
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write(data);
+            osw.flush();
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    public String readSavedData(){
+        StringBuffer datax = new StringBuffer("");
+        try {
+            FileInputStream fIn = openFileInput("feedback.json");
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader buffreader = new BufferedReader(isr);
+
+            String readString = buffreader.readLine();
+            while ( readString != null ) {
+                datax.append(readString);
+                readString = buffreader.readLine();
+            }
+            isr.close();
+        } catch ( IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return datax.toString();
     }
 }

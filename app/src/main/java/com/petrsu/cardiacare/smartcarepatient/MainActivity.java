@@ -74,13 +74,14 @@ public class MainActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         smart = new SmartCareLibrary();
         setLoadingActivity();
+        feedback = new Feedback("1 test", "Student", "feedback");////////////////////////////////////
     }
 
     // Запись в файл
 //    public void writeData ( String data ) {
 //        try {
 //            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-//            FileOutputStream fOut = context.openFileOutput(filename, context.MODE_PRIVATE );
+//            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE );
 //            OutputStreamWriter osw = new OutputStreamWriter(fOut);
 //            osw.write(data);
 //            osw.flush();
