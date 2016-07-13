@@ -13,6 +13,13 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.io.PrintWriter;
+
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.*;
+import java.net.MalformedURLException;
+
 /* Отправка ответов на сервер */
 
 public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
@@ -31,11 +38,11 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
 
     @Override
     public Void doInBackground(Void... params) {
-        try {
+       /* try {
             Gson json = new Gson();
             String jsonFeedback = json.toJson(MainActivity.feedback);
-            jsonFeedback = "{user_id:" + "123456" + ", date:" + "123456" + ", " + jsonFeedback + "}";
-            Log.i(MainActivity.TAG, "jsonFeedback = " + jsonFeedback);
+            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+"}";
+            /*Log.i(MainActivity.TAG, "jsonFeedback = " + jsonFeedback);
 
             URL url = new URL("http://api.cardiacare.ru/index.php?r=feedback/create");
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -54,9 +61,87 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
             writer.close();
             os.close();
             Log.i(MainActivity.TAG, "jsonFeedback отправлен");
+            System.out.println("jsonFeedback отправлен");
+            //////////////////////////////////////////////////////////////////////////////////////////
+            HttpURLConnection urlConnection = null;
+            // create connection
+            URL urlToRequest = new URL("http://karelia.xyz/test.php");
+            urlConnection = (HttpURLConnection) urlToRequest.openConnection();
+            urlConnection.setDoOutput(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setFixedLengthStreamingMode(
+                    jsonFeedback.getBytes().length);
+            urlConnection.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+
+            //send the POST out
+            PrintWriter out = new PrintWriter(urlConnection.getOutputStream());
+            out.print(jsonFeedback);
+            out.close();
+            //////////////////////////////////////////////////////////////////////////////////////////
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+        try {
+            Gson json = new Gson();
+            String jsonFeedback = json.toJson(MainActivity.feedback);
+            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
+
+            String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
+            String parammetrs = "user_id="+"123456"+"&date="+"123456"+"&feedback="+jsonFeedback;
+            byte[] data = null;
+            InputStream is = null;
+
+            try {
+                URL url = new URL(myURL);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                conn.setRequestProperty("Content-Length", "" + Integer.toString(parammetrs.getBytes().length));
+                OutputStream os = conn.getOutputStream();
+                data = parammetrs.getBytes("UTF-8");
+                os.write(data);
+                data = null;
+
+                conn.connect();
+                int responseCode= conn.getResponseCode();
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                if (responseCode == 200) {
+                    is = conn.getInputStream();
+
+                    byte[] buffer = new byte[8192]; // Такого вот размера буфер
+                    // Далее, например, вот так читаем ответ
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        baos.write(buffer, 0, bytesRead);
+                    }
+                    //data = baos.toByteArray();
+                    //resultString = new String(data, "UTF-8");
+                } else {
+                }
+
+
+
+            } catch (MalformedURLException e) {
+
+                //resultString = "MalformedURLException:" + e.getMessage();
+            } catch (IOException e) {
+
+                //resultString = "IOException:" + e.getMessage();
+            } catch (Exception e) {
+
+                //resultString = "Exception:" + e.getMessage();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
         return null;
     }
 
