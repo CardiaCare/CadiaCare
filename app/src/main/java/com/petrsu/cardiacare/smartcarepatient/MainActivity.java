@@ -203,9 +203,9 @@ public class MainActivity extends AppCompatActivity {
         AboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Long timestamp = System.currentTimeMillis()/1000;
-                String ts = timestamp.toString();
-                SmartCareLibrary.sendFeedback(nodeDescriptor, patientUri, ts);
+//                Long timestamp = System.currentTimeMillis()/1000;
+//                String ts = timestamp.toString();
+//                SmartCareLibrary.sendFeedback(nodeDescriptor, patientUri, ts);
                 Intent intentq = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(intentq);
             }

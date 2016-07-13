@@ -87,7 +87,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
         try {
             Gson json = new Gson();
             String jsonFeedback = json.toJson(MainActivity.feedback);
-            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
+            //jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
 
             String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
             String parammetrs = "user_id="+"123456"+"&date="+"123456"+"&feedback="+jsonFeedback;

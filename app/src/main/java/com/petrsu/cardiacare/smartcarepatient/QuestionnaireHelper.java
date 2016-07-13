@@ -38,8 +38,8 @@ public class QuestionnaireHelper {
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {
-            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-            feedbackPOST.execute();
+//            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+//            feedbackPOST.execute();
 
             String jsonFromFile = readSavedData(context);
             Gson json = new Gson();

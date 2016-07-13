@@ -20,6 +20,7 @@ import com.petrsu.cardiacare.smartcare.Feedback;
 import com.petrsu.cardiacare.smartcare.Question;
 import com.petrsu.cardiacare.smartcare.Response;
 import com.petrsu.cardiacare.smartcare.ResponseItem;
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -122,6 +123,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
         String jsonStr = json.toJson(MainActivity.feedback);
         System.out.println(jsonStr);
         writeData(jsonStr);
+        //to SIB
+        Long timestamp = System.currentTimeMillis()/1000;
+        String ts = timestamp.toString();
+        SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, ts);
+        //to Server
+        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+        feedbackPOST.execute();
     }
 
     public void writeData ( String data ) {
