@@ -50,7 +50,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     Context context;
 
     public static final int TextField = 0;//newtrue
-    public static final int Multiplechoice = 1;//newfalse
+    public static final int Multiplechoice = 1;//newtrue
     public static final int Singlechoice = 2;//newtrue
     public static final int Bipolarquestion = 3;//newtrue
     public static final int Guttmanscale = 4;//newtrue
@@ -183,10 +183,65 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     MultipleChoiceAnswers[j].setId(j);
                     MultipleChoiceAnswers[j].setText(Item.getItemText());
 
+                    final String uri = question.getUri();
+
                     MultipleChoiceAnswers[j].setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-                            System.out.println("Touch! Multiple "+view.getId()+" ");
+                            System.out.println("Touch! Multiple " + view.getId() + " " + uri);
+                            if (isChecked) {
+                                for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
+                                    if (MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                                        int flag = 0;
+                                        for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
+                                            if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+                                                //MainActivity.feedback.getResponses().get(j).getResponseItems().clear();//?
+                                                //вопрос
+                                                Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
+                                                //тип ответов
+                                                Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
+                                                //ответ выбранный
+                                                AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
+                                                //по Response Item пройтись и найти нужный, если нет то создать
+                                                // другое если есть ResponseItem, то по нему смотрим сколько AnswerItem'ов если есть нужный, то ничего иначе добавляем
+                                                ResponseItem itemMultipleChoice;
+                                                if(MainActivity.feedback.getResponses().get(j).getResponseItems().size() != 0) {
+                                                    itemMultipleChoice = MainActivity.feedback.getResponses().get(j).getResponseItems().get(0);
+                                                    for(int z = 0; z < itemMultipleChoice.getLinkedItems().size(); z++){
+                                                        if(!itemMultipleChoice.getLinkedItems().get(z).getItemText().equals(view.getText())){
+                                                            itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+                                                            MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).addLinkedAnswerItem(answeritemMultipleChoice);
+                                                            System.out.println("Touch! Multiple OLD");
+                                                        }
+                                                    }
+                                                }else {
+                                                    //System.out.println("Touch! Multiple NEW ANSWER"+MainActivity.feedback.getResponses().get(j).getResponseItems().size());
+                                                    itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
+                                                    itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+                                                    MainActivity.feedback.getResponses().get(j).addResponseItem(itemMultipleChoice);
+                                                    System.out.println("Touch! Multiple NEW ANSWER");
+                                                }
+                                                ////////////////////////////////////////////////////////////////
+
+                                                flag++;
+                                            }
+                                        }
+                                        if (flag == 0) {
+                                            //вопрос
+                                            Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
+                                            //тип ответов
+                                            Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
+                                            //ответ выбранный
+                                            AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
+                                            Response responseMultipleChoice = new Response(questionMultipleChoice.getUri(), questionMultipleChoice.getUri());
+                                            ResponseItem itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
+                                            itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+                                            responseMultipleChoice.addResponseItem(itemMultipleChoice);
+                                            MainActivity.feedback.addResponse(responseMultipleChoice);
+                                        }
+                                    }
+                                }
+                            }
                         }
                     });
 

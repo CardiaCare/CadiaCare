@@ -1,9 +1,13 @@
 package com.petrsu.cardiacare.smartcarepatient;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.Gson;
 
@@ -22,7 +26,7 @@ import java.net.MalformedURLException;
 
 /* Отправка ответов на сервер */
 
-public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
+public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
     Context context;
     HttpURLConnection urlConnection = null;
@@ -37,7 +41,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
     }
 
     @Override
-    public Void doInBackground(Void... params) {
+    public Integer doInBackground(Void... params) {
        /* try {
             Gson json = new Gson();
             String jsonFeedback = json.toJson(MainActivity.feedback);
@@ -142,11 +146,16 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Void> {
             e.printStackTrace();
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-        return null;
+        return 0;
     }
 
     @Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
+        if (result == -1) {
+
+        } else {
+
+        }
     }
 }
