@@ -141,7 +141,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
                         }
                     }
-                    holder.DichotomousGroup.addView(DichotomousAnswers[j]);
+                    if(holder.DichotomousGroup.getChildCount() < answeritem.size()) {
+                        holder.DichotomousGroup.addView(DichotomousAnswers[j]);
+                    }
                 }
             }
 
@@ -164,7 +166,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.BipolarQuestionQuestion.setText(question.getDescription());
             if (answeritem.size() > 0) {
                 AnswerItem Item = answeritem.get(0);
-                holder.BipolarQuestionSeekBar.setProgress(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
+                //holder.BipolarQuestionSeekBar.setProgress(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
                 Item = answeritem.get(1);
                 holder.BipolarQuestionSeekBar.setMax(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
             }
@@ -278,7 +280,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
                     }
                     //восстанавливаю отображение
-                    holder.MultipleChoiceLayout.addView(MultipleChoiceAnswers[j]);
+                    if(holder.MultipleChoiceLayout.getChildCount() < answeritem.size()) {
+                        holder.MultipleChoiceLayout.addView(MultipleChoiceAnswers[j]);
+                    }
                 }
             }
         } else if (viewHolder.getItemViewType() == Singlechoice) {
@@ -350,7 +354,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
                         }
                     }
-                    holder.LikertScaleGroup.addView(LikertScaleAnswers[j]);
+                    if(holder.LikertScaleGroup.getChildCount() < answeritem.size()) {
+                        holder.LikertScaleGroup.addView(LikertScaleAnswers[j]);
+                    }
                 }
             }
         } else if (viewHolder.getItemViewType() == Guttmanscale) {
@@ -378,7 +384,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             }
                         }
                     }
-                    holder.GuttmanScaleGroup.addView(GuttmanScaleAnswers[j]);
+                    if(holder.GuttmanScaleGroup.getChildCount() < answeritem.size()) {
+                        holder.GuttmanScaleGroup.addView(GuttmanScaleAnswers[j]);
+                    }
                 }
             }
         } else if (viewHolder.getItemViewType() == Continuousscale) {
