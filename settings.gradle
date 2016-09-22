@@ -1,1 +1,1 @@
-include ':app', ':smartcare'
+include ':cardiacare', ':smartcare'
