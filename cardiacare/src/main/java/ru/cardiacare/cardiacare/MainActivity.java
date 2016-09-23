@@ -51,16 +51,19 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.Feedback;
@@ -120,11 +123,13 @@ public class MainActivity extends AppCompatActivity {
         setLoadingActivity();
         feedback = new Feedback("1 test", "Student", "feedback");
 
-        if (connectedState == false) {
-            setRegisteredActivity();
-        } else {
-            setConnectedToDriverState();
-        }
+        //if (connectedState == false) {
+//            setRegisteredActivity();
+//        } else {
+//            //стартовое окно при подключенном блютус девайсе
+//            //FIXME не работает
+//            setConnectedToDriverState();
+//        }
 
     }
 
@@ -141,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
 
         if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+            Log.i(TAG, "setUnregisteredActivity");
+            //setContentView(R.layout.activity_main_account_connection);
             setUnregisteredActivity();
         } else {
             setRegisteredActivity();
@@ -177,13 +184,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     // Интерфейс для незарегистрированного пользователя
-    public void setUnregisteredActivity() {/*
+   public void setUnregisteredActivity() {
         setContentView(R.layout.activity_main_account_connection);
+        Log.i(TAG, "setUnregisteredActivity see");
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar);//ужен ли?
+        //setSupportActionBar(mToolbar);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
@@ -205,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 registration(etFirstName.getText().toString(), etSecondName.getText().toString());
             }
-        });*/
-    }
+        });
+   }
 
     // Регистрация
     public void registration(String first, String second) {
@@ -408,11 +415,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (connectedState == false) {
-            setRegisteredActivity();
-        } else {
-            setConnectedToDriverState();
-        }
+//        if (connectedState == false) {
+//            setRegisteredActivity();
+//        } else {
+//            setConnectedToDriverState();
+//        }
     }
 
     @Override

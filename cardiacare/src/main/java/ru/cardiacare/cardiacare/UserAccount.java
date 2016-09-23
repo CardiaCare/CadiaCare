@@ -78,7 +78,9 @@ public class UserAccount extends AppCompatActivity {
         super.onPause();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
-        storage.setAccountPreferences(etFirstName.getText().toString(),
+        storage.setAccountPreferences(
+                MainActivity.patientUri,
+                etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
                 etPhoneNumber.getText().toString(),
                 etHeight.getText().toString(),
