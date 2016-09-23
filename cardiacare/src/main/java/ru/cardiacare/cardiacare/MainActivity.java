@@ -46,37 +46,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.petrsu.cardiacare.smartcare.*;
+import com.petrsu.cardiacare.smartcare.Feedback;
+import com.petrsu.cardiacare.smartcare.Questionnaire;
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
-public class MainActivity extends AppCompatActivity implements OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     //private static final String TAG = "MainActivity";
     //Button btnStart;
@@ -110,8 +101,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     static public ProgressBar mProgressBar;
 
-    private GoogleApiClient client;
-
     public Context context = this;
 
     Toolbar mToolbar;
@@ -121,32 +110,23 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     SwipeRefreshLayout mSwipeRefreshLayout;
     static public Button QuestionnaireButton;//ля блокировки
     static public Button alarmButton;
-    Button buttonTest;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate Main Activity");
         super.onCreate(savedInstanceState);
 
+        smart = new SmartCareLibrary();
+        setLoadingActivity();
+        feedback = new Feedback("1 test", "Student", "feedback");
 
         if (connectedState == false) {
-            setFirstState();
+            setRegisteredActivity();
         } else {
             setConnectedToDriverState();
         }
 
-        smart = new SmartCareLibrary();
-        setLoadingActivity();
-        feedback = new Feedback("1 test", "Student", "feedback");
-        setRegisteredActivity();
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client2 = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // Подготовка к работе
@@ -195,78 +175,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
 
-    // Интерфейс для зарегистрированного пользователя
-    public void setRegisteredActivity() {
-
-//        alarmButton = (Button) findViewById(R.id.alarmButton);
-////        Display display = getWindowManager().getDefaultDisplay();
-////        DisplayMetrics metricsB = new DisplayMetrics();
-////        display.getMetrics(metricsB);
-//
-//        alarmButton.setOnClickListener(new Button.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                alarmButton.setEnabled(false);//блокируем от повторного нажатия
-//                alarmButton.setBackgroundColor(0x77a71000);
-//                alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
-//                alarmButtonFlag = 1;
-//                ///sosopros
-//                //Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-//                if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
-//                    //Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-//                    QuestionnaireHelper.showQuestionnaire(context);
-//                } else if (!isNetworkAvailable(context)) {
-//                    //Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
-//                    smart.disconnectSmartSpace(nodeDescriptor);
-//                    nodeDescriptor = -1;
-//                    setLoadingActivity();
-//                } else if ((!isNetworkAvailable(context)) && (passSurveyButtonClickCount == 0)) {
-//                    Toast toast = Toast.makeText(getApplicationContext(), "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
-//                    toast.show();
-//                    passSurveyButtonClickCount++;
-//                    smart.disconnectSmartSpace(nodeDescriptor);
-//                    nodeDescriptor = -1;
-//                } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
-//                    boolean flag;
-//                    do {
-//                        flag = ConnectToSmartSpace();
-//                        Toast toast2 = Toast.makeText(getApplicationContext(), "SIB reconnect", Toast.LENGTH_SHORT);
-//                        toast2.show();
-//                    } while (!flag);
-//                    QuestionnaireHelper.showQuestionnaire(context);
-//                }
-//                ///
-//            }
-//        });
-
-//        Button SaveInJsonButton = (Button)findViewById(R.id.SaveInJsonButton);
-//        SaveInJsonButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Gson json = new Gson();
-//                String jsonStr = json.toJson(questionnaire);
-//                //String jsonStr = json.toJson(feedback);
-//                System.out.println(jsonStr);
-//                writeData(jsonStr);
-//            }
-//        });
-
-//        Button LoadToJsonButton = (Button)findViewById(R.id.LoadToJsonButton);
-//        LoadToJsonButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String jsonFromFile = readSavedData();
-//                    Gson json = new Gson();
-//                    Questionnaire qst = json.fromJson(jsonFromFile,Questionnaire.class);
-//                    questionnaire = qst;
-//                    printQuestionnaire(questionnaire);
-//            }
-//        });
-
-        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
-
-    }
 
 
     // Интерфейс для незарегистрированного пользователя
@@ -302,9 +210,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
 
     // Регистрация
-    public void registration(String first, String second) {/*
+    public void registration(String first, String second) {
         if (first.isEmpty() ||second.isEmpty()) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppBaseTheme);
             builder.setTitle(R.string.dialog_title);
             builder.setMessage(R.string.dialog_message);
             builder.setPositiveButton(R.string.dialog_ok, null);
@@ -314,10 +222,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
             storage.setAccountPreferences(first,second, "", "", "", "","");
             setRegisteredActivity();
-        }*/
+        }
     }
 
-    public void setFirstState() {
+    // Интерфейс для зарегистрированного пользователя
+    public void setRegisteredActivity() {
         setContentView(R.layout.main);
 
         //registerReceiver(connectReceiver, new IntentFilter(???));
@@ -345,12 +254,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         });
 
-//        buttonTest = (Button) findViewById(R.id.buttonTEST);
-//        buttonTest.setOnClickListener(new Button.OnClickListener() {
-//            public void onClick(View v) {
-//                Log.i(TAG, "Клик " );
-//            }
-//        });
+
         alarmButton = (Button) findViewById(R.id.alarmButton);
 //        Display display = getWindowManager().getDefaultDisplay();
 //        DisplayMetrics metricsB = new DisplayMetrics();
@@ -392,15 +296,32 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         });
 
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
+
     }
 
     public void setConnectedToDriverState() {
         setContentView(R.layout.main_connected);
         btnDisconnect = (Button) findViewById(R.id.disconnect);
-        btnDisconnect.setOnClickListener(this);
+        btnDisconnect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connectedState = false;
+                setRegisteredActivity();
+            }
+        });
 
         btnCont = (Button) findViewById(R.id.continueConnection);
-        btnCont.setOnClickListener(this);
+        btnCont.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentECG = new Intent(context, ECGActivity.class);
+                //TODO change methods
+                startActivity(intentECG);
+                //startActivityForResult(intent,1);
+            }
+        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar_connected);
         setSupportActionBar(toolbar);
@@ -484,35 +405,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         loginState = state;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            /*case R.id.start:
-                Intent intentBluetoothFind = new Intent(this, BluetoothFindActivity.class);
-                //TODO change methods
-                startActivity(intentBluetoothFind);
-                //startActivityForResult(intent,1);
-                break;*/
-            case R.id.disconnect:
-                connectedState = false;
-                setFirstState();
-                break;
-            case R.id.continueConnection:
-                Intent intentECG = new Intent(this, ECGActivity.class);
-                //TODO change methods
-                startActivity(intentECG);
-                //startActivityForResult(intent,1);
-                break;
-            default:
-                break;
-        }
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (connectedState == false) {
-            setFirstState();
+            setRegisteredActivity();
         } else {
             setConnectedToDriverState();
         }
@@ -586,43 +484,4 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         return true;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client2.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://ru.cardiacare.cardiacare/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client2, viewAction);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://ru.cardiacare.cardiacare/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client2, viewAction);
-        client2.disconnect();
-    }
 }

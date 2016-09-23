@@ -30,13 +30,6 @@
         android:contentDescription="@string/content_description"/> <!--android:scaleType="centerCrop"-->
                                           <!--android:layout_gravity="center_horizontal|top"-->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/buttonTEST"
-        android:layout_gravity="center_horizontal" />
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.Questionnaire;
@@ -33,7 +32,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        MainActivity.mProgressBar.setVisibility(View.VISIBLE);
+        //MainActivity.mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -87,12 +86,12 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+                            //MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
                         }
                     });
             alertDialog.show();
         } else {
-            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+            //MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intentq = new Intent(context, QuestionnaireActivity.class);
             context.startActivity(intentq);
         }
