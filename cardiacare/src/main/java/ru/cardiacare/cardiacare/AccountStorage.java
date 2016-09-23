@@ -9,6 +9,7 @@ public class AccountStorage {
     SharedPreferences sPref;
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
+    public static final String ACCOUNT_PREFERENCES_ID = "id";
     public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
     public static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
     public static final String ACCOUNT_PREFERENCES_PHONENUMBER = "phonenumber";
@@ -17,6 +18,7 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
     public static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; //Версия последней загруженной анкеты
 
+    String strId;
     String strFirstName;
     String strSecondName;
     String strPhoneNumber;
@@ -25,8 +27,9 @@ public class AccountStorage {
     String strAge;
     String strQuestionnaireVersion;
 
-    public void setAccountPreferences(String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
+    public void setAccountPreferences(String id, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
         SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_ID, id);
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
         editor.putString(ACCOUNT_PREFERENCES_SECONDNAME, secondname);
         editor.putString(ACCOUNT_PREFERENCES_PHONENUMBER, phonenumber);
@@ -41,6 +44,13 @@ public class AccountStorage {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
         editor.apply();
+    }
+
+    public String getAccountId() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_ID)) {
+            strFirstName = sPref.getString(ACCOUNT_PREFERENCES_ID, "");
+        } else strId = "";
+        return strId;
     }
 
     public String getAccountFirstName() {

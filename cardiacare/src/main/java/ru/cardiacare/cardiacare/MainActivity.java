@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     static public SmartCareLibrary smart;
     static public long nodeDescriptor = -1;
     static protected String patientUri;
-    static protected String authUri;
     static protected String locationUri;
     static protected String alarmUri;
 
@@ -220,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         } else {
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            storage.setAccountPreferences(first,second, "", "", "", "","");
+            storage.setAccountPreferences(patientUri, first,second, "", "", "", "","");
             setRegisteredActivity();
         }
     }
@@ -287,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean flag;
                     do {
                         flag = ConnectToSmartSpace();
-                        Toast toast2 = Toast.makeText(getApplicationContext(), "SIB reconnect", Toast.LENGTH_SHORT);
+                        Toast toast2 = Toast.makeText(context, "SIB reconnect", Toast.LENGTH_SHORT);
                         toast2.show();
                     } while (!flag);
                     QuestionnaireHelper.showQuestionnaire(context);

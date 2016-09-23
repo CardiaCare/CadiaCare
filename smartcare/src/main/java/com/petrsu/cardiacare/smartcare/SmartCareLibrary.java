@@ -18,6 +18,7 @@ public class SmartCareLibrary {
     public native String getQuestionnaireSeverUri(long nodeDescriptor,String questionnaireUri);
 
     public native String initPatient (long nodeDescriptor);
+    public native String initPatientWithId (long nodeDescriptor,String patientUri);
     public native String initAuthRequest (long nodeDescriptor, String patientUri);
     public native String initLocation (long nodeDescriptor, String patientUri);
     public native void removeIndividual (long nodeDescriptor, String individualUri);

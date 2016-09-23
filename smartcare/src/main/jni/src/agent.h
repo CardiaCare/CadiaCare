@@ -18,9 +18,9 @@ char* generate_uri(char *);
 int kp_remove_individual(long, char *);
 int kp_remove_alarm(long nodeDescriptor, char *individual_uri);
 
-int kp_init_person(sslog_node_t *, char *);
-
 int kp_init_patient(char **, long);
+
+int kp_init_patient_with_uri(long, char *);
 
 int kp_init_auth_request(long, char *, char**);
 

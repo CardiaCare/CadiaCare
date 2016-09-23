@@ -29,6 +29,9 @@ JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_dis
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatient
   (JNIEnv *, jobject, jlong);
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatientWithUri
+    (JNIEnv *, jobject, jlong, jstring);
+
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initAuthRequest
         (JNIEnv *, jobject, jlong, jstring);
 

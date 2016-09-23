@@ -148,6 +148,26 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     free(patient_uri);
 }
 
+/*
+ * Инициализируем индивид пациента с предопределенным URI
+ *
+ */
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatientWithUri
+        (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri)
+{
+
+   const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
+
+    int kp_init_patient_with_uri(patient_uri, nodeDescriptor);
+
+    __android_log_print(ANDROID_LOG_INFO, TAG, "patient_uri: %s\n", patient_uri);
+
+    return (*env)->NewStringUTF(env, patient_uri);
+    free(patient_uri);
+}
+
+
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initAuthRequest
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri)
 {
