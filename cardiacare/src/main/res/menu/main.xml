@@ -16,6 +16,10 @@
         app:showAsAction="never"
         android:title="@string/about"/>
     <item
+        android:id="@+id/passSurvey"
+        app:showAsAction="never"
+        android:title="Pass Survey"/>
+    <item
         android:id="@+id/menuHelp"
         android:orderInCategory="100"
         app:showAsAction="never"
@@ -30,6 +34,11 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/userdata"/>
+    <item
+        android:id="@+id/exitAccount"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="Exit"/>
 
 <!--    <item
         android:id="@+id/menuExit"

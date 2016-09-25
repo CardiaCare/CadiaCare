@@ -368,8 +368,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent4);
                 break;
             case R.id.menuAbout:
-                About about = new About();
-                about.aboutDialog(this);
+                //About about = new About();
+                //about.aboutDialog(this);
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                break;
+            case R.id.passSurvey:
+                QuestionnaireHelper.showQuestionnaire(context);
+                break;
+            case R.id.exitAccount:
+                storage.setAccountPreferences("", "", "", "", "", "", "","");
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
                 break;
             case R.id.menuHelp:
                 Intent intent2 = new Intent(this, Help.class);
