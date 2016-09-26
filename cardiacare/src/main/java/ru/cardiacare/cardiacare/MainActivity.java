@@ -131,6 +131,12 @@ public class MainActivity extends AppCompatActivity {
 //            setConnectedToDriverState();
 //        }
 
+
+        locationUri = smart.initLocation(nodeDescriptor, patientUri);
+        if (locationUri == null) {
+            return ;
+        }
+
     }
 
     // Подготовка к работе
@@ -147,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
             Log.i(TAG, "setUnregisteredActivity");
-            //setContentView(R.layout.activity_main_account_connection);
+
             setUnregisteredActivity();
         } else {
             setRegisteredActivity();
@@ -187,7 +193,14 @@ public class MainActivity extends AppCompatActivity {
    public void setUnregisteredActivity() {
         setContentView(R.layout.activity_main_account_connection);
         Log.i(TAG, "setUnregisteredActivity see");
-        //mToolbar = (Toolbar) findViewById(R.id.toolbar);//ужен ли?
+
+       patientUri = storage.getAccountId();
+       patientUri = smart.initPatient(nodeDescriptor);
+       if (patientUri == null) {
+           return ;
+       }
+
+        //mToolbar = (Toolbar) findViewById(R.id.toolbar);//нужен ли?
         //setSupportActionBar(mToolbar);
 
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -225,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.dialog_cancle, null);
             builder.show();
         } else {
-            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
             storage.setAccountPreferences(patientUri, first,second, "", "", "", "","");
             setRegisteredActivity();
         }
@@ -235,6 +247,10 @@ public class MainActivity extends AppCompatActivity {
     public void setRegisteredActivity() {
         setContentView(R.layout.main);
 
+        if (patientUri == null) {
+            patientUri = storage.getAccountId();
+            smart.initPatientWithId(nodeDescriptor, patientUri);
+        }
         //registerReceiver(connectReceiver, new IntentFilter(???));
 
         //btnStart = (Button) findViewById(R.id.start);
@@ -302,7 +318,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
 
     }
@@ -477,15 +492,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        patientUri = smart.initPatient(nodeDescriptor);
-        if (patientUri == null) {
-            return false;
-        }
-
-        locationUri = smart.initLocation(nodeDescriptor, patientUri);
-        if (locationUri == null) {
-            return false;
-        }
 
         return true;
     }

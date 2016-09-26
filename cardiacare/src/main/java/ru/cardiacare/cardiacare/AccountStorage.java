@@ -9,7 +9,7 @@ public class AccountStorage {
     SharedPreferences sPref;
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
-    public static final String ACCOUNT_PREFERENCES_ID = "id";
+    public static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
     public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
     public static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
     public static final String ACCOUNT_PREFERENCES_PHONENUMBER = "phonenumber";
@@ -27,9 +27,9 @@ public class AccountStorage {
     String strAge;
     String strQuestionnaireVersion;
 
-    public void setAccountPreferences(String id, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
+    public void setAccountPreferences(String patientId, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
         SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(ACCOUNT_PREFERENCES_ID, id);
+        editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
         editor.putString(ACCOUNT_PREFERENCES_SECONDNAME, secondname);
         editor.putString(ACCOUNT_PREFERENCES_PHONENUMBER, phonenumber);
@@ -47,8 +47,8 @@ public class AccountStorage {
     }
 
     public String getAccountId() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_ID)) {
-            strFirstName = sPref.getString(ACCOUNT_PREFERENCES_ID, "");
+        if (sPref.contains(ACCOUNT_PREFERENCES_PATIENTID)) {
+            strId = sPref.getString(ACCOUNT_PREFERENCES_PATIENTID, "");
         } else strId = "";
         return strId;
     }

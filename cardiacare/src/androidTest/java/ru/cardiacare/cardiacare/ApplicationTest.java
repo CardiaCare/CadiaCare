@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare
+package ru.cardiacare.cardiacare;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
