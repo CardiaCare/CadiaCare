@@ -36,5 +36,12 @@
     <string name="userdata">Учетная запись</string>
     <string name="userdataActivity">Учетная запись</string>
     <string name="weight">Вес</string>
+    <string name="title_activity_about">О приложении</string>
+    <string name="Age">Возраст</string>
+    <string name="FirstName">Имя</string>
+    <string name="PhoneNumber">Телефон</string>
+    <string name="SecondName">Фамилия</string>
+    <string name="Height">Рост</string>
+    <string name="Weight">Возраст</string>
 
 </resources>

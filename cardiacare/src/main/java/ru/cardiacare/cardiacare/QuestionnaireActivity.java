@@ -149,7 +149,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
         //MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
         //buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+        //MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
     public void writeData ( String data ) {
