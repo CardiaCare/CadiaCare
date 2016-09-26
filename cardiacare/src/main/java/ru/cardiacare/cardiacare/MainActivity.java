@@ -194,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_account_connection);
         Log.i(TAG, "setUnregisteredActivity see");
 
-       patientUri = storage.getAccountId();
        patientUri = smart.initPatient(nodeDescriptor);
        if (patientUri == null) {
            return ;

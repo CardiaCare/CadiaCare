@@ -4,7 +4,6 @@ package ru.cardiacare.cardiacare;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.Answer;
@@ -46,7 +45,7 @@ public class QuestionnaireHelper {
             Gson json = new Gson();
             MainActivity.questionnaire = json.fromJson(jsonFromFile,Questionnaire.class);
             printQuestionnaire(MainActivity.questionnaire);
-            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+            //MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intentq = new Intent(context, QuestionnaireActivity.class);
             context.startActivity(intentq);
         }
