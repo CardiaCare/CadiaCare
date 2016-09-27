@@ -39,14 +39,14 @@ public class Userdata extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_account));
 
-//        // кнопка назад в ActionBar
-//        //TODO переход на Main
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//
-//        // back button in left side of ActionBar
-//        if (getActionBar() != null) {
-//            getActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
+        // кнопка назад в ActionBar
+        //TODO переход на Main
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        // back button in left side of ActionBar
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);

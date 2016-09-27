@@ -100,7 +100,7 @@ public class InternetEcgFileService  extends AsyncTask<String, Void, Void> { //J
     @Override
     protected void onPostExecute(Void result) { //JSONObject jsonData
         //super.onPostExecute(jsonData);
-        //Log.d("LOG_TAG", result.toString());
+        Log.d("LOG_TAG", result.toString());
     }
 }
 

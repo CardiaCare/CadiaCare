@@ -34,13 +34,13 @@ public class Login extends ActionBarActivity implements OnClickListener{
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_login));
 
-//        // кнопка назад в ActionBar
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        // back button in left side of ActionBar
-//        if (getActionBar() != null) {
-//            getActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
+        // кнопка назад в ActionBar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // back button in left side of ActionBar
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 
         etLogin = (EditText) findViewById(R.id.etLogin);
