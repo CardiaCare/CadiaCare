@@ -392,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exitAccount:
                 storage.setAccountPreferences("", "", "", "", "", "", "","");
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
+                deleteFile("feedback.json");
                 break;
             case R.id.menuHelp:
                 Intent intent2 = new Intent(this, Help.class);
