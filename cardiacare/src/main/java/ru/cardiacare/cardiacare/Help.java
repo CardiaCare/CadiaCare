@@ -18,13 +18,13 @@ public class Help extends ActionBarActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_help));
 
-        // кнопка назад в ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // back button in left side of ActionBar
-        if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+//        // кнопка назад в ActionBar
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//
+//        // back button in left side of ActionBar
+//        if (getActionBar() != null) {
+//            getActionBar().setDisplayHomeAsUpEnabled(true);
+//        }
     }
 
     @Override
