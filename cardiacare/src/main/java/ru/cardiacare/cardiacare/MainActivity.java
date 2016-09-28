@@ -398,10 +398,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, Help.class);
                 startActivity(intent2);
                 break;
-            case R.id.menuDownload:
+            /*case R.id.menuDownload:
                 Intent intent5 = new Intent(this, Download.class);
                 startActivity(intent5);
-                break;
+                break;*/
             case R.id.menuUserData:
                 //TODO как-то передедать (откуда беруться настройки юзера БД?)
                 if (!loginState) {

@@ -19,9 +19,10 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clean"
+                android:text="@string/clean"
                 android:id="@+id/buttonClean"
-                android:visibility="invisible" />
+                android:layout_gravity="right"
+                android:visibility="visible" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

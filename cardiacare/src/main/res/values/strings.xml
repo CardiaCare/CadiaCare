@@ -126,6 +126,8 @@
 </string>
     <string name="title_activity_cardia_care">CardiaCare</string>
     <string name="sos">SOS</string>
-
+    <string name="pass_survey">Pass survey</string>
+    <string name="download">Download</string>
+    <string name="clean">Clean</string>
 
 </resources>

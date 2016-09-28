@@ -20,7 +20,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/enter_name"
                 android:id="@+id/textView"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:nestedScrollingEnabled="false" />
 
 
             <android.support.design.widget.TextInputLayout android:layout_width="match_parent"

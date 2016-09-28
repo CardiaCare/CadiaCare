@@ -43,5 +43,11 @@
     <string name="SecondName">Фамилия</string>
     <string name="Height">Рост</string>
     <string name="Weight">Возраст</string>
+    <string name="auth_dialog_message"></string>
+    <string name="enter_name">Вход!</string>
+    <string name="title_activity_questionnaire">Опрос</string>
+    <string name="pass_survey">Пройти опрос</string>
+    <string name="download">Загрузка</string>
+    <string name="clean">Очистить</string>
 
 </resources>
