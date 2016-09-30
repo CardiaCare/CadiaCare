@@ -34,6 +34,11 @@
            android:orderInCategory="100"
            app:showAsAction="never"
            android:title="@string/userdata"/>
+    <item
+        android:id="@+id/documentsData"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/documents"/>
        <item
            android:id="@+id/exitAccount"
            android:orderInCategory="100"

@@ -49,5 +49,35 @@
     <string name="pass_survey">Пройти опрос</string>
     <string name="download">Загрузка</string>
     <string name="clean">Очистить</string>
+    <string name="documents">Документы</string>
+    <string name="title_activity_documents">Документы</string>
+    <string name="resultsBlood">Результаты измерения артериального давления</string>
+    <string name="resultsDoctor">Результаты обследования врачом</string>
+    <string name="demographicData">Демографические данные</string>
+    <string name="laboratoryStudies">Лабораторные исследования</string>
+    <string name="birthDate">Дата рождения</string>
+    <string name="name">Имя</string>
+    <string name="residence">Проживание</string>
+    <string name="sex">Пол</string>
+    <string name="surname">Фамилия</string>
+    <string name="title_activity_demographic_data">Демографические данные</string>
+    <string name="contactInformation">Контактная информация</string>
+    <string name="organizationName">Название организации</string>
+    <string name="title_activity_laboratory_studies">Лабораторные исследования</string>
+    <string name="hemoglobin">Гемоглобин</string>
+    <string name="hematocrit">Гематокрит</string>
+    <string name="erythrocyte">Эритроциты</string>
+    <string name="title_activity_results_doctor">Результаты обследования врачом</string>
+    <string name="diagnoses">Диагноз</string>
+    <string name="examinationReason">Исследование причин</string>
+    <string name="medications">Препараты</string>
+    <string name="smooking">Вы курите</string>
+    <string name="drinking">Вы употребляете алкоголь</string>
+    <string name="diseasePredisposition">Предрасположенность к болезни</string>
+    <string name="title_activity_results_blood">Результаты измерения артериального давления</string>
+    <string name="systolicPressure">Систолическое давление</string>
+    <string name="diastolicPressure">Диастолическое давление</string>
+    <string name="pulse">Пульс</string>
+    <string name="patronymic">Отчество</string>
 
 </resources>

@@ -20,6 +20,7 @@
 
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!--
  <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -121,6 +122,26 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/title_activity_about"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".DocumentsActivity"
+            android:label="@string/title_activity_documents"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".DemographicData"
+            android:label="@string/title_activity_demographic_data"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".LaboratoryStudies"
+            android:label="@string/title_activity_laboratory_studies"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".ResultsDoctor"
+            android:label="@string/title_activity_results_doctor"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".ResultsBlood"
+            android:label="@string/title_activity_results_blood"
             android:theme="@style/AppBaseTheme"></activity>
     </application>
 

@@ -398,6 +398,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, Help.class);
                 startActivity(intent2);
                 break;
+            case R.id.documentsData:
+                startActivity(new Intent(this, DocumentsActivity.class));
+                break;
             /*case R.id.menuDownload:
                 Intent intent5 = new Intent(this, Download.class);
                 startActivity(intent5);

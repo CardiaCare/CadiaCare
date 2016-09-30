@@ -129,5 +129,37 @@
     <string name="pass_survey">Pass survey</string>
     <string name="download">Download</string>
     <string name="clean">Clean</string>
+    <string name="documents">Documents</string>
+    <string name="title_activity_documents">Documents</string>
+    <string name="demographicData">Demographic data</string>
+    <string name="laboratoryStudies">Laboratory studies</string>
+    <string name="resultsDoctor">Survey results doctor</string>
+    <string name="resultsBlood">Results measuring blood pressure</string>
+    <string name="title_activity_demographic_data">Demographic data</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="patronymic">Patronymic</string>
+    <string name="birthDate">Birth date</string>
+    <string name="sex">Sex</string>
+    <string name="residence">Residence</string>
+    <string name="contactInformation">Сontact information</string>
+    <string name="title_activity_laboratory_studies">Laboratory studies</string>
+    <string name="organizationName">Organization name</string>
+    <string name="hemoglobin">Hemoglobin</string>
+    <string name="erythrocyte">Erythrocyte</string>
+    <string name="hematocrit">Hematocrit</string>
+    <string name="title_activity_results_doctor">Survey results doctor</string>
+    <string name="examinationReason">Examination reason</string>
+    <string name="visitOrder">Visit order</string>
+    <string name="diagnoses">Diagnoses</string>
+    <string name="medications">Medications</string>
+    <string name="smooking">Smooking</string>
+    <string name="drinking">Drinking</string>
+    <string name="diseasePredisposition">Disease predisposition</string>
+    <string name="title_activity_results_blood">Results measuring blood pressure</string>
+    <string name="systolicPressure">Systolic pressure</string>
+    <string name="diastolicPressure">Diastolic pressure</string>
+    <string name="pulse">Pulse</string>
+
 
 </resources>
