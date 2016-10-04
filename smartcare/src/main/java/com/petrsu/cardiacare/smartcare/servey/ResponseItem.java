@@ -1,4 +1,4 @@
-package com.petrsu.cardiacare.smartcare;
+package com.petrsu.cardiacare.smartcare.servey;
 
 import java.util.LinkedList;
 

@@ -1,6 +1,4 @@
-package com.petrsu.cardiacare.smartcare;
-
-import android.util.Log;
+package com.petrsu.cardiacare.smartcare.servey;
 
 import java.util.LinkedList;
 

@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.Questionnaire;
+import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

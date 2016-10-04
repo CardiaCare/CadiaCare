@@ -449,19 +449,33 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     return (*env)->NewStringUTF(env, his_document_uri);
 }
 
-int print_blood_presure_data(char *his_document_uri){
-            char* createdAt;
-            char* author;
-            char* systolicPressure;
-            char* diastolicPressure; char* pulse;
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
+    char* createdAt;
+    char* author;
+    char* systolicPressure;
+    char* diastolicPressure;
+    char* pulse;
 
-            kp_get_his_blood_pressure_measurement( his_document_uri,&createdAt, &author,
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
+    kp_get_his_blood_pressure_measurement( his_document_uri,&createdAt, &author,
         &systolicPressure, &diastolicPressure, &pulse);
-         printf("createdAt %s\nauthor %s\nsystolicPressure %s\ndiastolicPressure %s\npulse %s\n",
-                createdAt, author, systolicPressure, diastolicPressure, pulse);
+    //printf("createdAt %s\nauthor %s\nsystolicPressure %s\ndiastolicPressure %s\npulse %s\n",
+    //            createdAt, author, systolicPressure, diastolicPressure, pulse);
+
+
+    jobject *blood_pressure;
+    blood_pressure = (*env)->NewObject(env, class_blood_pressure, blood_pressure_constructor,
+                                        (*env)->NewStringUTF(env, systolicPressure),
+                                        (*env)->NewStringUTF(env, diastolicPressure),
+                                        (*env)->NewStringUTF(env, pulse));
+    return blood_pressure;
+
 }
 
-int print_demographic_data(char *his_document_uri){
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDemographicData
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
             char* createdAt;
             char* author;
             char* name;
@@ -471,30 +485,61 @@ int print_demographic_data(char *his_document_uri){
             char* sex;
             char* residence;
             char* contactInformaiton;
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
 
-            kp_get_his_demographic_data(his_document_uri, &createdAt, &author,
-                &name, &surname, &patronymic, &birthDate, &sex, &residence, &contactInformaiton);
+    kp_get_his_demographic_data(his_document_uri, &createdAt, &author,
+        &name, &surname, &patronymic, &birthDate, &sex, &residence, &contactInformaiton);
 
-            printf("createdAt %s\nauthor %s\nname %s\nsurname %s\npatronymic %s\nbirthDate %s\nsex %s\nresidence %s\ncontactInformaiton %s\n",
-           createdAt, author,name, surname, patronymic, birthDate, sex, residence, contactInformaiton);
+     //printf("createdAt %s\nauthor %s\nname %s\nsurname %s\npatronymic %s\nbirthDate %s\nsex %s\nresidence %s\ncontactInformaiton %s\n",
+    //       createdAt, author,name, surname, patronymic, birthDate, sex, residence, contactInformaiton);
+
+    jobject *demographic_data;
+
+    demographic_data = (*env)->NewObject(env, class_demographic, demographic_constructor,
+                                            (*env)->NewStringUTF(env, name),
+                                            (*env)->NewStringUTF(env, surname),
+                                            (*env)->NewStringUTF(env, patronymic),
+                                            (*env)->NewStringUTF(env, birthDate),
+                                            (*env)->NewStringUTF(env, sex),
+                                            (*env)->NewStringUTF(env, residence),
+                                            (*env)->NewStringUTF(env, contactInformaiton));
+
+    return demographic_data;
 }
 
-int print_laboratory_analysis_data(char *his_document_uri){
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHislaboratoryStudy
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
     char* createdAt;
     char* author;
     char* organizationName;
     char* hemoglobin;
     char* erythrocyte;
     char* hematocrit;
+
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
     kp_get_his_laboratory_analysis(his_document_uri,
                                     &createdAt, &author,
                                     &organizationName, &hemoglobin, &erythrocyte, &hematocrit);
 
-    printf("createdAt %s\nauthor %s\norganizationName %s\nhemoglobin %s\nerythrocyte %s\nhematocrit %s\n",
-            createdAt, author, organizationName, hemoglobin, erythrocyte, hematocrit);
+    //printf("createdAt %s\nauthor %s\norganizationName %s\nhemoglobin %s\nerythrocyte %s\nhematocrit %s\n",
+    //        createdAt, author, organizationName, hemoglobin, erythrocyte, hematocrit);
+
+    jobject *laboratory_analysis;
+
+    laboratory_analysis = (*env)->NewObject(env, class_laboratory, laboratory_constructor,
+                                            (*env)->NewStringUTF(env, organizationName),
+                                            (*env)->NewStringUTF(env, hemoglobin),
+                                            (*env)->NewStringUTF(env, erythrocyte),
+                                            (*env)->NewStringUTF(env, hematocrit));
+
+    return laboratory_analysis;
+
+
 }
 
-int print_doctor_examination_data(char *his_document_uri){
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDoctorExamination
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
     char* createdAt;
     char* author;
     char* examinationReason;
@@ -506,12 +551,30 @@ int print_doctor_examination_data(char *his_document_uri){
     char* height;
     char* weight;
     char* diseasePredisposition;
+
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
     kp_get_his_doctor_examination(his_document_uri,
         &createdAt, &author,
         &examinationReason, &visitOrder, &diagnoses, &medications, &smoking, &drinking, &height, &weight,  &diseasePredisposition);
 
-    printf("createdAt %s\nauthor %s\nexaminationReason %s\nvisitOrder %s\ndiagnoses %s\nmedications %s\nsmoking %s\ndrinking %s\nheight %s\nweight %s\ndiseasePredisposition",createdAt, author,
-        examinationReason, visitOrder, diagnoses, medications, smoking, drinking, height, weight,  diseasePredisposition);
+    //printf("createdAt %s\nauthor %s\nexaminationReason %s\nvisitOrder %s\ndiagnoses %s\nmedications %s\nsmoking %s\ndrinking %s\nheight %s\nweight %s\ndiseasePredisposition",createdAt, author,
+    //    examinationReason, visitOrder, diagnoses, medications, smoking, drinking, height, weight,  diseasePredisposition);
+
+    jobject *doctor_examination;
+
+    doctor_examination = (*env)->NewObject(env, class_doctor_examination, doctor_examination_constructor,
+                                            (*env)->NewStringUTF(env, examinationReason),
+                                            (*env)->NewStringUTF(env, visitOrder),
+                                            (*env)->NewStringUTF(env, diagnoses),
+                                            (*env)->NewStringUTF(env, medications),
+                                            (*env)->NewStringUTF(env, smoking),
+                                            (*env)->NewStringUTF(env, drinking),
+                                            (*env)->NewStringUTF(env, height),
+                                            (*env)->NewStringUTF(env, weight),
+                                            (*env)->NewStringUTF(env, diseasePredisposition));
+
+    return doctor_examination;
 
 }
 

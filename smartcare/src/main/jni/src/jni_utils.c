@@ -40,6 +40,39 @@ int init_global_instances(JNIEnv* env, jobject obj) {
     class_answer_item = (jclass * )(*env)->NewGlobalRef(env, _class_answer_item);
     if (NULL == class_answer_item) { return -1; }
 
+
+        jclass _class_demographic = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/DemographicData");
+        if (_class_demographic == NULL) { return -1; }
+        class_demographic = (jclass * )(*env)->NewGlobalRef(env, _class_demographic);
+        if (NULL == class_demographic) { return -1; }
+
+            demographic_constructor = (*env)->GetMethodID(env, class_demographic, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+            if ( demographic_constructor == NULL) { return -1; }
+
+        jclass _class_laboratory = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/LaboratoryStudy");
+        if (_class_laboratory == NULL) { return -1; }
+        class_laboratory = (jclass * )(*env)->NewGlobalRef(env, _class_laboratory);
+        if (NULL == class_laboratory) { return -1; }
+
+            laboratory_constructor = (*env)->GetMethodID(env, class_laboratory, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+            if ( laboratory_constructor == NULL) { return -1; }
+
+        jclass _class_blood_pressure = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/ResultBloodPressure");
+        if (_class_blood_pressure == NULL) { return -1; }
+        class_blood_pressure = (jclass * )(*env)->NewGlobalRef(env, _class_blood_pressure);
+        if (NULL == class_blood_pressure) { return -1; }
+
+            blood_pressure_constructor = (*env)->GetMethodID(env, class_blood_pressure, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+            if ( blood_pressure_constructor == NULL) { return -1; }
+
+        jclass _class_doctor_examination = (*env)->FindClass(env, "com/petrsu/cardiacare/smartcare/ResultDoctorExamination");
+        if (_class_doctor_examination == NULL) { return -1; }
+        class_doctor_examination = (jclass * )(*env)->NewGlobalRef(env, _class_doctor_examination);
+        if (NULL == class_doctor_examination) { return -1; }
+
+            doctor_examination_constructor = (*env)->GetMethodID(env, class_doctor_examination, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+            if ( doctor_examination_constructor == NULL) { return -1; }
+
     questionnaire_constructor = (*env)->GetMethodID(env, class_questionnaire, "<init>", "(Ljava/lang/String;)V");
     if (questionnaire_constructor == NULL) { return -1; }
 

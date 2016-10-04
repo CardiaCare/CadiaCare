@@ -66,8 +66,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.petrsu.cardiacare.smartcare.Feedback;
-import com.petrsu.cardiacare.smartcare.Questionnaire;
+import com.petrsu.cardiacare.smartcare.servey.Feedback;
+import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;

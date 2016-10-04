@@ -14,11 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.petrsu.cardiacare.smartcare.Answer;
-import com.petrsu.cardiacare.smartcare.AnswerItem;
-import com.petrsu.cardiacare.smartcare.Question;
-import com.petrsu.cardiacare.smartcare.Response;
-import com.petrsu.cardiacare.smartcare.ResponseItem;
+import com.petrsu.cardiacare.smartcare.servey.Answer;
+import com.petrsu.cardiacare.smartcare.servey.AnswerItem;
+import com.petrsu.cardiacare.smartcare.servey.Question;
+import com.petrsu.cardiacare.smartcare.servey.Response;
+import com.petrsu.cardiacare.smartcare.servey.ResponseItem;
 
 import java.util.LinkedList;
 

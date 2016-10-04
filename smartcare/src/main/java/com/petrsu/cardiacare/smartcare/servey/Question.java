@@ -1,4 +1,6 @@
-package com.petrsu.cardiacare.smartcare;
+package com.petrsu.cardiacare.smartcare.servey;
+
+import com.petrsu.cardiacare.smartcare.servey.Answer;
 
 /**
  * Created by Iuliia Zavialova on 09.03.16.

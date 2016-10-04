@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.Answer;
-import com.petrsu.cardiacare.smartcare.Feedback;
-import com.petrsu.cardiacare.smartcare.Question;
+import com.petrsu.cardiacare.smartcare.servey.Answer;
+import com.petrsu.cardiacare.smartcare.servey.Feedback;
+import com.petrsu.cardiacare.smartcare.servey.Question;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import java.io.BufferedReader;

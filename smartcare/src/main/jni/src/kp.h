@@ -90,6 +90,17 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisRequest
          ( JNIEnv* env, jobject thiz,  jstring hisRequestUri);
 
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDemographicData
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHislaboratoryStudy
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDoctorExamination
+        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri);
 
 #ifdef __cplusplus
 }

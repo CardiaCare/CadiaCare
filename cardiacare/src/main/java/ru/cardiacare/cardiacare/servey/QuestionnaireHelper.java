@@ -6,10 +6,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.Answer;
-import com.petrsu.cardiacare.smartcare.AnswerItem;
-import com.petrsu.cardiacare.smartcare.Question;
-import com.petrsu.cardiacare.smartcare.Questionnaire;
+import com.petrsu.cardiacare.smartcare.servey.Answer;
+import com.petrsu.cardiacare.smartcare.servey.AnswerItem;
+import com.petrsu.cardiacare.smartcare.servey.Question;
+import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

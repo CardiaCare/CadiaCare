@@ -1,5 +1,10 @@
 package com.petrsu.cardiacare.smartcare;
 
+import com.petrsu.cardiacare.smartcare.hisdocuments.DemographicData;
+import com.petrsu.cardiacare.smartcare.hisdocuments.LaboratoryStudy;
+import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
+import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
+
 /**
  * Created by Iuliia Zavialova on 28.06.16.
  */
@@ -42,5 +47,8 @@ public class SmartCareLibrary {
                                       String dateTo);
 
     public native String getHisRequest(String hisRequestUri);
-
+    public native ResultBloodPressure getHisBloodPressureResult(String hisDocumentUri);
+    public native DemographicData getHisDemographicData (String hisDocumentUri);
+    public native LaboratoryStudy getHislaboratoryStudy(String hisDocumentUri);
+    public native ResultDoctorExamination getHisDoctorExamination(String hisDocumentUri);
 }
