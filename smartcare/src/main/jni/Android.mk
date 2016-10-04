@@ -28,6 +28,8 @@ src/agent.c \
 src/agent.h \
 src/handlers.c \
 src/handlers.h \
+src/his.c \
+src/his.h \
 src/globals.c \
 src/globals.h \
 src/jni_utils.c \

@@ -32,4 +32,15 @@ public class SmartCareLibrary {
     static public native int updatePersonName(long nodeDescriptor, String patientUri, String name);
 
     public native int getAuthResponce(long nodeDescriptor, String authUri);
+
+
+    public native String getHis();
+
+    public native String sendHisRequest( String hisUri, String patientUri,
+                                      String hisDocumentType, String searchstring,
+                                      String fieldName, String dateFrom,
+                                      String dateTo);
+
+    public native String getHisRequest(String hisRequestUri);
+
 }

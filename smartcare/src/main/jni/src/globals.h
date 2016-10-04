@@ -15,6 +15,9 @@ extern jclass *GlobalMainActivityClass;
 extern sslog_node_t *GlobalNode;
 
 
+extern sslog_individual_t *his_request_glob;
+extern sslog_individual_t *his_response_glob;
+
 extern jclass *class_question;
 extern jclass *class_questionnaire;
 extern jclass *class_answer;

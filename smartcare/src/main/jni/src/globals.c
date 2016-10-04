@@ -14,6 +14,9 @@ jclass *GlobalPatientHelpActivityClass;
 jmethodID GlobalGetHelpRequestNotification;
 sslog_node_t *GlobalNode;
 
+sslog_individual_t *his_request_glob;
+sslog_individual_t *his_response_glob;
+
 jclass *class_question;
 jclass *class_questionnaire;
 jclass *class_answer;

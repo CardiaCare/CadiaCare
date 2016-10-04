@@ -76,6 +76,19 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 (JNIEnv *, jobject, jlong,jstring);
 
 
+/*****************************************************************************************/
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHis
+        ( JNIEnv* env, jobject thiz );
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
+        ( JNIEnv* env, jobject thiz,  jstring hisUri, jstring patientUri,
+            jstring hisDocumentType, jstring searchstring,
+            jstring fieldName, jstring dateFrom,
+            jstring dateTo);
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisRequest
+         ( JNIEnv* env, jobject thiz,  jstring hisRequestUri);
 
 
 #ifdef __cplusplus
