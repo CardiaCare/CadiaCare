@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,17 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.Answer;
-import com.petrsu.cardiacare.smartcare.AnswerItem;
 import com.petrsu.cardiacare.smartcare.Feedback;
 import com.petrsu.cardiacare.smartcare.Question;
-import com.petrsu.cardiacare.smartcare.Response;
-import com.petrsu.cardiacare.smartcare.ResponseItem;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import java.io.BufferedReader;
@@ -29,6 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
+
+import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 
 /* Отображение опросника */
 

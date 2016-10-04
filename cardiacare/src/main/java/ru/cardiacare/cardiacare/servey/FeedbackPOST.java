@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.*;
 import java.net.MalformedURLException;
+
+import ru.cardiacare.cardiacare.MainActivity;
 
 /* Отправка ответов на сервер */
 

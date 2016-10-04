@@ -1,6 +1,5 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.bluetooth;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,6 +28,10 @@ import android.widget.Toast;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
+import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 
 /**
  * created by Yulia Zavyalova

@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -22,45 +22,9 @@ import com.petrsu.cardiacare.smartcare.ResponseItem;
 
 import java.util.LinkedList;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.petrsu.cardiacare.smartcare.Answer;
-import com.petrsu.cardiacare.smartcare.AnswerItem;
-import com.petrsu.cardiacare.smartcare.Question;
-
-import java.util.LinkedList;
-
-
-import com.google.android.gms.common.server.converter.StringToIntConverter;
-import com.petrsu.cardiacare.smartcare.*;
-
-import java.text.NumberFormat;
-import java.util.LinkedList;
-
-import android.widget.EditText;
-import android.view.View.OnClickListener;
-import android.widget.CompoundButton;
-
-import android.widget.ListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.os.Bundle;
-
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-
-import android.widget.SeekBar.OnSeekBarChangeListener;
+import ru.cardiacare.cardiacare.*;
+import ru.cardiacare.cardiacare.R;
 
 /**
  * Kristina Shevtsova
@@ -94,7 +58,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int Type) {
         View v;
         if (Type == Dichotomous) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dichotomous_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(ru.cardiacare.cardiacare.R.layout.dichotomous_card, viewGroup, false);
             return new DichotomousViewHolder(v);
         } else if (Type == Singlechoice){
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.singlechoice_card, viewGroup, false);

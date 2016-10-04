@@ -28,81 +28,37 @@
  *
  */
 
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.ecgviewer;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.content.res.Resources;
 import android.os.Handler;
-import android.os.Message;
+
+import ru.cardiacare.cardiacare.R;
 
 /**
- * This class contains common data and methods for all of the supported ECG
- * signal sources.
+ * This class contains a fake ECG signal source for testing purposes
  *
  * @author Alexander Borodin
  * @author Yulia Zavyalova
  * @since 1.0
  */
-abstract public class SignalSource {
+public class FakeSource extends SignalSource {
 
-    public static enum States {
-        STATE_DISCONNECTED,
-        STATE_CONNECTING,
-        STATE_CONNECTED,
-        STATE_DISCONNECTING
-    };
+    private final int[] mDemoSignal;
 
-    private States mState;
-    private final Handler mRemoteHandler;
-    private final Handler mLocalHandler;
+    public FakeSource(Context context, Handler handler) {
+        super(context, handler);
 
-    public SignalSource(Context context, Handler handler) {
-        mState = States.STATE_DISCONNECTED;
-        mRemoteHandler = handler;
-        mLocalHandler = new Handler() {
-            public void handleMessage(Message msg) {
-                processMessage(msg);
-            }
-        };
+        Resources res = context.getResources();
+        mDemoSignal = res.getIntArray(R.array.demosignal);
     }
 
-    public Handler getHandler() {
-        return mLocalHandler;
-    }
-
-    private int processMessage(Message msg) {
-        return 0;
-
-    }
-
-    /**
-     *
-     * @return
-     */
-    public synchronized States getState() {
-        return mState;
-    }
-
-    private synchronized void setState(States state) {
-        mState = state;
-
-        // Give the new state to the Handler so the UI Activity can update
-        //mRemoteHandler.obtainMessage(BluetoothFindActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-    }
-
-    public synchronized void connect(Bundle config) {
-
-    }
-
-    public synchronized void disconnect(Bundle config) {
+    public synchronized void connect(String BTAddress) {
 
     }
 
     private static class ConnectionThread extends Thread {
-
-    }
-
-    private static class WorkerThread extends Thread {
 
     }
 }

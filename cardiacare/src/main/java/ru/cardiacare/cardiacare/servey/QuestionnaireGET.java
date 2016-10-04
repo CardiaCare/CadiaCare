@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +15,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import ru.cardiacare.cardiacare.MainActivity;
 
 /* Загрузка опросника с сервера */
 

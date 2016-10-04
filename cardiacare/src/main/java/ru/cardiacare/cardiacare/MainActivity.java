@@ -70,6 +70,16 @@ import com.petrsu.cardiacare.smartcare.Feedback;
 import com.petrsu.cardiacare.smartcare.Questionnaire;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
+import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
+import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
+import ru.cardiacare.cardiacare.location.GPSLoad;
+import ru.cardiacare.cardiacare.location.LocationService;
+import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
+import ru.cardiacare.cardiacare.user.AccountStorage;
+import ru.cardiacare.cardiacare.user.Login;
+import ru.cardiacare.cardiacare.user.Userdata;
+
 public class MainActivity extends AppCompatActivity {
 
     //private static final String TAG = "MainActivity";
@@ -87,19 +97,19 @@ public class MainActivity extends AppCompatActivity {
 
     static public SmartCareLibrary smart;
     static public long nodeDescriptor = -1;
-    static protected String patientUri;
-    static protected String locationUri;
+    static public String patientUri;
+    static public String locationUri;
     static protected String alarmUri;
 
-    static String TAG = "SS-main";
+    static public String TAG = "SS-main";
     static public Questionnaire questionnaire;
-    static protected Feedback feedback;
+    static public Feedback feedback;
     static public LocationService gps;
     public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
     static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
     static public int alarmButtonFlag = 0; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
 
-    static AccountStorage storage;
+    static public AccountStorage storage;
 
     static public ProgressBar mProgressBar;
 
@@ -401,10 +411,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.documentsData:
                 startActivity(new Intent(this, DocumentsActivity.class));
                 break;
-            /*case R.id.menuDownload:
-                Intent intent5 = new Intent(this, Download.class);
-                startActivity(intent5);
-                break;*/
+
             case R.id.menuUserData:
                 //TODO как-то передедать (откуда беруться настройки юзера БД?)
                 if (!loginState) {

@@ -1,18 +1,15 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.ecgviewer;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.LinearLayout;
-import android.os.Handler;
 import android.widget.RelativeLayout;
+
+import ru.cardiacare.cardiacare.R;
 
 /**
  * created by Zavyalova Yuliya on 21.12.14

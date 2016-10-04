@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.location;
 
 
 import android.app.AlertDialog;
@@ -15,6 +15,8 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
+
+import ru.cardiacare.cardiacare.MainActivity;
 
 /* Работа с геоданными */
 

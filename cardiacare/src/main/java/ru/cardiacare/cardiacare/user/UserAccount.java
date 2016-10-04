@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.user;
 
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -8,6 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.user.AccountStorage;
 
 /* Регистрация пользователя */
 

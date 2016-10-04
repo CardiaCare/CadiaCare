@@ -1,8 +1,10 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.location;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import ru.cardiacare.cardiacare.MainActivity;
 
 /* Отправка геоданных */
 

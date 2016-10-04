@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.ecgviewer;
 
 import android.app.Application;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.view.View;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import ru.cardiacare.cardiacare.R;
 
 public class ECGView extends View {
 

@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.user;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
+
+import ru.cardiacare.cardiacare.R;
 
 public class Userdata extends ActionBarActivity {
 

@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.user;
 
 import android.content.SharedPreferences;
 
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 
 public class AccountStorage {
 
-    SharedPreferences sPref;
+    public SharedPreferences sPref;
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
     public static final String ACCOUNT_PREFERENCES_PATIENTID = "id";

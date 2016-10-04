@@ -28,39 +28,81 @@
  *
  */
 
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.ecgviewer;
 
-import android.app.IntentService;
-import android.content.Intent;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 
 /**
- * This class represents a service running in background and responsible for
- * messaging between signal source and consumers.
+ * This class contains common data and methods for all of the supported ECG
+ * signal sources.
  *
  * @author Alexander Borodin
  * @author Yulia Zavyalova
  * @since 1.0
  */
-public class BackgroundService extends IntentService {
+abstract public class SignalSource {
 
-    private static BackgroundService serviceInstance = null;
+    public static enum States {
+        STATE_DISCONNECTED,
+        STATE_CONNECTING,
+        STATE_CONNECTED,
+        STATE_DISCONNECTING
+    };
 
-    public static BackgroundService getInstance() {
+    private States mState;
+    private final Handler mRemoteHandler;
+    private final Handler mLocalHandler;
 
-        if (serviceInstance == null) {
-            new BackgroundService();
-        }
-
-        return serviceInstance;
+    public SignalSource(Context context, Handler handler) {
+        mState = States.STATE_DISCONNECTED;
+        mRemoteHandler = handler;
+        mLocalHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                processMessage(msg);
+            }
+        };
     }
 
-    private BackgroundService() {
-
-        super("CardiaCare Service");
+    public Handler getHandler() {
+        return mLocalHandler;
     }
 
-    @Override
-    protected void onHandleIntent(Intent intent) {
+    private int processMessage(Message msg) {
+        return 0;
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public synchronized States getState() {
+        return mState;
+    }
+
+    private synchronized void setState(States state) {
+        mState = state;
+
+        // Give the new state to the Handler so the UI Activity can update
+        //mRemoteHandler.obtainMessage(BluetoothFindActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+    }
+
+    public synchronized void connect(Bundle config) {
+
+    }
+
+    public synchronized void disconnect(Bundle config) {
+
+    }
+
+    private static class ConnectionThread extends Thread {
+
+    }
+
+    private static class WorkerThread extends Thread {
 
     }
 }

@@ -28,35 +28,39 @@
  *
  */
 
-package ru.cardiacare.cardiacare;
+package ru.cardiacare.cardiacare.bluetooth;
 
-import android.content.Context;
-import android.content.res.Resources;
-import android.os.Handler;
+import android.app.IntentService;
+import android.content.Intent;
 
 /**
- * This class contains a fake ECG signal source for testing purposes
+ * This class represents a service running in background and responsible for
+ * messaging between signal source and consumers.
  *
  * @author Alexander Borodin
  * @author Yulia Zavyalova
  * @since 1.0
  */
-public class FakeSource extends SignalSource {
+public class BackgroundService extends IntentService {
 
-    private final int[] mDemoSignal;
+    private static BackgroundService serviceInstance = null;
 
-    public FakeSource(Context context, Handler handler) {
-        super(context, handler);
+    public static BackgroundService getInstance() {
 
-        Resources res = context.getResources();
-        mDemoSignal = res.getIntArray(R.array.demosignal);
+        if (serviceInstance == null) {
+            new BackgroundService();
+        }
+
+        return serviceInstance;
     }
 
-    public synchronized void connect(String BTAddress) {
+    private BackgroundService() {
 
+        super("CardiaCare Service");
     }
 
-    private static class ConnectionThread extends Thread {
+    @Override
+    protected void onHandleIntent(Intent intent) {
 
     }
 }
