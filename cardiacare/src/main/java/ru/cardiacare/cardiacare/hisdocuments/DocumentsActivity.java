@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 public class DocumentsActivity extends AppCompatActivity {
@@ -23,11 +22,11 @@ public class DocumentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
+        //hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
 
-        hisUri = MainActivity.smart.getHis(hisSibUri);
+        //hisUri = MainActivity.smart.getHis(hisSibUri);
 
-        hisPatientUri = MainActivity.smart.setHisId(hisSibUri, hisUri);
+        //hisPatientUri = MainActivity.smart.setHisId(hisSibUri, hisUri);
 
         Button demographicButton = (Button) findViewById(R.id.demographicData);
         demographicButton.setOnClickListener(new View.OnClickListener() {
