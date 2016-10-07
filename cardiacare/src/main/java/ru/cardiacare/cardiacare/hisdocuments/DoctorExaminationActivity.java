@@ -7,7 +7,11 @@ import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.R;
 
-public class ResultsDoctor extends AppCompatActivity {
+/**
+ * Created by Iuliia Zavialova on 07.10.16.
+ */
+
+public class DoctorExaminationActivity extends AppCompatActivity {
     String examinationReason = "Examination reason";
     String visitOrder = "Visit order";
     String diagnoses = "Diagnoses";

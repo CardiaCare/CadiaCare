@@ -7,7 +7,11 @@ import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.R;
 
-public class ResultsBlood extends AppCompatActivity {
+/**
+ * Created by Iuliia Zavialova on 07.10.16.
+ */
+
+public class BloodPressureActivity extends AppCompatActivity {
 
     Integer systolicPressure = 0;
     Integer diastolicPressure = 0;
@@ -27,5 +31,4 @@ public class ResultsBlood extends AppCompatActivity {
         EditText etPulse = (EditText) findViewById(R.id.etPulse);
         etPulse.setText(pulse.toString());
     }
-
 }

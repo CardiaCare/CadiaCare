@@ -118,20 +118,20 @@
             android:label="@string/title_activity_documents"
             android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".hisdocuments.DemographicData"
+            android:name=".hisdocuments.DemographicDataActivity"
             android:label="@string/title_activity_demographic_data"
             android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".hisdocuments.LaboratoryStudies"
+            android:name=".hisdocuments.LaboratoryStudyActivity"
             android:label="@string/title_activity_laboratory_studies"
             android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".hisdocuments.ResultsDoctor"
-            android:label="@string/title_activity_results_doctor"
-            android:theme="@style/AppBaseTheme" />
-        <activity
-            android:name=".hisdocuments.ResultsBlood"
+            android:name=".hisdocuments.BloodPressureActivity"
             android:label="@string/title_activity_results_blood"
+            android:theme="@style/AppBaseTheme"></activity>
+        <activity
+            android:name=".hisdocuments.DoctorExaminationActivity"
+            android:label="@string/title_activity_results_doctor"
             android:theme="@style/AppBaseTheme"></activity>
     </application>
 

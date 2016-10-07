@@ -395,10 +395,10 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sen
 
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHis
-        ( JNIEnv* env, jobject thiz )
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor )
 {
     char* his_uri;
-    kp_get_his(&his_uri);
+    kp_get_his(nodeDescriptor, &his_uri);
 
     return (*env)->NewStringUTF(env, his_uri);
 }
@@ -406,7 +406,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
-        ( JNIEnv* env, jobject thiz,  jstring hisUri, jstring patientUri,
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisUri, jstring patientUri,
             jstring hisDocumentType, jstring searchstring,
             jstring fieldName, jstring dateFrom,
             jstring dateTo)
@@ -421,7 +421,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
      char* date_from = (*env)->GetStringUTFChars(env, dateFrom, 0);
      char* date_to =(*env)->GetStringUTFChars(env, dateTo, 0);
      char* his_request_uri;
-     kp_send_his_request(his_uri,
+     kp_send_his_request(nodeDescriptor, his_uri,
                             patient_uri,
                             his_document_type,
                             search_string,
@@ -434,14 +434,14 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 }
 
 
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisRequest
-        ( JNIEnv* env, jobject thiz,  jstring hisRequestUri)
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisRequestUri)
 {
     char* his_request_uri = (*env)->GetStringUTFChars(env, hisRequestUri, 0);
     char* his_document_uri;
     char* his_response_uri;
     char* his_document_type;
-    int error = kp_get_his_response(his_request_uri, &his_response_uri, &his_document_uri, &his_document_type);
+    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri, &his_document_uri, &his_document_type);
 
     if (error == -1)
         return NULL;
@@ -449,8 +449,10 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     return (*env)->NewStringUTF(env, his_document_uri);
 }
 
+
+
 JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
-        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
     char* createdAt;
     char* author;
     char* systolicPressure;
@@ -459,7 +461,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
     char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
 
-    kp_get_his_blood_pressure_measurement( his_document_uri,&createdAt, &author,
+    kp_get_his_blood_pressure_measurement(nodeDescriptor, his_document_uri,&createdAt, &author,
         &systolicPressure, &diastolicPressure, &pulse);
     //printf("createdAt %s\nauthor %s\nsystolicPressure %s\ndiastolicPressure %s\npulse %s\n",
     //            createdAt, author, systolicPressure, diastolicPressure, pulse);
@@ -475,7 +477,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 }
 
 JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDemographicData
-        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
             char* createdAt;
             char* author;
             char* name;
@@ -487,7 +489,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
             char* contactInformaiton;
     char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
 
-    kp_get_his_demographic_data(his_document_uri, &createdAt, &author,
+    kp_get_his_demographic_data(nodeDescriptor, his_document_uri, &createdAt, &author,
         &name, &surname, &patronymic, &birthDate, &sex, &residence, &contactInformaiton);
 
      //printf("createdAt %s\nauthor %s\nname %s\nsurname %s\npatronymic %s\nbirthDate %s\nsex %s\nresidence %s\ncontactInformaiton %s\n",
@@ -508,7 +510,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 }
 
 JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHislaboratoryStudy
-        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
     char* createdAt;
     char* author;
     char* organizationName;
@@ -518,7 +520,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
     char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
 
-    kp_get_his_laboratory_analysis(his_document_uri,
+    kp_get_his_laboratory_analysis(nodeDescriptor, his_document_uri,
                                     &createdAt, &author,
                                     &organizationName, &hemoglobin, &erythrocyte, &hematocrit);
 
@@ -539,7 +541,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 }
 
 JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDoctorExamination
-        ( JNIEnv* env, jobject thiz,  jstring hisDocumentUri){
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
     char* createdAt;
     char* author;
     char* examinationReason;
@@ -554,7 +556,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
     char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
 
-    kp_get_his_doctor_examination(his_document_uri,
+    kp_get_his_doctor_examination(nodeDescriptor, his_document_uri,
         &createdAt, &author,
         &examinationReason, &visitOrder, &diagnoses, &medications, &smoking, &drinking, &height, &weight,  &diseasePredisposition);
 
@@ -588,6 +590,15 @@ int print_ecg_measurment_data(char *his_document_uri){
 
 }
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId(JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId){
 
+
+    char* his_id = (*env)->GetStringUTFChars(env, hisId, 0);
+    char* patient_uri;
+    kp_set_his_id(nodeDescriptor, his_id, &patient_uri);
+
+    return (*env)->NewStringUTF(env, patient_uri);
+
+}
 
 

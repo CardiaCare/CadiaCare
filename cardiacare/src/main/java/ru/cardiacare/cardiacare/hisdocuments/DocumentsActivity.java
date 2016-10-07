@@ -7,9 +7,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 public class DocumentsActivity extends AppCompatActivity {
+
+    static public String hisUri;
+    static public String hisPatientUri;
+    static public long hisSibUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,11 +23,17 @@ public class DocumentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
+
+        hisUri = MainActivity.smart.getHis(hisSibUri);
+
+        hisPatientUri = MainActivity.smart.setHisId(hisSibUri, hisUri);
+
         Button demographicButton = (Button) findViewById(R.id.demographicData);
         demographicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DocumentsActivity.this, DemographicData.class));
+                startActivity(new Intent(DocumentsActivity.this, DemographicDataActivity.class));
             }
         });
 
@@ -30,7 +41,7 @@ public class DocumentsActivity extends AppCompatActivity {
         laboratoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DocumentsActivity.this, LaboratoryStudies.class));
+                startActivity(new Intent(DocumentsActivity.this, LaboratoryStudyActivity.class));
             }
         });
 
@@ -38,7 +49,7 @@ public class DocumentsActivity extends AppCompatActivity {
         resultsDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DocumentsActivity.this, ResultsDoctor.class));
+                startActivity(new Intent(DocumentsActivity.this, DoctorExaminationActivity.class));
             }
         });
 
@@ -46,7 +57,7 @@ public class DocumentsActivity extends AppCompatActivity {
         resultsBloodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DocumentsActivity.this, ResultsBlood.class));
+                startActivity(new Intent(DocumentsActivity.this, BloodPressureActivity.class));
             }
         });
 

@@ -39,16 +39,17 @@ public class SmartCareLibrary {
     public native int getAuthResponce(long nodeDescriptor, String authUri);
 
 
-    public native String getHis();
+    public native String getHis(long nodeDescriptor);
 
-    public native String sendHisRequest( String hisUri, String patientUri,
+    public native String sendHisRequest(long nodeDescriptor, String hisUri, String patientUri,
                                       String hisDocumentType, String searchstring,
                                       String fieldName, String dateFrom,
                                       String dateTo);
 
-    public native String getHisRequest(String hisRequestUri);
-    public native ResultBloodPressure getHisBloodPressureResult(String hisDocumentUri);
-    public native DemographicData getHisDemographicData (String hisDocumentUri);
-    public native LaboratoryStudy getHislaboratoryStudy(String hisDocumentUri);
-    public native ResultDoctorExamination getHisDoctorExamination(String hisDocumentUri);
+    public native String getHisResponce(long nodeDescriptor,String hisRequestUri);
+    public native ResultBloodPressure getHisBloodPressureResult(long nodeDescriptor, String hisDocumentUri);
+    public native DemographicData getHisDemographicData (long nodeDescriptor, String hisDocumentUri);
+    public native LaboratoryStudy getHislaboratoryStudy(long nodeDescriptor, String hisDocumentUri);
+    public native ResultDoctorExamination getHisDoctorExamination(long nodeDescriptor, String hisDocumentUri);
+    public native String setHisId(long nodeDescriptor, String hisId);
 }

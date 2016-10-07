@@ -9,11 +9,37 @@
  * Генерация добавки для URI
  */
 
-int kp_get_his(char** his_uri){
-   
+ int kp_set_his_id(long nodeDescriptor, char* his_id, char** patientUri){
+
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+         return -1;
+    }
+
+    char *patient_uri = "http://oss.fruct.org/smartcare#bda5f180-1437-0134-e1ac-7998f2c888c2";
+
+    sslog_individual_t *patient = sslog_new_individual(CLASS_PATIENT, patient_uri);
+    sslog_node_insert_individual(node, patient);
+    char *his_patient_id = "5714f6309a08f754983b5c8c";
+    sslog_node_insert_property(node, patient, PROPERTY_HISID, his_patient_id);
+    //free(patient_uri);
+
+    if (patient == NULL) {
+        printf("\nError patient: %s\n", sslog_error_get_last_text());
+        return 0;
+    }
+    *patientUri = patient_uri;
+ }
+
+int kp_get_his(long nodeDescriptor, char** his_uri){
+       sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+       if (node == NULL){
+           return -1;
+       }
+
     list_t* hises;
 
-    hises = sslog_node_get_individuals_by_class(GlobalNode, CLASS_HOSPITALINFORMATIONSYSTEM);
+    hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
 
     if (list_is_null_or_empty(hises) == true) {
         printf("There are no such individuals.\n");
@@ -32,12 +58,16 @@ int kp_get_his(char** his_uri){
     } 
 }
 
-int kp_send_his_request(char* his_uri, char* patient_uri,  char* his_document_type,
+int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  char* his_document_type,
             char* search_string, char* field_name, char* date_from, char* date_to, char** request_uri){
 
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
-    sslog_individual_t *his = sslog_node_get_individual_by_uri(GlobalNode, his_uri);
-    sslog_individual_t *patient = sslog_node_get_individual_by_uri(GlobalNode, patient_uri);
+    sslog_individual_t *his = sslog_node_get_individual_by_uri(node, his_uri);
+    sslog_individual_t *patient = sslog_node_get_individual_by_uri(node, patient_uri);
 
     char * _his_request_uri = sslog_generate_uri(CLASS_HISREQUEST);
     char *his_request_uri = generate_uri(_his_request_uri);
@@ -63,7 +93,7 @@ int kp_send_his_request(char* his_uri, char* patient_uri,  char* his_document_ty
     }
 
     *request_uri = his_request_uri;
-    sslog_node_insert_individual(GlobalNode, his_request);
+    sslog_node_insert_individual(node, his_request);
 
     //object property of request - REQUESTSDOCUMENT
     char* class_uri;
@@ -88,34 +118,41 @@ int kp_send_his_request(char* his_uri, char* patient_uri,  char* his_document_ty
             RDF_TYPE,
             "http://www.w3.org/2000/01/rdf-schema#Class",
             SS_RDF_TYPE_URI, SS_RDF_TYPE_URI);
-    sslog_node_insert_triple(GlobalNode, class_triple);
+    sslog_node_insert_triple(node, class_triple);
 
     sslog_triple_t *type_triple = sslog_new_triple_detached(
             his_request_uri,
             pred_uri,
             class_uri,
             SS_RDF_TYPE_URI, SS_RDF_TYPE_URI);
-    sslog_node_insert_triple(GlobalNode, type_triple);
+    sslog_node_insert_triple(node, type_triple);
 
     //object property of request - RELATESTO
-    sslog_node_insert_property(GlobalNode, his_request, PROPERTY_RELATESTO, patient);
+    sslog_node_insert_property(node, his_request, PROPERTY_RELATESTO, patient);
     //object property of request - HASREQUEST
-    sslog_node_insert_property(GlobalNode, his, PROPERTY_HASREQUEST, his_request);
+    sslog_node_insert_property(node, his, PROPERTY_HASREQUEST, his_request);
 
     return 0;
 
 }
 
-int kp_get_his_response(char* his_request_uri, char** his_response_uri, char** his_document_uri, char** his_document_type){
+int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri, char** his_document_type){
 
-    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(GlobalNode, his_request_uri);
+
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+
+
+    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
 
     if(his_request == NULL) {
         printf(" no his_request\n");
         return -1;
     }
  
-    sslog_individual_t *his_response = ( sslog_individual_t *) sslog_node_get_property(GlobalNode,his_request,PROPERTY_HASRESPONSE);
+    sslog_individual_t *his_response = ( sslog_individual_t *) sslog_node_get_property(node,his_request,PROPERTY_HASRESPONSE);
     if(his_response == NULL) {
         printf(" no his_response\n");
         return -1;
@@ -123,7 +160,7 @@ int kp_get_his_response(char* his_request_uri, char** his_response_uri, char** h
 
     his_response_glob =  his_response;
 
-    sslog_node_populate(GlobalNode, his_response);
+    sslog_node_populate(node, his_response);
 
     char *status;
     status = (char *) sslog_get_property(his_response, PROPERTY_STATUS);
@@ -139,7 +176,7 @@ int kp_get_his_response(char* his_request_uri, char** his_response_uri, char** h
         document_uri  =  sslog_entity_get_uri (his_document);
         *his_document_uri  =  document_uri;
         char* subclass;
-        get_his_subclasses( document_uri , &subclass);
+        get_his_subclasses( node, document_uri , &subclass);
         *his_document_type = subclass;
     }
 
@@ -169,7 +206,7 @@ int kp_init_sbcr_his_response(){
         return -1;
     }
 
-printf("kp_init_sbcr_his_response end \n");
+    printf("kp_init_sbcr_his_response end \n");
 
 }
 void kp_sbcr_his_request(sslog_subscription_t *request_sbcr){
@@ -185,14 +222,21 @@ void kp_sbcr_his_request(sslog_subscription_t *request_sbcr){
 
 }
 
-int get_his_subclasses( char *uri, char** subclass){
+int get_his_subclasses( long nodeDescriptor, char *uri, char** subclass){
+
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+
+
     sslog_triple_t *req_triple = sslog_new_triple_detached(
             uri,
             RDF_TYPE,
             SS_RDF_SIB_ANY,
             SS_RDF_TYPE_URI, SS_RDF_TYPE_URI);
 
-    list_t *uris = sslog_node_query_triple(GlobalNode, req_triple);
+    list_t *uris = sslog_node_query_triple(node, req_triple);
     sslog_free_triple(req_triple);
   
     list_head_t *iterator = NULL;
@@ -211,13 +255,18 @@ int get_his_subclasses( char *uri, char** subclass){
 }
 
 
-int kp_get_his_laboratory_analysis(char* his_document_uri,
+int kp_get_his_laboratory_analysis(long nodeDescriptor, char* his_document_uri,
         char** createdAt, char** author,
         char** organizationName, char** hemoglobin, char** erythrocyte, char** hematocrit){
 
 
-    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(GlobalNode, his_document_uri);
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+
+    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, his_document_uri);
+    sslog_node_populate(node, his_document);
 
     *createdAt = (char *) sslog_get_property(his_document, PROPERTY_CREATEDAT);
     *author = (char *) sslog_get_property(his_document, PROPERTY_AUTHOR);
@@ -230,14 +279,19 @@ int kp_get_his_laboratory_analysis(char* his_document_uri,
 }
 
 
-int kp_get_his_blood_pressure_measurement(char* his_document_uri,
+int kp_get_his_blood_pressure_measurement(long nodeDescriptor, char* his_document_uri,
         char** createdAt, char** author,
         char** systolicPressure, char** diastolicPressure, char** pulse){
 
-    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(GlobalNode, his_document_uri);
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, his_document_uri);
+    sslog_node_populate(node, his_document);
+
+    sslog_node_populate(node, his_document);
 
     *createdAt = (char *) sslog_get_property(his_document, PROPERTY_CREATEDAT);
     *author = (char *) sslog_get_property(his_document, PROPERTY_AUTHOR);
@@ -248,12 +302,16 @@ int kp_get_his_blood_pressure_measurement(char* his_document_uri,
 
 }
 
-int kp_get_his_ECG_measurement( char* his_document_uri,
+int kp_get_his_ECG_measurement(long nodeDescriptor, char* his_document_uri,
         char** createdAt, char** author,
         char** dataLocation){
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
-    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(GlobalNode, his_document_uri);
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, his_document_uri);
+    sslog_node_populate(node, his_document);
 
 
     *createdAt = (char *) sslog_get_property(his_document, PROPERTY_CREATEDAT);
@@ -263,13 +321,17 @@ int kp_get_his_ECG_measurement( char* his_document_uri,
 
 }
 
-int kp_get_his_demographic_data( char* his_document_uri,
+int kp_get_his_demographic_data(long nodeDescriptor, char* his_document_uri,
         char** createdAt, char** author,
         char** name, char** surname, char** patronymic, char** birthDate, char** sex, char** residence, char** contactInformaiton){
 
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
-    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(GlobalNode, his_document_uri);
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, his_document_uri);
+    sslog_node_populate(node, his_document);
 
     *createdAt = (char *) sslog_get_property(his_document, PROPERTY_CREATEDAT);
     *author = (char *) sslog_get_property(his_document, PROPERTY_AUTHOR);
@@ -284,13 +346,17 @@ int kp_get_his_demographic_data( char* his_document_uri,
 
 }
 
-int kp_get_his_doctor_examination(char* his_document_uri,
+int kp_get_his_doctor_examination(long nodeDescriptor, char* his_document_uri,
         char** createdAt, char** author,
         char** examinationReason, char** visitOrder, char** diagnoses, char** medications, char** smoking, char** drinking, char** height, char** weight,  char** diseasePredisposition){
 
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
-    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(GlobalNode, his_document_uri);
-    sslog_node_populate(GlobalNode, his_document);
+    sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, his_document_uri);
+    sslog_node_populate(node, his_document);
 
     *createdAt = (char *) sslog_get_property(his_document, PROPERTY_CREATEDAT);
     *author = (char *) sslog_get_property(his_document, PROPERTY_AUTHOR);

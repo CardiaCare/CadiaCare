@@ -7,7 +7,11 @@ import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.R;
 
-public class LaboratoryStudies extends AppCompatActivity {
+/**
+ * Created by Iuliia Zavialova on 07.10.16.
+ */
+
+public class LaboratoryStudyActivity extends AppCompatActivity {
 
     String organizationName = "Ivanov Corporation";
     Integer hemoglobin = 0;
