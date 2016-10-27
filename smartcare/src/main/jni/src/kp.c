@@ -159,7 +159,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
    const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
 
-    int kp_init_patient_with_uri(patient_uri, nodeDescriptor);
+   kp_init_patient_with_uri(nodeDescriptor, patient_uri);
 
     __android_log_print(ANDROID_LOG_INFO, TAG, "patient_uri: %s\n", patient_uri);
 
