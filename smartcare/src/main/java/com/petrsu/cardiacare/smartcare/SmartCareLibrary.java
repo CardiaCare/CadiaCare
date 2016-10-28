@@ -51,5 +51,5 @@ public class SmartCareLibrary {
     public native DemographicData getHisDemographicData (long nodeDescriptor, String hisDocumentUri);
     public native LaboratoryStudy getHislaboratoryStudy(long nodeDescriptor, String hisDocumentUri);
     public native ResultDoctorExamination getHisDoctorExamination(long nodeDescriptor, String hisDocumentUri);
-    public native String setHisId(long nodeDescriptor, String hisId);
+    public native String setHisId(long nodeDescriptor, String hisId, String patientId);
 }

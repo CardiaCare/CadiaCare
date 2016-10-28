@@ -14,7 +14,7 @@ public class DocumentsActivity extends AppCompatActivity {
 
     static public String hisUri;
     static public String hisPatientUri;
-    static public long hisSibUri;
+    //static public long hisSibUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +23,11 @@ public class DocumentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
+        //hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
 
-        hisUri = MainActivity.smart.getHis(hisSibUri);
+        hisUri = MainActivity.smart.getHis(MainActivity.nodeDescriptor);
 
-        hisPatientUri = MainActivity.smart.setHisId(hisSibUri, hisUri);
+        hisPatientUri = MainActivity.smart.setHisId(MainActivity.nodeDescriptor, hisUri, MainActivity.patientUri);
 
         Button demographicButton = (Button) findViewById(R.id.demographicData);
         demographicButton.setOnClickListener(new View.OnClickListener() {

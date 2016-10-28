@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 
+import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
+
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /**
@@ -12,15 +15,16 @@ import ru.cardiacare.cardiacare.R;
  */
 
 public class DoctorExaminationActivity extends AppCompatActivity {
-    String examinationReason = "Examination reason";
-    String visitOrder = "Visit order";
-    String diagnoses = "Diagnoses";
-    String medications = "Medications";
-    Boolean smooking  = false;
-    String drinking = "No";
-    Float height = new Float(0.0);
-    Float weight = new Float(0.0);
-    String diseasePredisposition = "Diagnoses";
+
+    String searchstring = null;
+    String fieldName = null;
+    String dateFrom = null;
+    String dateTo = null;
+
+    static public String hisRequestUri;
+    static public String hisDocumentUri;
+
+    ResultDoctorExamination rde;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,24 +33,38 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        String hisDocumentType = "http://oss.fruct.org/smartcare#DoctorExamination";
+
+
+        hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
+                hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
+        hisDocumentUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
+        if (hisDocumentUri == null){
+
+        }
+
+        rde = new ResultDoctorExamination("Examination reason","Visit order",
+                "Diagnoses","Medications","true","No","h","w","Diagnoses");
+        rde = MainActivity.smart.getHisDoctorExamination(MainActivity.nodeDescriptor, hisDocumentUri);
+
         EditText etExaminationReason = (EditText) findViewById(R.id.etExaminationReason);
-        etExaminationReason.setText(examinationReason);
+        etExaminationReason.setText(rde.getExaminationReason());
         EditText etVisitOrder = (EditText) findViewById(R.id.etVisitOrder);
-        etVisitOrder.setText(visitOrder);
+        etVisitOrder.setText(rde.getVisitOrder());
         EditText etDiagnoses = (EditText) findViewById(R.id.etDiagnoses);
-        etDiagnoses.setText(diagnoses);
+        etDiagnoses.setText(rde.getDiagnoses());
         EditText etMedications = (EditText) findViewById(R.id.etMedications);
-        etMedications.setText(medications);
+        etMedications.setText(rde.getMedications());
         EditText etSmooking = (EditText) findViewById(R.id.etSmooking);
-        etSmooking.setText(smooking.toString());
+        etSmooking.setText(rde.getSmooking());
         EditText etDrinking = (EditText) findViewById(R.id.etDrinking);
-        etDrinking.setText(drinking);
+        etDrinking.setText(rde.getDrinking());
         EditText etHeight = (EditText) findViewById(R.id.etHeight);
-        etHeight.setText(height.toString());
+        etHeight.setText(rde.getHeight());
         EditText etWeight = (EditText) findViewById(R.id.etWeight);
-        etWeight.setText(weight.toString());
+        etWeight.setText(rde.getWeight());
         EditText etDiseasePredisposition = (EditText) findViewById(R.id.etDiseasePredisposition);
-        etDiseasePredisposition.setText(diseasePredisposition);
+        etDiseasePredisposition.setText(rde.getDiseasePredisposition());
     }
 
 }

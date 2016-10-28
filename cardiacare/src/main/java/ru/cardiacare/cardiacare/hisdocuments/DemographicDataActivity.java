@@ -11,26 +11,16 @@ import android.widget.EditText;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.DemographicData;
 
-import java.util.Date;
-
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 
 public class DemographicDataActivity extends AppCompatActivity {
 
-    String name = "Ivan";
-    String surname = "Ivanov";
-    String patronymic = "Ivanovich";
-    Date birthDate = new Date();
-    String sex = "Male";
-    String residence = "Petrozavods";
-    String contactInformation = "8-800-000-00-00";
-
-
-    String searchstring;
-    String fieldName; String dateFrom;
-    String dateTo;
+    String searchstring = null;
+    String fieldName = null;
+    String dateFrom = null;
+    String dateTo = null;
 
     static public String hisRequestUri;
     static public String hisDocumentUri;
@@ -48,14 +38,16 @@ public class DemographicDataActivity extends AppCompatActivity {
         String hisDocumentType = "http://oss.fruct.org/smartcare#DemographicData";
 
 
-        hisRequestUri = MainActivity.smart.sendHisRequest(DocumentsActivity.hisSibUri, DocumentsActivity.hisUri, DocumentsActivity.hisPatientUri,
+        hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
                  hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
+        hisDocumentUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
+         if (hisDocumentUri == null){
 
-        hisDocumentUri = MainActivity.smart.getHisResponce(DocumentsActivity.hisSibUri, hisRequestUri);
+         }
 
         dd = new DemographicData("name", "surname", "patronymic", "birthDate", "sex",
                                 "residence", "contactInformation");
-        dd = MainActivity.smart.getHisDemographicData (DocumentsActivity.hisSibUri, hisDocumentUri);
+        dd = MainActivity.smart.getHisDemographicData (MainActivity.nodeDescriptor, hisDocumentUri);
 
 
         EditText etName = (EditText) findViewById(R.id.etName);

@@ -5,7 +5,7 @@ extern "C" {
 #include "ontology/smartcare.h"
 #include <jni.h>
 
- int kp_set_his_id(long nodeDescriptor, char* his_id, char** patient_uri);
+ int kp_set_his_id(long nodeDescriptor, char* his_id, char* patient_uri, char** patient_his_uri);
 
 int get_his_subclasses(long nodeDescriptor, char *uri, char** subclass);
 

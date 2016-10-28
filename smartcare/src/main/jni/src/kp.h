@@ -103,7 +103,7 @@ JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
         ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId
-        (JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId);
+        (JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId, jstring patientId);
 
 
 #ifdef __cplusplus

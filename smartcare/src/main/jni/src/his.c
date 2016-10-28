@@ -9,26 +9,23 @@
  * Генерация добавки для URI
  */
 
- int kp_set_his_id(long nodeDescriptor, char* his_id, char** patientUri){
+ int kp_set_his_id(long nodeDescriptor, char* his_id, char* patient_uri, char** patient_his_uri){
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
          return -1;
     }
 
-    char *patient_uri = "http://oss.fruct.org/smartcare#bda5f180-1437-0134-e1ac-7998f2c888c2";
+    sslog_individual_t *patient = sslog_node_get_individual_by_uri(node, patient_uri);
 
-    sslog_individual_t *patient = sslog_new_individual(CLASS_PATIENT, patient_uri);
-    sslog_node_insert_individual(node, patient);
-    char *his_patient_id = "5714f6309a08f754983b5c8c";
-    sslog_node_insert_property(node, patient, PROPERTY_HISID, his_patient_id);
-    //free(patient_uri);
+    char* patient_his = sslog_node_get_property(node, patient,PROPERTY_HISID);
+    printf("\npatient_his %s\n", patient_his);
 
-    if (patient == NULL) {
+    if (patient_his == NULL) {
         printf("\nError patient: %s\n", sslog_error_get_last_text());
         return 0;
     }
-    *patientUri = patient_uri;
+    *patient_his_uri = patient_his;
  }
 
 int kp_get_his(long nodeDescriptor, char** his_uri){
@@ -78,17 +75,17 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
         return -1;
     }
 
-    if (search_string == NULL){
+    if (search_string != NULL){
         sslog_insert_property(his_request, PROPERTY_SEARCHSTRING, search_string);
     }
-    if ( field_name == NULL){
+    if ( field_name != NULL){
         sslog_insert_property(his_request, PROPERTY_FIELDNAME, field_name);
     }
-    if (date_from == NULL){
+    if (date_from != NULL){
         sslog_insert_property(his_request, PROPERTY_DATEFROM, date_from);
     }
 
-    if ( date_to == NULL){
+    if ( date_to != NULL){
         sslog_insert_property(his_request, PROPERTY_DATETO, date_to);
     }
 
@@ -137,7 +134,7 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
 }
 
 int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri, char** his_document_type){
-
+    sleep(6);
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
@@ -151,6 +148,8 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
         printf(" no his_request\n");
         return -1;
     }
+
+    sleep(8);
  
     sslog_individual_t *his_response = ( sslog_individual_t *) sslog_node_get_property(node,his_request,PROPERTY_HASRESPONSE);
     if(his_response == NULL) {
@@ -158,25 +157,28 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
         return -1;
     }
 
-    his_response_glob =  his_response;
-
-    sslog_node_populate(node, his_response);
+    //his_response_glob =  his_response;
+    *his_response_uri = his_response;
+    //sslog_node_populate(node, his_response);
 
     char *status;
-    status = (char *) sslog_get_property(his_response, PROPERTY_STATUS);
+    status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
     if (strcmp(status, "ERROR") == 0){
         printf("Error\n");
         return -1;
     }
 
+    sleep(4);
+
+
     //TODO несколько документов
-    sslog_individual_t * his_document = (sslog_individual_t *) sslog_get_property(his_response, PROPERTY_HASDOCUMENT);
+    sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
     if (his_document != NULL){
         char* document_uri;
         document_uri  =  sslog_entity_get_uri (his_document);
         *his_document_uri  =  document_uri;
         char* subclass;
-        get_his_subclasses( node, document_uri , &subclass);
+        get_his_subclasses(node, document_uri , &subclass);
         *his_document_type = subclass;
     }
 
