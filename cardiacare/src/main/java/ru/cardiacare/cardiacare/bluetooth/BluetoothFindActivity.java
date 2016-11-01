@@ -1,16 +1,19 @@
 package ru.cardiacare.cardiacare.bluetooth;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -123,7 +126,6 @@ public class BluetoothFindActivity extends ActionBarActivity {
                 }
             });
         }
-
     }
 
     @Override
@@ -176,8 +178,31 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
     public void on(){
         if (!myBluetoothAdapter.isEnabled()) {
-            Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(turnOnIntent, REQUEST_ENABLE_BT);
+//            Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(turnOnIntent, REQUEST_ENABLE_BT);
+
+//            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+//            startActivity(intent);
+
+            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+            alertDialog.setTitle("Выключен Bluetooth");
+            alertDialog.setMessage("Часть функций может быть не доступна. Желаете перейти к настройкам, чтобы включить его?");
+            alertDialog.setPositiveButton("Настройки",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
+                        }
+                    });
+
+            alertDialog.setNegativeButton("Отмена",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        }
+                    });
+
+            alertDialog.show();
 
             Toast.makeText(getApplicationContext(), "Bluetooth turned on",
                            Toast.LENGTH_LONG).show();
@@ -186,12 +211,15 @@ public class BluetoothFindActivity extends ActionBarActivity {
                            Toast.LENGTH_LONG).show();
             myBluetoothAdapter.startDiscovery();
             dialog.show();
+            //Если вернуться стрелочкой "назад" на главный экран с экрана посика устройств,
+            //то приложение не упадёт, но выдаст ошибку, указывая на строчку ниже
             registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i("BT", "onActivityResultonActivityResultonActivityResult");
         // TODO Auto-generated method stub
         if(requestCode == REQUEST_ENABLE_BT){
             if(myBluetoothAdapter.isEnabled()) {
@@ -237,7 +265,9 @@ public class BluetoothFindActivity extends ActionBarActivity {
         Log.i(TAG, "onDestroy BluetoothFindActivity Activity");
         // TODO Auto-generated method stub
         super.onDestroy();
-        //Error!!!
-        unregisterReceiver(bReceiver);
+//        Error!!! Зачем нужно?
+//        unregisterReceiver(bReceiver);
+        registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
     }
 }

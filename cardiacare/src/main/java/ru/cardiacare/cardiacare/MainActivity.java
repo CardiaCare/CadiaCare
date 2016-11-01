@@ -44,6 +44,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
     static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
     static public int alarmButtonFlag = 0; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
+    static public int sibConnectedFlag = 0; //установлено ли соединение с SIB'ом
 
     static public AccountStorage storage;
 
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate Main Activity");
         super.onCreate(savedInstanceState);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
         feedback = new Feedback("1 test", "Student", "feedback");
@@ -202,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.setNegativeButton("Перезапустить приложение",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //dialog.cancel();
+                            dialog.cancel();
                             setLoadingActivity();
                         }
                     });
@@ -471,17 +473,6 @@ public class MainActivity extends AppCompatActivity {
         loginState = state;
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if (connectedState == false) {
-//            setRegisteredActivity();
-//        } else {
-//            setConnectedToDriverState();
-//        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -532,10 +523,32 @@ public class MainActivity extends AppCompatActivity {
    
     // Подключение к интеллектуальному пространству
     public boolean ConnectToSmartSpace() {
-        nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
-        if (nodeDescriptor == -1) {
-            return false;
+        if (sibConnectedFlag != 1) {
+            nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
+            if (nodeDescriptor == -1) {
+                return false;
+            } else {
+                sibConnectedFlag = 1; //Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
+            }
         }
         return true;
+    }
+
+    // Срабатывает при сворачивании приложения. Например, при нажатии на кнопку "домой"
+    @Override
+    protected void onPause() {
+        super.onPause();
+        smart.disconnectSmartSpace(nodeDescriptor);
+        nodeDescriptor = -1;
+        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
+    }
+
+    // Срабатывает при возвращении к приложению
+    @Override
+    protected void onResume() {
+        Log.i(TAG,"ПРОДОЛЖЕНИЕ, ПОДКЛЮЧАЕМСЯ К СИБУ");
+        super.onResume();
+//        setLoadingActivity();
+        ConnectToSmartSpace();
     }
 }
