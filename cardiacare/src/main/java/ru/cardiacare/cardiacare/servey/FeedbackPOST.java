@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.gson.Gson;
+import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -95,6 +97,16 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
             String jsonFeedback = json.toJson(MainActivity.feedback);
             //jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
 
+            /////////////сравнение старого///////////
+            String jsonFeedbackOld = readSavedData();
+            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
+            String oldfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
+            if(newfb.equals(oldfb)){
+                return 0;
+            }
+            writeData(jsonFeedback);
+            ////////////////////////////////////////
+
             String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
             String parammetrs = "user_id="+"123456"+"&date="+"123456"+"&feedback="+jsonFeedback;
             byte[] data = null;
@@ -158,6 +170,38 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
         } else {
 
+        }
+    }
+
+    public String readSavedData(){
+        StringBuffer datax = new StringBuffer("");
+        try {
+            FileInputStream fIn = context.openFileInput("feedbackold.json");
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader buffreader = new BufferedReader(isr);
+
+            String readString = buffreader.readLine();
+            while ( readString != null ) {
+                datax.append(readString);
+                readString = buffreader.readLine();
+            }
+            isr.close();
+        } catch ( IOException ioe) {
+            ioe.printStackTrace();
+        }
+        return datax.toString();
+    }
+
+    public void writeData ( String data ) {
+        try {
+            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            FileOutputStream fOut = context.openFileOutput("feedbackold.json", context.MODE_PRIVATE );
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
+            osw.write(data);
+            osw.flush();
+            osw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
