@@ -140,35 +140,25 @@ public class LocationService extends Service implements LocationListener {
         return this.canGetLocation;
     }
 
-    /**
-     * Function to show settings alert dialog
-     * On pressing Settings button will lauch Settings Options
-     * */
+    // Диалоговое окно при отключенной GPS.
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        // Setting Dialog Title
-        alertDialog.setTitle("GPS is settings");
-
-        // Setting Dialog Message
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        //Заголовок
+        alertDialog.setTitle("Ошибка получения геоданных");
+        //Тело
+        alertDialog.setMessage("Функция GPS отключена. Часть функций может быть не доступна. Желаете перейти к настройкам, чтобы включить её?");
+        //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
+        alertDialog.setPositiveButton("Настройки", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
         });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
         });
-
-        // Showing Alert Message
         alertDialog.show();
     }
 
