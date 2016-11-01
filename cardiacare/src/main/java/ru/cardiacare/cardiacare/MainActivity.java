@@ -523,11 +523,14 @@ public class MainActivity extends AppCompatActivity {
    
     // Подключение к интеллектуальному пространству
     public boolean ConnectToSmartSpace() {
+        Log.i(TAG, "Зашли в функцию");
         if (sibConnectedFlag != 1) {
+            Log.i(TAG, "if");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {
                 return false;
             } else {
+                Log.i(TAG, "else");
                 sibConnectedFlag = 1; //Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
             }
         }
@@ -540,6 +543,7 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         smart.disconnectSmartSpace(nodeDescriptor);
         nodeDescriptor = -1;
+        sibConnectedFlag = -1;
         Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
     }
 
