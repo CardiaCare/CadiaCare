@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
-
+   
     // Подключение к интеллектуальному пространству
     public boolean ConnectToSmartSpace() {
         nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
