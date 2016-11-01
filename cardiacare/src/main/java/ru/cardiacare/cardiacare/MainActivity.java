@@ -61,6 +61,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -284,6 +285,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intentBluetoothFind);
             }
         });
+
+
+        ImageButton serveyButton = (ImageButton) findViewById(R.id.serveyButton);
+        serveyButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                QuestionnaireHelper.showQuestionnaire(context);
+            }
+        });
+
+        ImageButton docsButton = (ImageButton) findViewById(R.id.docsButton);
+        docsButton.setOnClickListener(new ImageButton.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
+            }
+        });
+
+
 
 
         alarmButton = (Button) findViewById(R.id.alarmButton);
