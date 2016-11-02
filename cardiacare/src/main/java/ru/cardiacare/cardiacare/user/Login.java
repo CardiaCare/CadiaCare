@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.InternetService;
 import ru.cardiacare.cardiacare.JSONGenerator;
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /**
@@ -50,6 +51,7 @@ public class Login extends ActionBarActivity implements OnClickListener{
 
         Button btEnter = (Button) findViewById(R.id.btEnter);
         btEnter.setOnClickListener(this);
+
     }
 
     @Override
@@ -89,5 +91,23 @@ public class Login extends ActionBarActivity implements OnClickListener{
             return false;
         } else
             return true;
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
     }
 }
