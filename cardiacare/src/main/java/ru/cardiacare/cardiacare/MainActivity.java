@@ -44,9 +44,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
     static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
     static public int alarmButtonFlag = 0; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
+    static public int sibConnectedFlag = 0; //установлено ли соединение с SIB'ом
 
     static public AccountStorage storage;
 
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate Main Activity");
         super.onCreate(savedInstanceState);
-
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
         feedback = new Feedback("1 test", "Student", "feedback");
@@ -142,73 +145,83 @@ public class MainActivity extends AppCompatActivity {
 //            setConnectedToDriverState();
 //        }
 
-
-        locationUri = smart.initLocation(nodeDescriptor, patientUri);
-        if (locationUri == null) {
-            return ;
+        if (isNetworkAvailable(this)) {
+            locationUri = smart.initLocation(nodeDescriptor, patientUri);
+            if (locationUri == null) {
+                return;
+            }
+        } else {
+            setLoadingActivity();
         }
 
     }
 
     // Подготовка к работе
     public void setLoadingActivity() {
+        setContentView(R.layout.activity_loading);
 
-        isNetworkAvailable(this);
-        ConnectToSmartSpace();
+        ProgressBar mLoadingProgressBar;
+        mLoadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
+        assert mLoadingProgressBar != null;
+        mLoadingProgressBar.setVisibility(View.VISIBLE);
 
-        GPSLoad gpsLoad = new GPSLoad(context);
-        gpsLoad.execute();
+        final Button WifiButton = (Button) findViewById(R.id.WifiButton);
+        assert WifiButton != null;
+        WifiButton.setVisibility(View.INVISIBLE);
+        WifiButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLoadingActivity();
+            }
+        });
 
-        storage = new AccountStorage();
-        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        if (isNetworkAvailable(this)) {
+            ConnectToSmartSpace();
 
-        if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-            Log.i(TAG, "setUnregisteredActivity");
+            GPSLoad gpsLoad = new GPSLoad(context);
+            gpsLoad.execute();
 
-            setUnregisteredActivity();
+            storage = new AccountStorage();
+            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+
+            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+                setUnregisteredActivity();
+            } else {
+                setRegisteredActivity();
+            }
         } else {
-            setRegisteredActivity();
+            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+            alertDialog.setTitle("Отсутствует подключение к сети");
+            alertDialog.setMessage("Включите wifi и перезапустите приложение");
+            alertDialog.setPositiveButton("Перейти к настройкам wifi",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                            WifiButton.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+            alertDialog.setNegativeButton("Перезапустить приложение",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            setLoadingActivity();
+                        }
+                    });
+
+            alertDialog.show();
         }
-        // } else {
-        //   android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-        // alertDialog.setTitle("Отсутствует подключение к сети");
-        //alertDialog.setMessage("Включите wifi и перезапустите приложение");
-
-        // Setting Icon to Dialog
-        // alertDialog.setIcon(R.drawable.ic_launcher);
-
-        //alertDialog.setPositiveButton("Перейти к настройкам wifi",
-        //      new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-//                            //WifiButton.setVisibility(View.VISIBLE);
-//                        }
-//                    });
-
-//            alertDialog.setNegativeButton("Перезапустить приложение",
-//                    new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            //dialog.cancel();
-//                            setLoadingActivity();
-//                        }
-//                    });
-//
-//            alertDialog.show();
-//        }
     }
 
-
-
-
     // Интерфейс для незарегистрированного пользователя
-   public void setUnregisteredActivity() {
+    public void setUnregisteredActivity() {
         setContentView(R.layout.activity_main_account_connection);
         Log.i(TAG, "setUnregisteredActivity see");
 
-       patientUri = smart.initPatient(nodeDescriptor);
-       if (patientUri == null) {
-           return ;
-       }
+        patientUri = smart.initPatient(nodeDescriptor);
+        if (patientUri == null) {
+            return;
+        }
 
         //mToolbar = (Toolbar) findViewById(R.id.toolbar);//нужен ли?
         //setSupportActionBar(mToolbar);
@@ -229,18 +242,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        nextButton = (Button)findViewById(R.id.nextButton);
+        nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registration(etFirstName.getText().toString(), etSecondName.getText().toString());
             }
         });
-   }
+    }
 
     // Регистрация
     public void registration(String first, String second) {
-        if (first.isEmpty() ||second.isEmpty()) {
+        if (first.isEmpty() || second.isEmpty()) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppBaseTheme);
             builder.setTitle(R.string.dialog_title);
             builder.setMessage(R.string.dialog_message);
@@ -248,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.dialog_cancle, null);
             builder.show();
         } else {
-            storage.setAccountPreferences(patientUri, first,second, "", "", "", "","");
+            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "");
             setRegisteredActivity();
         }
     }
@@ -300,8 +313,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
             }
         });
-
-
 
 
         alarmButton = (Button) findViewById(R.id.alarmButton);
@@ -421,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
                 QuestionnaireHelper.showQuestionnaire(context);
                 break;
             case R.id.exitAccount:
-                storage.setAccountPreferences("", "", "", "", "", "", "","");
+                storage.setAccountPreferences("", "", "", "", "", "", "", "");
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 deleteFile("feedback.json");
                 break;
@@ -463,17 +474,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static void setLoginState(boolean state) {
         loginState = state;
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        if (connectedState == false) {
-//            setRegisteredActivity();
-//        } else {
-//            setConnectedToDriverState();
-//        }
     }
 
     @Override
@@ -523,16 +523,39 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
-
+   
     // Подключение к интеллектуальному пространству
     public boolean ConnectToSmartSpace() {
-        nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
-        if (nodeDescriptor == -1) {
-            return false;
+        Log.i(TAG, "Зашли в функцию");
+        if (sibConnectedFlag != 1) {
+            Log.i(TAG, "if");
+            nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
+            if (nodeDescriptor == -1) {
+                return false;
+            } else {
+                Log.i(TAG, "else");
+                sibConnectedFlag = 1; //Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
+            }
         }
-
-
         return true;
     }
 
+    // Срабатывает при сворачивании приложения. Например, при нажатии на кнопку "домой"
+    @Override
+    protected void onPause() {
+        super.onPause();
+        smart.disconnectSmartSpace(nodeDescriptor);
+        nodeDescriptor = -1;
+        sibConnectedFlag = -1;
+        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
+    }
+
+    // Срабатывает при возвращении к приложению
+    @Override
+    protected void onResume() {
+        Log.i(TAG,"ПРОДОЛЖЕНИЕ, ПОДКЛЮЧАЕМСЯ К СИБУ");
+        super.onResume();
+//        setLoadingActivity();
+        ConnectToSmartSpace();
+    }
 }
