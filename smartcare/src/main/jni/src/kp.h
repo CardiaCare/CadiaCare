@@ -29,6 +29,9 @@ JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_dis
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatient
   (JNIEnv *, jobject, jlong);
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatientWithId
+    (JNIEnv *, jobject, jlong, jstring);
+
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initAuthRequest
         (JNIEnv *, jobject, jlong, jstring);
 
@@ -73,6 +76,34 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 (JNIEnv *, jobject, jlong,jstring);
 
 
+/*****************************************************************************************/
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHis
+        ( JNIEnv* env, jobject thiz, jlong );
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
+        ( JNIEnv* env, jobject thiz, jlong,  jstring hisUri, jstring patientUri,
+            jstring hisDocumentType, jstring searchstring,
+            jstring fieldName, jstring dateFrom,
+            jstring dateTo);
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
+         ( JNIEnv* env, jobject thiz, jlong,  jstring hisRequestUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
+        ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDemographicData
+        ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHislaboratoryStudy
+        ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDoctorExamination
+        ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId
+        (JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId, jstring patientId);
 
 
 #ifdef __cplusplus

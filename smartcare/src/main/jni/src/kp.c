@@ -21,8 +21,9 @@
 #include "ontology/smartcare.h"
 #include <android/log.h>
 #include <errno.h>
-#include "agent.h"
 
+#include "agent.h"
+#include "his.h"
 #include "handlers.h"
 #include "jni_utils.h"
 #include "globals.h"
@@ -147,6 +148,26 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     return (*env)->NewStringUTF(env, patient_uri);
     free(patient_uri);
 }
+
+/*
+ * Инициализируем индивид пациента с предопределенным URI
+ *
+ */
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initPatientWithId
+        (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri)
+{
+
+   const char * patient_uri= (*env)->GetStringUTFChars(env, patientUri, 0);
+
+   kp_init_patient_with_uri(nodeDescriptor, patient_uri);
+
+    __android_log_print(ANDROID_LOG_INFO, TAG, "patient_uri: %s\n", patient_uri);
+
+    return (*env)->NewStringUTF(env, patient_uri);
+    free(patient_uri);
+}
+
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initAuthRequest
         (JNIEnv *env, jobject thiz, jlong nodeDescriptor, jstring patientUri)
@@ -365,3 +386,251 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sen
         return 0;
     }
 }
+
+
+
+
+/***********************************************************************************************************
+    ********************** HIS ************************************
+***********************************************************************************************************/
+
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHis
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor )
+{
+    char* his_uri;
+    kp_get_his(nodeDescriptor, &his_uri);
+
+    return (*env)->NewStringUTF(env, his_uri);
+}
+
+
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisUri, jstring patientUri,
+            jstring hisDocumentType, jstring searchstring,
+            jstring fieldName, jstring dateFrom,
+            jstring dateTo)
+{
+
+     char* his_uri = (*env)->GetStringUTFChars(env, hisUri, 0);
+     char* patient_uri = (*env)->GetStringUTFChars(env, patientUri, 0);
+     char* his_document_type = (*env)->GetStringUTFChars(env, hisDocumentType, 0);
+
+     char* search_string;
+     if (searchstring != NULL){
+        search_string = (*env)->GetStringUTFChars(env, searchstring, 0);
+        __android_log_print(ANDROID_LOG_INFO, TAG, "search_string %s", search_string);
+      }
+      else searchstring = NULL;
+
+     char* field_name;
+     if (field_name != NULL){
+        field_name = (*env)->GetStringUTFChars(env, fieldName, 0);
+     } else field_name = NULL;
+
+     char* date_from;
+     if (date_from != NULL){
+        date_from = (*env)->GetStringUTFChars(env, dateFrom, 0);
+     } else date_from = NULL;
+
+     char* date_to;
+     if (date_from != NULL){
+        date_from =(*env)->GetStringUTFChars(env, dateTo, 0);
+     } else date_from = NULL;
+
+
+     char* his_request_uri;
+     kp_send_his_request(nodeDescriptor, his_uri,
+                            patient_uri,
+                            his_document_type,
+                            search_string,
+                            field_name,
+                            date_from,
+                            date_to,
+                            &his_request_uri);
+
+      return (*env)->NewStringUTF(env, his_request_uri);
+}
+
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisRequestUri)
+{
+    char* his_request_uri = (*env)->GetStringUTFChars(env, hisRequestUri, 0);
+     __android_log_print(ANDROID_LOG_INFO, TAG, "his_request_uri %s", his_request_uri);
+
+    char* his_document_uri;
+    char* his_response_uri;
+    char* his_document_type;
+    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri, &his_document_uri, &his_document_type);
+
+     __android_log_print(ANDROID_LOG_INFO, TAG, "his_response_uri %s", his_response_uri);
+
+    if (error == -1)
+        return NULL;
+
+     __android_log_print(ANDROID_LOG_INFO, TAG, "his_document_uri %s", his_document_uri);
+    return (*env)->NewStringUTF(env, his_document_uri);
+}
+
+
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
+    char* createdAt;
+    char* author;
+    char* systolicPressure;
+    char* diastolicPressure;
+    char* pulse;
+
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
+    kp_get_his_blood_pressure_measurement(nodeDescriptor, his_document_uri,&createdAt, &author,
+        &systolicPressure, &diastolicPressure, &pulse);
+    //printf("createdAt %s\nauthor %s\nsystolicPressure %s\ndiastolicPressure %s\npulse %s\n",
+    //            createdAt, author, systolicPressure, diastolicPressure, pulse);
+
+
+    jobject *blood_pressure;
+    blood_pressure = (*env)->NewObject(env, class_blood_pressure, blood_pressure_constructor,
+                                        (*env)->NewStringUTF(env, systolicPressure),
+                                        (*env)->NewStringUTF(env, diastolicPressure),
+                                        (*env)->NewStringUTF(env, pulse));
+    return blood_pressure;
+
+}
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDemographicData
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
+            char* createdAt;
+            char* author;
+            char* name;
+            char* surname;
+            char* patronymic;
+            char* birthDate;
+            char* sex;
+            char* residence;
+            char* contactInformaiton;
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
+    kp_get_his_demographic_data(nodeDescriptor, his_document_uri, &createdAt, &author,
+        &name, &surname, &patronymic, &birthDate, &sex, &residence, &contactInformaiton);
+
+     //printf("createdAt %s\nauthor %s\nname %s\nsurname %s\npatronymic %s\nbirthDate %s\nsex %s\nresidence %s\ncontactInformaiton %s\n",
+    //       createdAt, author,name, surname, patronymic, birthDate, sex, residence, contactInformaiton);
+
+    jobject *demographic_data;
+
+    demographic_data = (*env)->NewObject(env, class_demographic, demographic_constructor,
+                                            (*env)->NewStringUTF(env, name),
+                                            (*env)->NewStringUTF(env, surname),
+                                            (*env)->NewStringUTF(env, patronymic),
+                                            (*env)->NewStringUTF(env, birthDate),
+                                            (*env)->NewStringUTF(env, sex),
+                                            (*env)->NewStringUTF(env, residence),
+                                            (*env)->NewStringUTF(env, contactInformaiton));
+
+    return demographic_data;
+}
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHislaboratoryStudy
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
+    char* createdAt;
+    char* author;
+    char* organizationName;
+    char* hemoglobin;
+    char* erythrocyte;
+    char* hematocrit;
+
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
+    kp_get_his_laboratory_analysis(nodeDescriptor, his_document_uri,
+                                    &createdAt, &author,
+                                    &organizationName, &hemoglobin, &erythrocyte, &hematocrit);
+
+    //printf("createdAt %s\nauthor %s\norganizationName %s\nhemoglobin %s\nerythrocyte %s\nhematocrit %s\n",
+    //        createdAt, author, organizationName, hemoglobin, erythrocyte, hematocrit);
+
+    jobject *laboratory_analysis;
+
+    laboratory_analysis = (*env)->NewObject(env, class_laboratory, laboratory_constructor,
+                                            (*env)->NewStringUTF(env, organizationName),
+                                            (*env)->NewStringUTF(env, hemoglobin),
+                                            (*env)->NewStringUTF(env, erythrocyte),
+                                            (*env)->NewStringUTF(env, hematocrit));
+
+    return laboratory_analysis;
+
+
+}
+
+JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDoctorExamination
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisDocumentUri){
+    char* createdAt;
+    char* author;
+    char* examinationReason;
+    char* visitOrder;
+    char* diagnoses;
+    char* medications;
+    char* smoking;
+    char* drinking;
+    char* height;
+    char* weight;
+    char* diseasePredisposition;
+
+    char* his_document_uri = (*env)->GetStringUTFChars(env, hisDocumentUri, 0);
+
+    kp_get_his_doctor_examination(nodeDescriptor, his_document_uri,
+        &createdAt, &author,
+        &examinationReason, &visitOrder, &diagnoses, &medications, &smoking, &drinking, &height, &weight,  &diseasePredisposition);
+
+    //printf("createdAt %s\nauthor %s\nexaminationReason %s\nvisitOrder %s\ndiagnoses %s\nmedications %s\nsmoking %s\ndrinking %s\nheight %s\nweight %s\ndiseasePredisposition",createdAt, author,
+    //    examinationReason, visitOrder, diagnoses, medications, smoking, drinking, height, weight,  diseasePredisposition);
+
+    jobject *doctor_examination;
+
+    doctor_examination = (*env)->NewObject(env, class_doctor_examination, doctor_examination_constructor,
+                                            (*env)->NewStringUTF(env, examinationReason),
+                                            (*env)->NewStringUTF(env, visitOrder),
+                                            (*env)->NewStringUTF(env, diagnoses),
+                                            (*env)->NewStringUTF(env, medications),
+                                            (*env)->NewStringUTF(env, smoking),
+                                            (*env)->NewStringUTF(env, drinking),
+                                            (*env)->NewStringUTF(env, height),
+                                            (*env)->NewStringUTF(env, weight),
+                                            (*env)->NewStringUTF(env, diseasePredisposition));
+
+    return doctor_examination;
+
+}
+/*
+int print_ecg_measurment_data(long nodeDescriptor, char *his_document_uri){
+    char* createdAt;
+    char* author;
+    char* dataLocation;
+    kp_get_his_ECG_measurement(nodeDescriptor, his_document_uri,
+        &createdAt, &author,&dataLocation);
+    printf("createdAt %s\nauthor %s\ndataLocation %s\n", createdAt, author,dataLocation);
+
+}*/
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId(JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId, jstring patientId){
+
+
+    char* his_id = (*env)->GetStringUTFChars(env, hisId, 0);
+    char* patient_uri= (*env)->GetStringUTFChars(env, patientId, 0);
+    char* patient_id_uri;
+    int error  =  kp_set_his_id(nodeDescriptor, his_id, patient_uri, &patient_id_uri);
+
+    if (error == -1){
+        return NULL;
+    }
+
+    //__android_log_print(ANDROID_LOG_INFO, TAG, "patient_id_uri %s", patient_id_uri);
+
+    return (*env)->NewStringUTF(env, patient_id_uri);
+
+}
+
+

@@ -119,24 +119,6 @@ int kp_remove_individual(long nodeDescriptor, char *individual_uri){
 }
 
 /*
-* Person
-*/
-int kp_init_person(sslog_node_t *node, char* patient_uri){
-
-    if (node == NULL || patient_uri == NULL)
-        return -1;
-
-    sslog_individual_t *person = sslog_new_individual(CLASS_PERSON, patient_uri);
-
-    if (person == NULL) {
-        return -1;
-    }
-    sslog_node_insert_individual(node, person);
-
-    return 0;
-}
-
-/*
 * Patient
 */
 int kp_init_patient(char **uri, long nodeDescriptor){
@@ -161,11 +143,28 @@ int kp_init_patient(char **uri, long nodeDescriptor){
     //insert individual to SmartSpace
     sslog_node_insert_individual(node, patient);
 
-    int result = kp_init_person(node, patient_uri);
-    if (result == -1)
-        return -1;
-
     *uri = patient_uri;
+
+    return 0;
+}
+
+int kp_init_patient_with_uri(long nodeDescriptor, char *patient_uri){
+   sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        //__android_log_print(ANDROID_LOG_INFO, TAG, "Node Error");
+        return -1;
+    }
+    sslog_individual_t *patient = sslog_new_individual(CLASS_PATIENT, patient_uri);
+
+    //free(patient_uri);
+
+    if (patient == NULL) {
+            //__android_log_print(ANDROID_LOG_INFO, TAG, "Error patient: %s", sslog_error_get_last_text());
+        return -1;
+    }
+
+    //insert individual to SmartSpace
+    sslog_node_insert_individual(node, patient);
 
     return 0;
 }
