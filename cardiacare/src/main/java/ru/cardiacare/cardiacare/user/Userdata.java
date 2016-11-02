@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 public class Userdata extends ActionBarActivity {
@@ -80,6 +81,9 @@ public class Userdata extends ActionBarActivity {
         Log.i("TAG", "1 " +  sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
         Log.i("TAG", "1 " +  sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
         //editor.apply();
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
     }
 
     protected void onResume() {
@@ -116,6 +120,15 @@ public class Userdata extends ActionBarActivity {
             etAge.setText(sPref.getString(ACCOUNT_PREFERENCES_AGE, ""));
         }
     }
-
-
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
+    }
 }
