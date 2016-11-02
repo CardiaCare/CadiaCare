@@ -1,5 +1,7 @@
 package ru.cardiacare.cardiacare.hisdocuments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +30,19 @@ public class DocumentsActivity extends AppCompatActivity {
         hisUri = MainActivity.smart.getHis(MainActivity.nodeDescriptor);
 
         hisPatientUri = MainActivity.smart.setHisId(MainActivity.nodeDescriptor, hisUri, MainActivity.patientUri);
+
+        if (hisPatientUri == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Ошибка подключения")
+                    .setTitle("Нет подключения к МИС")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).show();
+        }
 
         Button demographicButton = (Button) findViewById(R.id.demographicData);
         demographicButton.setOnClickListener(new View.OnClickListener() {

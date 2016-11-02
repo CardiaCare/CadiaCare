@@ -23,9 +23,10 @@
 
     if (patient_his == NULL) {
         printf("\nError patient: %s\n", sslog_error_get_last_text());
-        return 0;
+        return -1;
     }
     *patient_his_uri = patient_his;
+    return 0;
  }
 
 int kp_get_his(long nodeDescriptor, char** his_uri){
@@ -134,7 +135,6 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
 }
 
 int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri, char** his_document_type){
-    sleep(6);
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
@@ -149,17 +149,41 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
         return -1;
     }
 
-    sleep(8);
- 
-    sslog_individual_t *his_response = ( sslog_individual_t *) sslog_node_get_property(node,his_request,PROPERTY_HASRESPONSE);
-    if(his_response == NULL) {
-        printf(" no his_response\n");
+    sslog_subscription_t *response_subscription = sslog_new_subscription(node, false);
+    list_t* properties = list_new();
+    list_add_data(properties, PROPERTY_HASRESPONSE);
+    sslog_sbcr_add_individual(response_subscription, his_request, properties);
+
+    if (sslog_sbcr_subscribe(response_subscription) != SSLOG_ERROR_NO) {
+        printf("\nCan't subscribe.");
         return -1;
     }
 
-    //his_response_glob =  his_response;
-    *his_response_uri = his_response;
-    //sslog_node_populate(node, his_response);
+    sslog_individual_t *his_response;
+
+    while (
+            sslog_sbcr_is_active(response_subscription) == true &&
+                sslog_sbcr_wait(response_subscription) != SSLOG_ERROR_NO
+          ){continue;}
+
+    sslog_sbcr_changes_t *changes =
+            sslog_sbcr_get_changes_last(response_subscription);
+
+
+    const list_t *inserted_ind =
+            sslog_sbcr_ch_get_individual_by_action(changes, SSLOG_ACTION_INSERT);
+
+    list_head_t *list_walker = NULL;
+    list_for_each(list_walker, &inserted_ind->links) {
+        list_t *list_node = list_entry(list_walker, list_t, links);
+        char *uri = (char *) list_node->data;
+        sslog_individual_t *his_response = sslog_node_get_individual_by_uri(node, uri);
+
+        *his_response_uri = his_response;
+        break;
+    }
+    sslog_sbcr_unsubscribe(response_subscription);
+    list_free_with_nodes(inserted_ind, NULL);
 
     char *status;
     status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
@@ -168,19 +192,63 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
         return -1;
     }
 
+    /*
+
+    sslog_subscription_t *document_subscription = sslog_new_subscription(node, false);
+
+    list_t* doc_properties = list_new();
+    list_add_data(doc_properties, PROPERTY_HASDOCUMENT);
+    sslog_sbcr_add_individual(document_subscription, his_response, doc_properties);
+
+    if (sslog_sbcr_subscribe(document_subscription) != SSLOG_ERROR_NO) {
+        printf("\nCan't subscribe.");
+        return -1;
+    }
+
+    sslog_individual_t *his_document;
+
+    while (
+            sslog_sbcr_is_active(document_subscription) == true &&
+                sslog_sbcr_wait(document_subscription) != SSLOG_ERROR_NO
+          ){continue;}
+
+    sslog_sbcr_changes_t *doc_changes =
+                sslog_sbcr_get_changes_last(document_subscription);
+
+
+    const list_t *doc_inserted_ind =
+            sslog_sbcr_ch_get_individual_by_action(doc_changes, SSLOG_ACTION_INSERT);
+
+    list_head_t *doc_list_walker = NULL;
+    list_for_each(doc_list_walker, &doc_inserted_ind->links) {
+        list_t *doc_list_node = list_entry(doc_list_walker, list_t, links);
+        char *doc_uri = (char *) doc_list_node->data;
+        sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, doc_uri);
+
+        *his_document_uri = his_document;
+        break;
+    }
+    list_free_with_nodes(doc_inserted_ind, NULL);
+    sslog_sbcr_unsubscribe(document_subscription);
+    //TODO несколько документов
+    if (his_document != NULL){
+        char* subclass;
+        get_his_subclasses(node, his_document_uri , &subclass);
+        *his_document_type = subclass;
+    }*/
+
     sleep(4);
 
+        sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
+        if (his_document != NULL){
+            char* document_uri;
+            document_uri  =  sslog_entity_get_uri (his_document);
+            *his_document_uri  =  document_uri;
+            char* subclass;
+            get_his_subclasses(node, document_uri , &subclass);
+            *his_document_type = subclass;
+        }
 
-    //TODO несколько документов
-    sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
-    if (his_document != NULL){
-        char* document_uri;
-        document_uri  =  sslog_entity_get_uri (his_document);
-        *his_document_uri  =  document_uri;
-        char* subclass;
-        get_his_subclasses(node, document_uri , &subclass);
-        *his_document_type = subclass;
-    }
 
     return 0;
 }

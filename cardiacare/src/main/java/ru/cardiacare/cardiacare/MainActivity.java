@@ -389,6 +389,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy Main Activity");
         // TODO unregisterReceiver(connectReceiver);
 
+        smart.removeIndividual(nodeDescriptor, locationUri);
+        smart.removeIndividual(nodeDescriptor, patientUri);
+
         super.onDestroy();
     }
 

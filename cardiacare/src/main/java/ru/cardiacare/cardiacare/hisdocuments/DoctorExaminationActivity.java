@@ -38,7 +38,11 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
                 hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
+
+
         hisDocumentUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
+
+
         if (hisDocumentUri == null){
 
         }
