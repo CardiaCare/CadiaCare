@@ -78,6 +78,7 @@ import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
+import ru.cardiacare.cardiacare.servey.AlarmQuestionnaireHelper;
 import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.user.Login;
@@ -106,11 +107,13 @@ public class MainActivity extends AppCompatActivity {
 
     static public String TAG = "SS-main";
     static public Questionnaire questionnaire;
+    static public Questionnaire alarmQuestionnaire;
     static public Feedback feedback;
+    static public Feedback alarmFeedback;
     static public LocationService gps;
     public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
     static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
-    static public int alarmButtonFlag = 0; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
+    static public boolean alarmButtonFlag = false; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
     static public int sibConnectedFlag = 0; //установлено ли соединение с SIB'ом
 
     static public AccountStorage storage;
@@ -124,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etFirstName;
     EditText etSecondName;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    static public Button QuestionnaireButton;//ля блокировки
+    static public Button QuestionnaireButton;//для блокировки
     static public Button alarmButton;
 
 
@@ -136,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
         smart = new SmartCareLibrary();
         setLoadingActivity();
         feedback = new Feedback("1 test", "Student", "feedback");
+        alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
 
         //if (connectedState == false) {
 //            setRegisteredActivity();
@@ -323,36 +327,62 @@ public class MainActivity extends AppCompatActivity {
         alarmButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alarmButton.setEnabled(false);//блокируем от повторного нажатия
-                alarmButton.setBackgroundColor(0x77a71000);
-                alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
-                alarmButtonFlag = 1;
-                ///sosopros
-                //Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-                if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
-                    //Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-                    QuestionnaireHelper.showQuestionnaire(context);
-                } else if (!isNetworkAvailable(context)) {
-                    //Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
-                    smart.disconnectSmartSpace(nodeDescriptor);
-                    nodeDescriptor = -1;
-                    setLoadingActivity();
-                } else if ((!isNetworkAvailable(context)) && (passSurveyButtonClickCount == 0)) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
-                    toast.show();
-                    passSurveyButtonClickCount++;
-                    smart.disconnectSmartSpace(nodeDescriptor);
-                    nodeDescriptor = -1;
-                } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
-                    boolean flag;
-                    do {
-                        flag = ConnectToSmartSpace();
-                        Toast toast2 = Toast.makeText(context, "SIB reconnect", Toast.LENGTH_SHORT);
-                        toast2.show();
-                    } while (!flag);
-                    QuestionnaireHelper.showQuestionnaire(context);
+
+                if (!gps.canGetLocation()) {
+                    alarmButtonFlag = true;
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                    //Заголовок
+                    alertDialog.setTitle("Ошибка получения геоданных");
+                    //Тело
+                    alertDialog.setMessage("Функция GPS отключена. Кнопка SOS не доступна. Желаете перейти к настройкам, чтобы включить её?");
+                    //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
+                    alertDialog.setPositiveButton("Настройки", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int which) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            context.startActivity(intent);
+                        }
+                    });
+                    alertDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            GPSLoad gpsLoad2 = new GPSLoad(context);
+                            gpsLoad2.execute();
+                            dialog.cancel();
+                        }
+                    });
+                    alertDialog.show();
+                } else {
+                    alarmButton.setEnabled(false);//блокируем от повторного нажатия
+                    alarmButton.setBackgroundColor(0x77a71000);
+                    alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
+                    alarmButtonFlag = false;
+                    ///sosopros
+                    //Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+//                    if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
+//                        //Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
+//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
+//                    } else if (!isNetworkAvailable(context)) {
+//                        //Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
+//                        smart.disconnectSmartSpace(nodeDescriptor);
+//                        nodeDescriptor = -1;
+//                        setLoadingActivity();
+//                    } else if ((!isNetworkAvailable(context)) && (passSurveyButtonClickCount == 0)) {
+//                        Toast toast = Toast.makeText(getApplicationContext(), "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
+//                        toast.show();
+//                        passSurveyButtonClickCount++;
+//                        smart.disconnectSmartSpace(nodeDescriptor);
+//                        nodeDescriptor = -1;
+//                    } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
+//                        boolean flag;
+//                        do {
+//                            flag = ConnectToSmartSpace();
+//                            Toast toast2 = Toast.makeText(context, "SIB reconnect", Toast.LENGTH_SHORT);
+//                            toast2.show();
+//                        } while (!flag);
+//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
+//                    }
+                    ///
+                    AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
                 }
-                ///
             }
         });
 
@@ -435,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
                 storage.setAccountPreferences("", "", "", "", "", "", "", "");
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 deleteFile("feedback.json");
+                deleteFile("alarmFeedback.json");
                 break;
             case R.id.menuHelp:
                 Intent intent2 = new Intent(this, Help.class);
@@ -541,21 +572,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Срабатывает при сворачивании приложения. Например, при нажатии на кнопку "домой"
-    @Override
-    protected void onPause() {
-        super.onPause();
-        smart.disconnectSmartSpace(nodeDescriptor);
-        nodeDescriptor = -1;
-        sibConnectedFlag = -1;
-        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
-    }
-
-    // Срабатывает при возвращении к приложению
-    @Override
-    protected void onResume() {
-        Log.i(TAG,"ПРОДОЛЖЕНИЕ, ПОДКЛЮЧАЕМСЯ К СИБУ");
-        super.onResume();
-//        setLoadingActivity();
-        ConnectToSmartSpace();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        smart.disconnectSmartSpace(nodeDescriptor);
+//        nodeDescriptor = -1;
+//        sibConnectedFlag = -1;
+//        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
+//    }
+//
+//    // Срабатывает при возвращении к приложению
+//    @Override
+//    protected void onResume() {
+//        Log.i(TAG,"ПРОДОЛЖЕНИЕ, ПОДКЛЮЧАЕМСЯ К СИБУ");
+//        super.onResume();
+////        setLoadingActivity();
+//        ConnectToSmartSpace();
+//    }
 }

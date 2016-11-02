@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 
 /* Отправка геоданных */
 
@@ -41,7 +42,7 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        if (MainActivity.gpsEnabledFlag == 0) {
+        if ((MainActivity.gpsEnabledFlag == 0) && (MainActivity.alarmButtonFlag == false)) {
             MainActivity.gps.showSettingsAlert();
         }
     }
