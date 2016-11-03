@@ -1,9 +1,9 @@
 package ru.cardiacare.cardiacare.hisdocuments;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+
 
 public class DocumentsActivity extends AppCompatActivity {
 
@@ -44,12 +45,15 @@ public class DocumentsActivity extends AppCompatActivity {
                     }).show();
         }
 
+
         hisPatientUri = MainActivity.smart.setHisId(MainActivity.nodeDescriptor, hisUri, MainActivity.patientUri);
 
         if (hisPatientUri == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
             builder.setMessage("Незарегистрированный пользователь")
                     .setTitle("Ошибка подключения")
+
                     .setCancelable(true)
                     .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                         @Override

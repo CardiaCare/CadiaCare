@@ -35,6 +35,7 @@ int kp_get_his(long nodeDescriptor, char** his_uri){
            return -1;
        }
 
+<<<<<<< HEAD
     //list_t* hises;
 
     list_t* hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
@@ -47,6 +48,16 @@ int kp_get_his(long nodeDescriptor, char** his_uri){
 
 
 
+=======
+    list_t* hises;
+
+    hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
+
+    if (list_is_null_or_empty(hises) == true) {
+        printf("There are no such individuals.\n");
+        return -1;
+    }
+>>>>>>> students
     sslog_individual_t *his = NULL;
     list_head_t *pos = NULL;
 
@@ -138,19 +149,24 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
 
 }
 
+
 int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri){
+
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
         return -1;
     }
 
+
    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
+
 
     if(his_request == NULL) {
         printf(" no his_request\n");
         return -1;
     }
+
 
     sleep(4);
 
@@ -175,13 +191,16 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
 
             sleep(4);
 
+
         sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
         if (his_document != NULL){
             char* document_uri;
             document_uri  =  sslog_entity_get_uri (his_document);
             *his_document_uri  =  document_uri;
+
             __android_log_print(ANDROID_LOG_INFO, "his", "document_uri %s\n", document_uri);
         }
+
 
     return 0;
 }
@@ -377,6 +396,7 @@ int kp_get_his_doctor_examination(long nodeDescriptor, char* his_document_uri,
 }
 
 
+<<<<<<< HEAD
 /*
 
 
@@ -485,3 +505,5 @@ __android_log_print(ANDROID_LOG_INFO, "his", "9");
         __android_log_print(ANDROID_LOG_INFO, "his", "11");
     }
 */
+=======
+>>>>>>> students

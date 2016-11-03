@@ -406,6 +406,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
         return NULL;
     }
 
+
     return (*env)->NewStringUTF(env, his_uri);
 }
 
@@ -428,8 +429,6 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 }
 
 
-
-
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
         ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisUri, jstring patientUri,
             jstring hisDocumentType, jstring searchstring,
@@ -444,6 +443,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
      char* search_string;
      if (searchstring != NULL){
         search_string = (*env)->GetStringUTFChars(env, searchstring, 0);
+
       }
       else searchstring = NULL;
 
@@ -464,6 +464,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
 
      char* his_request_uri;
+
      int error = kp_send_his_request(nodeDescriptor, his_uri,
                             patient_uri,
                             his_document_type,
@@ -476,6 +477,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
      if (error == -1){
         return NULL;
      }
+
 
       return (*env)->NewStringUTF(env, his_request_uri);
 }
@@ -494,8 +496,10 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
      //__android_log_print(ANDROID_LOG_INFO, TAG, "his_response_uri %s", his_response_uri);
 
+
     if (error == -1)
         return NULL;
+
 
     if (his_document_uri == NULL)
             return NULL;
