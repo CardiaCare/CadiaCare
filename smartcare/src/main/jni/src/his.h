@@ -15,10 +15,10 @@ int get_his_subclasses(long nodeDescriptor, char *uri, char** subclass);
 int kp_get_his(long nodeDescriptor, char** his_uri);
 
 int kp_send_his_request( long nodeDescriptor, char* his_uri, char* patient_uri,char* his_document_type, char* searchstring, char* fieldname, char* datefrom, char* dateto, char**);
+int kp_remove_his_request(long nodeDescriptor, char* his_uri, char* his_request_uri);
 
-
-int kp_get_his_response(long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri);
-
+int kp_get_his_response(long nodeDescriptor, char* his_request_uri, char** his_response_uri);
+int kp_get_his_document( long nodeDescriptor, char* his_response_uri, char** his_document_uri);
 
 int kp_get_his_laboratory_analysis(long nodeDescriptor,  char* his_document_uri,
         char** createdAt, char** author,

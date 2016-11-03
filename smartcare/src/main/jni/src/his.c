@@ -35,7 +35,6 @@ int kp_get_his(long nodeDescriptor, char** his_uri){
            return -1;
        }
 
-<<<<<<< HEAD
     //list_t* hises;
 
     list_t* hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
@@ -46,18 +45,6 @@ int kp_get_his(long nodeDescriptor, char** his_uri){
         return -1;
     }
 
-
-
-=======
-    list_t* hises;
-
-    hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
-
-    if (list_is_null_or_empty(hises) == true) {
-        printf("There are no such individuals.\n");
-        return -1;
-    }
->>>>>>> students
     sslog_individual_t *his = NULL;
     list_head_t *pos = NULL;
 
@@ -148,25 +135,43 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
     return 0;
 
 }
+int kp_remove_his_request(long nodeDescriptor, char* his_uri, char* his_request_uri){
 
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+    sslog_individual_t *his = sslog_node_get_individual_by_uri(node, his_uri);
+    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
 
-int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri){
+    sslog_node_remove_property(node, his, PROPERTY_HASREQUEST, his_request);
 
+    /*char* uri = "http://oss.fruct.org/smartcare#hasRequest";
+    sslog_triple_t *class_triple = sslog_new_triple_detached(
+                his_uri,
+                uri,
+                his_request_uri,
+                SS_RDF_TYPE_URI, SS_RDF_TYPE_URI);
+
+    sslog_node_remove_triple(node, class_triple);*/
+
+    __android_log_print(ANDROID_LOG_INFO, "his", "removeHisRequest done");
+    return 0;
+}
+
+int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri){
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
         return -1;
     }
 
-
-   sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
-
+    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
 
     if(his_request == NULL) {
         printf(" no his_request\n");
         return -1;
     }
-
 
     sleep(4);
 
@@ -175,10 +180,10 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
             printf(" no his_response\n");
             return -1;
         }
-
-        his_response_uri  =  sslog_entity_get_uri (his_response);
-        //__android_log_print(ANDROID_LOG_INFO, "his", "his_response_uri %s\n", his_response_uri);
-
+        char *uri;
+        uri =  sslog_entity_get_uri (his_response);
+        *his_response_uri = uri;
+        __android_log_print(ANDROID_LOG_INFO, "his", "his_response_uri %s\n", uri);
 
         char *status;
         status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
@@ -187,9 +192,23 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
             return -1;
         }
         //__android_log_print(ANDROID_LOG_INFO, "his", "status %s\n", status);
+}
+
+int kp_get_his_document( long nodeDescriptor, char* his_response_uri, char** his_document_uri){
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
 
-            sleep(4);
+   sslog_individual_t *his_response = sslog_node_get_individual_by_uri(node, his_response_uri);
+
+
+    if(his_response == NULL) {
+        printf(" no his_response\n");
+        return -1;
+    }
+            sleep(1);
 
 
         sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
@@ -204,6 +223,7 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
 
     return 0;
 }
+
 
 int kp_init_sbcr_his_response(){
 
@@ -396,7 +416,7 @@ int kp_get_his_doctor_examination(long nodeDescriptor, char* his_document_uri,
 }
 
 
-<<<<<<< HEAD
+
 /*
 
 
@@ -505,5 +525,3 @@ __android_log_print(ANDROID_LOG_INFO, "his", "9");
         __android_log_print(ANDROID_LOG_INFO, "his", "11");
     }
 */
-=======
->>>>>>> students

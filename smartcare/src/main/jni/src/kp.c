@@ -481,7 +481,20 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
       return (*env)->NewStringUTF(env, his_request_uri);
 }
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeHisRequest
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisUri, jstring requestUri)
+{
+    char* his_uri = (*env)->GetStringUTFChars(env, hisUri, 0);
+    char* his_request_uri = (*env)->GetStringUTFChars(env, requestUri, 0);
+     __android_log_print(ANDROID_LOG_INFO, TAG, "removeHisRequest");
+    int error =  kp_remove_his_request(nodeDescriptor, his_uri, his_request_uri);
 
+     if (error == -1){
+        return -1;
+     }
+
+     return 0;
+}
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
         ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisRequestUri)
@@ -489,10 +502,27 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     char* his_request_uri = (*env)->GetStringUTFChars(env, hisRequestUri, 0);
      __android_log_print(ANDROID_LOG_INFO, TAG, "his_request_uri %s", his_request_uri);
 
-    char* his_document_uri;
     char* his_response_uri;
 
-    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri, &his_document_uri);
+    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri);
+    if (error == -1)
+        return NULL;
+
+
+    if (his_response_uri == NULL)
+            return NULL;
+
+    return (*env)->NewStringUTF(env, his_response_uri);
+}
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDocument
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisResponseUri)
+{
+    char* his_response_uri = (*env)->GetStringUTFChars(env, hisResponseUri, 0);
+
+    char* his_document_uri;
+
+    int error = kp_get_his_document(nodeDescriptor, his_response_uri, &his_document_uri);
 
      //__android_log_print(ANDROID_LOG_INFO, TAG, "his_response_uri %s", his_response_uri);
 
@@ -508,6 +538,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
     return (*env)->NewStringUTF(env, his_document_uri);
 }
+
 
 
 

@@ -27,7 +27,7 @@ tools:context="ru.cardiacare.cardiacare.AboutActivity">
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.petrsu.cardiacare.smartcarequestionnaire.AboutActivity"
+        tools:context="ru.cardiacare.cardiacare.AboutActivity"
         tools:showIn="@layout/content_about">
         <TextView
             android:layout_width="match_parent"

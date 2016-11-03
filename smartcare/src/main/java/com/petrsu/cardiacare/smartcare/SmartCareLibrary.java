@@ -45,8 +45,9 @@ public class SmartCareLibrary {
                                       String hisDocumentType, String searchstring,
                                       String fieldName, String dateFrom,
                                       String dateTo);
-
+    public native int removeHisRequest(long nodeDescriptor, String hisUri, String requrstUri);
     public native String getHisResponce(long nodeDescriptor,String hisRequestUri);
+    public native String getHisDocument(long nodeDescriptor,String hisResponseUri);
     public native ResultBloodPressure getHisBloodPressureResult(long nodeDescriptor, String hisDocumentUri);
     public native DemographicData getHisDemographicData (long nodeDescriptor, String hisDocumentUri);
     public native LaboratoryStudy getHislaboratoryStudy(long nodeDescriptor, String hisDocumentUri);
