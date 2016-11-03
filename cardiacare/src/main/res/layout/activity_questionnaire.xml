@@ -16,13 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary">
-            <Button
+
+            <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/clean"
                 android:id="@+id/buttonClean"
+                android:src="@drawable/ic_action_navigation_refresh"
                 android:layout_gravity="right"
-                android:visibility="visible" />
+                android:visibility="visible"
+                style="@style/Widget.AppCompat.ImageButton"
+                android:background="@drawable/ic_action_navigation_refresh"
+                android:contentDescription=""
+                tools:ignore="ContentDescription,RtlHardcoded" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>

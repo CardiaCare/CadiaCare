@@ -36,6 +36,7 @@ public class QuestionnaireHelper {
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
         if((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (MainActivity.questionnaire == null)) {
             serverUri = MainActivity.smart.getQuestionnaireSeverUri(MainActivity.nodeDescriptor, qst);
+            Log.i("serverUri = ", serverUri);
             MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
             MainActivity.storage.setVersion(QuestionnaireServerVersion);
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);

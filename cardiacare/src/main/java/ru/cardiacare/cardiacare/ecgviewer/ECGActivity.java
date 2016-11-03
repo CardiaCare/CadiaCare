@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /**
@@ -79,5 +80,23 @@ public class ECGActivity extends ActionBarActivity {
         myView.pulseTimer.cancel();
         myView.myTimer.cancel();
         super.onDestroy();
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
     }
 }

@@ -42,4 +42,23 @@ public class Help extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
+    }
 }

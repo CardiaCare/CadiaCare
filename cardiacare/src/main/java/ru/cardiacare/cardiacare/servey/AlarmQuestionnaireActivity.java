@@ -8,13 +8,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.gson.Gson;
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Answer;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Question;
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -27,25 +28,27 @@ import java.util.LinkedList;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
+
 /* Отображение опросника */
 
-public class QuestionnaireActivity extends AppCompatActivity {
+public class AlarmQuestionnaireActivity extends AppCompatActivity {
 
-    RecyclerView QuestionnaireRecyclerView;
-    RecyclerView.Adapter QuestionnaireAdapter;
-    RecyclerView.LayoutManager QuestionnaireLayoutManager;
+    RecyclerView AlarmQuestionnaireRecyclerView;
+    RecyclerView.Adapter AlarmQuestionnaireAdapter;
+    RecyclerView.LayoutManager AlarmQuestionnaireLayoutManager;
     public Context context = this;
     static public ImageButton buttonClean; // Clean
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
-            FileInputStream fIn = openFileInput("feedback.json");
+            FileInputStream fIn = openFileInput("alarmFeedback.json");
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
-            MainActivity.feedback = qst;
-        }catch( Exception e ){
+            MainActivity.alarmFeedback = qst;
+
+        } catch( Exception e ){
 
         }
         super.onCreate(savedInstanceState);
@@ -53,48 +56,48 @@ public class QuestionnaireActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        QuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        QuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
-        QuestionnaireRecyclerView.setLayoutManager(QuestionnaireLayoutManager);
+        AlarmQuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        AlarmQuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
+        AlarmQuestionnaireRecyclerView.setLayoutManager(AlarmQuestionnaireLayoutManager);
 
-        LinkedList<Question> questionnaire = MainActivity.questionnaire.getQuestions();
-        int[] Types = new int[questionnaire.size()];
+        LinkedList<Question> alarmQuestionnaire = MainActivity.alarmQuestionnaire.getQuestions();
+        int[] Types = new int[alarmQuestionnaire.size()];
 
-        for (int i = 0; i < questionnaire.size(); i++) {
-            Question question = questionnaire.get(i);
+        for (int i = 0; i < alarmQuestionnaire.size(); i++) {
+            Question question = alarmQuestionnaire.get(i);
             Answer answer = question.getAnswer();
             switch (answer.getType()) {
                 case "Text":
-                    Types[i] = RecyclerViewAdapter.TextField;
+                    Types[i] = AlarmRecyclerViewAdapter.TextField;
                     break;
                 case "MultipleChoise":
-                    Types[i] = RecyclerViewAdapter.Multiplechoice;
+                    Types[i] = AlarmRecyclerViewAdapter.Multiplechoice;
                     break;
                 case "SingleChoise":
-                    Types[i] = RecyclerViewAdapter.Singlechoice;
+                    Types[i] = AlarmRecyclerViewAdapter.Singlechoice;
                     break;
                 case "BipolarQuestion":
-                    Types[i] = RecyclerViewAdapter.Bipolarquestion;
+                    Types[i] = AlarmRecyclerViewAdapter.Bipolarquestion;
                     break;
                 case "Dichotomous":
-                    Types[i] = RecyclerViewAdapter.Dichotomous;
+                    Types[i] = AlarmRecyclerViewAdapter.Dichotomous;
                     break;
                 case "GuttmanScale":
-                    Types[i] = RecyclerViewAdapter.Guttmanscale;
+                    Types[i] = AlarmRecyclerViewAdapter.Guttmanscale;
                     break;
                 case "LikertScale":
-                    Types[i] = RecyclerViewAdapter.Likertscale;
+                    Types[i] = AlarmRecyclerViewAdapter.Likertscale;
                     break;
                 case "ContinuousScale":
-                    Types[i] = RecyclerViewAdapter.Continuousscale;
+                    Types[i] = AlarmRecyclerViewAdapter.Continuousscale;
                     break;
                 default:
-                    Types[i] = RecyclerViewAdapter.DefaultValue;
+                    Types[i] = AlarmRecyclerViewAdapter.DefaultValue;
             }
         }
 
-        QuestionnaireAdapter = new RecyclerViewAdapter(MainActivity.questionnaire.getQuestions(), Types, context);
-        QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+        AlarmQuestionnaireAdapter = new AlarmRecyclerViewAdapter(MainActivity.alarmQuestionnaire.getQuestions(), Types, context);
+        AlarmQuestionnaireRecyclerView.setAdapter(AlarmQuestionnaireAdapter);
 
         //Clean
         //final Button buttonClean; // Clean
@@ -106,9 +109,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
                 buttonClean.setEnabled(false);//блокируем от повторного нажатия
                 buttonClean.setVisibility(4);
-                MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
+                MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
                 Gson json = new Gson();
-                String jsonStr = json.toJson(MainActivity.feedback);
+                String jsonStr = json.toJson(MainActivity.alarmFeedback);
                 System.out.println(jsonStr);
                 writeData(jsonStr);
 
@@ -131,18 +134,20 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
+        MainActivity.alarmButton.setEnabled(true);
+        MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standart_color);
         super.onStop();
         Gson json = new Gson();
-        String jsonStr = json.toJson(MainActivity.feedback);
+        String jsonStr = json.toJson(MainActivity.alarmFeedback);
         System.out.println(jsonStr);
         writeData(jsonStr);
         //to SIB
         Long timestamp = System.currentTimeMillis()/1000;
         String ts = timestamp.toString();
-        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri,ts);
+        //SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, ts);
         //to Server
-        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-        feedbackPOST.execute();
+//        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+//        feedbackPOST.execute();
 
         //MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
         //buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
@@ -152,7 +157,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public void writeData ( String data ) {
         try {
             //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE );
+            FileOutputStream fOut = context.openFileOutput("alarmFeedback.json", context.MODE_PRIVATE );
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -165,7 +170,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public String readSavedData(){
         StringBuffer datax = new StringBuffer("");
         try {
-            FileInputStream fIn = openFileInput("feedback.json");
+            FileInputStream fIn = openFileInput("alarmFeedback.json");
             InputStreamReader isr = new InputStreamReader(fIn);
             BufferedReader buffreader = new BufferedReader(isr);
 
