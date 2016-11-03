@@ -225,11 +225,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //mToolbar = (Toolbar) findViewById(R.id.toolbar);//нужен ли?
-        //setSupportActionBar(mToolbar);
-
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
 
