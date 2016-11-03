@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     static public String locationUri;
     static protected String alarmUri;
     static public String feedbackUri;
+    static public String alarmFeedbackUri;
 
     static public String TAG = "SS-main";
     static public Questionnaire questionnaire;
@@ -147,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
         setLoadingActivity();
         feedbackUri = smart.initFeedback();
         feedback = new Feedback(feedbackUri, "Student", "feedback");
+        alarmFeedbackUri = smart.initFeedback();
+        alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
 
         //if (connectedState == false) {
 //            setRegisteredActivity();
@@ -609,8 +612,9 @@ public class MainActivity extends AppCompatActivity {
         ConnectToSmartSpace();
         smart.removeIndividual(nodeDescriptor, locationUri);
         smart.removeIndividual(nodeDescriptor, patientUri);
-                smart.removeIndividual(nodeDescriptor, feedbackUri);
-                smart.removeIndividual(nodeDescriptor, alarmUri);
+        smart.removeIndividual(nodeDescriptor, feedbackUri);
+        smart.removeIndividual(nodeDescriptor, alarmUri);
+        smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
         DisconnectFromSmartSpace();
         super.onDestroy();
     }

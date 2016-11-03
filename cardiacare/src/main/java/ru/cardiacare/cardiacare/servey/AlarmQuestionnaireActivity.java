@@ -142,9 +142,9 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
         System.out.println(jsonStr);
         writeData(jsonStr);
         //to SIB
-        Long timestamp = System.currentTimeMillis()/1000;
-        String ts = timestamp.toString();
-        //SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, ts);
+        //Long timestamp = System.currentTimeMillis()/1000;
+        //String ts = timestamp.toString();
+        //MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.alarmFeedbackUri,ts);
         //to Server
 //        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
 //        feedbackPOST.execute();
