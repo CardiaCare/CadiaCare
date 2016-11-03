@@ -13,7 +13,6 @@ tools:context="ru.cardiacare.cardiacare.AboutActivity">
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary" />
-
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scroll"
         android:layout_marginTop="?attr/actionBarSize"

@@ -45,7 +45,7 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sen
         (JNIEnv *, jobject, jlong, jstring, jstring, jstring, jstring);
 
 JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendFeedback
-         (JNIEnv *, jobject, jlong, jstring, jstring);
+         (JNIEnv *, jobject, jlong, jstring, jjstring, string);
 
 JNIEXPORT void JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeIndividual
         (JNIEnv*, jobject, jlong, jstring);
@@ -75,7 +75,8 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getQuestionnaireSeverUri
 (JNIEnv *, jobject, jlong,jstring);
 
-
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initFeedback
+        ( JNIEnv* env, jobject thiz);
 /*****************************************************************************************/
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHis
@@ -87,8 +88,14 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
             jstring fieldName, jstring dateFrom,
             jstring dateTo);
 
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeHisRequest
+         ( JNIEnv* env, jobject thiz, jlong ,  jstring , jstring );
+
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
-         ( JNIEnv* env, jobject thiz, jlong,  jstring hisRequestUri);
+         ( JNIEnv* env, jobject thiz, jlong,  jstring );
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDocument
+         ( JNIEnv* env, jobject thiz, jlong ,  jstring );
 
 JNIEXPORT jobject JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisBloodPressureResult
         ( JNIEnv* env, jobject thiz, jlong,  jstring hisDocumentUri);

@@ -30,8 +30,8 @@ public class SmartCareLibrary {
     public native void removeAlarm (long nodeDescriptor, String individualUri);
     public native String  sendAlarm(long nodeDescriptor, String patientUri);
     static public native int sendLocation(long nodeDescriptor, String patientUri, String locationUri ,String latitude, String longitude);
-    static public native int sendFeedback(long nodeDescriptor, String patientUri, String feedbackDate);
-
+    static public native int sendFeedback(long nodeDescriptor, String patientUri, String feedbackUri, String feedbackDate);
+    static public native String initFeedback();
 
     static public native int insertPersonName(long nodeDescriptor, String patientUri, String name);
     static public native int updatePersonName(long nodeDescriptor, String patientUri, String name);
@@ -45,8 +45,9 @@ public class SmartCareLibrary {
                                       String hisDocumentType, String searchstring,
                                       String fieldName, String dateFrom,
                                       String dateTo);
-
+    public native int removeHisRequest(long nodeDescriptor, String hisUri, String requrstUri);
     public native String getHisResponce(long nodeDescriptor,String hisRequestUri);
+    public native String getHisDocument(long nodeDescriptor,String hisResponseUri);
     public native ResultBloodPressure getHisBloodPressureResult(long nodeDescriptor, String hisDocumentUri);
     public native DemographicData getHisDemographicData (long nodeDescriptor, String hisDocumentUri);
     public native LaboratoryStudy getHislaboratoryStudy(long nodeDescriptor, String hisDocumentUri);

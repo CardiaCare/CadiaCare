@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
     static public String patientUri;
     static public String locationUri;
     static protected String alarmUri;
+    static public String feedbackUri;
 
     static public String TAG = "SS-main";
     static public Questionnaire questionnaire;
@@ -144,8 +145,8 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
-        feedback = new Feedback("1 test", "Student", "feedback");
-        alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
+        feedbackUri = smart.initFeedback();
+        feedback = new Feedback(feedbackUri, "Student", "feedback");
 
         //if (connectedState == false) {
 //            setRegisteredActivity();
@@ -564,8 +565,8 @@ public class MainActivity extends AppCompatActivity {
    
     // Подключение к интеллектуальному пространству
     static public boolean ConnectToSmartSpace() {
-        Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
         if (sibConnectedFlag != 1) {
+            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {
                 return false;
@@ -608,6 +609,8 @@ public class MainActivity extends AppCompatActivity {
         ConnectToSmartSpace();
         smart.removeIndividual(nodeDescriptor, locationUri);
         smart.removeIndividual(nodeDescriptor, patientUri);
+                smart.removeIndividual(nodeDescriptor, feedbackUri);
+                smart.removeIndividual(nodeDescriptor, alarmUri);
         DisconnectFromSmartSpace();
         super.onDestroy();
     }

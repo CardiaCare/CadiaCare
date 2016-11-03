@@ -370,13 +370,14 @@ sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, quest
  * Отправляем Feedback
  */
 JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendFeedback
-        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri, jstring feedbackDate )
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri, jstring feedbackUri,jstring feedbackDate )
 {
     const char *patient_uri = (*env)->GetStringUTFChars(env, patientUri, 0);
+    const char *feedback_uri = (*env)->GetStringUTFChars(env, feedbackUri, 0);
     const char *feedback_date = (*env)->GetStringUTFChars(env, feedbackDate, 0);
 
     //char * alarm_uri = (char *) malloc(30);
-    int result = kp_send_feedback(nodeDescriptor, patient_uri, feedback_date);
+    int result = kp_send_feedback(nodeDescriptor, patient_uri, feedback_uri, feedback_date);
     if (result == -1) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "Node Error");
         return -1;
@@ -388,6 +389,20 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sen
 }
 
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initFeedback
+        ( JNIEnv* env, jobject thiz)
+{
+    char *uri;
+
+    int error = kp_init_feedback(&uri);
+
+    if (error == -1){
+         return NULL;
+    }
+
+    return (*env)->NewStringUTF(env, uri);
+
+}
 
 
 /***********************************************************************************************************
@@ -399,11 +414,34 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
         ( JNIEnv* env, jobject thiz, jlong nodeDescriptor )
 {
     char* his_uri;
-    kp_get_his(nodeDescriptor, &his_uri);
+
+    int error = kp_get_his(nodeDescriptor, &his_uri);
+
+    if (error == -1){
+        return NULL;
+    }
+
 
     return (*env)->NewStringUTF(env, his_uri);
 }
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId(JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId, jstring patientId){
+
+
+    char* his_id = (*env)->GetStringUTFChars(env, hisId, 0);
+    char* patient_uri= (*env)->GetStringUTFChars(env, patientId, 0);
+    char* patient_id_uri;
+    int error  =  kp_set_his_id(nodeDescriptor, his_id, patient_uri, &patient_id_uri);
+
+    if (error == -1){
+        return NULL;
+    }
+
+    //__android_log_print(ANDROID_LOG_INFO, TAG, "patient_id_uri %s", patient_id_uri);
+
+    return (*env)->NewStringUTF(env, patient_id_uri);
+
+}
 
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendHisRequest
@@ -420,7 +458,7 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
      char* search_string;
      if (searchstring != NULL){
         search_string = (*env)->GetStringUTFChars(env, searchstring, 0);
-        __android_log_print(ANDROID_LOG_INFO, TAG, "search_string %s", search_string);
+
       }
       else searchstring = NULL;
 
@@ -441,7 +479,8 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
 
 
      char* his_request_uri;
-     kp_send_his_request(nodeDescriptor, his_uri,
+
+     int error = kp_send_his_request(nodeDescriptor, his_uri,
                             patient_uri,
                             his_document_type,
                             search_string,
@@ -450,9 +489,27 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
                             date_to,
                             &his_request_uri);
 
+     if (error == -1){
+        return NULL;
+     }
+
+
       return (*env)->NewStringUTF(env, his_request_uri);
 }
+JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_removeHisRequest
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisUri, jstring requestUri)
+{
+    char* his_uri = (*env)->GetStringUTFChars(env, hisUri, 0);
+    char* his_request_uri = (*env)->GetStringUTFChars(env, requestUri, 0);
+     __android_log_print(ANDROID_LOG_INFO, TAG, "removeHisRequest");
+    int error =  kp_remove_his_request(nodeDescriptor, his_uri, his_request_uri);
 
+     if (error == -1){
+        return -1;
+     }
+
+     return 0;
+}
 
 JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisResponce
         ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisRequestUri)
@@ -460,19 +517,43 @@ JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_
     char* his_request_uri = (*env)->GetStringUTFChars(env, hisRequestUri, 0);
      __android_log_print(ANDROID_LOG_INFO, TAG, "his_request_uri %s", his_request_uri);
 
-    char* his_document_uri;
     char* his_response_uri;
-    char* his_document_type;
-    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri, &his_document_uri, &his_document_type);
 
-     __android_log_print(ANDROID_LOG_INFO, TAG, "his_response_uri %s", his_response_uri);
+    int error = kp_get_his_response(nodeDescriptor, his_request_uri, &his_response_uri);
+    if (error == -1)
+        return NULL;
+
+
+    if (his_response_uri == NULL)
+            return NULL;
+
+    return (*env)->NewStringUTF(env, his_response_uri);
+}
+
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_getHisDocument
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,  jstring hisResponseUri)
+{
+    char* his_response_uri = (*env)->GetStringUTFChars(env, hisResponseUri, 0);
+
+    char* his_document_uri;
+
+    int error = kp_get_his_document(nodeDescriptor, his_response_uri, &his_document_uri);
+
+     //__android_log_print(ANDROID_LOG_INFO, TAG, "his_response_uri %s", his_response_uri);
+
 
     if (error == -1)
         return NULL;
 
+
+    if (his_document_uri == NULL)
+            return NULL;
+
      __android_log_print(ANDROID_LOG_INFO, TAG, "his_document_uri %s", his_document_uri);
+
     return (*env)->NewStringUTF(env, his_document_uri);
 }
+
 
 
 
@@ -614,23 +695,5 @@ int print_ecg_measurment_data(long nodeDescriptor, char *his_document_uri){
     printf("createdAt %s\nauthor %s\ndataLocation %s\n", createdAt, author,dataLocation);
 
 }*/
-
-JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_setHisId(JNIEnv* env, jobject thiz, jlong nodeDescriptor, jstring hisId, jstring patientId){
-
-
-    char* his_id = (*env)->GetStringUTFChars(env, hisId, 0);
-    char* patient_uri= (*env)->GetStringUTFChars(env, patientId, 0);
-    char* patient_id_uri;
-    int error  =  kp_set_his_id(nodeDescriptor, his_id, patient_uri, &patient_id_uri);
-
-    if (error == -1){
-        return NULL;
-    }
-
-    //__android_log_print(ANDROID_LOG_INFO, TAG, "patient_id_uri %s", patient_id_uri);
-
-    return (*env)->NewStringUTF(env, patient_id_uri);
-
-}
 
 

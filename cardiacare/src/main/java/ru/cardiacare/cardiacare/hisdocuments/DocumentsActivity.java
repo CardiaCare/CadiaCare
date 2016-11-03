@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+
 
 public class DocumentsActivity extends AppCompatActivity {
 
@@ -27,14 +29,31 @@ public class DocumentsActivity extends AppCompatActivity {
 
         //hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
 
+        Log.i("docs", MainActivity.nodeDescriptor+ "");
         hisUri = MainActivity.smart.getHis(MainActivity.nodeDescriptor);
+
+        if (hisUri == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Нет подключения к МИС")
+                    .setTitle("Ошибка подключения")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).show();
+        }
+
 
         hisPatientUri = MainActivity.smart.setHisId(MainActivity.nodeDescriptor, hisUri, MainActivity.patientUri);
 
         if (hisPatientUri == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Ошибка подключения")
-                    .setTitle("Нет подключения к МИС")
+
+            builder.setMessage("Незарегистрированный пользователь")
+                    .setTitle("Ошибка подключения")
+
                     .setCancelable(true)
                     .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                         @Override
@@ -78,4 +97,8 @@ public class DocumentsActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

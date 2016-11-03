@@ -35,14 +35,16 @@ int kp_get_his(long nodeDescriptor, char** his_uri){
            return -1;
        }
 
-    list_t* hises;
+    //list_t* hises;
 
-    hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
+    list_t* hises = sslog_node_get_individuals_by_class(node, CLASS_HOSPITALINFORMATIONSYSTEM);
 
-    if (list_is_null_or_empty(hises) == true) {
+    if (list_is_null_or_empty(hises)) {
         printf("There are no such individuals.\n");
+            __android_log_print(ANDROID_LOG_INFO, "his", "There are no such individuals.\n");
         return -1;
     }
+
     sslog_individual_t *his = NULL;
     list_head_t *pos = NULL;
 
@@ -133,14 +135,36 @@ int kp_send_his_request(long nodeDescriptor, char* his_uri, char* patient_uri,  
     return 0;
 
 }
-
-int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri, char** his_document_uri, char** his_document_type){
+int kp_remove_his_request(long nodeDescriptor, char* his_uri, char* his_request_uri){
 
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
         return -1;
     }
+    sslog_individual_t *his = sslog_node_get_individual_by_uri(node, his_uri);
+    sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
 
+    sslog_node_remove_property(node, his, PROPERTY_HASREQUEST, his_request);
+
+    /*char* uri = "http://oss.fruct.org/smartcare#hasRequest";
+    sslog_triple_t *class_triple = sslog_new_triple_detached(
+                his_uri,
+                uri,
+                his_request_uri,
+                SS_RDF_TYPE_URI, SS_RDF_TYPE_URI);
+
+    sslog_node_remove_triple(node, class_triple);*/
+
+    __android_log_print(ANDROID_LOG_INFO, "his", "removeHisRequest done");
+    return 0;
+}
+
+int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_response_uri){
+
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
 
     sslog_individual_t *his_request = sslog_node_get_individual_by_uri(node, his_request_uri);
 
@@ -149,109 +173,57 @@ int kp_get_his_response( long nodeDescriptor, char* his_request_uri, char** his_
         return -1;
     }
 
-    sslog_subscription_t *response_subscription = sslog_new_subscription(node, false);
-    list_t* properties = list_new();
-    list_add_data(properties, PROPERTY_HASRESPONSE);
-    sslog_sbcr_add_individual(response_subscription, his_request, properties);
-
-    if (sslog_sbcr_subscribe(response_subscription) != SSLOG_ERROR_NO) {
-        printf("\nCan't subscribe.");
-        return -1;
-    }
-
-    sslog_individual_t *his_response;
-
-    while (
-            sslog_sbcr_is_active(response_subscription) == true &&
-                sslog_sbcr_wait(response_subscription) != SSLOG_ERROR_NO
-          ){continue;}
-
-    sslog_sbcr_changes_t *changes =
-            sslog_sbcr_get_changes_last(response_subscription);
-
-
-    const list_t *inserted_ind =
-            sslog_sbcr_ch_get_individual_by_action(changes, SSLOG_ACTION_INSERT);
-
-    list_head_t *list_walker = NULL;
-    list_for_each(list_walker, &inserted_ind->links) {
-        list_t *list_node = list_entry(list_walker, list_t, links);
-        char *uri = (char *) list_node->data;
-        sslog_individual_t *his_response = sslog_node_get_individual_by_uri(node, uri);
-
-        *his_response_uri = his_response;
-        break;
-    }
-    sslog_sbcr_unsubscribe(response_subscription);
-    list_free_with_nodes(inserted_ind, NULL);
-
-    char *status;
-    status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
-    if (strcmp(status, "ERROR") == 0){
-        printf("Error\n");
-        return -1;
-    }
-
-    /*
-
-    sslog_subscription_t *document_subscription = sslog_new_subscription(node, false);
-
-    list_t* doc_properties = list_new();
-    list_add_data(doc_properties, PROPERTY_HASDOCUMENT);
-    sslog_sbcr_add_individual(document_subscription, his_response, doc_properties);
-
-    if (sslog_sbcr_subscribe(document_subscription) != SSLOG_ERROR_NO) {
-        printf("\nCan't subscribe.");
-        return -1;
-    }
-
-    sslog_individual_t *his_document;
-
-    while (
-            sslog_sbcr_is_active(document_subscription) == true &&
-                sslog_sbcr_wait(document_subscription) != SSLOG_ERROR_NO
-          ){continue;}
-
-    sslog_sbcr_changes_t *doc_changes =
-                sslog_sbcr_get_changes_last(document_subscription);
-
-
-    const list_t *doc_inserted_ind =
-            sslog_sbcr_ch_get_individual_by_action(doc_changes, SSLOG_ACTION_INSERT);
-
-    list_head_t *doc_list_walker = NULL;
-    list_for_each(doc_list_walker, &doc_inserted_ind->links) {
-        list_t *doc_list_node = list_entry(doc_list_walker, list_t, links);
-        char *doc_uri = (char *) doc_list_node->data;
-        sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, doc_uri);
-
-        *his_document_uri = his_document;
-        break;
-    }
-    list_free_with_nodes(doc_inserted_ind, NULL);
-    sslog_sbcr_unsubscribe(document_subscription);
-    //TODO несколько документов
-    if (his_document != NULL){
-        char* subclass;
-        get_his_subclasses(node, his_document_uri , &subclass);
-        *his_document_type = subclass;
-    }*/
-
     sleep(4);
+
+        sslog_individual_t *his_response = ( sslog_individual_t *) sslog_node_get_property(node,his_request,PROPERTY_HASRESPONSE);
+        if(his_response == NULL) {
+            printf(" no his_response\n");
+            return -1;
+        }
+        char *uri;
+        uri =  sslog_entity_get_uri (his_response);
+        *his_response_uri = uri;
+        __android_log_print(ANDROID_LOG_INFO, "his", "his_response_uri %s\n", uri);
+
+        char *status;
+        status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
+        if (strcmp(status, "ERROR") == 0){
+            printf("Error\n");
+            return -1;
+        }
+        //__android_log_print(ANDROID_LOG_INFO, "his", "status %s\n", status);
+}
+
+int kp_get_his_document( long nodeDescriptor, char* his_response_uri, char** his_document_uri){
+    sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
+    if (node == NULL){
+        return -1;
+    }
+
+
+   sslog_individual_t *his_response = sslog_node_get_individual_by_uri(node, his_response_uri);
+
+
+    if(his_response == NULL) {
+        printf(" no his_response\n");
+        return -1;
+    }
+            sleep(1);
+
 
         sslog_individual_t * his_document = (sslog_individual_t *) sslog_node_get_property(node, his_response, PROPERTY_HASDOCUMENT);
         if (his_document != NULL){
             char* document_uri;
             document_uri  =  sslog_entity_get_uri (his_document);
             *his_document_uri  =  document_uri;
-            char* subclass;
-            get_his_subclasses(node, document_uri , &subclass);
-            *his_document_type = subclass;
+
+            __android_log_print(ANDROID_LOG_INFO, "his", "document_uri %s\n", document_uri);
         }
 
 
     return 0;
 }
+
 
 int kp_init_sbcr_his_response(){
 
@@ -444,3 +416,112 @@ int kp_get_his_doctor_examination(long nodeDescriptor, char* his_document_uri,
 }
 
 
+
+/*
+
+
+__android_log_print(ANDROID_LOG_INFO, "his", "2");
+    sslog_subscription_t *response_subscription = sslog_new_subscription(node, false);
+    list_t* properties = list_new();
+    list_add_data(properties, PROPERTY_HASRESPONSE);
+
+    __android_log_print(ANDROID_LOG_INFO, "his", "3");
+    sslog_sbcr_add_individual(response_subscription, his_request, properties);
+
+    if (sslog_sbcr_subscribe(response_subscription) != SSLOG_ERROR_NO) {
+        printf("\nCan't subscribe.");
+        return -1;
+    }
+
+    sslog_individual_t *his_response;
+__android_log_print(ANDROID_LOG_INFO, "his", "4");
+    while (
+            sslog_sbcr_is_active(response_subscription) == true &&
+                sslog_sbcr_wait(response_subscription) != SSLOG_ERROR_NO
+          ){continue;}
+
+    sslog_sbcr_changes_t *changes =
+            sslog_sbcr_get_changes_last(response_subscription);
+
+
+    const list_t *inserted_ind =
+            sslog_sbcr_ch_get_individual_by_action(changes, SSLOG_ACTION_INSERT);
+__android_log_print(ANDROID_LOG_INFO, "his", "5");
+
+
+    list_head_t *list_walker = NULL;
+
+    list_for_each(list_walker, &inserted_ind->links) {
+        list_t *list_node = list_entry(list_walker, list_t, links);
+        char *uri = (char *) list_node->data;
+        sslog_individual_t *his_response = sslog_node_get_individual_by_uri(node, uri);
+
+        __android_log_print(ANDROID_LOG_INFO, "his", "%s", uri);
+        __android_log_print(ANDROID_LOG_INFO, "his", "%s", his_response);
+
+
+        *his_response_uri = his_response;
+        break;
+    }
+    sslog_sbcr_unsubscribe(response_subscription);
+    list_free_with_nodes(inserted_ind, NULL);
+
+__android_log_print(ANDROID_LOG_INFO, "his", "6");
+
+    char *status;
+    status = (char *) sslog_node_get_property(node, his_response, PROPERTY_STATUS);
+    if (strcmp(status, "ERROR") == 0){
+        printf("Error\n");
+        return -1;
+    }
+
+
+
+        /*sslog_subscription_t *document_subscription = sslog_new_subscription(node, false);
+
+    list_t* doc_properties = list_new();
+    list_add_data(doc_properties, PROPERTY_HASDOCUMENT);
+
+    __android_log_print(ANDROID_LOG_INFO, "his", "7");
+    sslog_sbcr_add_individual(document_subscription, his_response, doc_properties);
+
+    if (sslog_sbcr_subscribe(document_subscription) != SSLOG_ERROR_NO) {
+        printf("\nCan't subscribe.");
+        return -1;
+    }
+
+    sslog_individual_t *his_document;
+
+    while (
+            sslog_sbcr_is_active(document_subscription) == true &&
+                sslog_sbcr_wait(document_subscription) != SSLOG_ERROR_NO
+          ){continue;}
+
+    sslog_sbcr_changes_t *doc_changes =
+                sslog_sbcr_get_changes_last(document_subscription);
+
+__android_log_print(ANDROID_LOG_INFO, "his", "8");
+    const list_t *doc_inserted_ind =
+            sslog_sbcr_ch_get_individual_by_action(doc_changes, SSLOG_ACTION_INSERT);
+
+    list_head_t *doc_list_walker = NULL;
+    list_for_each(doc_list_walker, &doc_inserted_ind->links) {
+        list_t *doc_list_node = list_entry(doc_list_walker, list_t, links);
+        char *doc_uri = (char *) doc_list_node->data;
+        sslog_individual_t *his_document = sslog_node_get_individual_by_uri(node, doc_uri);
+__android_log_print(ANDROID_LOG_INFO, "his", "9");
+        *his_document_uri = his_document;
+        break;
+    }
+    list_free_with_nodes(doc_inserted_ind, NULL);
+    sslog_sbcr_unsubscribe(document_subscription);
+
+    __android_log_print(ANDROID_LOG_INFO, "his", "10");
+    //TODO несколько документов
+    if (his_document != NULL){
+        char* subclass;
+        get_his_subclasses(node, his_document_uri , &subclass);
+        *his_document_type = subclass;
+        __android_log_print(ANDROID_LOG_INFO, "his", "11");
+    }
+*/

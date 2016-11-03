@@ -1,6 +1,8 @@
 package ru.cardiacare.cardiacare.hisdocuments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
@@ -23,7 +25,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
     static public String hisRequestUri;
     static public String hisDocumentUri;
-
+    static public String hisResponseUri;
     ResultDoctorExamination rde;
 
     @Override
@@ -40,11 +42,34 @@ public class DoctorExaminationActivity extends AppCompatActivity {
                 hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
 
 
-        hisDocumentUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
+        hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
+        if (hisResponseUri == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Нет ответа от сервера")
+                    .setTitle("Ошибка подключения")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).show();
+        }
+
+        hisDocumentUri = MainActivity.smart.getHisDocument(MainActivity.nodeDescriptor, hisResponseUri);
 
         if (hisDocumentUri == null){
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Нет соотвтетствующего документа")
+                    .setTitle("Ошибка подключения")
+                    .setCancelable(true)
+                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).show();
         }
 
         rde = new ResultDoctorExamination("Examination reason","Visit order",
@@ -69,6 +94,16 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         etWeight.setText(rde.getWeight());
         EditText etDiseasePredisposition = (EditText) findViewById(R.id.etDiseasePredisposition);
         etDiseasePredisposition.setText(rde.getDiseasePredisposition());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
+        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
+        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
+        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
     }
 
 }
