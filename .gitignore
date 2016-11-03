@@ -34,3 +34,6 @@ local.properties
 /proguard/
 
 
+CardiaCare.iml
+cardiacare/cardiacare.iml
+smartcare/smartcare.iml
