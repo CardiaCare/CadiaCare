@@ -544,10 +544,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        smart.disconnectSmartSpace(nodeDescriptor);
-        nodeDescriptor = -1;
-        sibConnectedFlag = -1;
-        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
+//        smart.disconnectSmartSpace(nodeDescriptor);
+//        nodeDescriptor = -1;
+//        sibConnectedFlag = -1;
+//        Log.i(TAG,"ПАУЗА, ОТКЛЮЧАЕМСЯ ОТ СИБА");
     }
 
     // Срабатывает при возвращении к приложению
@@ -556,6 +556,6 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG,"ПРОДОЛЖЕНИЕ, ПОДКЛЮЧАЕМСЯ К СИБУ");
         super.onResume();
 //        setLoadingActivity();
-        ConnectToSmartSpace();
+        //ConnectToSmartSpace();
     }
 }
