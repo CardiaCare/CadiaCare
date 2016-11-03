@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
@@ -36,7 +37,7 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
     RecyclerView.Adapter AlarmQuestionnaireAdapter;
     RecyclerView.LayoutManager AlarmQuestionnaireLayoutManager;
     public Context context = this;
-    static public Button buttonClean; // Clean
+    static public ImageButton buttonClean; // Clean
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,7 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
 
         //Clean
         //final Button buttonClean; // Clean
-        buttonClean = (Button) findViewById(R.id.buttonClean);// Clean
+        buttonClean = (ImageButton) findViewById(R.id.buttonClean);// Clean
         buttonClean.setVisibility(4);
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
