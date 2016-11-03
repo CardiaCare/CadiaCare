@@ -139,7 +139,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         //to SIB
         Long timestamp = System.currentTimeMillis()/1000;
         String ts = timestamp.toString();
-        SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, ts);
+        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri,ts);
         //to Server
         FeedbackPOST feedbackPOST = new FeedbackPOST(context);
         feedbackPOST.execute();

@@ -609,7 +609,7 @@ int add_answer_item(JNIEnv* env, jobject *answer, sslog_node_t *node_ss, sslog_i
     return 0;
 }
 
-int kp_send_feedback(long nodeDescriptor, char *patient_uri, char *feedback_date){
+int kp_send_feedback(long nodeDescriptor, char *patient_uri, char *feedback_uri, char *feedback_date){
     //get node from SmartSpace
     sslog_node_t *node = (sslog_node_t *) nodeDescriptor;
     if (node == NULL){
@@ -619,8 +619,6 @@ int kp_send_feedback(long nodeDescriptor, char *patient_uri, char *feedback_date
     //get patient and feeddback from SmartSpace
     sslog_individual_t *patient = sslog_node_get_individual_by_uri(node, patient_uri);
 
-    char * _feedback_uri = sslog_generate_uri(CLASS_FEEDBACK);
-        char *feedback_uri = generate_uri(_feedback_uri);
     sslog_individual_t *feedback = sslog_new_individual(CLASS_FEEDBACK, feedback_uri);
 
     if (feedback == NULL) {
@@ -628,12 +626,29 @@ int kp_send_feedback(long nodeDescriptor, char *patient_uri, char *feedback_date
     }
 
 
-    sslog_insert_property(feedback, PROPERTY_FEEDBACKDATE, feedback_date);
+   sslog_insert_property(feedback, PROPERTY_FEEDBACKDATE, feedback_date);
    sslog_node_insert_individual(node, feedback);
-       sslog_node_insert_property(node, patient, PROPERTY_HASFEEDBACK, feedback);
+   sslog_node_insert_property(node, patient, PROPERTY_HASFEEDBACK, feedback);
 
     //update in SmartSpace Patient's property: feedback_date
     //char *feedback_from_ss = sslog_node_get_property(node, patient, PROPERTY_FEEDBACKDATE);
     //sslog_node_update_property(node, patient,  PROPERTY_FEEDBACKDATE, feedback_from_ss,feedback_date);
     return 0;
 }
+
+/*
+* Patient
+*/
+int kp_init_feedback(char **uri){
+
+    char * _feedback_uri = sslog_generate_uri(CLASS_FEEDBACK);
+    char *feedback_uri = generate_uri(_feedback_uri);
+
+    *uri = feedback_uri;
+
+    return 0;
+}
+
+
+
+

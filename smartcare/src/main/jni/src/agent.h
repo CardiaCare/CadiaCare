@@ -32,7 +32,7 @@ int kp_send_location(long, char *, char *, char *, char *);
 
 int kp_send_alarm(long, char *, char**);
 
-int kp_send_feedback(long, char *, char *);
+int kp_send_feedback(long, char *, char *, char *);
 
 int kp_insert_person_name(long, char *, char *);
 
@@ -53,6 +53,8 @@ int check_answer_type(char *);
 int kp_get_answer_items_by_type(JNIEnv* , jobject *, sslog_node_t *, sslog_individual_t *, char*  );
 int kp_get_answer_items(JNIEnv* , jobject *, sslog_node_t *, sslog_individual_t *, char* );
 int add_answer_item(JNIEnv* , jobject *, sslog_node_t *, sslog_individual_t *, char* );
+
+int kp_init_feedback(char **uri);
 
 long kp_connect_smartspace(char*, char*, int);
 int kp_disconnect_smartpace(long);

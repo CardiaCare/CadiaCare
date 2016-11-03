@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     static public String patientUri;
     static public String locationUri;
     static protected String alarmUri;
+    static public String feedbackUri;
 
     static public String TAG = "SS-main";
     static public Questionnaire questionnaire;
@@ -135,7 +136,8 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
-        feedback = new Feedback("1 test", "Student", "feedback");
+        feedbackUri = smart.initFeedback();
+        feedback = new Feedback(feedbackUri, "Student", "feedback");
 
         //if (connectedState == false) {
 //            setRegisteredActivity();
@@ -402,7 +404,10 @@ public class MainActivity extends AppCompatActivity {
 
         smart.removeIndividual(nodeDescriptor, locationUri);
         smart.removeIndividual(nodeDescriptor, patientUri);
+        smart.removeIndividual(nodeDescriptor, feedbackUri);
+        smart.removeIndividual(nodeDescriptor, alarmUri);
 
+        smart.disconnectSmartSpace(nodeDescriptor);
         super.onDestroy();
     }
 

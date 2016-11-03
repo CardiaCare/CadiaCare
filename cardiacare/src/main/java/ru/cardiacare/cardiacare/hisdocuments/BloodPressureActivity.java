@@ -88,7 +88,6 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
         MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
         MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);

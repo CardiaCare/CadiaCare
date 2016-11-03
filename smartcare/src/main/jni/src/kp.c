@@ -370,13 +370,14 @@ sslog_individual_t *questionnaire = sslog_node_get_individual_by_uri(node, quest
  * Отправляем Feedback
  */
 JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sendFeedback
-        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri, jstring feedbackDate )
+        ( JNIEnv* env, jobject thiz, jlong nodeDescriptor,jstring patientUri, jstring feedbackUri,jstring feedbackDate )
 {
     const char *patient_uri = (*env)->GetStringUTFChars(env, patientUri, 0);
+    const char *feedback_uri = (*env)->GetStringUTFChars(env, feedbackUri, 0);
     const char *feedback_date = (*env)->GetStringUTFChars(env, feedbackDate, 0);
 
     //char * alarm_uri = (char *) malloc(30);
-    int result = kp_send_feedback(nodeDescriptor, patient_uri, feedback_date);
+    int result = kp_send_feedback(nodeDescriptor, patient_uri, feedback_uri, feedback_date);
     if (result == -1) {
         __android_log_print(ANDROID_LOG_INFO, TAG, "Node Error");
         return -1;
@@ -388,6 +389,20 @@ JNIEXPORT jint JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_sen
 }
 
 
+JNIEXPORT jstring JNICALL Java_com_petrsu_cardiacare_smartcare_SmartCareLibrary_initFeedback
+        ( JNIEnv* env, jobject thiz)
+{
+    char *uri;
+
+    int error = kp_init_feedback(&uri);
+
+    if (error == -1){
+         return NULL;
+    }
+
+    return (*env)->NewStringUTF(env, uri);
+
+}
 
 
 /***********************************************************************************************************
