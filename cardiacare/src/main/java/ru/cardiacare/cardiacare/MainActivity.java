@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     static public boolean alarmButtonFlag = false; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
     static public int sibConnectedFlag = 0; //установлено ли соединение с SIB'ом, 1 - установлено
     static public int backgroundFlag = 0; //если закрытие активности добровольное, то флаг = 1, иначе = 0
+    static public int patientUriFlag = -1; //-1 - первый запуск приложения, 1 - зарегистрированный пользователь, 0 - незарегистрированный пользователь
 
     static public AccountStorage storage;
 
@@ -146,10 +147,10 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
-        feedbackUri = smart.initFeedback();
-        feedback = new Feedback(feedbackUri, "Student", "feedback");
-        alarmFeedbackUri = smart.initFeedback();
-        alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
+//        feedbackUri = smart.initFeedback();
+//        feedback = new Feedback(feedbackUri, "Student", "feedback");
+//        alarmFeedbackUri = smart.initFeedback();
+//        alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
 
         //if (connectedState == false) {
 //            setRegisteredActivity();
@@ -159,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
 //            setConnectedToDriverState();
 //        }
 
-        if (isNetworkAvailable(this)) {
-            locationUri = smart.initLocation(nodeDescriptor, patientUri);
-            if (locationUri == null) {
-                return;
-            }
-        } else {
-            setLoadingActivity();
-        }
+//        if (isNetworkAvailable(this)) {
+//            locationUri = smart.initLocation(nodeDescriptor, patientUri);
+//            if (locationUri == null) {
+//                return;
+//            }
+//        } else {
+//            setLoadingActivity();
+//        }
 
     }
 
@@ -190,13 +191,15 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (isNetworkAvailable(this)) {
+
+
+            storage = new AccountStorage();
+            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+
             ConnectToSmartSpace();
 
             GPSLoad gpsLoad = new GPSLoad(context);
             gpsLoad.execute();
-
-            storage = new AccountStorage();
-            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
 
             if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
                 setUnregisteredActivity();
@@ -231,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
     public void setUnregisteredActivity() {
         setContentView(R.layout.activity_main_account_connection);
         Log.i(TAG, "setUnregisteredActivity see");
-
+        patientUriFlag = 0;
         patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null) {
             return;
@@ -283,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
     // Интерфейс для зарегистрированного пользователя
     public void setRegisteredActivity() {
         setContentView(R.layout.main);
-
+        patientUriFlag = 1;
         if (patientUri == null) {
             patientUri = storage.getAccountId();
             smart.initPatientWithId(nodeDescriptor, patientUri);
@@ -576,7 +579,38 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 sibConnectedFlag = 1; //Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
             }
+            InitObjects();
         }
+        return true;
+    }
+
+    // Инициализация объектов в интеллектуальном пространстве
+    static public boolean InitObjects() {
+        if (backgroundFlag == 0) {
+            Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
+            feedbackUri = smart.initFeedback();
+            Log.i(TAG, "FEEDBACKURIFEEDBACKURIFEEDBACKURI");
+            feedback = new Feedback(feedbackUri, "Student", "feedback");
+            alarmFeedbackUri = smart.initFeedback();
+            alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
+            Log.i(TAG, "ALARMURIALARMURIALARMURI");
+            if ((patientUriFlag == 1) || (patientUriFlag == -1)) {
+                patientUri = storage.getAccountId();
+                smart.initPatientWithId(nodeDescriptor, patientUri);
+                SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
+            }
+            Log.i(TAG, "PATIENTURIPATIENTURIPATIENTURI");
+            //            if (isNetworkAvailable(this)) {
+            locationUri = smart.initLocation(nodeDescriptor, patientUri);
+//                if (locationUri == null) {
+//                    return false;
+//                }
+//            } else {
+//                setLoadingActivity();
+//            }
+            Log.i(TAG, "LOCATIONURILOCATIONURILOCATIONURI");
+        }
+        backgroundFlag = 0;
         return true;
     }
 
@@ -587,7 +621,7 @@ public class MainActivity extends AppCompatActivity {
             smart.removeIndividual(nodeDescriptor, locationUri);
             smart.removeIndividual(nodeDescriptor, patientUri);
             smart.removeIndividual(nodeDescriptor, feedbackUri);
-            //smart.removeIndividual(nodeDescriptor, alarmUri);
+            smart.removeIndividual(nodeDescriptor, alarmUri);
             smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
             smart.disconnectSmartSpace(nodeDescriptor);
             nodeDescriptor = -1;
@@ -599,7 +633,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        backgroundFlag = 0;
         ConnectToSmartSpace();
     }
     @Override
@@ -611,7 +644,11 @@ public class MainActivity extends AppCompatActivity {
         }
         backgroundFlag = 0;
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        backgroundFlag = 0;
+    }
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy Main Activity");
