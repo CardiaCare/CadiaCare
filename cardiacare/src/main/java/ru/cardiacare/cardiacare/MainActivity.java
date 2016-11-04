@@ -589,17 +589,14 @@ public class MainActivity extends AppCompatActivity {
         if (backgroundFlag == 0) {
             Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
             feedbackUri = smart.initFeedback();
-            Log.i(TAG, "FEEDBACKURIFEEDBACKURIFEEDBACKURI");
             feedback = new Feedback(feedbackUri, "Student", "feedback");
             alarmFeedbackUri = smart.initFeedback();
             alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
-            Log.i(TAG, "ALARMURIALARMURIALARMURI");
             if ((patientUriFlag == 1) || (patientUriFlag == -1)) {
                 patientUri = storage.getAccountId();
                 smart.initPatientWithId(nodeDescriptor, patientUri);
                 SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
             }
-            Log.i(TAG, "PATIENTURIPATIENTURIPATIENTURI");
             //            if (isNetworkAvailable(this)) {
             locationUri = smart.initLocation(nodeDescriptor, patientUri);
 //                if (locationUri == null) {
@@ -608,7 +605,6 @@ public class MainActivity extends AppCompatActivity {
 //            } else {
 //                setLoadingActivity();
 //            }
-            Log.i(TAG, "LOCATIONURILOCATIONURILOCATIONURI");
         }
         backgroundFlag = 0;
         return true;

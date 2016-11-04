@@ -117,7 +117,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     DichotomousAnswers[j].setId(j);
                     DichotomousAnswers[j].setText(Item.getItemText());
                     //тут отображение ответов
-                    Log.i(MainActivity.TAG, "alarmFeedback.size():" + alarmFeedback.size());
                     for(int fbc = 0; fbc < alarmFeedback.size(); fbc++){
                         if(question.getUri().equals(alarmFeedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < alarmFeedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
