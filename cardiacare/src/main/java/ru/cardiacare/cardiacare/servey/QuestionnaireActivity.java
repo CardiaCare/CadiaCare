@@ -2,6 +2,7 @@ package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -49,6 +50,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
         }
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -103,7 +105,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
             public void onClick(View v) {// Clean
-
+                MainActivity.backgroundFlag = 1;
                 buttonClean.setEnabled(false);//блокируем от повторного нажатия
                 buttonClean.setVisibility(4);
                 MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
@@ -132,17 +134,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        Gson json = new Gson();
-        String jsonStr = json.toJson(MainActivity.feedback);
-        System.out.println(jsonStr);
-        writeData(jsonStr);
-        //to SIB
-        Long timestamp = System.currentTimeMillis()/1000;
-        String ts = timestamp.toString();
-        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri,ts);
-        //to Server
-        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-        feedbackPOST.execute();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.serveyButton.setEnabled(true);
 
         //MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
         //buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
@@ -179,5 +172,35 @@ public class QuestionnaireActivity extends AppCompatActivity {
             ioe.printStackTrace();
         }
         return datax.toString();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onPause() {
+        Gson json = new Gson();
+        String jsonStr = json.toJson(MainActivity.feedback);
+        System.out.println(jsonStr);
+        writeData(jsonStr);
+        //to SIB
+        Long timestamp = System.currentTimeMillis()/1000;
+        String ts = timestamp.toString();
+        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri,ts);
+        //to Server
+        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+        feedbackPOST.execute();
+        super.onPause();
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
     }
 }

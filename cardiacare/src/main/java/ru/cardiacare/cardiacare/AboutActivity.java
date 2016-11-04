@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.content_about);
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_activity_toolbar);
         setSupportActionBar(toolbar);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override

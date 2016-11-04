@@ -6,6 +6,7 @@ package ru.cardiacare.cardiacare.hisdocuments;
 
 
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 
@@ -35,6 +36,7 @@ public class DemographicDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_demographicdata);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -102,9 +104,32 @@ public class DemographicDataActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
+//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
+//        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
+//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MainActivity.backgroundFlag = 0;
+        MainActivity.ConnectToSmartSpace();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
         MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
         MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
         MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
         MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
+        if (MainActivity.backgroundFlag == 0) {
+            MainActivity.DisconnectFromSmartSpace();
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        MainActivity.backgroundFlag = 1;
+        super.onBackPressed();
     }
 }

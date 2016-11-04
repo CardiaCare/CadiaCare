@@ -582,10 +582,17 @@ public class MainActivity extends AppCompatActivity {
 
     // Отключение от интеллектуального пространства
     static public boolean DisconnectFromSmartSpace() {
-        Log.i(TAG,"РАЗРЫВАЕМ СОЕДИНЕНИЕ");
-        smart.disconnectSmartSpace(nodeDescriptor);
-        nodeDescriptor = -1;
-        sibConnectedFlag = -1;
+        if (sibConnectedFlag == 1) {
+            Log.i(TAG, "РАЗРЫВАЕМ СОЕДИНЕНИЕ");
+            smart.removeIndividual(nodeDescriptor, locationUri);
+            smart.removeIndividual(nodeDescriptor, patientUri);
+            smart.removeIndividual(nodeDescriptor, feedbackUri);
+            //smart.removeIndividual(nodeDescriptor, alarmUri);
+            smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
+            smart.disconnectSmartSpace(nodeDescriptor);
+            nodeDescriptor = -1;
+            sibConnectedFlag = -1;
+        }
         return true;
     }
 
@@ -609,12 +616,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy Main Activity");
         // TODO unregisterReceiver(connectReceiver);
-        ConnectToSmartSpace();
-        smart.removeIndividual(nodeDescriptor, locationUri);
-        smart.removeIndividual(nodeDescriptor, patientUri);
-        smart.removeIndividual(nodeDescriptor, feedbackUri);
-        smart.removeIndividual(nodeDescriptor, alarmUri);
-        smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
+//        smart.removeIndividual(nodeDescriptor, locationUri);
+//        smart.removeIndividual(nodeDescriptor, patientUri);
+//        smart.removeIndividual(nodeDescriptor, feedbackUri);
+//        smart.removeIndividual(nodeDescriptor, alarmUri);
+//        smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
         DisconnectFromSmartSpace();
         super.onDestroy();
     }

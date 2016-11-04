@@ -3,6 +3,7 @@ package ru.cardiacare.cardiacare.user;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ public class Userdata extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.userdata);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);

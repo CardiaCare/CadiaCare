@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare.ecgviewer;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +32,7 @@ public class ECGActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate ECGActivity Activity");
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_ecg);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.ecg_activity_toolbar);

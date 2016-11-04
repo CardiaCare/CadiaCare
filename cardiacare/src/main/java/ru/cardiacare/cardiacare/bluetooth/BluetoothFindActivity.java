@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -65,6 +66,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate BluetoothFindActivity Activity");
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.bluetoothfind);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.bt_find_activity_toolbar);
