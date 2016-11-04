@@ -205,9 +205,9 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-            alertDialog.setTitle("Отсутствует подключение к сети");
-            alertDialog.setMessage("Включите wifi и перезапустите приложение");
-            alertDialog.setPositiveButton("Перейти к настройкам wifi",
+            alertDialog.setTitle(R.string.dialog_wifi_title);
+            alertDialog.setMessage(R.string.dialog_wifi_message);
+            alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-            alertDialog.setNegativeButton("Перезапустить приложение",
+            alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -346,17 +346,17 @@ public class MainActivity extends AppCompatActivity {
                     alarmButtonFlag = true;
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                     //Заголовок
-                    alertDialog.setTitle("Ошибка получения геоданных");
+                    alertDialog.setTitle(R.string.dialog_sos_title);
                     //Тело
-                    alertDialog.setMessage("Функция GPS отключена. Кнопка SOS не доступна. Желаете перейти к настройкам, чтобы включить её?");
+                    alertDialog.setMessage(R.string.dialog_sos_message);
                     //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
-                    alertDialog.setPositiveButton("Настройки", new DialogInterface.OnClickListener() {
+                    alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,int which) {
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             context.startActivity(intent);
                         }
                     });
-                    alertDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                    alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             GPSLoad gpsLoad2 = new GPSLoad(context);
                             gpsLoad2.execute();
@@ -587,7 +587,7 @@ public class MainActivity extends AppCompatActivity {
             smart.removeIndividual(nodeDescriptor, locationUri);
             smart.removeIndividual(nodeDescriptor, patientUri);
             smart.removeIndividual(nodeDescriptor, feedbackUri);
-            //smart.removeIndividual(nodeDescriptor, alarmUri);
+            smart.removeIndividual(nodeDescriptor, alarmUri);
             smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
             smart.disconnectSmartSpace(nodeDescriptor);
             nodeDescriptor = -1;

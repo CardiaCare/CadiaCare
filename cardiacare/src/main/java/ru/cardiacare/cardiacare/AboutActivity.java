@@ -12,7 +12,7 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("Справка");
+//        setTitle(R.string.about);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_about);
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_activity_toolbar);

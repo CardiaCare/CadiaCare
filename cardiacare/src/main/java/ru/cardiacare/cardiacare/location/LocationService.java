@@ -17,6 +17,7 @@ import android.util.Log;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 
 /* Работа с геоданными */
 
@@ -144,17 +145,17 @@ public class LocationService extends Service implements LocationListener {
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
         //Заголовок
-        alertDialog.setTitle("Ошибка получения геоданных");
+        alertDialog.setTitle(R.string.dialog_gps_title);
         //Тело
-        alertDialog.setMessage("Функция GPS отключена. Часть функций может быть не доступна. Желаете перейти к настройкам, чтобы включить её?");
+        alertDialog.setMessage(R.string.dialog_gps_message);
         //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
-        alertDialog.setPositiveButton("Настройки", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton(R.string.dialog_gps_positive_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog,int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
         });
-        alertDialog.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.dialog_gps_negative_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }

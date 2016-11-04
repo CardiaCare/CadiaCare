@@ -46,7 +46,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
             MainActivity.feedback = qst;
-        }catch( Exception e ){
+        } catch( Exception e ){
 
         }
         super.onCreate(savedInstanceState);

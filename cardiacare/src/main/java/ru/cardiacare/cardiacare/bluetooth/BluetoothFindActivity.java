@@ -86,7 +86,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(myBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(),"Your device does not support Bluetooth",
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
                     Toast.LENGTH_LONG).show();
         } else {
             on();
@@ -187,16 +187,16 @@ public class BluetoothFindActivity extends ActionBarActivity {
 //            startActivity(intent);
 
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-            alertDialog.setTitle("Выключен Bluetooth");
-            alertDialog.setMessage("Часть функций может быть не доступна. Желаете перейти к настройкам, чтобы включить его?");
-            alertDialog.setPositiveButton("Настройки",
+            alertDialog.setTitle(R.string.dialog_bluetooth_title);
+            alertDialog.setMessage(R.string.dialog_bluetooth_message);
+            alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
                         }
                     });
 
-            alertDialog.setNegativeButton("Отмена",
+            alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -206,10 +206,10 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
             alertDialog.show();
 
-            Toast.makeText(getApplicationContext(), "Bluetooth turned on",
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast2,
                            Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(),"Bluetooth is already on",
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast3,
                            Toast.LENGTH_LONG).show();
             myBluetoothAdapter.startDiscovery();
             dialog.show();
@@ -225,11 +225,11 @@ public class BluetoothFindActivity extends ActionBarActivity {
         // TODO Auto-generated method stub
         if(requestCode == REQUEST_ENABLE_BT){
             if(myBluetoothAdapter.isEnabled()) {
-                Toast.makeText(getApplicationContext(), "Status: enabled",
+                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast4,
                         Toast.LENGTH_LONG).show();
                 find();
             } else {
-                Toast.makeText(getApplicationContext(), "Status: disabled",
+                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast5,
                         Toast.LENGTH_LONG).show();
             }
         }
