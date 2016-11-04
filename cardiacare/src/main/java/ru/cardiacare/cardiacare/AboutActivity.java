@@ -1,14 +1,22 @@
 package ru.cardiacare.cardiacare;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
+
+import com.google.gson.Gson;
+import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 /* Страница справки */
 
 public class AboutActivity extends AppCompatActivity {
+
+    static public ImageButton buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +26,15 @@ public class AboutActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_activity_toolbar);
         setSupportActionBar(toolbar);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        buttonBack = (ImageButton) findViewById(R.id.buttonBack);
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
     }
 
     @Override

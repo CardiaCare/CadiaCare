@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_account_connection);
         Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
-        patientUri = smart.initPatient(nodeDescriptor);
+//        patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null) {
             return;
         }
@@ -287,10 +287,10 @@ public class MainActivity extends AppCompatActivity {
     public void setRegisteredActivity() {
         setContentView(R.layout.main);
         patientUriFlag = 1;
-        if (patientUri == null) {
-            patientUri = storage.getAccountId();
-            smart.initPatientWithId(nodeDescriptor, patientUri);
-        }
+//        if (patientUri == null) {
+//            patientUri = storage.getAccountId();
+//            smart.initPatientWithId(nodeDescriptor, patientUri);
+//        }
         //registerReceiver(connectReceiver, new IntentFilter(???));
 
         //btnStart = (Button) findViewById(R.id.start);
@@ -592,19 +592,19 @@ public class MainActivity extends AppCompatActivity {
             feedback = new Feedback(feedbackUri, "Student", "feedback");
             alarmFeedbackUri = smart.initFeedback();
             alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
-            if ((patientUriFlag == 1) || (patientUriFlag == -1)) {
-                patientUri = storage.getAccountId();
-                smart.initPatientWithId(nodeDescriptor, patientUri);
-                SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
+
+            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+                patientUri = smart.initPatient(nodeDescriptor);
+            } else {
+                if ((patientUriFlag == 1) || (patientUriFlag == -1)) {
+                    patientUri = storage.getAccountId();
+                    smart.initPatientWithId(nodeDescriptor, patientUri);
+                    SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
+                }
             }
-            //            if (isNetworkAvailable(this)) {
+
+
             locationUri = smart.initLocation(nodeDescriptor, patientUri);
-//                if (locationUri == null) {
-//                    return false;
-//                }
-//            } else {
-//                setLoadingActivity();
-//            }
         }
         backgroundFlag = 0;
         return true;
