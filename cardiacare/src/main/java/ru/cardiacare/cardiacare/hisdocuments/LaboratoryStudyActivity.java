@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -27,6 +28,15 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_laboratory_studies);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         EditText etOrganizationName = (EditText) findViewById(R.id.etOrganizationName);
         etOrganizationName.setText(organizationName);

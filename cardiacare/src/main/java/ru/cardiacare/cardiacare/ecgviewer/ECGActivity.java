@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -38,6 +39,15 @@ public class ECGActivity extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.ecg_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.ecg));
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         RelativeLayout v = (RelativeLayout) findViewById(R.id.ecg_view);
         myView = new ECGView(this,setViewWidthInMillimeter());

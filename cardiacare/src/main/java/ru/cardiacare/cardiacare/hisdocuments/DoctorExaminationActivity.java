@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
@@ -36,6 +37,14 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results_doctor);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         String hisDocumentType = "http://oss.fruct.org/smartcare#DoctorExamination";
 

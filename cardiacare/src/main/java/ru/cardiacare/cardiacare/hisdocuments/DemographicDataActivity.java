@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.EditText;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.DemographicData;
@@ -40,6 +41,15 @@ public class DemographicDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_demographicdata);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
 
         String hisDocumentType = "http://oss.fruct.org/smartcare#DemographicData";

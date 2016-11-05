@@ -16,8 +16,6 @@ import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 public class AboutActivity extends AppCompatActivity {
 
-    static public ImageButton buttonBack;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 //        setTitle(R.string.about);
@@ -27,8 +25,8 @@ public class AboutActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        buttonBack = (ImageButton) findViewById(R.id.buttonBack);
-        buttonBack.setOnClickListener(new View.OnClickListener() {
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
@@ -36,6 +34,8 @@ public class AboutActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     @Override
     protected void onRestart() {

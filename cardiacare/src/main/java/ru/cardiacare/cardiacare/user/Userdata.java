@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -43,6 +44,15 @@ public class Userdata extends ActionBarActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(getString(R.string.title_account));
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
 //        // кнопка назад в ActionBar
 //        //TODO переход на Main

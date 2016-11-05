@@ -25,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
     private BluetoothSocket mBluetoothSocket;
     private static final String TAG = "BluetoothFindActivity";
+    static public ImageButton buttonBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,16 @@ public class BluetoothFindActivity extends ActionBarActivity {
         getSupportActionBar().setTitle(getString(R.string.title_activity_bluetooth_find));
 
         // кнопка назад в ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         //TODO http://developer.alexanderklimov.ru/android/theory/progressdialog.php - связать его хендлером с потоком
         dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);

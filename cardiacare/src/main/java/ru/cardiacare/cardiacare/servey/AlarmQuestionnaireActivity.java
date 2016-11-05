@@ -57,6 +57,14 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         AlarmQuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         AlarmQuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
