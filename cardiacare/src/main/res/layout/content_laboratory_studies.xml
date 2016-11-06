@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="@string/organizationName"
                 android:id="@+id/OrganizationName"
                 android:padding="8dp" />
@@ -45,12 +45,13 @@
                 android:enabled="false"
                 android:textColor="#ffffff"
                 android:editable="false"
-                android:text="Ivanov Corporation" />
+                android:text="Ivanov Corporation"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="@string/hemoglobin"
                 android:id="@+id/Hemoglobin"
                 android:padding="8dp" />
@@ -65,12 +66,13 @@
                 android:enabled="false"
                 android:textColor="#ffffff"
                 android:editable="false"
-                android:text="111" />
+                android:text="111"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="@string/erythrocyte"
                 android:id="@+id/Erythrocyte"
                 android:padding="8dp" />
@@ -85,12 +87,13 @@
                 android:enabled="false"
                 android:textColor="#ffffff"
                 android:editable="false"
-                android:text="2.22" />
+                android:text="2.22"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="@string/hematocrit"
                 android:id="@+id/Hematocrit"
                 android:padding="8dp" />
@@ -105,7 +108,8 @@
                 android:enabled="false"
                 android:textColor="#ffffff"
                 android:editable="false"
-                android:text="333" />
+                android:text="333"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
