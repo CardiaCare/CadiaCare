@@ -138,9 +138,6 @@ public class DocumentsActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
-        }
         MainActivity.backgroundFlag = 0;
 
     }
