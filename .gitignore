@@ -34,6 +34,10 @@ local.properties
 /proguard/
 
 
+# Keystore files
+*.jks
+
 CardiaCare.iml
 cardiacare/cardiacare.iml
 smartcare/smartcare.iml
+
