@@ -14,9 +14,7 @@ import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
+/* Результаты обследования врачом */
 
 public class DoctorExaminationActivity extends AppCompatActivity {
 
@@ -48,14 +46,12 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         String hisDocumentType = "http://oss.fruct.org/smartcare#DoctorExamination";
 
-
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
-                hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
-
+                hisDocumentType, searchstring, fieldName, dateFrom, dateTo);
 
         hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
-        if (hisResponseUri == null){
+        if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет ответа от сервера")
                     .setTitle("Ошибка подключения")
@@ -70,7 +66,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         hisDocumentUri = MainActivity.smart.getHisDocument(MainActivity.nodeDescriptor, hisResponseUri);
 
-        if (hisDocumentUri == null){
+        if (hisDocumentUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет соотвтетствующего документа")
                     .setTitle("Ошибка подключения")
@@ -83,8 +79,8 @@ public class DoctorExaminationActivity extends AppCompatActivity {
                     }).show();
         }
 
-        rde = new ResultDoctorExamination("Examination reason","Visit order",
-                "Diagnoses","Medications","true","No","h","w","Diagnoses");
+        rde = new ResultDoctorExamination("Examination reason", "Visit order",
+                "Diagnoses", "Medications", "true", "No", "h", "w", "Diagnoses");
         rde = MainActivity.smart.getHisDoctorExamination(MainActivity.nodeDescriptor, hisDocumentUri);
 
         EditText etExaminationReason = (EditText) findViewById(R.id.etExaminationReason);
@@ -110,11 +106,6 @@ public class DoctorExaminationActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
-//        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
     }
 
     @Override
@@ -123,6 +114,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -134,6 +126,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

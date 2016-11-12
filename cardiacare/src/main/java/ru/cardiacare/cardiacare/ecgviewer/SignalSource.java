@@ -35,14 +35,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-/**
- * This class contains common data and methods for all of the supported ECG
- * signal sources.
- *
- * @author Alexander Borodin
- * @author Yulia Zavyalova
- * @since 1.0
- */
+/* This class contains common data and methods for all of the supported ECG signal sources */
+
 abstract public class SignalSource {
 
     public static enum States {
@@ -50,7 +44,9 @@ abstract public class SignalSource {
         STATE_CONNECTING,
         STATE_CONNECTED,
         STATE_DISCONNECTING
-    };
+    }
+
+    ;
 
     private States mState;
     private final Handler mRemoteHandler;
@@ -72,13 +68,8 @@ abstract public class SignalSource {
 
     private int processMessage(Message msg) {
         return 0;
-
     }
 
-    /**
-     *
-     * @return
-     */
     public synchronized States getState() {
         return mState;
     }
@@ -87,22 +78,18 @@ abstract public class SignalSource {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        //mRemoteHandler.obtainMessage(BluetoothFindActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+//        mRemoteHandler.obtainMessage(BluetoothFindActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 
     public synchronized void connect(Bundle config) {
-
     }
 
     public synchronized void disconnect(Bundle config) {
-
     }
 
     private static class ConnectionThread extends Thread {
-
     }
 
     private static class WorkerThread extends Thread {
-
     }
 }

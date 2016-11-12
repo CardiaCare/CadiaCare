@@ -2,9 +2,9 @@ package ru.cardiacare.cardiacare;
 
 import org.json.JSONObject;
 
-/**
- * Created by Yulia on 20.04.2015.
- */
+/* Разбор JSON-файлов */
+// Не используется
+
 public class JSONParser {
 
     final String LOG_TAG = "myLogs JSONParser";
@@ -16,12 +16,7 @@ public class JSONParser {
             Integer created_at = reader.getInt("created_at");
             Integer type = reader.getInt("type");
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
     }
-
-
-
 }

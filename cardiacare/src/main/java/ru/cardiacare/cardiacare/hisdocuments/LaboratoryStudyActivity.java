@@ -10,9 +10,7 @@ import android.widget.EditText;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
+/* Экран "Лабораторные исследования" */
 
 public class LaboratoryStudyActivity extends AppCompatActivity {
 
@@ -54,6 +52,7 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -61,6 +60,7 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

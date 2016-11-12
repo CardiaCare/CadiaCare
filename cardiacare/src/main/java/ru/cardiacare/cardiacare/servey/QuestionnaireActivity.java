@@ -15,7 +15,6 @@ import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.servey.Answer;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Question;
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -28,7 +27,7 @@ import java.util.LinkedList;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/* Отображение опросника */
+/* Отображение периодического опросника */
 
 public class QuestionnaireActivity extends AppCompatActivity {
 
@@ -36,7 +35,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
-    static public ImageButton buttonClean; // Clean
+    static public ImageButton buttonClean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +45,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
             MainActivity.feedback = qst;
-        } catch( Exception e ){
+        } catch (Exception e) {
 
         }
         super.onCreate(savedInstanceState);
@@ -106,15 +105,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
         QuestionnaireAdapter = new RecyclerViewAdapter(MainActivity.questionnaire.getQuestions(), Types, context);
         QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
 
-        //Clean
-        //final Button buttonClean; // Clean
-        buttonClean = (ImageButton) findViewById(R.id.buttonClean);// Clean
+        buttonClean = (ImageButton) findViewById(R.id.buttonClean);
         buttonClean.setVisibility(4);
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
-            public void onClick(View v) {// Clean
+            public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
-                buttonClean.setEnabled(false);//блокируем от повторного нажатия
+                buttonClean.setEnabled(false);
                 buttonClean.setVisibility(4);
                 MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
                 Gson json = new Gson();
@@ -126,16 +123,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 finish();
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-                /*
-                Intent i = new Intent( QuestionnaireActivity.this , QuestionnaireActivity.this.getClass() );
-                //finish();
-                //QuestionnaireActivity.this.startActivity(i);
-                QuestionnaireActivity.restartPackages(i);//
-                //finish();//
-                */
             }// Clean
-        });// Clean
-
+        });
         buttonClean.setVisibility(0);
     }
 
@@ -144,16 +133,15 @@ public class QuestionnaireActivity extends AppCompatActivity {
         super.onStop();
         MainActivity.backgroundFlag = 0;
         MainActivity.serveyButton.setEnabled(true);
-
-        //MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-        //buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-        //MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
-    public void writeData ( String data ) {
+    public void writeData(String data) {
         try {
-            //FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE );
+//            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
+            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -163,7 +151,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         }
     }
 
-    public String readSavedData(){
+    public String readSavedData() {
         StringBuffer datax = new StringBuffer("");
         try {
             FileInputStream fIn = openFileInput("feedback.json");
@@ -171,12 +159,12 @@ public class QuestionnaireActivity extends AppCompatActivity {
             BufferedReader buffreader = new BufferedReader(isr);
 
             String readString = buffreader.readLine();
-            while ( readString != null ) {
+            while (readString != null) {
                 datax.append(readString);
                 readString = buffreader.readLine();
             }
             isr.close();
-        } catch ( IOException ioe) {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         return datax.toString();
@@ -188,17 +176,18 @@ public class QuestionnaireActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         Gson json = new Gson();
         String jsonStr = json.toJson(MainActivity.feedback);
         System.out.println(jsonStr);
         writeData(jsonStr);
-        //to SIB
-        Long timestamp = System.currentTimeMillis()/1000;
+        // To SIB
+        Long timestamp = System.currentTimeMillis() / 1000;
         String ts = timestamp.toString();
-        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri,ts);
-        //to Server
+        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
+        // To Server
         FeedbackPOST feedbackPOST = new FeedbackPOST(context);
         feedbackPOST.execute();
         super.onPause();
@@ -206,6 +195,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

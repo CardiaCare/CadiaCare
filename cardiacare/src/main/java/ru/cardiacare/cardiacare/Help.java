@@ -1,6 +1,5 @@
 package ru.cardiacare.cardiacare;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -9,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+/* Экран "Помощь" */
 
 public class Help extends ActionBarActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -29,22 +30,14 @@ public class Help extends ActionBarActivity {
                 onBackPressed();
             }
         });
-
-//        // кнопка назад в ActionBar
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        // back button in left side of ActionBar
-//        if (getActionBar() != null) {
-//            getActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if ( item.getItemId() == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);*/
+//        if ( item.getItemId() == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -61,6 +54,7 @@ public class Help extends ActionBarActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -68,6 +62,7 @@ public class Help extends ActionBarActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

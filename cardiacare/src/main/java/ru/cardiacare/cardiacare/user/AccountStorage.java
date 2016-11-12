@@ -16,7 +16,7 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
-    public static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; //Версия последней загруженной анкеты
+    public static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
 
     String strId;
     String strFirstName;

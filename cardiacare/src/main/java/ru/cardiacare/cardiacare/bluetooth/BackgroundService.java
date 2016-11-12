@@ -33,14 +33,7 @@ package ru.cardiacare.cardiacare.bluetooth;
 import android.app.IntentService;
 import android.content.Intent;
 
-/**
- * This class represents a service running in background and responsible for
- * messaging between signal source and consumers.
- *
- * @author Alexander Borodin
- * @author Yulia Zavyalova
- * @since 1.0
- */
+/* This class represents a service running in background and responsible for messaging between signal source and consumers */
 public class BackgroundService extends IntentService {
 
     private static BackgroundService serviceInstance = null;
@@ -50,17 +43,14 @@ public class BackgroundService extends IntentService {
         if (serviceInstance == null) {
             new BackgroundService();
         }
-
         return serviceInstance;
     }
 
     private BackgroundService() {
-
         super("CardiaCare Service");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
     }
 }

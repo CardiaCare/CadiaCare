@@ -14,12 +14,9 @@ import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
+/* Экран "Результаты измерения артериального давления" */
 
 public class BloodPressureActivity extends AppCompatActivity {
-
 
     String searchstring = null;
     String fieldName = null;
@@ -51,12 +48,11 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         String hisDocumentType = "http://oss.fruct.org/smartcare#BloodPressureMeasurement";
 
-
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
-                hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
+                hisDocumentType, searchstring, fieldName, dateFrom, dateTo);
         hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
-        if (hisResponseUri == null){
+        if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет ответа от сервера")
                     .setTitle("Ошибка подключения")
@@ -71,7 +67,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         hisDocumentUri = MainActivity.smart.getHisDocument(MainActivity.nodeDescriptor, hisResponseUri);
 
-        if (hisDocumentUri == null){
+        if (hisDocumentUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет соотвтетствующего документа")
                     .setTitle("Ошибка подключения")
@@ -84,10 +80,8 @@ public class BloodPressureActivity extends AppCompatActivity {
                     }).show();
         }
 
-        rbp = new ResultBloodPressure("systolicPressure","diastolicPressure", "pulse");
+        rbp = new ResultBloodPressure("systolicPressure", "diastolicPressure", "pulse");
         rbp = MainActivity.smart.getHisBloodPressureResult(MainActivity.nodeDescriptor, hisDocumentUri);
-
-
 
         EditText etSystolicPressure = (EditText) findViewById(R.id.etSystolicPressure);
         etSystolicPressure.setText(rbp.getSystolicPressure());
@@ -100,10 +94,6 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
-//        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
     }
 
     @Override
@@ -112,6 +102,7 @@ public class BloodPressureActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -123,6 +114,7 @@ public class BloodPressureActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

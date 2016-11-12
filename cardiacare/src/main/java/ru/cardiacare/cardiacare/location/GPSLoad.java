@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 
 /* Отправка геоданных */
 
@@ -25,11 +24,11 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
 
     @Override
     public Void doInBackground(Void... params) {
-        if(MainActivity.gps.canGetLocation()) {
+        if (MainActivity.gps.canGetLocation()) {
             double latitude = MainActivity.gps.getLatitude();
             double longitude = MainActivity.gps.getLongitude();
             if (MainActivity.isNetworkAvailable(context)) {
-                Log.i("SS", ""+ Double.toString(latitude)+" "+ Double.toString(longitude));
+                Log.i("SS", "" + Double.toString(latitude) + " " + Double.toString(longitude));
                 if (MainActivity.locationUri != null && MainActivity.patientUri != null)
                     MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
             }
