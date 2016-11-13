@@ -158,7 +158,6 @@ public class LocationService extends Service implements LocationListener {
             // Ask user to enable GPS/network in settings
             showSettingsAlert();
             MainActivity.gpsEnabledFlag = 0;
-
         }
     }
 

@@ -229,20 +229,28 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                backgroundFlag = 1;
-                // TODO выбор способа подключения
-                Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
-                // TODO change methods
-                startActivity(intentBluetoothFind);
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    // TODO выбор способа подключения
+                    Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
+                    // TODO change methods
+                    startActivity(intentBluetoothFind);
+                } else {
+                    setLoadingActivity();
+                }
             }
         });
 
         serveyButton = (ImageButton) findViewById(R.id.serveyButton);
         serveyButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                backgroundFlag = 1;
-                QuestionnaireHelper.showQuestionnaire(context);
-                serveyButton.setEnabled(false);
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    QuestionnaireHelper.showQuestionnaire(context);
+                    serveyButton.setEnabled(false);
+                } else {
+                    setLoadingActivity();
+                }
             }
         });
 
@@ -250,8 +258,12 @@ public class MainActivity extends AppCompatActivity {
         assert docsButton != null;
         docsButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                backgroundFlag = 1;
-                startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
+                } else {
+                    setLoadingActivity();
+                }
             }
         });
 
@@ -263,33 +275,37 @@ public class MainActivity extends AppCompatActivity {
         alarmButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backgroundFlag = 1;
-                if (!gps.canGetLocation()) {
-                    alarmButtonFlag = true;
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                    alertDialog.setTitle(R.string.dialog_sos_title);
-                    alertDialog.setMessage(R.string.dialog_sos_message);
-                    alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Переход к настройкам GPS
-                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            context.startActivity(intent);
-                        }
-                    });
-                    alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            GPSLoad gpsLoad2 = new GPSLoad(context);
-                            gpsLoad2.execute();
-                            dialog.cancel();
-                        }
-                    });
-                    alertDialog.show();
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    if (!gps.canGetLocation()) {
+                        alarmButtonFlag = true;
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                        alertDialog.setTitle(R.string.dialog_sos_title);
+                        alertDialog.setMessage(R.string.dialog_sos_message);
+                        alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Переход к настройкам GPS
+                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                context.startActivity(intent);
+                            }
+                        });
+                        alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                GPSLoad gpsLoad2 = new GPSLoad(context);
+                                gpsLoad2.execute();
+                                dialog.cancel();
+                            }
+                        });
+                        alertDialog.show();
+                    } else {
+                        alarmButton.setEnabled(false);
+                        alarmButton.setBackgroundColor(0x77a71000);
+                        alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
+                        alarmButtonFlag = false;
+                        AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                    }
                 } else {
-                    alarmButton.setEnabled(false);
-                    alarmButton.setBackgroundColor(0x77a71000);
-                    alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
-                    alarmButtonFlag = false;
-                    AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                    setLoadingActivity();
                 }
             }
         });
@@ -356,17 +372,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             case R.id.passSurvey:
-                backgroundFlag = 1;
-                QuestionnaireHelper.showQuestionnaire(context);
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    QuestionnaireHelper.showQuestionnaire(context);
+                } else {
+                    setLoadingActivity();
+                }
                 break;
             case R.id.exitAccount:
-                backgroundFlag = 0;
-                patientUriFlag = -1;
-                storage.setAccountPreferences("", "", "", "", "", "", "", "", "0");
-                DisconnectFromSmartSpace();
-                setLoadingActivity();
-                deleteFile("feedback.json");
-                deleteFile("alarmFeedback.json");
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 0;
+                    patientUriFlag = -1;
+                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "0");
+                    DisconnectFromSmartSpace();
+                    setLoadingActivity();
+                    deleteFile("feedback.json");
+                    deleteFile("alarmFeedback.json");
+                } else {
+                    setLoadingActivity();
+                }
                 break;
             case R.id.menuHelp:
                 backgroundFlag = 1;
@@ -374,17 +398,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent2);
                 break;
             case R.id.documentsData:
-                backgroundFlag = 1;
-                startActivity(new Intent(this, DocumentsActivity.class));
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    startActivity(new Intent(this, DocumentsActivity.class));
+                } else {
+                    setLoadingActivity();
+                }
                 break;
             case R.id.menuUserData:
-                backgroundFlag = 1;
-                //TODO Переделать (откуда берутся настройки юзера БД?)
-                if (!loginState) {
-                    Intent intent3 = new Intent(this, Login.class);
-                    startActivity(intent3);
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+                    //TODO Переделать (откуда берутся настройки юзера БД?)
+                    if (!loginState) {
+                        Intent intent3 = new Intent(this, Login.class);
+                        startActivity(intent3);
+                    } else {
+                        startActivity(new Intent(this, Userdata.class));
+                    }
                 } else {
-                    startActivity(new Intent(this, Userdata.class));
+                    setLoadingActivity();
                 }
                 break;
             default:
