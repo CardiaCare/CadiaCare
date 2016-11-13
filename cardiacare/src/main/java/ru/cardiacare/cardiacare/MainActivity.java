@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     // 1 - добровольное / 0 - недобровольное
     // Перед каждым переходом на другую активность устанавливаем флаг = 1
     static public int patientUriFlag = -1; // Статус пользователя, -1 - первый запуск приложения / 1 - зарегистрированный пользователь / 0 - незарегистрированный пользователь
+    static public int netFlag = 0; // Установлено ли соединение с интернетом, 1 - установлено / 0 - не установлено
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (isNetworkAvailable(this)) {
+            netFlag = 1;
             storage = new AccountStorage();
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
             ConnectToSmartSpace();
@@ -137,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 setRegisteredActivity();
             }
         } else {
+            netFlag = 0;
+            Log.i(TAG, "patientUriFlag = " + patientUriFlag);
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
             alertDialog.setTitle(R.string.dialog_wifi_title);
             alertDialog.setMessage(R.string.dialog_wifi_message);
@@ -147,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                             WifiButton.setVisibility(View.VISIBLE);
                         }
                     });
-
             alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -155,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                             setLoadingActivity();
                         }
                     });
-
             alertDialog.show();
         }
     }
@@ -421,8 +423,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Подключение к интеллектуальному пространству
     static public boolean ConnectToSmartSpace() {
-        //Если соединение не установлено, то устанавливаем его
-        if (sibConnectedFlag != 1) {
+        //Если есть доступ к интернету и соединение с SIB'ом не установлено, то устанавливаем его
+        if  ((netFlag == 1) && (sibConnectedFlag != 1)) {
 //            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {
