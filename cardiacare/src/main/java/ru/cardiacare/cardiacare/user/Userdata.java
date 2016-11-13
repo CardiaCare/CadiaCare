@@ -1,9 +1,11 @@
 package ru.cardiacare.cardiacare.user;
 
+import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,7 +16,7 @@ import ru.cardiacare.cardiacare.R;
 
 /* Хранение данных аккаунта */
 
-public class Userdata extends ActionBarActivity {
+public class Userdata extends AppCompatActivity {
 
     SharedPreferences sPref;
 
@@ -41,8 +43,8 @@ public class Userdata extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_account));
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

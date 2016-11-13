@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.google.gson.Gson;
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Answer;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Question;
@@ -53,6 +54,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,13 +108,11 @@ public class QuestionnaireActivity extends AppCompatActivity {
         QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
 
         buttonClean = (ImageButton) findViewById(R.id.buttonClean);
-        buttonClean.setVisibility(4);
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
                 buttonClean.setEnabled(false);
-                buttonClean.setVisibility(4);
                 MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
                 Gson json = new Gson();
                 String jsonStr = json.toJson(MainActivity.feedback);
@@ -125,7 +125,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 startActivity(intent);
             }// Clean
         });
-        buttonClean.setVisibility(0);
     }
 
     @Override
@@ -152,7 +151,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
     public String readSavedData() {
-        StringBuffer datax = new StringBuffer("");
+        StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn = openFileInput("feedback.json");
             InputStreamReader isr = new InputStreamReader(fIn);
@@ -186,7 +185,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         // To SIB
         Long timestamp = System.currentTimeMillis() / 1000;
         String ts = timestamp.toString();
-        MainActivity.smart.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
+        SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
         // To Server
         FeedbackPOST feedbackPOST = new FeedbackPOST(context);
         feedbackPOST.execute();

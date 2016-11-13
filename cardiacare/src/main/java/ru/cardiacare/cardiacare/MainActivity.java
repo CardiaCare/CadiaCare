@@ -247,11 +247,10 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
 
         connectListView = (ListView) findViewById(R.id.ConnectListView);
 
-        connectListArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        connectListArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         connectListView.setAdapter(connectListArrayAdapter);
         connectListArrayAdapter.add("Alive Bluetooth Monitor");
         connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ImageButton docsButton = (ImageButton) findViewById(R.id.docsButton);
+        assert docsButton != null;
         docsButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 backgroundFlag = 1;
@@ -350,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar_connected);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
     }
 
     // Древняя функция. Не используется
@@ -470,9 +469,9 @@ public class MainActivity extends AppCompatActivity {
     static public boolean InitObjects() {
         if (backgroundFlag == 0) {
 //            Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
-            feedbackUri = smart.initFeedback();
+            feedbackUri = SmartCareLibrary.initFeedback();
             feedback = new Feedback(feedbackUri, "Student", "feedback");
-            alarmFeedbackUri = smart.initFeedback();
+            alarmFeedbackUri = SmartCareLibrary.initFeedback();
             alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
 
             if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {

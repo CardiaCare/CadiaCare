@@ -39,14 +39,12 @@ import android.os.Message;
 
 abstract public class SignalSource {
 
-    public static enum States {
+    private static enum States {
         STATE_DISCONNECTED,
         STATE_CONNECTING,
         STATE_CONNECTED,
         STATE_DISCONNECTING
     }
-
-    ;
 
     private States mState;
     private final Handler mRemoteHandler;

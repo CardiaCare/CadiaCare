@@ -28,9 +28,9 @@ import ru.cardiacare.cardiacare.R;
 /* Расстановка вопросов по карточкам */
 
 public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecyclerViewAdapter.ViewHolder> {
-    LinkedList<Question> Questions;
-    int[] TypesQuestions;
-    Context context;
+    private LinkedList<Question> Questions;
+    private int[] TypesQuestions;
+    private Context context;
 
     public static final int TextField = 0;
     public static final int Multiplechoice = 1;
@@ -42,7 +42,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     public static final int Dichotomous = 7;
     public static final int DefaultValue = 8;
 
-    LinkedList<Response> alarmFeedback = MainActivity.alarmFeedback.getResponses();
+    private LinkedList<Response> alarmFeedback = MainActivity.alarmFeedback.getResponses();
 
     public AlarmRecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
         this.Questions = Questions;
@@ -406,7 +406,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class DichotomousViewHolder extends ViewHolder {
+    private class DichotomousViewHolder extends ViewHolder {
 //        TextView DichotomousQuestion;
 //        RadioButton DichotomousAnswer1, DichotomousAnswer2;
 //
@@ -469,7 +469,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class SingleChoiceViewHolder extends ViewHolder {
+    private class SingleChoiceViewHolder extends ViewHolder {
         TextView SingleChoiceQuestion;
         RadioGroup SingleChoiceGroup;
         RadioButton SingleChoiceAnswer;
@@ -523,7 +523,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class TextFieldViewHolder extends ViewHolder {
+    private class TextFieldViewHolder extends ViewHolder {
         TextView TextFieldQuestion;
         EditText TextFieldAnswer;
         String uri;
@@ -537,7 +537,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
 //                    System.out.println("Touch! TextField "+hasFocus+" "+uri);
-                    if (false == hasFocus) {
+                    if (!hasFocus) {
                         for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
                             if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                 int flag = 0;
@@ -577,7 +577,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class MultipleChoiceViewHolder extends ViewHolder {
+    private class MultipleChoiceViewHolder extends ViewHolder {
         TextView MultipleChoiceQuestion;
         LinearLayout MultipleChoiceLayout;
         CheckBox MultipleChoiceAnswer;
@@ -591,7 +591,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class BipolarQuestionViewHolder extends ViewHolder {
+    private class BipolarQuestionViewHolder extends ViewHolder {
         TextView BipolarQuestionQuestion;
         TextView BipolarQuestionValue;
         SeekBar BipolarQuestionSeekBar;
@@ -657,7 +657,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class LikertScaleViewHolder extends ViewHolder {
+    private class LikertScaleViewHolder extends ViewHolder {
         TextView LikertScaleQuestion;
         RadioGroup LikertScaleGroup;
         RadioButton LikertScaleAnswer;
@@ -711,7 +711,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class GuttmanScaleViewHolder extends ViewHolder {
+    private class GuttmanScaleViewHolder extends ViewHolder {
         TextView GuttmanScaleQuestion;
         RadioGroup GuttmanScaleGroup;
         RadioButton GuttmanScaleAnswer;
@@ -764,7 +764,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
         }
     }
 
-    public class ContinuousScaleViewHolder extends ViewHolder {
+    private class ContinuousScaleViewHolder extends ViewHolder {
         TextView ContinuousScaleQuestion;
         TextView ContinuousScaleAnswer;
         TextView ContinuousScaleValue;

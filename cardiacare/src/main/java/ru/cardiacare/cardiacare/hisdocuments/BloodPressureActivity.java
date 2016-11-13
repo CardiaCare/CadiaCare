@@ -37,6 +37,7 @@ public class BloodPressureActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,10 +85,13 @@ public class BloodPressureActivity extends AppCompatActivity {
         rbp = MainActivity.smart.getHisBloodPressureResult(MainActivity.nodeDescriptor, hisDocumentUri);
 
         EditText etSystolicPressure = (EditText) findViewById(R.id.etSystolicPressure);
+        assert etSystolicPressure != null;
         etSystolicPressure.setText(rbp.getSystolicPressure());
         EditText etDiastolicPressure = (EditText) findViewById(R.id.etDiastolicPressure);
+        assert etDiastolicPressure != null;
         etDiastolicPressure.setText(rbp.getDiastolicPressure());
         EditText etPulse = (EditText) findViewById(R.id.etPulse);
+        assert etPulse != null;
         etPulse.setText(rbp.getPulse());
     }
 

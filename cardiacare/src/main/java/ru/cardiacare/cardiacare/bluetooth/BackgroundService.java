@@ -34,6 +34,7 @@ import android.app.IntentService;
 import android.content.Intent;
 
 /* This class represents a service running in background and responsible for messaging between signal source and consumers */
+
 public class BackgroundService extends IntentService {
 
     private static BackgroundService serviceInstance = null;

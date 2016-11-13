@@ -22,10 +22,10 @@ import ru.cardiacare.cardiacare.MainActivity;
 
 public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
 
-    Context context;
-    HttpURLConnection urlConnection = null;
-    BufferedReader reader = null;
-    String resultJson = "";
+    private Context context;
+    private HttpURLConnection urlConnection = null;
+    private BufferedReader reader = null;
+    private String resultJson = "";
 
     public QuestionnaireGET(Context context) {
         this.context = context;

@@ -359,7 +359,6 @@ public class ECGView extends View {
         return sig;
     }
 
-
     public double[] broadband_filter(double[] Signal) {
         double[] sig = new double[Signal.length];
 

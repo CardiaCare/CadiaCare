@@ -54,6 +54,7 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,13 +108,11 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
         AlarmQuestionnaireRecyclerView.setAdapter(AlarmQuestionnaireAdapter);
 
         buttonClean = (ImageButton) findViewById(R.id.buttonClean);
-        buttonClean.setVisibility(4);
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
                 buttonClean.setEnabled(false);
-                buttonClean.setVisibility(4);
                 MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
                 Gson json = new Gson();
                 String jsonStr = json.toJson(MainActivity.alarmFeedback);
@@ -126,7 +125,6 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
                 startActivity(intent);
             }// Clean
         });
-        buttonClean.setVisibility(0);
     }
 
     @Override
@@ -162,7 +160,7 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
     }
 
     public String readSavedData() {
-        StringBuffer datax = new StringBuffer("");
+        StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn = openFileInput("alarmFeedback.json");
             InputStreamReader isr = new InputStreamReader(fIn);

@@ -35,6 +35,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results_doctor);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,22 +85,31 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         rde = MainActivity.smart.getHisDoctorExamination(MainActivity.nodeDescriptor, hisDocumentUri);
 
         EditText etExaminationReason = (EditText) findViewById(R.id.etExaminationReason);
+        assert etExaminationReason != null;
         etExaminationReason.setText(rde.getExaminationReason());
         EditText etVisitOrder = (EditText) findViewById(R.id.etVisitOrder);
+        assert etVisitOrder != null;
         etVisitOrder.setText(rde.getVisitOrder());
         EditText etDiagnoses = (EditText) findViewById(R.id.etDiagnoses);
+        assert etDiagnoses != null;
         etDiagnoses.setText(rde.getDiagnoses());
         EditText etMedications = (EditText) findViewById(R.id.etMedications);
+        assert etMedications != null;
         etMedications.setText(rde.getMedications());
         EditText etSmooking = (EditText) findViewById(R.id.etSmooking);
+        assert etSmooking != null;
         etSmooking.setText(rde.getSmooking());
         EditText etDrinking = (EditText) findViewById(R.id.etDrinking);
+        assert etDrinking != null;
         etDrinking.setText(rde.getDrinking());
         EditText etHeight = (EditText) findViewById(R.id.etHeight);
+        assert etHeight != null;
         etHeight.setText(rde.getHeight());
         EditText etWeight = (EditText) findViewById(R.id.etWeight);
+        assert etWeight != null;
         etWeight.setText(rde.getWeight());
         EditText etDiseasePredisposition = (EditText) findViewById(R.id.etDiseasePredisposition);
+        assert etDiseasePredisposition != null;
         etDiseasePredisposition.setText(rde.getDiseasePredisposition());
     }
 

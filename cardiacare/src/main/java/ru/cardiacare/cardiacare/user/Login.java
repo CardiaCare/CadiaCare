@@ -3,7 +3,7 @@ package ru.cardiacare.cardiacare.user;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +20,7 @@ import ru.cardiacare.cardiacare.R;
 
 /* ??? */
 
-public class Login extends ActionBarActivity implements OnClickListener {
+public class Login extends AppCompatActivity implements OnClickListener {
 
     EditText etLogin;
     EditText etPassword;
@@ -34,8 +34,8 @@ public class Login extends ActionBarActivity implements OnClickListener {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.login_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_login));
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +49,7 @@ public class Login extends ActionBarActivity implements OnClickListener {
         etPassword = (EditText) findViewById(R.id.etPassword);
 
         Button btEnter = (Button) findViewById(R.id.btEnter);
+        assert btEnter != null;
         btEnter.setOnClickListener(this);
     }
 

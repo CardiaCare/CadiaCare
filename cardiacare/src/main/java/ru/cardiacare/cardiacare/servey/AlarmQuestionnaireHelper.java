@@ -47,7 +47,7 @@ public class AlarmQuestionnaireHelper {
     }
 
     // Чтение из файла
-    static public String readSavedDataAlarm(Context context) {
+    private static String readSavedDataAlarm(Context context) {
         StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn = context.openFileInput(filename);

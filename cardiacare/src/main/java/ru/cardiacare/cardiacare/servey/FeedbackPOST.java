@@ -22,7 +22,7 @@ import ru.cardiacare.cardiacare.MainActivity;
 
 public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
-    Context context;
+    private Context context;
     HttpURLConnection urlConnection = null;
 
     public FeedbackPOST(Context context) {
@@ -85,10 +85,6 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 //                    data = baos.toByteArray();
 //                    resultString = new String(data, "UTF-8");
                 }
-            } catch (MalformedURLException e) {
-//                resultString = "MalformedURLException:" + e.getMessage();
-            } catch (IOException e) {
-//                resultString = "IOException:" + e.getMessage();
             } catch (Exception e) {
 //                resultString = "Exception:" + e.getMessage();
             }
@@ -103,8 +99,8 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
         super.onPostExecute(result);
     }
 
-    public String readSavedData() {
-        StringBuffer datax = new StringBuffer("");
+    private String readSavedData() {
+        StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn = context.openFileInput("feedbackold.json");
             InputStreamReader isr = new InputStreamReader(fIn);
@@ -122,7 +118,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
         return datax.toString();
     }
 
-    public void writeData(String data) {
+    private void writeData(String data) {
         try {
 //            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
             FileOutputStream fOut = context.openFileOutput("feedbackold.json", context.MODE_PRIVATE);

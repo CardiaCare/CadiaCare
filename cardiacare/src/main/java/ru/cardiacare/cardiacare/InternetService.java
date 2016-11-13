@@ -17,8 +17,6 @@ import java.net.MalformedURLException;
 
 public class InternetService extends AsyncTask<JSONObject, JSONObject, JSONObject> {
 
-    final String LOG_TAG = "myLogs InternetService";
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -54,6 +52,8 @@ public class InternetService extends AsyncTask<JSONObject, JSONObject, JSONObjec
 //
 //       //Log.d("LOG_TAG", jsonResponse.toString());
 
+        String LOG_TAG = "myLogs InternetService";
+
         try {
             URL object = new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -73,7 +73,7 @@ public class InternetService extends AsyncTask<JSONObject, JSONObject, JSONObjec
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"));
                 String line = null;
                 while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
+                    sb.append(line).append("\n");
                 }
                 br.close();
                 System.out.println("" + sb.toString());

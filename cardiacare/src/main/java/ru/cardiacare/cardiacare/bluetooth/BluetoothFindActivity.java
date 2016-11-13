@@ -70,8 +70,8 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.bt_find_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_activity_bluetooth_find));
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

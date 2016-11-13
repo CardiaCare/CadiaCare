@@ -4,7 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,7 +16,7 @@ import ru.cardiacare.cardiacare.R;
 
 /* Экран "ЭКГ" */
 
-public class ECGActivity extends ActionBarActivity {
+public class ECGActivity extends AppCompatActivity {
 
     final int Data = 1;
     ECGView myView;
@@ -35,8 +35,8 @@ public class ECGActivity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.ecg_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.ecg));
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,6 +49,7 @@ public class ECGActivity extends ActionBarActivity {
         RelativeLayout v = (RelativeLayout) findViewById(R.id.ecg_view);
         myView = new ECGView(this, setViewWidthInMillimeter());
 
+        assert v != null;
         v.addView(myView);
 
         Resources res = getResources();

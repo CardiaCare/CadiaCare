@@ -86,7 +86,7 @@ public class QuestionnaireHelper {
     }
 
     // Чтение из файла
-    static public String readSavedData(Context context) {
+    private static String readSavedData(Context context) {
         StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn = context.openFileInput(filename);

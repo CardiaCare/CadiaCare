@@ -38,6 +38,7 @@ public class DemographicDataActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +52,6 @@ public class DemographicDataActivity extends AppCompatActivity {
 
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
                 hisDocumentType, searchstring, fieldName, dateFrom, dateTo);
-
 
         hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
@@ -89,18 +89,25 @@ public class DemographicDataActivity extends AppCompatActivity {
 
 
         EditText etName = (EditText) findViewById(R.id.etName);
+        assert etName != null;
         etName.setText(dd.getPatientName());
         EditText etSurname = (EditText) findViewById(R.id.etSurname);
+        assert etSurname != null;
         etSurname.setText(dd.getSurname());
         EditText etPatronymic = (EditText) findViewById(R.id.etPatronymic);
+        assert etPatronymic != null;
         etPatronymic.setText(dd.getPatronymic());
         EditText etBirthDate = (EditText) findViewById(R.id.etBirthDate);
+        assert etBirthDate != null;
         etBirthDate.setText(dd.getBirthDate());
         EditText etSex = (EditText) findViewById(R.id.etSex);
+        assert etSex != null;
         etSex.setText(dd.getSex());
         EditText etResidence = (EditText) findViewById(R.id.etResidence);
+        assert etResidence != null;
         etResidence.setText(dd.getResidence());
         EditText etContactInformation = (EditText) findViewById(R.id.etContactInformation);
+        assert etContactInformation != null;
         etContactInformation.setText(dd.getContactInformation());
     }
 

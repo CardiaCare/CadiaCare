@@ -30,6 +30,7 @@ public class DocumentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +76,7 @@ public class DocumentsActivity extends AppCompatActivity {
         }
 
         Button demographicButton = (Button) findViewById(R.id.demographicData);
+        assert demographicButton != null;
         demographicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +86,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button laboratoryButton = (Button) findViewById(R.id.laboratoryStudies);
+        assert laboratoryButton != null;
         laboratoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +96,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button resultsDoctorButton = (Button) findViewById(R.id.resultsDoctor);
+        assert resultsDoctorButton != null;
         resultsDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +106,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button resultsBloodButton = (Button) findViewById(R.id.resultsBlood);
+        assert resultsBloodButton != null;
         resultsBloodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

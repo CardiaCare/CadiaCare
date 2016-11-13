@@ -36,10 +36,10 @@ public class BluetoothService {
     private boolean isStop = false;
 
     // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0;       // we're doing nothing
+    private static final int STATE_NONE = 0;       // we're doing nothing
     public static final int STATE_LISTEN = 1;     // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
-    public static final int STATE_CONNECTED = 3;  // now connected to a remote device
+    private static final int STATE_CONNECTING = 2; // now initiating an outgoing connection
+    private static final int STATE_CONNECTED = 3;  // now connected to a remote device
 
 //     Constructor. Prepares a new Act_Main session.
 //     @param context  The UI Activity Context
@@ -99,10 +99,10 @@ public class BluetoothService {
 //        connected(mConnectThread.mmSocket,device);
     }
 
-    //     Start the ConnectedThread to begin managing a Bluetooth connection
-//     @param socket  The BluetoothSocket on which the connection was made
-//     @param device  The BluetoothDevice that has been connected
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
+    // Start the ConnectedThread to begin managing a Bluetooth connection
+    // @param socket  The BluetoothSocket on which the connection was made
+    // @param device  The BluetoothDevice that has been connected
+    private synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
         if (D) Log.d(TAG, "connected");
 
         // Cancel the thread that completed the connection
@@ -336,7 +336,6 @@ public class BluetoothService {
                 }
             }
         }
-
 
 //         Write to the connected OutStream.
 //         @param buffer  The bytes to write
