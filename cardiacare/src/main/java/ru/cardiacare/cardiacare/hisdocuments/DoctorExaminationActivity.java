@@ -14,9 +14,7 @@ import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
+/* Результаты обследования врачом */
 
 public class DoctorExaminationActivity extends AppCompatActivity {
 
@@ -37,6 +35,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_results_doctor);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,14 +47,12 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         String hisDocumentType = "http://oss.fruct.org/smartcare#DoctorExamination";
 
-
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
-                hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
-
+                hisDocumentType, searchstring, fieldName, dateFrom, dateTo);
 
         hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
-        if (hisResponseUri == null){
+        if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет ответа от сервера")
                     .setTitle("Ошибка подключения")
@@ -70,7 +67,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         hisDocumentUri = MainActivity.smart.getHisDocument(MainActivity.nodeDescriptor, hisResponseUri);
 
-        if (hisDocumentUri == null){
+        if (hisDocumentUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Нет соотвтетствующего документа")
                     .setTitle("Ошибка подключения")
@@ -83,38 +80,42 @@ public class DoctorExaminationActivity extends AppCompatActivity {
                     }).show();
         }
 
-        rde = new ResultDoctorExamination("Examination reason","Visit order",
-                "Diagnoses","Medications","true","No","h","w","Diagnoses");
+        rde = new ResultDoctorExamination("Examination reason", "Visit order",
+                "Diagnoses", "Medications", "true", "No", "h", "w", "Diagnoses");
         rde = MainActivity.smart.getHisDoctorExamination(MainActivity.nodeDescriptor, hisDocumentUri);
 
         EditText etExaminationReason = (EditText) findViewById(R.id.etExaminationReason);
+        assert etExaminationReason != null;
         etExaminationReason.setText(rde.getExaminationReason());
         EditText etVisitOrder = (EditText) findViewById(R.id.etVisitOrder);
+        assert etVisitOrder != null;
         etVisitOrder.setText(rde.getVisitOrder());
         EditText etDiagnoses = (EditText) findViewById(R.id.etDiagnoses);
+        assert etDiagnoses != null;
         etDiagnoses.setText(rde.getDiagnoses());
         EditText etMedications = (EditText) findViewById(R.id.etMedications);
+        assert etMedications != null;
         etMedications.setText(rde.getMedications());
         EditText etSmooking = (EditText) findViewById(R.id.etSmooking);
+        assert etSmooking != null;
         etSmooking.setText(rde.getSmooking());
         EditText etDrinking = (EditText) findViewById(R.id.etDrinking);
+        assert etDrinking != null;
         etDrinking.setText(rde.getDrinking());
         EditText etHeight = (EditText) findViewById(R.id.etHeight);
+        assert etHeight != null;
         etHeight.setText(rde.getHeight());
         EditText etWeight = (EditText) findViewById(R.id.etWeight);
+        assert etWeight != null;
         etWeight.setText(rde.getWeight());
         EditText etDiseasePredisposition = (EditText) findViewById(R.id.etDiseasePredisposition);
+        assert etDiseasePredisposition != null;
         etDiseasePredisposition.setText(rde.getDiseasePredisposition());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
-//        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
     }
 
     @Override
@@ -123,6 +124,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -134,6 +136,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

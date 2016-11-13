@@ -12,7 +12,6 @@ import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.user.AccountStorage;
 
 /* Регистрация пользователя */
 
@@ -35,22 +34,13 @@ public class UserAccount extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);
         setSupportActionBar(toolbar);
-        // кнопка назад в ActionBar
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
-                onBackPressed();
-            }
-        });
-
-        assert toolbar != null;
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 onBackPressed();
             }
         });
@@ -63,23 +53,22 @@ public class UserAccount extends AppCompatActivity {
         etAge = (EditText) findViewById(R.id.etAge);
 
         storage = new AccountStorage();
-        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
-
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
     }
 
     @Override
     public void onBackPressed() {
-        //MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
+//        MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
         super.onBackPressed();
         MainActivity.backgroundFlag = 1;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if ( item.getItemId() == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);*/
+//        if ( item.getItemId() == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
@@ -91,7 +80,6 @@ public class UserAccount extends AppCompatActivity {
     }
 
     protected void onPause() {
-        // TODO Auto-generated method stub
         super.onPause();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
@@ -110,9 +98,8 @@ public class UserAccount extends AppCompatActivity {
     }
 
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
-        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES,  MODE_PRIVATE);
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         etFirstName.setText(storage.getAccountFirstName());
         etSecondName.setText(storage.getAccountSecondName());
         etPhoneNumber.setText(storage.getAccountPhoneNumber());
@@ -120,7 +107,6 @@ public class UserAccount extends AppCompatActivity {
         etWeight.setText(storage.getAccountWeight());
         etAge.setText(storage.getAccountAge());
     }
-
 
     @Override
     protected void onRestart() {

@@ -36,13 +36,8 @@ import android.os.Handler;
 
 import ru.cardiacare.cardiacare.R;
 
-/**
- * This class contains a fake ECG signal source for testing purposes
- *
- * @author Alexander Borodin
- * @author Yulia Zavyalova
- * @since 1.0
- */
+/* This class contains a fake ECG signal source for testing purposes */
+
 public class FakeSource extends SignalSource {
 
     private final int[] mDemoSignal;
@@ -55,10 +50,8 @@ public class FakeSource extends SignalSource {
     }
 
     public synchronized void connect(String BTAddress) {
-
     }
 
     private static class ConnectionThread extends Thread {
-
     }
 }

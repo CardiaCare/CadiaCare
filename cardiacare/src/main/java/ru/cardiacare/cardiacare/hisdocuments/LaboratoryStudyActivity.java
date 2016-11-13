@@ -10,9 +10,7 @@ import android.widget.EditText;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
+/* Экран "Лабораторные исследования" */
 
 public class LaboratoryStudyActivity extends AppCompatActivity {
 
@@ -29,6 +27,7 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,12 +38,16 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
         });
 
         EditText etOrganizationName = (EditText) findViewById(R.id.etOrganizationName);
+        assert etOrganizationName != null;
         etOrganizationName.setText(organizationName);
         EditText etHemoglobin = (EditText) findViewById(R.id.etHemoglobin);
+        assert etHemoglobin != null;
         etHemoglobin.setText(hemoglobin.toString());
         EditText etErythrocyte = (EditText) findViewById(R.id.etErythrocyte);
+        assert etErythrocyte != null;
         etErythrocyte.setText(erythrocyte.toString());
         EditText etHematocrit = (EditText) findViewById(R.id.etHematocrit);
+        assert etHematocrit != null;
         etHematocrit.setText(hematocrit.toString());
     }
 
@@ -54,6 +57,7 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -61,6 +65,7 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

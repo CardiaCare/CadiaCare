@@ -9,23 +9,23 @@ public class AccountStorage {
     public SharedPreferences sPref;
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
-    public static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
-    public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
-    public static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
-    public static final String ACCOUNT_PREFERENCES_PHONENUMBER = "phonenumber";
-    public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
-    public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
-    public static final String ACCOUNT_PREFERENCES_AGE = "age";
-    public static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; //Версия последней загруженной анкеты
+    private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
+    private static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
+    private static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
+    private static final String ACCOUNT_PREFERENCES_PHONENUMBER = "phonenumber";
+    private static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
+    private static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
+    private static final String ACCOUNT_PREFERENCES_AGE = "age";
+    private static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
 
-    String strId;
-    String strFirstName;
-    String strSecondName;
-    String strPhoneNumber;
-    String strHeight;
-    String strWeight;
-    String strAge;
-    String strQuestionnaireVersion;
+    private String strId;
+    private String strFirstName;
+    private String strSecondName;
+    private String strPhoneNumber;
+    private String strHeight;
+    private String strWeight;
+    private String strAge;
+    private String strQuestionnaireVersion;
 
     public void setAccountPreferences(String patientId, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
         SharedPreferences.Editor editor = sPref.edit();
@@ -67,28 +67,28 @@ public class AccountStorage {
         return strSecondName;
     }
 
-    public String getAccountPhoneNumber() {
+    String getAccountPhoneNumber() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
             strPhoneNumber = sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, "");
         } else strPhoneNumber = "";
         return strPhoneNumber;
     }
 
-    public String getAccountHeight() {
+    String getAccountHeight() {
         if (sPref.contains(ACCOUNT_PREFERENCES_HEIGHT)) {
             strHeight = sPref.getString(ACCOUNT_PREFERENCES_HEIGHT, "");
         } else strHeight = "";
         return strHeight;
     }
 
-    public String getAccountWeight() {
+    String getAccountWeight() {
         if (sPref.contains(ACCOUNT_PREFERENCES_WEIGHT)) {
             strWeight = sPref.getString(ACCOUNT_PREFERENCES_WEIGHT, "");
         } else strWeight = "";
         return strWeight;
     }
 
-    public String getAccountAge() {
+    String getAccountAge() {
         if (sPref.contains(ACCOUNT_PREFERENCES_AGE)) {
             strAge = sPref.getString(ACCOUNT_PREFERENCES_AGE, "");
         } else strAge = "";

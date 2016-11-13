@@ -30,19 +30,10 @@
 
 package ru.cardiacare.cardiacare;
 
-/**
- * This activity implements the main window of the app, allowing the user to
- * choose appropriate method of ECG signal obtaining.
- *
- * @author Alexander Borodin
- * @author Yulia Zavyalova
- * @since 1.0
- */
+/* Главный экран */
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,7 +42,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -69,13 +59,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
-
-import java.util.List;
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
@@ -90,18 +77,18 @@ import ru.cardiacare.cardiacare.user.Userdata;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private static final String TAG = "MainActivity";
-    //Button btnStart;
-    Button btnDisconnect;
+    public Context context = this;
+
     Button btnCont;
+    Button nextButton;
+    Button btnDisconnect;
+    static public Button alarmButton;
+    static public ImageButton serveyButton;
+    EditText etFirstName;
+    EditText etSecondName;
     ListView connectListView;
 
     private ArrayAdapter<String> connectListArrayAdapter;
-
-    public static boolean connectedState = false;
-
-    // true if user has already logged-in else false
-    public static boolean loginState = false;
 
     static public SmartCareLibrary smart;
     static public long nodeDescriptor = -1;
@@ -111,67 +98,44 @@ public class MainActivity extends AppCompatActivity {
     static public String feedbackUri;
     static public String alarmFeedbackUri;
 
+    public static boolean connectedState = false;
+    public static boolean loginState = false; // Авторизирован ли пользователь, true - авторизирован / false - неавторизирован
+
     static public String TAG = "SS-main";
+    static public AccountStorage storage;
     static public Questionnaire questionnaire;
     static public Questionnaire alarmQuestionnaire;
     static public Feedback feedback;
     static public Feedback alarmFeedback;
     static public LocationService gps;
-    public int passSurveyButtonClickCount = 0; //количество нажатий на кнопку PASS SURVEY при отключенном интернете
-    static public int gpsEnabledFlag = 1; //включена ли передача геоданных, 1 - вкл/0 - выкл
-    static public boolean alarmButtonFlag = false; //была ли нажата кнопка SOS, 1 - была нажата/0 - не была
-    static public int sibConnectedFlag = 0; //установлено ли соединение с SIB'ом, 1 - установлено
-    static public int backgroundFlag = 0; //если закрытие активности добровольное, то флаг = 1, иначе = 0
-    static public int patientUriFlag = -1; //-1 - первый запуск приложения, 1 - зарегистрированный пользователь, 0 - незарегистрированный пользователь
-
-    static public AccountStorage storage;
-
-    static public ProgressBar mProgressBar;
-
-    public Context context = this;
-
-    Toolbar mToolbar;
-    Button nextButton;
-    EditText etFirstName;
-    EditText etSecondName;
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    static public Button QuestionnaireButton;//для блокировки
-    static public Button alarmButton;
-    static public ImageButton serveyButton;
-
+    static public boolean alarmButtonFlag = false; // Была ли нажата кнопка SOS, 1 - была нажата / 0 - не была
+    static public int gpsEnabledFlag = 1; // Включена ли передача геоданных, 1 - вкл / 0 - выкл
+    static public int sibConnectedFlag = 0; // Установлено ли соединение с SIB'ом, 1 - установлено / 0 - не установлено
+    static public int backgroundFlag = 0; // Добровольное ли закрытие активности (инициировано из приложения),
+    // 1 - добровольное / 0 - недобровольное
+    // Перед каждым переходом на другую активность устанавливаем флаг = 1
+    static public int patientUriFlag = -1; // Статус пользователя, -1 - первый запуск приложения / 1 - зарегистрированный пользователь / 0 - незарегистрированный пользователь
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d(TAG, "onCreate Main Activity");
+//        Log.d(TAG, "onCreate Main Activity");
         super.onCreate(savedInstanceState);
+        // Установка ТОЛЬКО вертикальной ориентации
+        // Такая строка должна быть прописана в КАЖДОЙ активности
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
         setLoadingActivity();
-//        feedbackUri = smart.initFeedback();
-//        feedback = new Feedback(feedbackUri, "Student", "feedback");
-//        alarmFeedbackUri = smart.initFeedback();
-//        alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
-
-        //if (connectedState == false) {
+//        if (connectedState == false) {
 //            setRegisteredActivity();
 //        } else {
-//            //стартовое окно при подключенном блютус девайсе
-//            //FIXME не работает
+//            // Стартовое окно при подключенном bluetooth-устройстве
+//            // FIXME не работает
 //            setConnectedToDriverState();
 //        }
-
-//        if (isNetworkAvailable(this)) {
-//            locationUri = smart.initLocation(nodeDescriptor, patientUri);
-//            if (locationUri == null) {
-//                return;
-//            }
-//        } else {
-//            setLoadingActivity();
-//        }
-
     }
 
-    // Подготовка к работе
+    // Загрузочный экран.
+    // Осуществляется подготовка к работе
     public void setLoadingActivity() {
         setContentView(R.layout.activity_loading);
 
@@ -191,13 +155,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (isNetworkAvailable(this)) {
-
-
             storage = new AccountStorage();
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-
             ConnectToSmartSpace();
-
             GPSLoad gpsLoad = new GPSLoad(context);
             gpsLoad.execute();
 
@@ -233,17 +193,11 @@ public class MainActivity extends AppCompatActivity {
     // Интерфейс для незарегистрированного пользователя
     public void setUnregisteredActivity() {
         setContentView(R.layout.activity_main_account_connection);
-        Log.i(TAG, "setUnregisteredActivity see");
+//        Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
-//        patientUri = smart.initPatient(nodeDescriptor);
         if (patientUri == null) {
             return;
         }
-
-        //mToolbar = (Toolbar) findViewById(R.id.toolbar);//нужен ли?
-        //setSupportActionBar(mToolbar);
-
-        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
@@ -268,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Регистрация
+    // Экран регистрации
     public void registration(String first, String second) {
         if (first.isEmpty() || second.isEmpty()) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppBaseTheme);
@@ -287,22 +241,16 @@ public class MainActivity extends AppCompatActivity {
     public void setRegisteredActivity() {
         setContentView(R.layout.main);
         patientUriFlag = 1;
-//        if (patientUri == null) {
-//            patientUri = storage.getAccountId();
-//            smart.initPatientWithId(nodeDescriptor, patientUri);
-//        }
-        //registerReceiver(connectReceiver, new IntentFilter(???));
-
-        //btnStart = (Button) findViewById(R.id.start);
-        //btnStart.setOnClickListener(this);
+//        registerReceiver(connectReceiver, new IntentFilter(???));
+//        btnStart = (Button) findViewById(R.id.start);
+//        btnStart.setOnClickListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
 
         connectListView = (ListView) findViewById(R.id.ConnectListView);
 
-        connectListArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+        connectListArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
         connectListView.setAdapter(connectListArrayAdapter);
         connectListArrayAdapter.add("Alive Bluetooth Monitor");
         connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -310,31 +258,30 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 backgroundFlag = 1;
-                //TODO выбор способа подключения
+                // TODO выбор способа подключения
                 Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
-                //TODO change methods
+                // TODO change methods
                 startActivity(intentBluetoothFind);
             }
         });
-
 
         serveyButton = (ImageButton) findViewById(R.id.serveyButton);
         serveyButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 backgroundFlag = 1;
                 QuestionnaireHelper.showQuestionnaire(context);
-                serveyButton.setEnabled(false); //блокируем от повторного нажатия
+                serveyButton.setEnabled(false);
             }
         });
 
         ImageButton docsButton = (ImageButton) findViewById(R.id.docsButton);
+        assert docsButton != null;
         docsButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 backgroundFlag = 1;
                 startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
             }
         });
-
 
         alarmButton = (Button) findViewById(R.id.alarmButton);
 //        Display display = getWindowManager().getDefaultDisplay();
@@ -348,13 +295,11 @@ public class MainActivity extends AppCompatActivity {
                 if (!gps.canGetLocation()) {
                     alarmButtonFlag = true;
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                    //Заголовок
                     alertDialog.setTitle(R.string.dialog_sos_title);
-                    //Тело
                     alertDialog.setMessage(R.string.dialog_sos_message);
-                    //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
                     alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog,int which) {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Переход к настройкам GPS
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             context.startActivity(intent);
                         }
@@ -368,45 +313,18 @@ public class MainActivity extends AppCompatActivity {
                     });
                     alertDialog.show();
                 } else {
-                    alarmButton.setEnabled(false);//блокируем от повторного нажатия
+                    alarmButton.setEnabled(false);
                     alarmButton.setBackgroundColor(0x77a71000);
                     alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
                     alarmButtonFlag = false;
-                    ///sosopros
-                    //Log.i(TAG, "Клик" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-//                    if (isNetworkAvailable(context) && (nodeDescriptor != -1)) {
-//                        //Log.i(TAG, "Есть сеть, норм дескриптор" + "; Net=" + isNetworkAvailable(context) + "; nodeDescriptor=" + nodeDescriptor);
-//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-//                    } else if (!isNetworkAvailable(context)) {
-//                        //Log.i(TAG, "Нет сети, k > 0" + "; Net = " + isNetworkAvailable(context) + "; nodeDescriptor = " + nodeDescriptor);
-//                        smart.disconnectSmartSpace(nodeDescriptor);
-//                        nodeDescriptor = -1;
-//                        setLoadingActivity();
-//                    } else if ((!isNetworkAvailable(context)) && (passSurveyButtonClickCount == 0)) {
-//                        Toast toast = Toast.makeText(getApplicationContext(), "Отсутствует подключение к сети", Toast.LENGTH_SHORT);
-//                        toast.show();
-//                        passSurveyButtonClickCount++;
-//                        smart.disconnectSmartSpace(nodeDescriptor);
-//                        nodeDescriptor = -1;
-//                    } else if ((isNetworkAvailable(context)) && (nodeDescriptor == -1)) {
-//                        boolean flag;
-//                        do {
-//                            flag = ConnectToSmartSpace();
-//                            Toast toast2 = Toast.makeText(context, "SIB reconnect", Toast.LENGTH_SHORT);
-//                            toast2.show();
-//                        } while (!flag);
-//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-//                    }
-                    ///
                     AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
                 }
             }
         });
-
         SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
-
     }
 
+    // Древняя функция. Не используется
     public void setConnectedToDriverState() {
         setContentView(R.layout.main_connected);
         btnDisconnect = (Button) findViewById(R.id.disconnect);
@@ -424,18 +342,17 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 backgroundFlag = 1;
                 Intent intentECG = new Intent(context, ECGActivity.class);
-                //TODO change methods
+                // TODO change methods
                 startActivity(intentECG);
-                //startActivityForResult(intent,1);
+//                 startActivityForResult(intent,1);
             }
         });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar_connected);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
-
     }
 
+    // Древняя функция. Не используется
     final BroadcastReceiver connectReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             connectListArrayAdapter.add("Alive Bluetooth Monitor");
@@ -449,12 +366,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    // Тулбар
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if ( item.getItemId() == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);*/
+//        if ( item.getItemId() == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.ecg:
                 backgroundFlag = 1;
@@ -463,8 +381,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.menuAbout:
                 backgroundFlag = 1;
-                //About about = new About();
-                //about.aboutDialog(this);
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             case R.id.passSurvey:
@@ -490,7 +406,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.menuUserData:
                 backgroundFlag = 1;
-                //TODO как-то передедать (откуда беруться настройки юзера БД?)
+                //TODO Переделать (откуда берутся настройки юзера БД?)
                 if (!loginState) {
                     Intent intent3 = new Intent(this, Login.class);
                     startActivity(intent3);
@@ -498,33 +414,21 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(this, Userdata.class));
                 }
                 break;
-            /*case R.id.menuExit:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Пожалуйста, подтвердите.")
-                        .setTitle("Вы действительно хотите выйти?")
-                        .setCancelable(true)
-                        .setNegativeButton("Нет", null)
-                        .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                finish();
-                            }
-                        }).show();
-                return true;*/
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public static void setLoginState(boolean state) {
-        loginState = state;
-    }
+    // Старинная функция. Не используется
+//    public static void setLoginState(boolean state) {
+//        loginState = state;
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("TAG", "onActivityResult ");
+//        Log.e("TAG", "onActivityResult ");
         if (data == null) {
             return;
         }
@@ -532,33 +436,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i("TAG", "adress " + adress);
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-//        openQuitDialog();
-    }
-
-    /**
-     * TODO
-     * FIXME Так делать нежелательно. Кнопка "назад" должна выходить из приложения без дополнительного уведомления пользователя
-     * Если нужно что-то выгрузить из памяти или закончить работу перед выходом, есть методы onDestroy, onFinish и т.п.
-     * TODO
-     */
-//    private void openQuitDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("Пожалуйста, подтвердите.")
-//                .setTitle("Вы действительно хотите выйти?")
-//                .setCancelable(true)
-//                .setNegativeButton("Нет", null)
-//                .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        finish();
-//                    }
-//                }).show();
-//    }
-
-    // Проверка подключения к сети (есть или нет)
+    // Проверка подключения к интернету
+    // Если подключение установлено, возвращает True, иначе False
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = cm.getActiveNetworkInfo();
@@ -568,16 +447,18 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     }
-   
+
     // Подключение к интеллектуальному пространству
     static public boolean ConnectToSmartSpace() {
+        //Если соединение не установлено, то устанавливаем его
         if (sibConnectedFlag != 1) {
-            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
+//            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {
                 return false;
             } else {
-                sibConnectedFlag = 1; //Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
+                // Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
+                sibConnectedFlag = 1;
             }
             InitObjects();
         }
@@ -587,10 +468,10 @@ public class MainActivity extends AppCompatActivity {
     // Инициализация объектов в интеллектуальном пространстве
     static public boolean InitObjects() {
         if (backgroundFlag == 0) {
-            Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
-            feedbackUri = smart.initFeedback();
+//            Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
+            feedbackUri = SmartCareLibrary.initFeedback();
             feedback = new Feedback(feedbackUri, "Student", "feedback");
-            alarmFeedbackUri = smart.initFeedback();
+            alarmFeedbackUri = SmartCareLibrary.initFeedback();
             alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
 
             if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
@@ -602,8 +483,6 @@ public class MainActivity extends AppCompatActivity {
                     SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
                 }
             }
-
-
             locationUri = smart.initLocation(nodeDescriptor, patientUri);
         }
         backgroundFlag = 0;
@@ -612,8 +491,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Отключение от интеллектуального пространства
     static public boolean DisconnectFromSmartSpace() {
+        // Разрываем соединение, если оно было установлено ранее
         if (sibConnectedFlag == 1) {
-            Log.i(TAG, "РАЗРЫВАЕМ СОЕДИНЕНИЕ");
+//            Log.i(TAG, "РАЗРЫВАЕМ СОЕДИНЕНИЕ");
             smart.removeIndividual(nodeDescriptor, locationUri);
             smart.removeIndividual(nodeDescriptor, patientUri);
             smart.removeIndividual(nodeDescriptor, feedbackUri);
@@ -627,33 +507,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        backgroundFlag = 0;
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
         ConnectToSmartSpace();
     }
+
     @Override
     public void onStop() {
         super.onStop();
-        //Если активность закрывается не из приложения, то разрываем соединение с сибом
+        // Если активность закрывается не из приложения, то разрываем соединение с SIB'ом
         if (backgroundFlag == 0) {
             DisconnectFromSmartSpace();
         }
         backgroundFlag = 0;
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        backgroundFlag = 0;
-    }
+
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy Main Activity");
-        // TODO unregisterReceiver(connectReceiver);
-//        smart.removeIndividual(nodeDescriptor, locationUri);
-//        smart.removeIndividual(nodeDescriptor, patientUri);
-//        smart.removeIndividual(nodeDescriptor, feedbackUri);
-//        smart.removeIndividual(nodeDescriptor, alarmUri);
-//        smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
+        // Старинный комментарий: TODO unregisterReceiver(connectReceiver);
         DisconnectFromSmartSpace();
         super.onDestroy();
     }
