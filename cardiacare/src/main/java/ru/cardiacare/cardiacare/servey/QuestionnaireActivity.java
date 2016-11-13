@@ -189,6 +189,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         // To Server
         FeedbackPOST feedbackPOST = new FeedbackPOST(context);
         feedbackPOST.execute();
+        MainActivity.storage.setLastQuestionnairePassDate(ts);
         super.onPause();
         if (MainActivity.backgroundFlag == 0) {
             MainActivity.DisconnectFromSmartSpace();

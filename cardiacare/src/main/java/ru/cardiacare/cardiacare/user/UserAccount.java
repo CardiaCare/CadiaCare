@@ -83,6 +83,7 @@ public class UserAccount extends AppCompatActivity {
         super.onPause();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
+        String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
         storage.setAccountPreferences(
                 MainActivity.patientUri,
                 etFirstName.getText().toString(),
@@ -91,7 +92,8 @@ public class UserAccount extends AppCompatActivity {
                 etHeight.getText().toString(),
                 etWeight.getText().toString(),
                 etAge.getText().toString(),
-                version);
+                version,
+                lastquestionnairepassdate);
         if (MainActivity.backgroundFlag == 0) {
             MainActivity.DisconnectFromSmartSpace();
         }

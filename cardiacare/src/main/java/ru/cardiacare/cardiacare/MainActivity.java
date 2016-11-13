@@ -1,33 +1,3 @@
-/*
- * Copyright (c) 2014, Petrozavodsk State University
- * Copyright (c) 2014, Open Innovations Framework Program FRUCT
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the names of the copyright holders nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- */
-
 package ru.cardiacare.cardiacare;
 
 /* Главный экран */
@@ -232,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.dialog_cancle, null);
             builder.show();
         } else {
-            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "");
+            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "");
             setRegisteredActivity();
         }
     }
@@ -389,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.exitAccount:
                 backgroundFlag = 1;
-                storage.setAccountPreferences("", "", "", "", "", "", "", "");
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "");
                 startActivity(new Intent(MainActivity.this, MainActivity.class));
                 deleteFile("feedback.json");
                 deleteFile("alarmFeedback.json");
@@ -508,6 +478,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
+        // Условие выполняется только для авторизированного пользователя
+        if (patientUriFlag == 1) {
+            // Если с момента последнего прохождения периодического опроса прошла минута, то
+            // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
+            Long timestamp = System.currentTimeMillis() / 1000;
+            String ts = timestamp.toString();
+            Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
+            if (time >= 60) {
+                serveyButton.setBackgroundResource(R.drawable.servey);
+            } else {
+                serveyButton.setBackgroundResource(R.drawable.servey_white);
+            }
+        }
         super.onStart();
         backgroundFlag = 0;
     }

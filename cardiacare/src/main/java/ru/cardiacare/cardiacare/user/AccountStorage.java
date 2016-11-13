@@ -17,6 +17,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     private static final String ACCOUNT_PREFERENCES_AGE = "age";
     private static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
+    private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
 
     private String strId;
     private String strFirstName;
@@ -26,8 +27,9 @@ public class AccountStorage {
     private String strWeight;
     private String strAge;
     private String strQuestionnaireVersion;
+    private String strLastQuestionnairePassDate;
 
-    public void setAccountPreferences(String patientId, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion) {
+    public void setAccountPreferences(String patientId, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
@@ -37,6 +39,13 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_WEIGHT, weight);
         editor.putString(ACCOUNT_PREFERENCES_AGE, age);
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
+        editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
+        editor.apply();
+    }
+
+    public void setLastQuestionnairePassDate (String lastquestionnairepassdate) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
         editor.apply();
     }
 
@@ -100,5 +109,12 @@ public class AccountStorage {
             strQuestionnaireVersion = sPref.getString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, "");
         } else strQuestionnaireVersion = "";
         return strQuestionnaireVersion;
+    }
+
+    public String getLastQuestionnairePassDate() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE)) {
+            strLastQuestionnairePassDate = sPref.getString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, "");
+        } else strLastQuestionnairePassDate = "";
+        return strLastQuestionnairePassDate;
     }
 }
