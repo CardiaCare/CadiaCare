@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Экран регистрации
+    // Регистрация
     public void registration(String first, String second) {
         if (first.isEmpty() || second.isEmpty()) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppBaseTheme);
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setNegativeButton(R.string.dialog_cancle, null);
             builder.show();
         } else {
-            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "");
+            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "0");
             setRegisteredActivity();
         }
     }
@@ -358,9 +358,11 @@ public class MainActivity extends AppCompatActivity {
                 QuestionnaireHelper.showQuestionnaire(context);
                 break;
             case R.id.exitAccount:
-                backgroundFlag = 1;
-                storage.setAccountPreferences("", "", "", "", "", "", "", "", "");
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                backgroundFlag = 0;
+                patientUriFlag = -1;
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "0");
+                DisconnectFromSmartSpace();
+                setLoadingActivity();
                 deleteFile("feedback.json");
                 deleteFile("alarmFeedback.json");
                 break;
@@ -373,7 +375,6 @@ public class MainActivity extends AppCompatActivity {
                 backgroundFlag = 1;
                 startActivity(new Intent(this, DocumentsActivity.class));
                 break;
-
             case R.id.menuUserData:
                 backgroundFlag = 1;
                 //TODO Переделать (откуда берутся настройки юзера БД?)
@@ -516,6 +517,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy Main Activity");
         // Старинный комментарий: TODO unregisterReceiver(connectReceiver);
         DisconnectFromSmartSpace();
+        patientUriFlag = -1;
         super.onDestroy();
     }
 }
