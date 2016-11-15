@@ -129,18 +129,35 @@ public class MainActivity extends AppCompatActivity {
             netFlag = 1;
             storage = new AccountStorage();
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            ConnectToSmartSpace();
-            GPSLoad gpsLoad = new GPSLoad(context);
-            gpsLoad.execute();
+            if (ConnectToSmartSpace()) {
+                GPSLoad gpsLoad = new GPSLoad(context);
+                gpsLoad.execute();
 
-            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                setUnregisteredActivity();
+                if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+                    setUnregisteredActivity();
+                } else {
+                    setRegisteredActivity();
+                }
             } else {
-                setRegisteredActivity();
+                android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+                alertDialog.setTitle("Ошибка");
+                alertDialog.setMessage("В настоящее время приложение не может подключиться к ителлектуальному пространству. Попробуйте позже");
+                alertDialog.setPositiveButton("Перезапустить приложение",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                setLoadingActivity();
+                            }
+                        });
+                alertDialog.setNegativeButton("Закрыть приложение",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                alertDialog.show();
             }
         } else {
             netFlag = 0;
-            Log.i(TAG, "patientUriFlag = " + patientUriFlag);
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
             alertDialog.setTitle(R.string.dialog_wifi_title);
             alertDialog.setMessage(R.string.dialog_wifi_message);
