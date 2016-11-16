@@ -47,10 +47,10 @@ public class DocumentsActivity extends AppCompatActivity {
 
         if (hisUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Нет подключения к МИС")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_mis_error)
+                    .setTitle(R.string.dialog_title_server_error)
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -63,11 +63,11 @@ public class DocumentsActivity extends AppCompatActivity {
         if (hisPatientUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage("Незарегистрированный пользователь")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_unregistered_user)
+                    .setTitle(R.string.dialog_title_server_error)
 
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();

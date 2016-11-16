@@ -142,15 +142,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else {
                 android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-                alertDialog.setTitle("Ошибка");
-                alertDialog.setMessage("В настоящее время приложение не может подключиться к ителлектуальному пространству. Попробуйте позже");
-                alertDialog.setPositiveButton("Перезапустить приложение",
+                alertDialog.setTitle(R.string.dialog_ss_title);
+                alertDialog.setMessage(R.string.dialog_ss_message);
+                alertDialog.setPositiveButton(R.string.restart_app,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 setLoadingActivity();
                             }
                         });
-                alertDialog.setNegativeButton("Закрыть приложение",
+                alertDialog.setNegativeButton(R.string.close_app,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();
@@ -457,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         String adress = data.getStringExtra("adress");
-        Log.i("TAG", "adress " + adress);
+//        Log.i("TAG", "adress " + adress);
     }
 
     // Проверка подключения к интернету
@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
     // Подключение к интеллектуальному пространству
     static public boolean ConnectToSmartSpace() {
         //Если есть доступ к интернету и соединение с SIB'ом не установлено, то устанавливаем его
-        if  ((netFlag == 1) && (sibConnectedFlag != 1)) {
+        if ((netFlag == 1) && (sibConnectedFlag != 1)) {
 //            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {

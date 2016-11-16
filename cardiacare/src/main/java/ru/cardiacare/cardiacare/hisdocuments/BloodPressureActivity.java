@@ -55,10 +55,10 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Нет ответа от сервера")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_server_error)
+                    .setTitle(R.string.dialog_title_server_error)
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -70,10 +70,10 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         if (hisDocumentUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Нет соотвтетствующего документа")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_ducument_message)
+                    .setTitle(R.string.dialog_title_server_error)
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();

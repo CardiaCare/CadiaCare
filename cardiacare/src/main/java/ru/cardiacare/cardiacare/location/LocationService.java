@@ -146,7 +146,7 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged");
+//        Log.i(TAG, "onLocationChanged");
         if (MainActivity.isNetworkAvailable(mContext)) {
             if (canGetLocation()) {
                 MainActivity.gpsEnabledFlag = 1;
@@ -163,7 +163,7 @@ public class LocationService extends Service implements LocationListener {
             }
         } else {
             Toast toast = Toast.makeText(mContext,
-                    "Нет доступа к сети", Toast.LENGTH_SHORT);
+                    R.string.dialog_wifi_title, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

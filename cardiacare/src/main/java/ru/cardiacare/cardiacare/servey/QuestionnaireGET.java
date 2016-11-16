@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 
 /* Загрузка периодического опросника с сервера */
 
@@ -82,8 +83,8 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         super.onPostExecute(result);
         if (result == -1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            alertDialog.setTitle("Ошибка");
-            alertDialog.setMessage("Не удаётся подключиться к серверу. Повторите попытку позже");
+            alertDialog.setTitle(R.string.dialog_title_server_error);
+            alertDialog.setMessage(R.string.dialog_message_server_error);
             alertDialog.setNegativeButton("OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
