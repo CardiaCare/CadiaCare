@@ -54,31 +54,31 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int Type) {
         View v;
         if (Type == Dichotomous) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dichotomous_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_dichotomous_question, viewGroup, false);
             return new DichotomousViewHolder(v);
         } else if (Type == Singlechoice) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.singlechoice_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_single_choice_question, viewGroup, false);
             return new SingleChoiceViewHolder(v);
         } else if (Type == TextField) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.textfield_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_textfield_question, viewGroup, false);
             return new TextFieldViewHolder(v);
         } else if (Type == Bipolarquestion) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.bipolarquestion_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_bipolar_question, viewGroup, false);
             return new BipolarQuestionViewHolder(v);
         } else if (Type == Multiplechoice) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.multiplechoice_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_multiple_choice_question, viewGroup, false);
             return new MultipleChoiceViewHolder(v);
         } else if (Type == Likertscale) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.likertscale_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_likert_scale_queston, viewGroup, false);
             return new LikertScaleViewHolder(v);
         } else if (Type == Guttmanscale) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.guttmanscale_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_guttman_scale_question, viewGroup, false);
             return new GuttmanScaleViewHolder(v);
         } else if (Type == Continuousscale) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.continuousscale_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_continuous_scale_question, viewGroup, false);
             return new ContinuousScaleViewHolder(v);
         } else {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.singlechoice_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_single_choice_question, viewGroup, false);
             return new SingleChoiceViewHolder(v);
         }
     }

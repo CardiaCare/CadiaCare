@@ -1,9 +1,7 @@
 package ru.cardiacare.cardiacare.user;
 
-import android.annotation.TargetApi;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +37,7 @@ public class Userdata extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.userdata);
+        setContentView(R.layout.activity_user_data);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);
         setSupportActionBar(toolbar);

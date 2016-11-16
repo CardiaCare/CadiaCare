@@ -29,7 +29,7 @@ tools:context="ru.cardiacare.cardiacare.AboutActivity">
 
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="com.petrsu.cardiacare.smartcarequestionnaire.AboutActivity"
-            tools:showIn="@layout/content_about"
+            tools:showIn="@layout/activity_about"
             tools:ignore="ScrollViewSize">
 
             <TextView

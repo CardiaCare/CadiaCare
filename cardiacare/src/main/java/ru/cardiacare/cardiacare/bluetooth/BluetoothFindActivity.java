@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +24,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +38,7 @@ import ru.cardiacare.cardiacare.R;
 
 /* Экран "Alive Bluetooth Monitor */
 
-public class BluetoothFindActivity extends ActionBarActivity {
+public class BluetoothFindActivity extends AppCompatActivity {
 
     ProgressDialog dialog;
     private static final int REQUEST_ENABLE_BT = 1;
@@ -48,7 +47,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
     public static final String DEVICE_NAME = null;
     public static final int MESSAGE_READ = 0;
     private Button onBtn;
-    //    private Button offBtn;
+//    private Button offBtn;
 //    private Button listBtn;
     private Button findBtn;
     private TextView text;
@@ -66,7 +65,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
         Log.i(TAG, "onCreate BluetoothFindActivity Activity");
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.bluetoothfind);
+        setContentView(R.layout.activity_bluetooth_find);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.bt_find_activity_toolbar);
         setSupportActionBar(toolbar);

@@ -16,7 +16,7 @@ public class Help extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.help);
+        setContentView(R.layout.activity_help);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.help_activity_toolbar);
         setSupportActionBar(toolbar);

@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         // Такая строка должна быть прописана в КАЖДОЙ активности
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         smart = new SmartCareLibrary();
-        setLoadingActivity();
+        setLoadingScreen();
 //        if (connectedState == false) {
 //            setRegisteredActivity();
 //        } else {
@@ -109,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Загрузочный экран.
     // Осуществляется подготовка к работе
-    public void setLoadingActivity() {
-        setContentView(R.layout.activity_loading);
+    public void setLoadingScreen() {
+        setContentView(R.layout.screen_main_loading);
 
         ProgressBar mLoadingProgressBar;
         mLoadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         WifiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLoadingActivity();
+                setLoadingScreen();
             }
         });
 
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 gpsLoad.execute();
 
                 if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                    setUnregisteredActivity();
+                    setUnregisteredScreen();
                 } else {
                     setRegisteredActivity();
                 }
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.setPositiveButton(R.string.restart_app,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                setLoadingActivity();
+                                setLoadingScreen();
                             }
                         });
                 alertDialog.setNegativeButton(R.string.close_app,
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            setLoadingActivity();
+                            setLoadingScreen();
                         }
                     });
             alertDialog.show();
@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Интерфейс для незарегистрированного пользователя
-    public void setUnregisteredActivity() {
-        setContentView(R.layout.activity_main_account_connection);
+    public void setUnregisteredScreen() {
+        setContentView(R.layout.screen_main_unregistered);
 //        Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
         if (patientUri == null) {
@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO change methods
                     startActivity(intentBluetoothFind);
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
             }
         });
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                     QuestionnaireHelper.showQuestionnaire(context);
                     serveyButton.setEnabled(false);
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
             }
         });
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                     backgroundFlag = 1;
                     startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
             }
         });
@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                         AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
             }
         });
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Древняя функция. Не используется
     public void setConnectedToDriverState() {
-        setContentView(R.layout.main_connected);
+        setContentView(R.layout.screen_main_bluetooth_connected);
         btnDisconnect = (Button) findViewById(R.id.disconnect);
         btnDisconnect.setOnClickListener(new OnClickListener() {
             @Override
@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                     backgroundFlag = 1;
                     QuestionnaireHelper.showQuestionnaire(context);
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
                 break;
             case R.id.exitAccount:
@@ -404,11 +404,11 @@ public class MainActivity extends AppCompatActivity {
                     patientUriFlag = -1;
                     storage.setAccountPreferences("", "", "", "", "", "", "", "", "0");
                     DisconnectFromSmartSpace();
-                    setLoadingActivity();
+                    setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
                 break;
             case R.id.menuHelp:
@@ -421,7 +421,7 @@ public class MainActivity extends AppCompatActivity {
                     backgroundFlag = 1;
                     startActivity(new Intent(this, DocumentsActivity.class));
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
                 break;
             case R.id.menuUserData:
@@ -435,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(new Intent(this, Userdata.class));
                     }
                 } else {
-                    setLoadingActivity();
+                    setLoadingScreen();
                 }
                 break;
             default:
