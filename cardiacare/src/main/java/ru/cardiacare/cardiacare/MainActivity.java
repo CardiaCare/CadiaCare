@@ -48,6 +48,7 @@ import ru.cardiacare.cardiacare.user.Userdata;
 public class MainActivity extends AppCompatActivity {
 
     public Context context = this;
+    private static Context mContext;
 
     Button btnCont;
     Button nextButton;
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
 //            // FIXME не работает
 //            setConnectedToDriverState();
 //        }
+        mContext = this;
     }
 
     // Загрузочный экран.
@@ -477,6 +479,8 @@ public class MainActivity extends AppCompatActivity {
 //            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
             if (nodeDescriptor == -1) {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                mContext.startActivity(intent);
                 return false;
             } else {
                 // Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
