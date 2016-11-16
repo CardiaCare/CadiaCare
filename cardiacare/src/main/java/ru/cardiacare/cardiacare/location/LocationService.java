@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
@@ -145,19 +146,25 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-//        Log.i(TAG, "onLocationChanged");
-        if (canGetLocation()) {
-            MainActivity.gpsEnabledFlag = 1;
-            double latitude = getLatitude();
-            double longitude = getLongitude();
-            SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
-                    MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+        Log.i(TAG, "onLocationChanged");
+        if (MainActivity.isNetworkAvailable(mContext)) {
+            if (canGetLocation()) {
+                MainActivity.gpsEnabledFlag = 1;
+                double latitude = getLatitude();
+                double longitude = getLongitude();
+                SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
+                        MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+            } else {
+                // Сan't get location
+                // GPS or Network is not enabled
+                // Ask user to enable GPS/network in settings
+                showSettingsAlert();
+                MainActivity.gpsEnabledFlag = 0;
+            }
         } else {
-            // Сan't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            showSettingsAlert();
-            MainActivity.gpsEnabledFlag = 0;
+            Toast toast = Toast.makeText(mContext,
+                    "Нет доступа к сети", Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
