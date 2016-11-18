@@ -39,10 +39,8 @@ package ru.cardiacare.cardiacare;
  * @since 1.0
  */
 
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,13 +67,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
-
-import java.util.List;
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
@@ -305,17 +300,20 @@ public class MainActivity extends AppCompatActivity {
         connectListArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         connectListView.setAdapter(connectListArrayAdapter);
         connectListArrayAdapter.add("Alive Bluetooth Monitor");
-        connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        connectListArrayAdapter.add("ECG-BTLE");
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                backgroundFlag = 1;
-                //TODO выбор способа подключения
-                Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
-                //TODO change methods
-                startActivity(intentBluetoothFind);
-            }
-        });
+                connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        backgroundFlag = 1;
+                        //TODO выбор способа подключения
+                        Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
+                        intentBluetoothFind.putExtra("deviceType", id);
+                        //TODO change methods
+                        startActivity(intentBluetoothFind);
+                    }
+                });
 
 
         serveyButton = (ImageButton) findViewById(R.id.serveyButton);
@@ -439,6 +437,7 @@ public class MainActivity extends AppCompatActivity {
     final BroadcastReceiver connectReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             connectListArrayAdapter.add("Alive Bluetooth Monitor");
+
             connectListArrayAdapter.notifyDataSetChanged();
         }
     };

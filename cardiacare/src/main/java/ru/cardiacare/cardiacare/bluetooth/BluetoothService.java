@@ -311,33 +311,38 @@ public class BluetoothService {
             // Keep listening to the InputStream while connected
             while (true) {
                 try {
-                    //Clear buffer
-                    buffer = new byte[4096];
+                    if (BluetoothFindActivity.deviceType == 0) {
+                        //Clear buffer
+                        buffer = new byte[4096];
 
-                    // Read from the InputStream
-                    bytes = mmInStream.read(buffer);
+                        // Read from the InputStream
+                        bytes = mmInStream.read(buffer);
 
-                    int[] int_buf = new int[4096];
-                    for (int i=0;i<buffer.length;i++) {
-                        int_buf[i] = buffer[i];
-                        //Log.i("TAG", ""+int_buf[i]);
-                    }
-
-                    //FIXME
-                    if ((int_buf[0] == 0) && (int_buf[1] == -2)){
-
-                        if (int_buf[6] == -86){
-                            int ecg_length = ((buffer[7]&0x00FF)<<8) + (buffer[8]&0x00FF);
-
-                            int[] ecg_buffer = new int[ecg_length-5];
-                            for (int i = 0; i < ecg_length-5; i++){
-                                ecg_buffer[i] = buffer[i+11] & 0xFF;
-                                //Log.i("TAG", ""+ecg_buffer[i]);
-                            }
-
-                            //Log.i("TAG", ""+s);
-                            mHandler.obtainMessage(Data, bytes, -1, ecg_buffer).sendToTarget();
+                        int[] int_buf = new int[4096];
+                        for (int i = 0; i < buffer.length; i++) {
+                            int_buf[i] = buffer[i];
+                            //Log.i("TAG", ""+int_buf[i]);
                         }
+
+                        //FIXME
+                        if ((int_buf[0] == 0) && (int_buf[1] == -2)) {
+
+                            if (int_buf[6] == -86) {
+                                int ecg_length = ((buffer[7] & 0x00FF) << 8) + (buffer[8] & 0x00FF);
+
+                                int[] ecg_buffer = new int[ecg_length - 5];
+                                for (int i = 0; i < ecg_length - 5; i++) {
+                                    ecg_buffer[i] = buffer[i + 11] & 0xFF;
+                                    //Log.i("TAG", ""+ecg_buffer[i]);
+                                }
+
+                                //Log.i("TAG", ""+s);
+                                mHandler.obtainMessage(Data, bytes, -1, ecg_buffer).sendToTarget();
+                            }
+                        }
+                    }
+                    if (BluetoothFindActivity.deviceType == 1) {
+                        Log.i("TAG", "Device 2");
                     }
 
                 }

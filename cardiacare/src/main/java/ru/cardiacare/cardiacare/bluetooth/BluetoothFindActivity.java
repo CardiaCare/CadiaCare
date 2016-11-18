@@ -1,6 +1,5 @@
 package ru.cardiacare.cardiacare.bluetooth;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -34,9 +33,9 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 
 /**
  * created by Yulia Zavyalova
@@ -63,6 +62,8 @@ public class BluetoothFindActivity extends ActionBarActivity {
     private BluetoothSocket mBluetoothSocket;
     private static final String TAG = "BluetoothFindActivity";
     static public ImageButton buttonBack;
+    public static int deviceType;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,11 @@ public class BluetoothFindActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.bluetoothfind);
+
+
+        Intent intent = getIntent();
+        deviceType = intent.getIntExtra("deviceType",0);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.bt_find_activity_toolbar);
         setSupportActionBar(toolbar);
