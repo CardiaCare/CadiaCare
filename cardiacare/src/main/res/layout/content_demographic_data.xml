@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="ru.cardiacare.cardiacare.hisdocuments.DemographicData"
-    tools:showIn="@layout/activity_demographicdata">
+    tools:showIn="@layout/activity_demographic_data">
 
     <ScrollView
         android:layout_width="match_parent"

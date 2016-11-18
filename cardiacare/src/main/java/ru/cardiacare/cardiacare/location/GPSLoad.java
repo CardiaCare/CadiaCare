@@ -4,14 +4,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
+
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 
 /* Отправка геоданных */
 
 public class GPSLoad extends AsyncTask<Void, Integer, Void> {
 
-    Context context;
+    private Context context;
 
     public GPSLoad(Context context) {
         this.context = context;
@@ -25,13 +26,13 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
 
     @Override
     public Void doInBackground(Void... params) {
-        if(MainActivity.gps.canGetLocation()) {
+        if (MainActivity.gps.canGetLocation()) {
             double latitude = MainActivity.gps.getLatitude();
             double longitude = MainActivity.gps.getLongitude();
             if (MainActivity.isNetworkAvailable(context)) {
-                Log.i("SS", ""+ Double.toString(latitude)+" "+ Double.toString(longitude));
+                Log.i("SS", "" + Double.toString(latitude) + " " + Double.toString(longitude));
                 if (MainActivity.locationUri != null && MainActivity.patientUri != null)
-                    MainActivity.smart.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+                    SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
             }
         } else {
             MainActivity.gpsEnabledFlag = 0;
@@ -42,7 +43,7 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        if ((MainActivity.gpsEnabledFlag == 0) && (MainActivity.alarmButtonFlag == false)) {
+        if ((MainActivity.gpsEnabledFlag == 0) && (!MainActivity.alarmButtonFlag)) {
             MainActivity.gps.showSettingsAlert();
         }
     }

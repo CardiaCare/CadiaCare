@@ -14,12 +14,13 @@ import android.widget.Button;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
+/* Экран "Документы" */
 
 public class DocumentsActivity extends AppCompatActivity {
 
     static public String hisUri;
     static public String hisPatientUri;
-    //static public long hisSibUri;
+//    static public long hisSibUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class DocumentsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,17 +40,17 @@ public class DocumentsActivity extends AppCompatActivity {
             }
         });
 
-        //hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
+//        hisSibUri = MainActivity.smart.connectSmartSpace("X", "109.195.115.73", 10010);
 
-        Log.i("docs", MainActivity.nodeDescriptor+ "");
+        Log.i("docs", MainActivity.nodeDescriptor + "");
         hisUri = MainActivity.smart.getHis(MainActivity.nodeDescriptor);
 
-        if (hisUri == null){
+        if (hisUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Нет подключения к МИС")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_mis_error)
+                    .setTitle(R.string.dialog_title_server_error)
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -56,17 +58,16 @@ public class DocumentsActivity extends AppCompatActivity {
                     }).show();
         }
 
-
         hisPatientUri = MainActivity.smart.setHisId(MainActivity.nodeDescriptor, hisUri, MainActivity.patientUri);
 
-        if (hisPatientUri == null){
+        if (hisPatientUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            builder.setMessage("Незарегистрированный пользователь")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_unregistered_user)
+                    .setTitle(R.string.dialog_title_server_error)
 
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -75,6 +76,7 @@ public class DocumentsActivity extends AppCompatActivity {
         }
 
         Button demographicButton = (Button) findViewById(R.id.demographicData);
+        assert demographicButton != null;
         demographicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,6 +86,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button laboratoryButton = (Button) findViewById(R.id.laboratoryStudies);
+        assert laboratoryButton != null;
         laboratoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,6 +96,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button resultsDoctorButton = (Button) findViewById(R.id.resultsDoctor);
+        assert resultsDoctorButton != null;
         resultsDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,6 +106,7 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
         Button resultsBloodButton = (Button) findViewById(R.id.resultsBlood);
+        assert resultsBloodButton != null;
         resultsBloodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +114,6 @@ public class DocumentsActivity extends AppCompatActivity {
                 startActivity(new Intent(DocumentsActivity.this, BloodPressureActivity.class));
             }
         });
-
     }
 
     @Override
@@ -123,6 +127,7 @@ public class DocumentsActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -130,11 +135,13 @@ public class DocumentsActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;
         super.onBackPressed();
     }
+
     @Override
     public void onStop() {
         super.onStop();

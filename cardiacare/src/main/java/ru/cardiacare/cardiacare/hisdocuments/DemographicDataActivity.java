@@ -1,10 +1,5 @@
 package ru.cardiacare.cardiacare.hisdocuments;
 
-/**
- * Created by Iuliia Zavialova on 07.10.16.
- */
-
-
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -20,6 +15,7 @@ import com.petrsu.cardiacare.smartcare.hisdocuments.DemographicData;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
+/* Экран "Демографические данные" */
 
 public class DemographicDataActivity extends AppCompatActivity {
 
@@ -38,10 +34,11 @@ public class DemographicDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_demographicdata);
+        setContentView(R.layout.activity_demographic_data);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        assert toolbar != null;
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,22 +48,19 @@ public class DemographicDataActivity extends AppCompatActivity {
             }
         });
 
-
         String hisDocumentType = "http://oss.fruct.org/smartcare#DemographicData";
 
-
         hisRequestUri = MainActivity.smart.sendHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, MainActivity.patientUri,
-                 hisDocumentType,  searchstring, fieldName,  dateFrom, dateTo);
-
+                hisDocumentType, searchstring, fieldName, dateFrom, dateTo);
 
         hisResponseUri = MainActivity.smart.getHisResponce(MainActivity.nodeDescriptor, hisRequestUri);
 
-        if (hisResponseUri == null){
+        if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Нет ответа от сервера")
-                    .setTitle("Ошибка подключения")
+            builder.setMessage(R.string.dialog_message_server_error)
+                    .setTitle(R.string.dialog_title_server_error)
                     .setCancelable(true)
-                    .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -76,48 +70,50 @@ public class DemographicDataActivity extends AppCompatActivity {
 
         hisDocumentUri = MainActivity.smart.getHisDocument(MainActivity.nodeDescriptor, hisResponseUri);
 
-         if (hisDocumentUri == null){
-             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-             builder.setMessage("Нет соотвтетствующего документа")
-                     .setTitle("Ошибка подключения")
-                     .setCancelable(true)
-                     .setPositiveButton("Да", new DialogInterface.OnClickListener() {
-                         @Override
-                         public void onClick(DialogInterface dialog, int id) {
-                             finish();
-                         }
-                     }).show();
-         }
+        if (hisDocumentUri == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_message_ducument_message)
+                    .setTitle(R.string.dialog_title_server_error)
+                    .setCancelable(true)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    }).show();
+        }
 
         dd = new DemographicData("name", "surname", "patronymic", "birthDate", "sex",
-                                "residence", "contactInformation");
-        dd = MainActivity.smart.getHisDemographicData (MainActivity.nodeDescriptor, hisDocumentUri);
+                "residence", "contactInformation");
+        dd = MainActivity.smart.getHisDemographicData(MainActivity.nodeDescriptor, hisDocumentUri);
 
 
         EditText etName = (EditText) findViewById(R.id.etName);
+        assert etName != null;
         etName.setText(dd.getPatientName());
         EditText etSurname = (EditText) findViewById(R.id.etSurname);
+        assert etSurname != null;
         etSurname.setText(dd.getSurname());
         EditText etPatronymic = (EditText) findViewById(R.id.etPatronymic);
+        assert etPatronymic != null;
         etPatronymic.setText(dd.getPatronymic());
         EditText etBirthDate = (EditText) findViewById(R.id.etBirthDate);
+        assert etBirthDate != null;
         etBirthDate.setText(dd.getBirthDate());
         EditText etSex = (EditText) findViewById(R.id.etSex);
+        assert etSex != null;
         etSex.setText(dd.getSex());
         EditText etResidence = (EditText) findViewById(R.id.etResidence);
+        assert etResidence != null;
         etResidence.setText(dd.getResidence());
         EditText etContactInformation = (EditText) findViewById(R.id.etContactInformation);
+        assert etContactInformation != null;
         etContactInformation.setText(dd.getContactInformation());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisDocumentUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisResponseUri);
-//        MainActivity.smart.removeHisRequest(MainActivity.nodeDescriptor, DocumentsActivity.hisUri, hisRequestUri);
-//        MainActivity.smart.removeIndividual(MainActivity.nodeDescriptor, hisRequestUri);
     }
 
     @Override
@@ -126,6 +122,7 @@ public class DemographicDataActivity extends AppCompatActivity {
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -137,6 +134,7 @@ public class DemographicDataActivity extends AppCompatActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

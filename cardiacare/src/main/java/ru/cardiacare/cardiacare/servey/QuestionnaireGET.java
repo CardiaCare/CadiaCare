@@ -17,15 +17,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 
-/* Загрузка опросника с сервера */
+/* Загрузка периодического опросника с сервера */
 
 public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
 
-    Context context;
-    HttpURLConnection urlConnection = null;
-    BufferedReader reader = null;
-    String resultJson = "";
+    private Context context;
+    private HttpURLConnection urlConnection = null;
+    private BufferedReader reader = null;
+    private String resultJson = "";
 
     public QuestionnaireGET(Context context) {
         this.context = context;
@@ -34,7 +35,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        //MainActivity.mProgressBar.setVisibility(View.VISIBLE);
+//        MainActivity.mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         }
 
         Gson json = new Gson();
-        MainActivity.questionnaire = json.fromJson(resultJson,Questionnaire.class);
+        MainActivity.questionnaire = json.fromJson(resultJson, Questionnaire.class);
         if (MainActivity.questionnaire == null) {
             return -1;
         }
@@ -82,18 +83,18 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         super.onPostExecute(result);
         if (result == -1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            alertDialog.setTitle("Ошибка");
-            alertDialog.setMessage("Не удаётся подключиться к серверу. Повторите попытку позже");
+            alertDialog.setTitle(R.string.dialog_title_server_error);
+            alertDialog.setMessage(R.string.dialog_message_server_error);
             alertDialog.setNegativeButton("OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            //MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+//                            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
                         }
                     });
             alertDialog.show();
         } else {
-            //MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intentq = new Intent(context, QuestionnaireActivity.class);
             context.startActivity(intentq);
         }

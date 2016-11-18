@@ -117,6 +117,7 @@
     <string name="title_activity_questionnaire">Опрос</string>
     <string name="title_activity_sos_questionnaire">SOS опрос</string>
     <string name="restart_app">Перезапустить приложение</string>
+    <string name="close_app">Закрыть приложение</string>
     <string name="next">Далее</string>
     <string name="dialog_wifi_title">Отсутствует подключение к сети</string>
     <string name="dialog_wifi_message">Включите Wi-Fi и перезапустите приложение</string>
@@ -131,7 +132,7 @@
     <string name="dialog_gps_positive_button">Перейти к настройкам GPS</string>
     <string name="dialog_gps_negative_button">Отмена</string>
     <string name="dialog_bluetooth_title">Bluetooth выключен</string>
-    <string name="dialog_bluetooth_message">Функция Bluetooth отключена. Некоторые функции могут быть недоступны. Желаете перейти к настройкам, чтобы включить Bluetooth?</string>
+    <string name="dialog_bluetooth_message">Функция Bluetooth отключен. Некоторые функции могут быть недоступны. Желаете перейти к настройкам, чтобы включить Bluetooth?</string>
     <string name="dialog_bluetooth_positive_button">Перейти к настройкам Bluetooth</string>
     <string name="dialog_bluetooth_negative_button">Отмена</string>
     <string name="bluetooth_toast1">Ваше устройство не поддерживает Bluetooth</string>
@@ -139,5 +140,12 @@
     <string name="bluetooth_toast3">Bluetooth уже включен</string>
     <string name="bluetooth_toast4">Статус: доступен</string>
     <string name="bluetooth_toast5">Статус: недоступен</string>
-
+    <string name="dialog_ss_title">Приложение недоступно</string>
+    <string name="dialog_ss_message">В настоящее время приложение не может подключиться к ителлектуальному пространству. Повторите попытку позже</string>
+    <string name="login_toast">Пожалуйста, заполните все поля</string>
+    <string name="dialog_title_server_error">Ошибка подключения</string>
+    <string name="dialog_message_server_error">Не удалось подключиться к серверу. Повторите попытку позже</string>
+    <string name="dialog_message_mis_error">Не удалось подключиться к медицинской информационной системе. Повторите попытку позже</string>
+    <string name="dialog_message_unregistered_user">Незарегистрированный пользователь</string>
+    <string name="dialog_message_ducument_message">Соответсвующий документ не найден</string>
 </resources>

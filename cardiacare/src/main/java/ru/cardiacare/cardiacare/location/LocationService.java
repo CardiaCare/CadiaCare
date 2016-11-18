@@ -1,6 +1,5 @@
 package ru.cardiacare.cardiacare.location;
 
-
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -13,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 
@@ -26,14 +26,9 @@ public class LocationService extends Service implements LocationListener {
     private static final String TAG = "LocationService";
     private final Context mContext;
 
-    // flag for GPS status
-    boolean isGPSEnabled = false;
-
-    // flag for network status
-    boolean isNetworkEnabled = false;
-
-    // flag for GPS status
-    boolean canGetLocation = false;
+    boolean isGPSEnabled = false; // flag for GPS status
+    boolean isNetworkEnabled = false; // flag for network status
+    boolean canGetLocation = false; // flag for GPS status
 
     Location location; // location
     double latitude; // latitude
@@ -100,43 +95,32 @@ public class LocationService extends Service implements LocationListener {
         return location;
     }
 
-    /**
-     * Stop using GPS listener
-     * Calling this function will stop using GPS in your app
-     * */
+    // Stop using GPS listener
+    // Calling this function will stop using GPS in your app
     public void stopUsingGPS() {
-        if(locationManager != null) {
+        if (locationManager != null) {
             locationManager.removeUpdates(LocationService.this);
         }
     }
 
-    /**
-     * Function to get latitude
-     * */
+    // Function to get latitude
     public double getLatitude() {
-        if(location != null) {
+        if (location != null) {
             latitude = location.getLatitude();
         }
-        // return latitude
         return latitude;
     }
 
-    /**
-     * Function to get longitude
-     * */
+    // Function to get longitude
     public double getLongitude() {
-        if(location != null){
+        if (location != null) {
             longitude = location.getLongitude();
         }
-
-        // return longitude
         return longitude;
     }
 
-    /**
-     * Function to check GPS/wifi enabled
-     * @return boolean
-     * */
+    // Function to check GPS/wifi enabled
+    // @return boolean
     public boolean canGetLocation() {
         return this.canGetLocation;
     }
@@ -144,13 +128,10 @@ public class LocationService extends Service implements LocationListener {
     // Диалоговое окно при отключенной GPS.
     public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-        //Заголовок
         alertDialog.setTitle(R.string.dialog_gps_title);
-        //Тело
         alertDialog.setMessage(R.string.dialog_gps_message);
-        //Кнопки, с возможностью перехода на экран настроек (включения геоданных)
         alertDialog.setPositiveButton(R.string.dialog_gps_positive_button, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog,int which) {
+            public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 mContext.startActivity(intent);
             }
@@ -165,31 +146,39 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged");
-        if(canGetLocation()) {
-            MainActivity.gpsEnabledFlag = 1;
-            double latitude = getLatitude();
-            double longitude = getLongitude();
-            SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
-                    MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+//        Log.i(TAG, "onLocationChanged");
+        if (MainActivity.isNetworkAvailable(mContext)) {
+            if (canGetLocation()) {
+                MainActivity.gpsEnabledFlag = 1;
+                double latitude = getLatitude();
+                double longitude = getLongitude();
+                SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
+                        MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+            } else {
+                // Сan't get location
+                // GPS or Network is not enabled
+                // Ask user to enable GPS/network in settings
+                showSettingsAlert();
+                MainActivity.gpsEnabledFlag = 0;
+            }
         } else {
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            showSettingsAlert();
-            MainActivity.gpsEnabledFlag = 0;
-
+            Toast toast = Toast.makeText(mContext,
+                    R.string.dialog_wifi_title, Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
 
     @Override
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) {}
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
     public IBinder onBind(Intent arg0) {

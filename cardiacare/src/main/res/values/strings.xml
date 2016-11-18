@@ -8,8 +8,6 @@
     <string name="title_account">Account</string>
     <string name="title_login">Login/Logout</string>
 
-
-    <!-- for main.xml Yamushev Igor on 17.12-->
     <string name="start">Find and connect</string>
     <string name="remember">You connected to Bluetooth</string>
     <string name="disconnect">Disconnect</string>
@@ -17,34 +15,28 @@
     <string name="bluetoothSearching"> "Searching, please wait…"</string>
     <string name="content_description"> picture </string>
 
-    <!-- for Menu: main.xml Yamushev Igor on 17.12-->
     <string name="about">About</string>
     <string name="help">Help</string>
     <string name="userdata">Account</string>
     <string name="exit">Exit</string>
 
-    <!-- for about Yamushev Igor on 21.12-->
     <string name="aboutActivity">About</string>
     <string name="aboutOK">OK</string>
     <string name="aboutText">Mobile and Wireless Systems Lab of IT-park of Petrozavodsk State University (member of FRUCT association ) \nDevelopers: \nAlexander Borodin, Yuliya Zavyalova, Igor Yamushev</string>
 
-    <!-- for help Yamushev Igor on 21.12-->
     <string name="helpActivity">Help</string>
     <string name="helpText_step1">Set up two electrodes to the chest </string>
     <string name="helpText_step2">Switch heart monitor on </string>
     <string name="helpText_step3">Run CardiaCare app </string>
     <string name="helpText_step4">Watch your cardiogram</string>
 
-    <!-- for bluetoothfind Yamushev Igor on 21.12-->
     <string name="refresh">Refresh</string>
 
-    <!-- for login Yamushev Igor on 28.12-->
     <string name="loginActivity">Login</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="enter">Enter</string>
 
-    <!-- for userdata Yamushev Igor on 28.12-->
     <string name="userdataActivity">Userdata</string>
     <string name="tvFirstName">First name</string>
     <string name="tvSecondName">Second name</string>
@@ -131,6 +123,7 @@
     <string name="diastolicPressure">Diastolic pressure</string>
     <string name="pulse">Pulse</string>
     <string name="restart_app">Restart application</string>
+    <string name="close_app">Close application</string>
     <string name="next">Next</string>
     <string name="dialog_wifi_title">There is no network connection</string>
     <string name="dialog_wifi_message">Turn on Wi-Fi and restart the application</string>
@@ -153,9 +146,12 @@
     <string name="bluetooth_toast3">Bluetooth is already on</string>
     <string name="bluetooth_toast4">Status: enabled</string>
     <string name="bluetooth_toast5">Status: disabled</string>
-
-
-
-
-
+    <string name="dialog_ss_title">The application is not available</string>
+    <string name="dialog_ss_message">Currently, the application can not connect to smart space. Please try again later</string>
+    <string name="login_toast">Please, fill fields</string>
+    <string name="dialog_title_server_error">Connection error</string>
+    <string name="dialog_message_server_error">Failed to connect to server. Please try again later</string>
+    <string name="dialog_message_mis_error">Failed to connect to medical information system. Please try again later</string>
+    <string name="dialog_message_unregistered_user">Unregistered user</string>
+    <string name="dialog_message_ducument_message">The relevant document was not found</string>
 </resources>
