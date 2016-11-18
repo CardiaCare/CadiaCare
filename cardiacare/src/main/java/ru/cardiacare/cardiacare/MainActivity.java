@@ -32,18 +32,12 @@ import android.widget.TextView;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
-import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
-<<<<<<< HEAD
-=======
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
->>>>>>> b6d24e0946865991f9616ce698194fdd84b1534c
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
-import ru.cardiacare.cardiacare.servey.AlarmQuestionnaireHelper;
 import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.user.Login;
@@ -78,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
     static public String TAG = "SS-main";
     static public AccountStorage storage;
-    static public Questionnaire questionnaire;
-    static public Questionnaire alarmQuestionnaire;
     static public Feedback feedback;
     static public Feedback alarmFeedback;
     static public LocationService gps;
@@ -324,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                         alarmButton.setBackgroundColor(0x77a71000);
                         alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
                         alarmButtonFlag = false;
-                        AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                        QuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
                 } else {
                     setLoadingScreen();

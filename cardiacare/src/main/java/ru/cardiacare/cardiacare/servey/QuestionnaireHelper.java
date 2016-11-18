@@ -23,17 +23,24 @@ import ru.cardiacare.cardiacare.MainActivity;
 
 public class QuestionnaireHelper {
     static public String serverUri;
-    static public String filename = "questionnaire.json";
+    static public String questionnaireFile = "questionnaire.json";
+    static public String alarmQuestionnaireFile = "alarmQuestionnaire.json";
+    static public boolean questionnaireDownloaded = false;
+    static public boolean alarmQuestionnaireDownloaded = false;
+    static public String questionnaireType;
+
+    static public Questionnaire questionnaire;
+    static public Questionnaire alarmQuestionnaire;
 
     // Отображение опросника
     static public void showQuestionnaire(Context context) {
-
+        questionnaireType = "periodic";
         String QuestionnaireVersion = MainActivity.storage.getQuestionnaireVersion();
         String qst = MainActivity.smart.getQuestionnaire(MainActivity.nodeDescriptor);
         String QuestionnaireServerVersion = MainActivity.smart.getQuestionnaireVersion(MainActivity.nodeDescriptor, qst);
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
-        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (MainActivity.questionnaire == null)) {
+        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (!questionnaireDownloaded)) {
             serverUri = MainActivity.smart.getQuestionnaireSeverUri(MainActivity.nodeDescriptor, qst);
             Log.i("serverUri = ", serverUri);
             MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
@@ -45,11 +52,33 @@ public class QuestionnaireHelper {
 //            feedbackPOST.execute();
             String jsonFromFile = readSavedData(context);
             Gson json = new Gson();
-            MainActivity.questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
-            printQuestionnaire(MainActivity.questionnaire);
+            questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
+//            printQuestionnaire(questionnaire);
 //            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
-            Intent intentq = new Intent(context, QuestionnaireActivity.class);
-            context.startActivity(intentq);
+            Intent intent = new Intent(context, QuestionnaireActivity.class);
+            intent.putExtra("questionnaireType", questionnaireType);
+            context.startActivity(intent);
+        }
+    }
+
+    static public void showAlarmQuestionnaire(Context context) {
+        questionnaireType = "alarm";
+        // Если опросник ещё не был загружен, то загружаем опросник
+        if (!alarmQuestionnaireDownloaded) {
+            serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
+            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
+            questionnaireGET.execute();
+        } else {
+//            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+//            feedbackPOST.execute();
+            String jsonFromFile = readSavedData(context);
+            Gson json = new Gson();
+            alarmQuestionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
+//            printQuestionnaire(alarmQuestionnaire);
+//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
+            Intent intent = new Intent(context, QuestionnaireActivity.class);
+            intent.putExtra("questionnaireType", questionnaireType);
+            context.startActivity(intent);
         }
     }
 
@@ -88,7 +117,10 @@ public class QuestionnaireHelper {
     private static String readSavedData(Context context) {
         StringBuilder datax = new StringBuilder("");
         try {
-            FileInputStream fIn = context.openFileInput(filename);
+            FileInputStream fIn;
+            if (questionnaireType.equals("periodic"))
+                fIn = context.openFileInput(questionnaireFile);
+            else fIn = context.openFileInput(alarmQuestionnaireFile);
             InputStreamReader isr = new InputStreamReader(fIn);
             BufferedReader buffreader = new BufferedReader(isr);
 

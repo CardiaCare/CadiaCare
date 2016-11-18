@@ -32,24 +32,42 @@ import ru.cardiacare.cardiacare.R;
 
 public class QuestionnaireActivity extends AppCompatActivity {
 
+    public static final int TextField = 0;
+    public static final int Multiplechoice = 1;
+    public static final int Singlechoice = 2;
+    public static final int Bipolarquestion = 3;
+    public static final int Guttmanscale = 4;
+    public static final int Likertscale = 5;
+    public static final int Continuousscale = 6;
+    public static final int Dichotomous = 7;
+    public static final int DefaultValue = 8;
+
     RecyclerView QuestionnaireRecyclerView;
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
-    static public ImageButton buttonClean;
+    static ImageButton buttonClean;
+    String periodic = "periodic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        FileInputStream fIn;
         try {
-            FileInputStream fIn = openFileInput("feedback.json");
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                 fIn = openFileInput("feedback.json");
+            else fIn = openFileInput("alarmFeedback.json");
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
-            MainActivity.feedback = qst;
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                MainActivity.feedback = qst;
+            else MainActivity.alarmFeedback = qst;
         } catch (Exception e) {
 
         }
-        super.onCreate(savedInstanceState);
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_questionnaire);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,7 +86,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
         QuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
         QuestionnaireRecyclerView.setLayoutManager(QuestionnaireLayoutManager);
 
-        LinkedList<Question> questionnaire = MainActivity.questionnaire.getQuestions();
+        LinkedList<Question> questionnaire;
+        if (QuestionnaireHelper.questionnaireType.equals(periodic))
+            questionnaire = QuestionnaireHelper.questionnaire.getQuestions();
+        else questionnaire = QuestionnaireHelper.alarmQuestionnaire.getQuestions();
         int[] Types = new int[questionnaire.size()];
 
         for (int i = 0; i < questionnaire.size(); i++) {
@@ -76,46 +97,56 @@ public class QuestionnaireActivity extends AppCompatActivity {
             Answer answer = question.getAnswer();
             switch (answer.getType()) {
                 case "Text":
-                    Types[i] = RecyclerViewAdapter.TextField;
+                    Types[i] = TextField;
                     break;
                 case "MultipleChoise":
-                    Types[i] = RecyclerViewAdapter.Multiplechoice;
+                    Types[i] = Multiplechoice;
                     break;
                 case "SingleChoise":
-                    Types[i] = RecyclerViewAdapter.Singlechoice;
+                    Types[i] = Singlechoice;
                     break;
                 case "BipolarQuestion":
-                    Types[i] = RecyclerViewAdapter.Bipolarquestion;
+                    Types[i] = Bipolarquestion;
                     break;
                 case "Dichotomous":
-                    Types[i] = RecyclerViewAdapter.Dichotomous;
+                    Types[i] = Dichotomous;
                     break;
                 case "GuttmanScale":
-                    Types[i] = RecyclerViewAdapter.Guttmanscale;
+                    Types[i] = Guttmanscale;
                     break;
                 case "LikertScale":
-                    Types[i] = RecyclerViewAdapter.Likertscale;
+                    Types[i] = Likertscale;
                     break;
                 case "ContinuousScale":
-                    Types[i] = RecyclerViewAdapter.Continuousscale;
+                    Types[i] = Continuousscale;
                     break;
                 default:
-                    Types[i] = RecyclerViewAdapter.DefaultValue;
+                    Types[i] = DefaultValue;
             }
         }
-
-        QuestionnaireAdapter = new RecyclerViewAdapter(MainActivity.questionnaire.getQuestions(), Types, context);
-        QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+        if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+            QuestionnaireAdapter = new RecyclerViewAdapter(QuestionnaireHelper.questionnaire.getQuestions(), Types, context);
+            QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+        } else {
+            QuestionnaireAdapter = new AlarmRecyclerViewAdapter(QuestionnaireHelper.alarmQuestionnaire.getQuestions(), Types, context);
+            QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+        }
 
         buttonClean = (ImageButton) findViewById(R.id.buttonClean);
         buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
             public void onClick(View v) {
+                String jsonStr = "";
                 MainActivity.backgroundFlag = 1;
                 buttonClean.setEnabled(false);
-                MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
+                if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                    MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
+                else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
+
                 Gson json = new Gson();
-                String jsonStr = json.toJson(MainActivity.feedback);
+                if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                    jsonStr = json.toJson(MainActivity.feedback);
+                else jsonStr = json.toJson(MainActivity.alarmFeedback);
                 System.out.println(jsonStr);
                 writeData(jsonStr);
 
@@ -131,7 +162,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         MainActivity.backgroundFlag = 0;
-        MainActivity.serveyButton.setEnabled(true);
+        if (QuestionnaireHelper.questionnaireType.equals(periodic))
+            MainActivity.serveyButton.setEnabled(true);
+        else {
+            MainActivity.alarmButton.setEnabled(true);
+            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standart_color);
+        }
+
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
@@ -140,7 +177,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public void writeData(String data) {
         try {
 //            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-            FileOutputStream fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE);
+            FileOutputStream fOut;
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE);
+            else fOut = context.openFileOutput("alarmFeedback.json", context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -152,8 +192,11 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     public String readSavedData() {
         StringBuilder datax = new StringBuilder("");
+        FileInputStream fIn;
         try {
-            FileInputStream fIn = openFileInput("feedback.json");
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                fIn = openFileInput("feedback.json");
+            else fIn = openFileInput("alarmFeedback.json");
             InputStreamReader isr = new InputStreamReader(fIn);
             BufferedReader buffreader = new BufferedReader(isr);
 
@@ -178,18 +221,22 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
+        String jsonStr;
         Gson json = new Gson();
-        String jsonStr = json.toJson(MainActivity.feedback);
+        if (QuestionnaireHelper.questionnaireType.equals(periodic))
+            jsonStr = json.toJson(MainActivity.feedback);
+        else jsonStr = json.toJson(MainActivity.alarmFeedback);
         System.out.println(jsonStr);
         writeData(jsonStr);
-        // To SIB
-        Long timestamp = System.currentTimeMillis() / 1000;
-        String ts = timestamp.toString();
-        SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
-        // To Server
+        if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+            // To SIB
+            Long timestamp = System.currentTimeMillis() / 1000;
+            String ts = timestamp.toString();
+            SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
+            MainActivity.storage.setLastQuestionnairePassDate(ts);
+        }
         FeedbackPOST feedbackPOST = new FeedbackPOST(context);
         feedbackPOST.execute();
-        MainActivity.storage.setLastQuestionnairePassDate(ts);
         super.onPause();
         if (MainActivity.backgroundFlag == 0) {
             MainActivity.DisconnectFromSmartSpace();
