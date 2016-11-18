@@ -60,7 +60,9 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
-                onBackPressed();
+                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+                configIntent.setAction(" ");
+                startActivity(configIntent);
             }
         });
 
@@ -200,6 +202,9 @@ public class AlarmQuestionnaireActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
+        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+        configIntent.setAction(" ");
+        startActivity(configIntent);
+//        super.onBackPressed();
     }
 }

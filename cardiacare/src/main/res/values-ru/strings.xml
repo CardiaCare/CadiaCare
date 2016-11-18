@@ -148,4 +148,5 @@
     <string name="dialog_message_mis_error">Не удалось подключиться к медицинской информационной системе. Повторите попытку позже</string>
     <string name="dialog_message_unregistered_user">Незарегистрированный пользователь</string>
     <string name="dialog_message_ducument_message">Соответсвующий документ не найден</string>
+    <string name="widget_sos_text">ТРЕВОГА</string>
 </resources>

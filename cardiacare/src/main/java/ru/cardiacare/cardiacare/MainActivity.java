@@ -3,6 +3,7 @@ package ru.cardiacare.cardiacare;
 /* Главный экран */
 
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,14 +30,11 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
-<<<<<<< HEAD
-=======
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
->>>>>>> b6d24e0946865991f9616ce698194fdd84b1534c
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
@@ -102,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         smart = new SmartCareLibrary();
         setLoadingScreen();
 //        if (connectedState == false) {
-//            setRegisteredActivity();
+//            setRegisteredScreen();
 //        } else {
 //            // Стартовое окно при подключенном bluetooth-устройстве
 //            // FIXME не работает
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
                     setUnregisteredScreen();
                 } else {
-                    setRegisteredActivity();
+                    setRegisteredScreen();
                 }
             } else {
                 android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
@@ -228,12 +226,12 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
         } else {
             storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "0");
-            setRegisteredActivity();
+            setRegisteredScreen();
         }
     }
 
     // Интерфейс для зарегистрированного пользователя
-    public void setRegisteredActivity() {
+    public void setRegisteredScreen() {
         setContentView(R.layout.main);
         patientUriFlag = 1;
 //        registerReceiver(connectReceiver, new IntentFilter(???));
@@ -342,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 connectedState = false;
-                setRegisteredActivity();
+                setRegisteredScreen();
             }
         });
 
@@ -538,21 +536,53 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStart() {
-        // Условие выполняется только для авторизированного пользователя
-        if (patientUriFlag == 1) {
-            // Если с момента последнего прохождения периодического опроса прошла минута, то
-            // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String ts = timestamp.toString();
-            Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
-            if (time >= 60) {
-                serveyButton.setBackgroundResource(R.drawable.servey);
-            } else {
-                serveyButton.setBackgroundResource(R.drawable.servey_white);
-            }
-        }
         super.onStart();
         backgroundFlag = 0;
+        Intent intent = getIntent();
+
+        // Проверяем каким способом запущено приложение (обычным или через виджет)
+        if (intent.getAction().equalsIgnoreCase(SosWidget.ACTION_WIDGET)) {
+            int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                mAppWidgetId = extras.getInt(
+                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+                        AppWidgetManager.INVALID_APPWIDGET_ID);
+
+            }
+            // Если приложение запустили с помощью виджета "ТРЕВОГА"
+            // то отправляем сигнал SOS и открываем экстренный опросник
+            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+                setLoadingScreen();
+                if (patientUriFlag == 1) {
+                    if ((isNetworkAvailable(context)) && (ConnectToSmartSpace()) && (gps.canGetLocation())) {
+                        alarmUri = MainActivity.smart.sendAlarm(MainActivity.nodeDescriptor, MainActivity.patientUri);
+                        alarmButtonFlag = false;
+                        backgroundFlag = 1;
+                        AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                    }
+                } else {
+                    Toast toast = Toast.makeText(mContext,
+                            R.string.dialog_message_unregistered_user, Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+            // Если приложение запустили обычным способом
+        } else {
+            // Условие выполняется только для авторизированного пользователя
+            if (patientUriFlag == 1) {
+                // Если с момента последнего прохождения периодического опроса прошла минута, то
+                // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
+                Long timestamp = System.currentTimeMillis() / 1000;
+                String ts = timestamp.toString();
+                Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
+                if (time >= 60) {
+                    serveyButton.setBackgroundResource(R.drawable.servey);
+                } else {
+                    serveyButton.setBackgroundResource(R.drawable.servey_white);
+                }
+            }
+        }
     }
 
     @Override
