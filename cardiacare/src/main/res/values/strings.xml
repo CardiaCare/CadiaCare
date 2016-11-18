@@ -154,4 +154,5 @@
     <string name="dialog_message_mis_error">Failed to connect to medical information system. Please try again later</string>
     <string name="dialog_message_unregistered_user">Unregistered user</string>
     <string name="dialog_message_ducument_message">The relevant document was not found</string>
+    <string name="widget_sos_text">SOS</string>
 </resources>

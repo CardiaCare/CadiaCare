@@ -45,17 +45,21 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
             else jsonFeedback = json.toJson(MainActivity.alarmFeedback);
 //            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
 
-            String jsonFeedbackOld = readSavedData();
-            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
-            String oldfb = jsonFeedbackOld.substring(jsonFeedbackOld.indexOf("personUri"), jsonFeedbackOld.length());
-            if (newfb.equals(oldfb)) {
-                Log.i(MainActivity.TAG, "Feedback не отправлен");
-                return 0;
-            }
+            // TODO feedback отправляется всегда, независимо от того, изменились ответы или нет.
+//            String jsonFeedbackOld = readSavedData();
+//            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
+//            String oldfb = jsonFeedbackOld.substring(jsonFeedbackOld.indexOf("personUri"), jsonFeedbackOld.length());
+//            if (newfb.equals(oldfb)) {
+//                Log.i(MainActivity.TAG, "Feedback не отправлен");
+//                return 0;
+//            }
             writeData(jsonFeedback);
 
             String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
-            String parameters = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
+            String parameters;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                parameters = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
+            else parameters = "user_id=" + "654321" + "&date=" + "654321" + "&feedback=" + jsonFeedback;
             byte[] data = null;
             InputStream is = null;
 

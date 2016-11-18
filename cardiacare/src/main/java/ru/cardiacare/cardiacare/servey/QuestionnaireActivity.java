@@ -46,7 +46,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
-    static ImageButton buttonClean;
+    boolean refreshFlag = false; // Была ли нажата кнопка "Обновить", true - была нажата / false - не была
+    static ImageButton buttonRefresh;
     String periodic = "periodic";
 
     @Override
@@ -78,7 +79,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MainActivity.backgroundFlag = 1;
-                onBackPressed();
+                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+                configIntent.setAction(" ");
+                startActivity(configIntent);
             }
         });
 
@@ -132,13 +135,14 @@ public class QuestionnaireActivity extends AppCompatActivity {
             QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
         }
 
-        buttonClean = (ImageButton) findViewById(R.id.buttonClean);
-        buttonClean.setOnClickListener(new View.OnClickListener() {// Clean
+        buttonRefresh = (ImageButton) findViewById(R.id.buttonClean);
+        buttonRefresh.setOnClickListener(new View.OnClickListener() {// Clean
             @Override // Clean
             public void onClick(View v) {
                 String jsonStr = "";
+                refreshFlag = true;
                 MainActivity.backgroundFlag = 1;
-                buttonClean.setEnabled(false);
+                buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
                     MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
                 else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
@@ -170,7 +174,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         }
 
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-//        buttonClean.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        buttonRefresh.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
@@ -221,23 +225,26 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        String jsonStr;
-        Gson json = new Gson();
-        if (QuestionnaireHelper.questionnaireType.equals(periodic))
-            jsonStr = json.toJson(MainActivity.feedback);
-        else jsonStr = json.toJson(MainActivity.alarmFeedback);
-        System.out.println(jsonStr);
-        writeData(jsonStr);
-        if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
-            // To SIB
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String ts = timestamp.toString();
-            SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
-            MainActivity.storage.setLastQuestionnairePassDate(ts);
+        if (refreshFlag == false) {
+            String jsonStr;
+            Gson json = new Gson();
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                jsonStr = json.toJson(MainActivity.feedback);
+            else jsonStr = json.toJson(MainActivity.alarmFeedback);
+            System.out.println(jsonStr);
+            writeData(jsonStr);
+            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+                // To SIB
+                Long timestamp = System.currentTimeMillis() / 1000;
+                String ts = timestamp.toString();
+                SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
+                MainActivity.storage.setLastQuestionnairePassDate(ts);
+            }
+            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+            feedbackPOST.execute();
         }
-        FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-        feedbackPOST.execute();
         super.onPause();
+        refreshFlag = false;
         if (MainActivity.backgroundFlag == 0) {
             MainActivity.DisconnectFromSmartSpace();
         }
@@ -246,6 +253,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
+        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+        configIntent.setAction(" ");
+        startActivity(configIntent);
+//        super.onBackPressed();
     }
 }
