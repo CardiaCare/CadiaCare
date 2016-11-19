@@ -1,6 +1,6 @@
 package ru.cardiacare.cardiacare;
 
-/* Главный экран */
+/* Главный  экран */
 
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
