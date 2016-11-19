@@ -1,6 +1,6 @@
 package ru.cardiacare.cardiacare;
 
-/* Главный  экран */
+/* Главный экран */
 
 import android.app.AlertDialog;
 import android.appwidget.AppWidgetManager;
@@ -630,16 +630,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         backgroundFlag = 0;
         Intent intent = getIntent();
-
         // Проверяем каким способом запущено приложение (обычным или через виджет)
-        if (intent.getAction().equalsIgnoreCase(SosWidget.ACTION_WIDGET)) {
+        if ((intent.getAction() != null) && (intent.getAction().equalsIgnoreCase("ru.cardiacare.cardiacare.open_from_widget"))) {
             int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 mAppWidgetId = extras.getInt(
                         AppWidgetManager.EXTRA_APPWIDGET_ID,
                         AppWidgetManager.INVALID_APPWIDGET_ID);
-
             }
             // Если приложение запустили с помощью виджета "ТРЕВОГА"
             // то отправляем сигнал SOS и открываем экстренный опросник
