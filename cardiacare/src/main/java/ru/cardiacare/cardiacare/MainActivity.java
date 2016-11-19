@@ -142,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
                 android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
                 alertDialog.setTitle(R.string.dialog_ss_title);
                 alertDialog.setMessage(R.string.dialog_ss_message);
-                alertDialog.setPositiveButton(R.string.restart_app,
+                alertDialog.setPositiveButton(R.string.dialog_ss_positive_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 setLoadingScreen();
                             }
                         });
-                alertDialog.setNegativeButton(R.string.close_app,
+                alertDialog.setNegativeButton(R.string.dialog_ss_negative_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle(R.string.dialog_title);
             builder.setMessage(R.string.dialog_message);
             builder.setPositiveButton(R.string.dialog_ok, null);
-            builder.setNegativeButton(R.string.dialog_cancle, null);
+            builder.setNegativeButton(R.string.dialog_cancel, null);
             builder.show();
         } else {
             storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "0");
@@ -559,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast toast = Toast.makeText(mContext,
-                            R.string.dialog_message_unregistered_user, Toast.LENGTH_SHORT);
+                            R.string.unregistered_user_toast, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }

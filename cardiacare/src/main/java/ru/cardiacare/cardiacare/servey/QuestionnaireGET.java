@@ -94,9 +94,9 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         super.onPostExecute(result);
         if (result == -1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            alertDialog.setTitle(R.string.dialog_title_server_error);
-            alertDialog.setMessage(R.string.dialog_message_server_error);
-            alertDialog.setNegativeButton("OK",
+            alertDialog.setTitle(R.string.dialog_server_error_title);
+            alertDialog.setMessage(R.string.dialog_server_error_message);
+            alertDialog.setNegativeButton(R.string.dialog_server_error_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();

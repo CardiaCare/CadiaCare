@@ -44,7 +44,7 @@
         android:layout_weight="0.09">
 
         <TextView
-            android:text="Pass Servey"
+            android:text="@string/pass_survey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView5"
@@ -53,7 +53,7 @@
             android:textSize="20sp" />
 
         <TextView
-            android:text="Labs &amp; Info"
+            android:text="@string/documents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView6"
@@ -88,7 +88,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.5"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:text="@string/start_inctruction"
+            android:text="@string/start_instruction"
             android:textAlignment="center"
             android:textSize="24sp"
             android:textColor="#fff"

@@ -50,7 +50,7 @@
         <activity
             android:name=".Help"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/helpActivity"
+            android:label="@string/title_activity_help"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -60,7 +60,7 @@
         <activity
             android:name=".user.Login"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/login"
+            android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -70,7 +70,7 @@
         <activity
             android:name=".user.Userdata"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/userdataActivity"
+            android:label="@string/title_activity_userdata"
             android:screenOrientation="portrait" />
         <activity
             android:name=".user.UserAccount"
