@@ -32,16 +32,6 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     private int[] TypesQuestions;
     private Context context;
 
-    public static final int TextField = 0;
-    public static final int Multiplechoice = 1;
-    public static final int Singlechoice = 2;
-    public static final int Bipolarquestion = 3;
-    public static final int Guttmanscale = 4;
-    public static final int Likertscale = 5;
-    public static final int Continuousscale = 6;
-    public static final int Dichotomous = 7;
-    public static final int DefaultValue = 8;
-
     private LinkedList<Response> alarmFeedback = MainActivity.alarmFeedback.getResponses();
 
     public AlarmRecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
@@ -53,28 +43,28 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int Type) {
         View v;
-        if (Type == Dichotomous) {
+        if (Type == QuestionnaireActivity.Dichotomous) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_dichotomous_question, viewGroup, false);
             return new DichotomousViewHolder(v);
-        } else if (Type == Singlechoice) {
+        } else if (Type == QuestionnaireActivity.Singlechoice) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_single_choice_question, viewGroup, false);
             return new SingleChoiceViewHolder(v);
-        } else if (Type == TextField) {
+        } else if (Type == QuestionnaireActivity.TextField) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_textfield_question, viewGroup, false);
             return new TextFieldViewHolder(v);
-        } else if (Type == Bipolarquestion) {
+        } else if (Type == QuestionnaireActivity.Bipolarquestion) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_bipolar_question, viewGroup, false);
             return new BipolarQuestionViewHolder(v);
-        } else if (Type == Multiplechoice) {
+        } else if (Type == QuestionnaireActivity.Multiplechoice) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_multiple_choice_question, viewGroup, false);
             return new MultipleChoiceViewHolder(v);
-        } else if (Type == Likertscale) {
+        } else if (Type == QuestionnaireActivity.Likertscale) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_likert_scale_queston, viewGroup, false);
             return new LikertScaleViewHolder(v);
-        } else if (Type == Guttmanscale) {
+        } else if (Type == QuestionnaireActivity.Guttmanscale) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_guttman_scale_question, viewGroup, false);
             return new GuttmanScaleViewHolder(v);
-        } else if (Type == Continuousscale) {
+        } else if (Type == QuestionnaireActivity.Continuousscale) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_continuous_scale_question, viewGroup, false);
             return new ContinuousScaleViewHolder(v);
         } else {
@@ -85,7 +75,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        if (viewHolder.getItemViewType() == Dichotomous) {
+        if (viewHolder.getItemViewType() == QuestionnaireActivity.Dichotomous) {
 //            Question question = Questions.get(position);
 //            Answer answer = question.getAnswer();
 //            LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -126,7 +116,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Bipolarquestion) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Bipolarquestion) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -147,7 +137,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 Item = answeritem.get(1);
                 holder.BipolarQuestionSeekBar.setMax(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
             }
-        } else if (viewHolder.getItemViewType() == Multiplechoice) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Multiplechoice) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -255,7 +245,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Singlechoice) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Singlechoice) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -287,7 +277,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == TextField) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.TextField) {
             Question question = Questions.get(position);
             TextFieldViewHolder holder = (TextFieldViewHolder) viewHolder;
             holder.TextFieldQuestion.setText(question.getDescription());
@@ -297,7 +287,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     holder.TextFieldAnswer.setText(alarmFeedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(0).getItemText().toString());
                 }
             }
-        } else if (viewHolder.getItemViewType() == Likertscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Likertscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -326,7 +316,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Guttmanscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Guttmanscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -355,7 +345,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Continuousscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Continuousscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -431,14 +421,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     System.out.println("Touch! Dichotomous " + checkedId + " " + uri);
-                    for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                        if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                 if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                     // Вопрос
-                                    Question questionDichotomous = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                    Question questionDichotomous = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                     // Тип ответов
                                     Answer answerDichotomous = questionDichotomous.getAnswer();
                                     // Выбранный ответ
@@ -451,7 +441,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                             }
                             if (flag == 0) {
                                 // Вопрос
-                                Question questionDichotomous = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                Question questionDichotomous = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                 // Тип ответов
                                 Answer answerDichotomous = questionDichotomous.getAnswer();
                                 // Выбранный ответ
@@ -485,14 +475,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 //                    System.out.println("Touch! SingleChoice "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                        if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                 if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                     // Вопрос
-                                    Question questionSingleChoice = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                    Question questionSingleChoice = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                     // Тип ответов
                                     Answer answerSingleChoice = questionSingleChoice.getAnswer();
                                     // Ответ выбранный
@@ -505,7 +495,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                             }
                             if (flag == 0) {
                                 // Вопрос
-                                Question questionSingleChoice = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                Question questionSingleChoice = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                 // Тип ответов
                                 Answer answerSingleChoice = questionSingleChoice.getAnswer();
                                 // Выбранный ответ
@@ -538,14 +528,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 public void onFocusChange(View v, boolean hasFocus) {
 //                    System.out.println("Touch! TextField "+hasFocus+" "+uri);
                     if (!hasFocus) {
-                        for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                            if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                        for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                            if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                 int flag = 0;
                                 for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                     if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                         MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                         // Вопрос
-                                        Question questionTextField = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                        Question questionTextField = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                         // Тип ответов
                                         Answer answerTextField = questionTextField.getAnswer();
                                         // Выбранный ответ
@@ -558,7 +548,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                                 }
                                 if (flag == 0) {
                                     // Вопрос
-                                    Question questionTextField = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                    Question questionTextField = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                     // Тип ответов
                                     Answer answerTextField = questionTextField.getAnswer();
                                     // Выбранный ответ
@@ -618,14 +608,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                         public void onStopTrackingTouch(SeekBar seekBar) {
                             BipolarQuestionValue.setText(String.valueOf(progress));
 //                            System.out.println("Touch! Bipolar "+uri+" "+BipolarQuestionValue.getText());////////////////
-                            for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                                if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                            for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                                if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                     int flag = 0;
                                     for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                         if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                             MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                             // Вопрос
-                                            Question questionBipolarQuestion = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                            Question questionBipolarQuestion = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                             // Тип ответов
                                             Answer answerBipolarQuestion = questionBipolarQuestion.getAnswer();
                                             // Выбранный ответ
@@ -638,7 +628,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                                     }
                                     if (flag == 0) {
                                         // Вопрос
-                                        Question questionBipolarQuestion = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                        Question questionBipolarQuestion = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                         // Тип ответов
                                         Answer answerBipolarQuestion = questionBipolarQuestion.getAnswer();
                                         // Выбранный ответ
@@ -673,14 +663,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 //                    System.out.println("Touch! LikertScale "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                        if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                 if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                     // Вопрос
-                                    Question questionLikertScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                    Question questionLikertScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                     // Тип ответов
                                     Answer answerLikertScale = questionLikertScale.getAnswer();
                                     // Выбранный ответ
@@ -693,7 +683,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                             }
                             if (flag == 0) {
                                 // Вопрос
-                                Question questionLikertScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                Question questionLikertScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                 // Тип ответов
                                 Answer answerLikertScale = questionLikertScale.getAnswer();
                                 // Выбранный ответ
@@ -726,14 +716,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
 //                    System.out.println("Touch! GuttmanScale "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                        if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                 if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                     // Вопрос
-                                    Question questionGuttmanScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                    Question questionGuttmanScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                     // Тип ответов
                                     Answer answerGuttmanScale = questionGuttmanScale.getAnswer();
                                     // Выбранный ответ
@@ -746,7 +736,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                             }
                             if (flag == 0) {
                                 // Вопрос
-                                Question questionGuttmanScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                Question questionGuttmanScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                 // Тип ответов
                                 Answer answerGuttmanScale = questionGuttmanScale.getAnswer();
                                 // Выбранный ответ
@@ -798,14 +788,14 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
 
                         public void onStopTrackingTouch(SeekBar seekBar) {
 //                            System.out.println("Touch! ContinuousScale "+uri+" "+ContinuousScaleValue.getText());
-                            for (int i = 0; i < MainActivity.alarmQuestionnaire.getQuestions().size(); i++) {
-                                if (MainActivity.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                            for (int i = 0; i < QuestionnaireHelper.alarmQuestionnaire.getQuestions().size(); i++) {
+                                if (QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                     int flag = 0;
                                     for (int j = 0; j < MainActivity.alarmFeedback.getResponses().size(); j++) {
                                         if (MainActivity.alarmFeedback.getResponses().get(j).getUri().equals(uri)) {
                                             MainActivity.alarmFeedback.getResponses().get(j).getResponseItems().clear();
                                             // Вопрос
-                                            Question questionContinuousScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                            Question questionContinuousScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                             // Тип ответов
                                             Answer answerContinuousScale = questionContinuousScale.getAnswer();
                                             // Выбранный ответ
@@ -818,7 +808,7 @@ public class AlarmRecyclerViewAdapter extends RecyclerView.Adapter<AlarmRecycler
                                     }
                                     if (flag == 0) {
                                         // Вопрос
-                                        Question questionContinuousScale = MainActivity.alarmQuestionnaire.getQuestions().get(i);
+                                        Question questionContinuousScale = QuestionnaireHelper.alarmQuestionnaire.getQuestions().get(i);
                                         // Тип ответов
                                         Answer answerContinuousScale = questionContinuousScale.getAnswer();
                                         // Выбранный ответ

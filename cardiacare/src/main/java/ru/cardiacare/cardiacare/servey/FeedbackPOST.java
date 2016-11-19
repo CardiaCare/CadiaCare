@@ -2,6 +2,7 @@ package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -38,19 +39,27 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
     public Integer doInBackground(Void... params) {
         try {
             Gson json = new Gson();
-            String jsonFeedback = json.toJson(MainActivity.feedback);
+            String jsonFeedback;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                jsonFeedback = json.toJson(MainActivity.feedback);
+            else jsonFeedback = json.toJson(MainActivity.alarmFeedback);
 //            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
 
-            String jsonFeedbackOld = readSavedData();
-            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
-            String oldfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
-            if (newfb.equals(oldfb)) {
-                return 0;
-            }
+            // TODO feedback отправляется всегда, независимо от того, изменились ответы или нет.
+//            String jsonFeedbackOld = readSavedData();
+//            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
+//            String oldfb = jsonFeedbackOld.substring(jsonFeedbackOld.indexOf("personUri"), jsonFeedbackOld.length());
+//            if (newfb.equals(oldfb)) {
+//                Log.i(MainActivity.TAG, "Feedback не отправлен");
+//                return 0;
+//            }
             writeData(jsonFeedback);
 
             String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
-            String parammetrs = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
+            String parameters;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                parameters = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
+            else parameters = "user_id=" + "654321" + "&date=" + "654321" + "&feedback=" + jsonFeedback;
             byte[] data = null;
             InputStream is = null;
 
@@ -61,9 +70,9 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
 
-                conn.setRequestProperty("Content-Length", "" + Integer.toString(parammetrs.getBytes().length));
+                conn.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
                 OutputStream os = conn.getOutputStream();
-                data = parammetrs.getBytes("UTF-8");
+                data = parameters.getBytes("UTF-8");
                 os.write(data);
                 data = null;
 
@@ -91,6 +100,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Log.i(MainActivity.TAG, "Feedback отправлен");
         return 0;
     }
 
@@ -102,7 +112,10 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
     private String readSavedData() {
         StringBuilder datax = new StringBuilder("");
         try {
-            FileInputStream fIn = context.openFileInput("feedbackold.json");
+            FileInputStream fIn;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                fIn = context.openFileInput("feedbackold.json");
+            else fIn = context.openFileInput("alarmfeedbackold.json");
             InputStreamReader isr = new InputStreamReader(fIn);
             BufferedReader buffreader = new BufferedReader(isr);
 
@@ -121,7 +134,10 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
     private void writeData(String data) {
         try {
 //            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
-            FileOutputStream fOut = context.openFileOutput("feedbackold.json", context.MODE_PRIVATE);
+            FileOutputStream fOut;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                fOut = context.openFileOutput("feedbackold.json", context.MODE_PRIVATE);
+            else fOut = context.openFileOutput("alarmfeedbackold.json", context.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();

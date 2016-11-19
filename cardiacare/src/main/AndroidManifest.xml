@@ -89,10 +89,6 @@
             android:name=".servey.QuestionnaireActivity"
             android:label="@string/title_activity_questionnaire"
             android:theme="@style/AppBaseTheme" />
-        <activity
-            android:name=".servey.AlarmQuestionnaireActivity"
-            android:label="@string/title_activity_sos_questionnaire"
-            android:theme="@style/AppBaseTheme" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.

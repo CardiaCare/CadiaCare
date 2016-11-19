@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
-import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
 
 import org.json.JSONObject;
 
@@ -40,7 +39,6 @@ import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
-import ru.cardiacare.cardiacare.servey.AlarmQuestionnaireHelper;
 import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.user.Login;
@@ -82,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
     static public String TAG = "SS-main";
     static public AccountStorage storage;
-    static public Questionnaire questionnaire;
-    static public Questionnaire alarmQuestionnaire;
     static public Feedback feedback;
     static public Feedback alarmFeedback;
     static public LocationService gps;
@@ -406,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
                         alarmButton.setBackgroundColor(0x77a71000);
                         alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
                         alarmButtonFlag = false;
-                        AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                        QuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
                 } else {
                     setLoadingScreen();
@@ -655,7 +651,7 @@ public class MainActivity extends AppCompatActivity {
                         alarmUri = MainActivity.smart.sendAlarm(MainActivity.nodeDescriptor, MainActivity.patientUri);
                         alarmButtonFlag = false;
                         backgroundFlag = 1;
-                        AlarmQuestionnaireHelper.showAlarmQuestionnaire(context);
+                        QuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
                 } else {
                     Toast toast = Toast.makeText(mContext,
@@ -710,7 +706,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy Main Activity");
         // Старинный комментарий: TODO unregisterReceiver(connectReceiver);
-        DisconnectFromSmartSpace();
+        if (backgroundFlag == 0) {
+            DisconnectFromSmartSpace();
+        }
+        backgroundFlag = 0;
         patientUriFlag = -1;
         super.onDestroy();
     }
