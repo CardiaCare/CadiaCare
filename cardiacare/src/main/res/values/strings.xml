@@ -33,7 +33,7 @@
     <string name="refresh">Refresh</string>
 
     <string name="loginActivity">Login</string>
-    <string name="login">Login</string>
+    <string name="login">Log in</string>
     <string name="password">Password</string>
     <string name="enter">Enter</string>
 
@@ -62,7 +62,8 @@
     <string name="dialog_confirm">Confirm</string>
     <string name="dialog_reject">Reject</string>
 
-    <string name="enter_name">Introduce!</string>
+    <string name="sib_enter_name">SIB settings</string>
+    <string name="user_enter_name">Authorization</string>
     <string name="send_alarm">Press button!</string>
 
     <string name="title_activity_user_account">Account</string>
@@ -155,4 +156,5 @@
     <string name="dialog_message_unregistered_user">Unregistered user</string>
     <string name="dialog_message_ducument_message">The relevant document was not found</string>
     <string name="widget_sos_text">SOS</string>
+    <string name="dialog_authorization_title">Authorization error</string>
 </resources>

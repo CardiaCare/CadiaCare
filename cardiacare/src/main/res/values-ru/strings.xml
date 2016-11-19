@@ -18,7 +18,7 @@
     <string name="helpText_step2">Включить кардиомонитор</string>
     <string name="helpText_step3">Запустить приложение CardiaCare</string>
     <string name="helpText_step4">Просмотр ЭКГ</string>
-    <string name="login">Логин</string>
+    <string name="login">Вход</string>
     <string name="loginActivity">Логин</string>
     <string name="password">Пароль</string>
     <string name="phoneNumber">Номер телефона</string>
@@ -43,7 +43,8 @@
     <string name="Height">Рост</string>
     <string name="Weight">Возраст</string>
     <string name="auth_dialog_message"></string>
-    <string name="enter_name">Вход!</string>
+    <string name="sib_enter_name">Настройка подключения к ИП</string>
+    <string name="user_enter_name">Авторизация</string>
     <string name="pass_survey">Пройти опрос</string>
     <string name="download">Загрузка</string>
     <string name="clean">Очистить</string>
@@ -149,4 +150,6 @@
     <string name="dialog_message_unregistered_user">Незарегистрированный пользователь</string>
     <string name="dialog_message_ducument_message">Соответсвующий документ не найден</string>
     <string name="widget_sos_text">ТРЕВОГА</string>
+    <string name="dialog_authorization_title">Ошибка авторизации</string>
+    <string name="dialog_authorization_message">Проверьте введенные данные</string>
 </resources>

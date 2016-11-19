@@ -11,7 +11,7 @@ public class JSONGenerator {
         JSONObject json = new JSONObject();
         try {
 //            JSONObject json = new JSONObject();
-            json.put("username", username);
+            json.put("email", username);
             json.put("password", password);
 //            JSONObject url = new JSONObject();
 //            url.put("url", "api.cardiacare.ru/index.php/user/auth");
