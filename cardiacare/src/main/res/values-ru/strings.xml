@@ -15,7 +15,7 @@
     <string name="login_toast">Пожалуйста, заполните все поля</string>
     <string name="widget_sos_text">ТРЕВОГА</string>
 
-    <!--Используется в AndroidManifest.xml-->
+    <!--AndroidManifest.xml-->
     <string name="app_name">CardiaCare</string>
     <string name="title_activity_bluetooth_find">Найти устройство</string>
     <string name="title_activity_help">Помощь</string>
@@ -86,6 +86,11 @@
     <string name="dialog_document_message">Соответсвующий документ не найден</string>
     <string name="dialog_document_positive_button">OK</string>
 
+    <!--Диалог при ошибке авторизации-->
+    <string name="dialog_authorization_title">Ошибка авторизации</string>
+    <string name="dialog_authorization_message">Проверьте введенные данные</string>
+    <string name="dialog_authorization_positive_button">OK</string>
+
     <!--action_settings.xml-->
     <string name="action_settings">Настройки</string>
 
@@ -134,7 +139,7 @@
     <string name="helpText_step4">Просмотр ЭКГ</string>
 
     <!--activity_login.xml-->
-    <string name="login">Логин</string>
+    <string name="login">Вход</string>
     <string name="password">Пароль</string>
     <string name="enter">Ввод</string>
 
@@ -216,10 +221,16 @@
     <!--screen_main_loading.xml-->
     <string name="restart_app">Перезапустить приложение</string>
 
+    <!--screen_main_sib_authorization-->
+    <string name="sib_enter_name">Настройка подключения к ИП</string>
+
     <!--screen_main_unregistered.xml-->
     <string name="enter_name">Вход!</string>
     <string name="sign">Войти</string>
     <string name="next">Далее</string>
+
+    <!--screen_main_user_authorization.xml-->
+    <string name="user_enter_name">Авторизация</string>
 
     <!--BluetoothFindActivity.java-->
     <string name="bluetoothSearching">Поиск, пожалуйста, подождите&#8230;</string>

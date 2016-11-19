@@ -16,12 +16,10 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,11 +27,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
+
+import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
@@ -42,21 +41,25 @@ import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
 import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
-import ru.cardiacare.cardiacare.user.Login;
 import ru.cardiacare.cardiacare.user.Userdata;
 
 public class MainActivity extends AppCompatActivity {
 
     public Context context = this;
-    private static Context mContext;
+    public static Context mContext;
 
     Button btnCont;
     Button nextButton;
     Button btnDisconnect;
     static public Button alarmButton;
     static public ImageButton serveyButton;
+    EditText etSibName;
+    EditText etSibIp;
+    EditText etSibPort;
     EditText etFirstName;
     EditText etSecondName;
+    EditText etEmail;
+    EditText etPassword;
     ListView connectListView;
 
     private ArrayAdapter<String> connectListArrayAdapter;
@@ -68,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     static protected String alarmUri;
     static public String feedbackUri;
     static public String alarmFeedbackUri;
+
+    static public String authorization_token = "";
 
     public static boolean connectedState = false;
     public static boolean loginState = false; // Авторизирован ли пользователь, true - авторизирован / false - неавторизирован
@@ -134,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 gpsLoad.execute();
 
                 if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                    setUnregisteredScreen();
+                    setSibAuthorizationScreen();
                 } else {
                     setRegisteredScreen();
                 }
@@ -179,9 +184,60 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Интерфейс для незарегистрированного пользователя
-    public void setUnregisteredScreen() {
-        setContentView(R.layout.screen_main_unregistered);
+    // Интерфейс для ввода данных об интеллектуальном пространстве
+    public void setSibAuthorizationScreen() {
+        setContentView(R.layout.screen_main_sib_authorization);
+
+        etSibName = (EditText) findViewById(R.id.etSibName);
+        etSibIp = (EditText) findViewById(R.id.etSibIp);
+        etSibPort = (EditText) findViewById(R.id.etSibPort);
+
+        etSibName.setText(storage.getSibName());
+        etSibIp.setText(storage.getSibIp());
+        etSibPort.setText(storage.getSibPort());
+
+        nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((etSibName.getText().toString().isEmpty()) || (etSibIp.getText().toString().isEmpty()) || (etSibPort.getText().toString().isEmpty())) {
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                    builder.setMessage(R.string.dialog_authorization_message)
+                            .setTitle(R.string.dialog_authorization_title)
+                            .setCancelable(true)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            }).show();
+                } else {
+                    // Если данные о SIB'е поменялись, то переподключаемся по новым данным
+                    if ((!storage.getSibName().equals("")) && ((!etSibName.getText().toString().equals(storage.getSibName())) || (!etSibIp.getText().toString().equals(storage.getSibIp())) || (!etSibPort.getText().toString().equals(storage.getSibPort())))) {
+                        storage.setAccountPreferences(etSibName.getText().toString(), etSibIp.getText().toString(), etSibPort.getText().toString(), "", "", "", "", "", "", "", "", "", "", "0", "");
+                        DisconnectFromSmartSpace();
+                        if (!ConnectToSmartSpace()) {
+                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+                            builder.setMessage(R.string.dialog_authorization_message)
+                                    .setTitle(R.string.dialog_authorization_title)
+                                    .setCancelable(true)
+                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    }).show();
+                        }
+                    }
+                    setUserAuthorizationScreen();
+                }
+            }
+        });
+    }
+
+    // Интерфейс для авторизации пользователя
+    public void setUserAuthorizationScreen() {
+        setContentView(R.layout.screen_main_user_authorization);
 //        Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
         if (patientUri == null) {
@@ -190,39 +246,66 @@ public class MainActivity extends AppCompatActivity {
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
-
-        etSecondName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_NULL) {
-                    registration(etFirstName.getText().toString(), etSecondName.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
+        etEmail = (EditText) findViewById(R.id.etEmail);
+        etPassword = (EditText) findViewById(R.id.etPassword);
 
         nextButton = (Button) findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registration(etFirstName.getText().toString(), etSecondName.getText().toString());
+                authorization(etSibName.getText().toString(), etSibIp.getText().toString(), etSibPort.getText().toString(), etFirstName.getText().toString(), etSecondName.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString());
             }
         });
     }
 
-    // Регистрация
-    public void registration(String first, String second) {
-        if (first.isEmpty() || second.isEmpty()) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this, R.style.AppBaseTheme);
-            builder.setTitle(R.string.dialog_title);
-            builder.setMessage(R.string.dialog_message);
-            builder.setPositiveButton(R.string.dialog_ok, null);
-            builder.setNegativeButton(R.string.dialog_cancel, null);
-            builder.show();
+    // Авторизация
+    public void authorization(String sibName, String sibIp, String sibPort, String first, String second, String email, String password) {
+        // Если не все поля заполнены, то выводим диалог об ошибке
+        if ((first.isEmpty()) || (second.isEmpty()) || (email.isEmpty())) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+            // Если все поля заполнены, формируем запрос на авторизацию и отправляем его на сервер
         } else {
-            storage.setAccountPreferences(patientUri, first, second, "", "", "", "", "", "0");
-            setRegisteredScreen();
+            JSONGenerator jsonGen = new JSONGenerator();
+            // Чтобы не вводить каждый раз e-mail и password зарегистрированного пользователя.
+            // Для корректной работы авторизации - удалить две строки ниже.
+            email = "test_patient@test.ru";
+            password = "test_patient";
+            JSONObject json = jsonGen.generateAuthJSON(email, password);
+            AuthorizationService intServ = new AuthorizationService();
+            intServ.execute(json);
+
+            // Получаем ответ от сервера
+            try {
+                authorization_token = intServ.get();
+            } catch (Exception e) {
+            }
+
+            // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
+            if (!authorization_token.equals("error_authorization")) {
+                storage.setAccountPreferences(sibName, sibIp, sibPort, patientUri, authorization_token, email, first, second, "", "", "", "", "", "0", "");
+                setRegisteredScreen();
+                // Если авторизация не успешна, то выводим диалог об ошибке
+            } else {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setMessage(R.string.dialog_authorization_message)
+                        .setTitle(R.string.dialog_authorization_title)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).show();
+            }
         }
     }
 
@@ -244,18 +327,18 @@ public class MainActivity extends AppCompatActivity {
         connectListArrayAdapter.add("Alive Bluetooth Monitor");
         connectListArrayAdapter.add("ECG-BTLE");
 
-                connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        backgroundFlag = 1;
-                        //TODO выбор способа подключения
-                        Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
-                        intentBluetoothFind.putExtra("deviceType", id);
-                        //TODO change methods
-                        startActivity(intentBluetoothFind);
-                    }
-                });
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                backgroundFlag = 1;
+                //TODO выбор способа подключения
+                Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
+                intentBluetoothFind.putExtra("deviceType", id);
+                //TODO change methods
+                startActivity(intentBluetoothFind);
+            }
+        });
 
         serveyButton = (ImageButton) findViewById(R.id.serveyButton);
         serveyButton.setOnClickListener(new ImageButton.OnClickListener() {
@@ -374,20 +457,13 @@ public class MainActivity extends AppCompatActivity {
     // Тулбар
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        if ( item.getItemId() == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case R.id.ecg:
-                backgroundFlag = 1;
-                Intent intent4 = new Intent(this, ECGActivity.class);
-                startActivity(intent4);
-                break;
+            // О приложении (справка)
             case R.id.menuAbout:
                 backgroundFlag = 1;
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
+            // Пройти опрос
             case R.id.passSurvey:
                 if (isNetworkAvailable(context)) {
                     backgroundFlag = 1;
@@ -396,24 +472,34 @@ public class MainActivity extends AppCompatActivity {
                     setLoadingScreen();
                 }
                 break;
-            case R.id.exitAccount:
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 0;
-                    patientUriFlag = -1;
-                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "0");
-                    DisconnectFromSmartSpace();
-                    setLoadingScreen();
-                    deleteFile("feedback.json");
-                    deleteFile("alarmFeedback.json");
-                } else {
-                    setLoadingScreen();
-                }
+            // ЭКГ
+            case R.id.ecg:
+                backgroundFlag = 1;
+                Intent intent4 = new Intent(this, ECGActivity.class);
+                startActivity(intent4);
                 break;
+            // Помощь
             case R.id.menuHelp:
                 backgroundFlag = 1;
                 Intent intent2 = new Intent(this, Help.class);
                 startActivity(intent2);
                 break;
+            // Учетная запись
+            case R.id.menuUserData:
+                if (isNetworkAvailable(context)) {
+                    backgroundFlag = 1;
+//                    //TODO Переделать (откуда берутся настройки юзера БД?)
+//                    if (!loginState) {
+//                        Intent intent3 = new Intent(this, Login.class);
+//                        startActivity(intent3);
+//                    } else {
+                    startActivity(new Intent(this, Userdata.class));
+//                    }
+                } else {
+                    setLoadingScreen();
+                }
+                break;
+            // Документы
             case R.id.documentsData:
                 if (isNetworkAvailable(context)) {
                     backgroundFlag = 1;
@@ -422,16 +508,20 @@ public class MainActivity extends AppCompatActivity {
                     setLoadingScreen();
                 }
                 break;
-            case R.id.menuUserData:
+            // Выход
+            case R.id.exitAccount:
                 if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    //TODO Переделать (откуда берутся настройки юзера БД?)
-                    if (!loginState) {
-                        Intent intent3 = new Intent(this, Login.class);
-                        startActivity(intent3);
-                    } else {
-                        startActivity(new Intent(this, Userdata.class));
-                    }
+                    // TODO: удалять токен доступа на сервере
+                    backgroundFlag = 0;
+                    patientUriFlag = -1;
+                    String sibName = storage.getSibName();
+                    String sibIp = storage.getSibIp();
+                    String sibPort = storage.getSibPort();
+                    storage.setAccountPreferences(sibName, sibIp, sibPort, "", "", "", "", "", "", "", "", "", "", "0", "");
+                    DisconnectFromSmartSpace();
+                    setLoadingScreen();
+                    deleteFile("feedback.json");
+                    deleteFile("alarmFeedback.json");
                 } else {
                     setLoadingScreen();
                 }
@@ -475,7 +565,11 @@ public class MainActivity extends AppCompatActivity {
         //Если есть доступ к интернету и соединение с SIB'ом не установлено, то устанавливаем его
         if ((netFlag == 1) && (sibConnectedFlag != 1)) {
 //            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
+            String sibName = storage.getSibName();
+            String sibIp = storage.getSibIp();
+            String sibPort = storage.getSibPort();
             nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
+//            nodeDescriptor = smart.connectSmartSpace(sibName, sibIp, Integer.parseInt(sibPort));
             if (nodeDescriptor == -1) {
                 Intent intent = new Intent(mContext, MainActivity.class);
                 mContext.startActivity(intent);
@@ -530,6 +624,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -572,7 +667,16 @@ public class MainActivity extends AppCompatActivity {
                 Long timestamp = System.currentTimeMillis() / 1000;
                 String ts = timestamp.toString();
                 Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
-                if (time >= 60) {
+                Integer period;
+                // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
+                // Иначе ставим период по умолчанию (1 минута)
+                if (!storage.getPeriodPassServey().equals("")) {
+                    period = Integer.parseInt(storage.getPeriodPassServey());
+                } else {
+                    period = 60;
+                    storage.setPeriodPassServey("60");
+                }
+                if (time >= period) {
                     serveyButton.setBackgroundResource(R.drawable.servey);
                 } else {
                     serveyButton.setBackgroundResource(R.drawable.servey_white);

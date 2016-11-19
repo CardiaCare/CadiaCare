@@ -17,6 +17,10 @@ import ru.cardiacare.cardiacare.R;
 
 public class UserAccount extends AppCompatActivity {
 
+    EditText etSibName;
+    EditText etSibIp;
+    EditText etSibPort;
+    EditText etEmail;
     EditText etFirstName;
     EditText etSecondName;
     EditText etPhoneNumber;
@@ -45,6 +49,7 @@ public class UserAccount extends AppCompatActivity {
             }
         });
 
+        etEmail = (EditText) findViewById(R.id.etEmail);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
@@ -84,8 +89,14 @@ public class UserAccount extends AppCompatActivity {
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
         String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
+        String periodpassservey = storage.getPeriodPassServey();
         storage.setAccountPreferences(
+                etSibName.getText().toString(),
+                etSibIp.getText().toString(),
+                etSibPort.getText().toString(),
                 MainActivity.patientUri,
+                MainActivity.authorization_token,
+                etEmail.getText().toString(),
                 etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
                 etPhoneNumber.getText().toString(),
@@ -93,7 +104,8 @@ public class UserAccount extends AppCompatActivity {
                 etWeight.getText().toString(),
                 etAge.getText().toString(),
                 version,
-                lastquestionnairepassdate);
+                lastquestionnairepassdate,
+                periodpassservey);
         if (MainActivity.backgroundFlag == 0) {
             MainActivity.DisconnectFromSmartSpace();
         }
@@ -102,6 +114,7 @@ public class UserAccount extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
+        etEmail.setText(storage.getAccountEmail());
         etFirstName.setText(storage.getAccountFirstName());
         etSecondName.setText(storage.getAccountSecondName());
         etPhoneNumber.setText(storage.getAccountPhoneNumber());
