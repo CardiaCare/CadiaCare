@@ -25,14 +25,14 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme">
+        android:theme="@style/AppBaseTheme"
+        android:supportsRtl="true">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -50,7 +50,7 @@
         <activity
             android:name=".Help"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/helpActivity"
+            android:label="@string/title_activity_help"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -60,7 +60,7 @@
         <activity
             android:name=".user.Login"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/login"
+            android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
             <meta-data
@@ -70,7 +70,7 @@
         <activity
             android:name=".user.Userdata"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/userdataActivity"
+            android:label="@string/title_activity_userdata"
             android:screenOrientation="portrait" />
         <activity
             android:name=".user.UserAccount"
@@ -88,10 +88,6 @@
         <activity
             android:name=".servey.QuestionnaireActivity"
             android:label="@string/title_activity_questionnaire"
-            android:theme="@style/AppBaseTheme" />
-        <activity
-            android:name=".servey.AlarmQuestionnaireActivity"
-            android:label="@string/title_activity_sos_questionnaire"
             android:theme="@style/AppBaseTheme" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
@@ -125,6 +121,17 @@
             android:name=".hisdocuments.DoctorExaminationActivity"
             android:label="@string/title_activity_results_doctor"
             android:theme="@style/AppBaseTheme"></activity>
+        <receiver
+            android:name=".SosWidget">
+            <intent-filter>
+                <action
+                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
+                </action>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_metadata">
+            </meta-data>
+        </receiver>
     </application>
-
 </manifest>

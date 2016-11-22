@@ -47,10 +47,10 @@ public class DocumentsActivity extends AppCompatActivity {
 
         if (hisUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_message_mis_error)
-                    .setTitle(R.string.dialog_title_server_error)
+            builder.setMessage(R.string.dialog_mis_error_message)
+                    .setTitle(R.string.dialog_mis_error_title)
                     .setCancelable(true)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dialog_mis_error_positive_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -62,12 +62,10 @@ public class DocumentsActivity extends AppCompatActivity {
 
         if (hisPatientUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setMessage(R.string.dialog_message_unregistered_user)
-                    .setTitle(R.string.dialog_title_server_error)
-
+            builder.setMessage(R.string.dialog_unregistered_user_message)
+                    .setTitle(R.string.dialog_unregistered_user_title)
                     .setCancelable(true)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dialog_unregistered_user_positive_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();

@@ -114,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/smooking"
+                android:text="@string/smoking"
                 android:id="@+id/Smooking"
                 android:padding="8dp" />
 

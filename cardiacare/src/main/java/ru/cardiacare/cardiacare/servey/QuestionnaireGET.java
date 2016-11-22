@@ -16,7 +16,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Загрузка периодического опросника с сервера */
@@ -59,14 +58,23 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             e.printStackTrace();
             return -1;
         }
-
         Gson json = new Gson();
-        MainActivity.questionnaire = json.fromJson(resultJson, Questionnaire.class);
-        if (MainActivity.questionnaire == null) {
-            return -1;
+        if (QuestionnaireHelper.questionnaireType.equals("periodic")) {
+            QuestionnaireHelper.questionnaire = json.fromJson(resultJson, Questionnaire.class);
+            if (QuestionnaireHelper.questionnaire == null) {
+                return -1;
+            }
+        } else {
+            QuestionnaireHelper.alarmQuestionnaire = json.fromJson(resultJson, Questionnaire.class);
+            if (QuestionnaireHelper.alarmQuestionnaire == null) {
+                return -1;
+            }
         }
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.filename, Context.MODE_PRIVATE));
+            OutputStreamWriter writer;
+            if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+                writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.questionnaireFile, Context.MODE_PRIVATE));
+            else writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.alarmQuestionnaireFile, Context.MODE_PRIVATE));
             writer.write(resultJson);
             writer.flush();
             writer.close();
@@ -74,7 +82,10 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             e.printStackTrace();
             return -1;
         }
-        QuestionnaireHelper.printQuestionnaire(MainActivity.questionnaire);
+//        QuestionnaireHelper.printQuestionnaire(QuestionnaireHelper.questionnaire);
+        if (QuestionnaireHelper.questionnaireType.equals("periodic"))
+            QuestionnaireHelper.questionnaireDownloaded = true;
+        else QuestionnaireHelper.alarmQuestionnaireDownloaded = true;
         return 0;
     }
 
@@ -83,9 +94,9 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         super.onPostExecute(result);
         if (result == -1) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            alertDialog.setTitle(R.string.dialog_title_server_error);
-            alertDialog.setMessage(R.string.dialog_message_server_error);
-            alertDialog.setNegativeButton("OK",
+            alertDialog.setTitle(R.string.dialog_server_error_title);
+            alertDialog.setMessage(R.string.dialog_server_error_message);
+            alertDialog.setNegativeButton(R.string.dialog_server_error_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -95,8 +106,8 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             alertDialog.show();
         } else {
 //            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
-            Intent intentq = new Intent(context, QuestionnaireActivity.class);
-            context.startActivity(intentq);
+            Intent intent = new Intent(context, QuestionnaireActivity.class);
+            context.startActivity(intent);
         }
     }
 }

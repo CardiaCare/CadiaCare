@@ -163,7 +163,7 @@ public class LocationService extends Service implements LocationListener {
             }
         } else {
             Toast toast = Toast.makeText(mContext,
-                    R.string.dialog_wifi_title, Toast.LENGTH_SHORT);
+                    R.string.wifi_toast, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

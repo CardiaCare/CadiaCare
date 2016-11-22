@@ -54,10 +54,10 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         if (hisResponseUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_message_server_error)
-                    .setTitle(R.string.dialog_title_server_error)
+            builder.setMessage(R.string.dialog_server_error_message)
+                    .setTitle(R.string.dialog_server_error_title)
                     .setCancelable(true)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dialog_server_error_positive_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
@@ -69,10 +69,10 @@ public class DoctorExaminationActivity extends AppCompatActivity {
 
         if (hisDocumentUri == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.dialog_message_ducument_message)
-                    .setTitle(R.string.dialog_title_server_error)
+            builder.setMessage(R.string.dialog_document_message)
+                    .setTitle(R.string.dialog_document_title)
                     .setCancelable(true)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.dialog_document_positive_button, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
