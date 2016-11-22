@@ -33,10 +33,6 @@ import android.widget.TextView;
 import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
-<<<<<<< HEAD
-=======
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
->>>>>>> b6d24e0946865991f9616ce698194fdd84b1534c
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
