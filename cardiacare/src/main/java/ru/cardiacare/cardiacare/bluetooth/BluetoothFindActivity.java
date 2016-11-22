@@ -1,6 +1,5 @@
 package ru.cardiacare.cardiacare.bluetooth;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -10,11 +9,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,14 +33,13 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
 
-/**
- * created by Yulia Zavyalova
- */
-public class BluetoothFindActivity extends ActionBarActivity {
+/* Экран "Alive Bluetooth Monitor */
+
+public class BluetoothFindActivity extends AppCompatActivity {
 
     ProgressDialog dialog;
     private static final int REQUEST_ENABLE_BT = 1;
@@ -48,8 +48,8 @@ public class BluetoothFindActivity extends ActionBarActivity {
     public static final String DEVICE_NAME = null;
     public static final int MESSAGE_READ = 0;
     private Button onBtn;
-    //private Button offBtn;
-    //private Button listBtn;
+//    private Button offBtn;
+//    private Button listBtn;
     private Button findBtn;
     private TextView text;
     private BluetoothAdapter myBluetoothAdapter;
@@ -61,41 +61,56 @@ public class BluetoothFindActivity extends ActionBarActivity {
     private BluetoothSocket mBluetoothSocket;
     private static final String TAG = "BluetoothFindActivity";
 
+    static public ImageButton buttonBack;
+    public static int deviceType;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "onCreate BluetoothFindActivity Activity");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bluetoothfind);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_bluetooth_find);
+
+
+        Intent intent = getIntent();
+        deviceType = intent.getIntExtra("deviceType",0);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.bt_find_activity_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getString(R.string.title_activity_bluetooth_find));
 
-        // кнопка назад в ActionBar
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        assert toolbar != null;
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         //TODO http://developer.alexanderklimov.ru/android/theory/progressdialog.php - связать его хендлером с потоком
         dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(getString(R.string.bluetoothSearching));
-        //dialog.setCancelable(false);
-        //dialog.show();
-        //убрать диалог
-        //dialog.dismiss();
+//        dialog.setCancelable(false);
+//        dialog.show();
+//        dialog.dismiss();
 
         myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(myBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(),"Your device does not support Bluetooth",
+        if (myBluetoothAdapter == null) {
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
                     Toast.LENGTH_LONG).show();
         } else {
             on();
             myTimerExecute();
 
             //TODO все включилось, можно писать поиск
-            // перенесен в onActivityResult()
-            //find();
-            myListView = (ListView)findViewById(R.id.mListView);
+            // Перенесен в onActivityResult()
+//             find();
+            myListView = (ListView) findViewById(R.id.mListView);
 
-            // create the arrayAdapter that contains the BTDevices, and set it to the ListView
+//             create the arrayAdapter that contains the BTDevices, and set it to the ListView
             BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
             myListView.setAdapter(BTArrayAdapter);
             myListView.setOnItemClickListener(new OnItemClickListener() {
@@ -104,12 +119,11 @@ public class BluetoothFindActivity extends ActionBarActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    // TODO Auto-generated method stub
                     // Cancel discovery because it's costly and we're about to connect
                     myBluetoothAdapter.cancelDiscovery();
                     // Get the device MAC address, which is the last 17 chars in the View
                     String info = ((TextView) view).getText().toString();
-                    String adress = info.substring(info.length() -17);
+                    String adress = info.substring(info.length() - 17);
 
                     MainActivity.connectedState = true;
                     Handler handler = new Handler(Looper.getMainLooper());
@@ -117,7 +131,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
                     Intent intent = new Intent();
                     intent.putExtra("adress", adress);
                     setResult(RESULT_OK, intent);
-                    //finish();
+//                    finish();
 
                     mBluetoothService = new BluetoothService(getApplicationContext(), handler);
                     mBluetoothService.connect(adress);
@@ -136,19 +150,19 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*if ( item.getItemId() == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);*/
+//        if ( item.getItemId() == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.refreshList:
                 //TODO чистим список и заполняем заново в потоке
-                /*dialog.show();*/
+//                dialog.show();
                 refresh();
                 break;
             case android.R.id.home:
                 finish();
-                //NavUtils.navigateUpFromSameTask(this);
+//                NavUtils.navigateUpFromSameTask(this);
                 break;
             default:
                 break;
@@ -176,25 +190,24 @@ public class BluetoothFindActivity extends ActionBarActivity {
         timer.schedule(task, 11000);
     }
 
-    public void on(){
+    public void on() {
         if (!myBluetoothAdapter.isEnabled()) {
 //            Intent turnOnIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(turnOnIntent, REQUEST_ENABLE_BT);
-
 //            Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
 //            startActivity(intent);
 
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-            alertDialog.setTitle("Выключен Bluetooth");
-            alertDialog.setMessage("Часть функций может быть не доступна. Желаете перейти к настройкам, чтобы включить его?");
-            alertDialog.setPositiveButton("Настройки",
+            alertDialog.setTitle(R.string.dialog_bluetooth_title);
+            alertDialog.setMessage(R.string.dialog_bluetooth_message);
+            alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
                         }
                     });
 
-            alertDialog.setNegativeButton("Отмена",
+            alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -204,15 +217,15 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
             alertDialog.show();
 
-            Toast.makeText(getApplicationContext(), "Bluetooth turned on",
-                           Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast2,
+                    Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(),"Bluetooth is already on",
-                           Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast3,
+                    Toast.LENGTH_LONG).show();
             myBluetoothAdapter.startDiscovery();
             dialog.show();
-            //Если вернуться стрелочкой "назад" на главный экран с экрана посика устройств,
-            //то приложение не упадёт, но выдаст ошибку, указывая на строчку ниже
+            // Если вернуться стрелочкой "назад" на главный экран с экрана посика устройств,
+            // то приложение не упадёт, но выдаст ошибку, указывая на строчку ниже
             registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
         }
     }
@@ -220,14 +233,13 @@ public class BluetoothFindActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i("BT", "onActivityResultonActivityResultonActivityResult");
-        // TODO Auto-generated method stub
-        if(requestCode == REQUEST_ENABLE_BT){
-            if(myBluetoothAdapter.isEnabled()) {
-                Toast.makeText(getApplicationContext(), "Status: enabled",
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (myBluetoothAdapter.isEnabled()) {
+                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast4,
                         Toast.LENGTH_LONG).show();
                 find();
             } else {
-                Toast.makeText(getApplicationContext(), "Status: disabled",
+                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast5,
                         Toast.LENGTH_LONG).show();
             }
         }
@@ -249,13 +261,12 @@ public class BluetoothFindActivity extends ActionBarActivity {
 
     public void find() {
         if (myBluetoothAdapter.isDiscovering()) {
-            // the button is pressed when it discovers, so cancel the discovery
+            // The button is pressed when it discovers, so cancel the discovery
             myBluetoothAdapter.cancelDiscovery();
         } else {
             BTArrayAdapter.clear();
             myBluetoothAdapter.startDiscovery();
             dialog.show();
-
             registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
         }
     }
@@ -263,19 +274,20 @@ public class BluetoothFindActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
         Log.i(TAG, "onDestroy BluetoothFindActivity Activity");
-        // TODO Auto-generated method stub
         super.onDestroy();
-//        Error!!! Зачем нужно?
+        // Error!!! Зачем нужно?
 //        unregisterReceiver(bReceiver);
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
 
     }
+
     @Override
     protected void onRestart() {
         super.onRestart();
         MainActivity.backgroundFlag = 0;
         MainActivity.ConnectToSmartSpace();
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -283,6 +295,7 @@ public class BluetoothFindActivity extends ActionBarActivity {
             MainActivity.DisconnectFromSmartSpace();
         }
     }
+
     @Override
     public void onBackPressed() {
         MainActivity.backgroundFlag = 1;

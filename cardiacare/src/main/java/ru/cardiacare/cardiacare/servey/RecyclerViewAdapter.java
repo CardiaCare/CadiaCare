@@ -2,6 +2,7 @@ package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,29 +27,16 @@ import java.util.LinkedList;
 import ru.cardiacare.cardiacare.*;
 import ru.cardiacare.cardiacare.R;
 
-/**
- * Kristina Shevtsova
- * Kirill Orloff
- */
+/* Расстановка вопросов по карточкам */
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    LinkedList<Question> Questions;
-    int[] TypesQuestions;
-    Context context;
+    private LinkedList<Question> Questions;
+    private int[] TypesQuestions;
+    private Context context;
 
-    public static final int TextField = 0;//newtrue
-    public static final int Multiplechoice = 1;//newfalse
-    public static final int Singlechoice = 2;//newtrue
-    public static final int Bipolarquestion = 3;//newtrue
-    public static final int Guttmanscale = 4;//newtrue
-    public static final int Likertscale = 5;//newtrue
-    public static final int Continuousscale = 6;//newtrue
-    public static final int Dichotomous = 7;//newtrue
-    public static final int DefaultValue = 8;
+    private LinkedList<Response> feedback = MainActivity.feedback.getResponses();
 
-    // ответник
-    LinkedList<Response> feedback = MainActivity.feedback.getResponses();
-
-    public RecyclerViewAdapter(LinkedList <Question> Questions, int[] Types, Context context) {
+    public RecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
         this.Questions = Questions;
         TypesQuestions = Types;
         this.context = context;
@@ -57,52 +45,39 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int Type) {
         View v;
-        if (Type == Dichotomous) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(ru.cardiacare.cardiacare.R.layout.dichotomous_card, viewGroup, false);
+        if (Type == QuestionnaireActivity.Dichotomous) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(ru.cardiacare.cardiacare.R.layout.card_dichotomous_question, viewGroup, false);
             return new DichotomousViewHolder(v);
-        } else if (Type == Singlechoice){
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.singlechoice_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Singlechoice) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_single_choice_question, viewGroup, false);
             return new SingleChoiceViewHolder(v);
-        } else if (Type == TextField){
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.textfield_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.TextField) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_textfield_question, viewGroup, false);
             return new TextFieldViewHolder(v);
-        } else if (Type == Bipolarquestion){
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.bipolarquestion_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Bipolarquestion) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_bipolar_question, viewGroup, false);
             return new BipolarQuestionViewHolder(v);
-        } else if (Type == Multiplechoice){
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.multiplechoice_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Multiplechoice) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_multiple_choice_question, viewGroup, false);
             return new MultipleChoiceViewHolder(v);
-        } else if (Type == Likertscale){
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.likertscale_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Likertscale) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_likert_scale_queston, viewGroup, false);
             return new LikertScaleViewHolder(v);
-        } else if (Type == Guttmanscale) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.guttmanscale_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Guttmanscale) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_guttman_scale_question, viewGroup, false);
             return new GuttmanScaleViewHolder(v);
-        } else if (Type == Continuousscale) {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.continuousscale_card, viewGroup, false);
+        } else if (Type == QuestionnaireActivity.Continuousscale) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_continuous_scale_question, viewGroup, false);
             return new ContinuousScaleViewHolder(v);
         } else {
-            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.singlechoice_card, viewGroup, false);
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_single_choice_question, viewGroup, false);
             return new SingleChoiceViewHolder(v);
         }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        if (viewHolder.getItemViewType() == Dichotomous) {
-            /*Question question = Questions.get(position);
-            Answer answer = question.getAnswer();
-            LinkedList<AnswerItem> answeritem = answer.getItems();
-            DichotomousViewHolder holder = (DichotomousViewHolder) viewHolder;
-            holder.DichotomousQuestion.setText(question.getDescription());
-            if (answeritem.size() > 0) {
-                AnswerItem Item = answeritem.get(0);
-                holder.DichotomousAnswer1.setText(Item.getItemText());
-                Item = answeritem.get(1);
-                holder.DichotomousAnswer2.setText(Item.getItemText());
-            }*/
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-
+        if (viewHolder.getItemViewType() == QuestionnaireActivity.Dichotomous) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -116,34 +91,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     DichotomousAnswers[j] = new RadioButton(context);
                     DichotomousAnswers[j].setId(j);
                     DichotomousAnswers[j].setText(Item.getItemText());
-                    //тут отображение ответов
-                    for(int fbc = 0; fbc < feedback.size(); fbc++){
-                        if(question.getUri().equals(feedback.get(fbc).getUri())) {
+                    for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                        if (question.getUri().equals(feedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < feedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
-                                if(question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())){
-                                    //
-                                    DichotomousAnswers[j].setChecked(true);///
+                                if (question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())) {
+                                    DichotomousAnswers[j].setChecked(true);
                                 }
                             }
                         }
                     }
-                    if(holder.DichotomousGroup.getChildCount() < answeritem.size()) {
+                    if (holder.DichotomousGroup.getChildCount() < answeritem.size()) {
                         holder.DichotomousGroup.addView(DichotomousAnswers[j]);
                     }
                 }
             }
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-        } else if (viewHolder.getItemViewType() == Bipolarquestion) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Bipolarquestion) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
             BipolarQuestionViewHolder holder = (BipolarQuestionViewHolder) viewHolder;
             holder.uri = question.getUri();
 
-            //видимо тут отображать ответ буду
-            for(int fbc = 0; fbc < feedback.size(); fbc++){
-                if(question.getUri().equals(feedback.get(fbc).getUri())) {
+            for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                if (question.getUri().equals(feedback.get(fbc).getUri())) {
                     holder.BipolarQuestionValue.setText(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(0).getItemText().toString());
                     holder.BipolarQuestionSeekBar.setProgress(Integer.parseInt(holder.BipolarQuestionValue.getText().toString()));
                 }
@@ -152,11 +122,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.BipolarQuestionQuestion.setText(question.getDescription());
             if (answeritem.size() > 0) {
                 AnswerItem Item = answeritem.get(0);
-                //holder.BipolarQuestionSeekBar.setProgress(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
+//                holder.BipolarQuestionSeekBar.setProgress(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
                 Item = answeritem.get(1);
                 holder.BipolarQuestionSeekBar.setMax(Integer.parseInt(Item.getItemText().replaceAll("[\\D]", "")));
             }
-        } else if (viewHolder.getItemViewType() == Multiplechoice) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Multiplechoice) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -176,102 +146,89 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     MultipleChoiceAnswers[j].setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-                            //System.out.println("Touch! Multiple " + view.getId() + " " + uri);view.isShown()
-                            /*
-                                if (isChecked) {//////////////
-                                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                                        if (MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
-                                            int flag = 0;
-                                            for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
-                                                    //MainActivity.feedback.getResponses().get(j).getResponseItems().clear();//?
-                                                    //вопрос
-                                                    Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
-                                                    //тип ответов
-                                                    Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
-                                                    //ответ выбранный
-                                                    AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
-                                                    //по Response Item пройтись и найти нужный, если нет то создать
-                                                    // другое если есть ResponseItem, то по нему смотрим сколько AnswerItem'ов если есть нужный, то ничего иначе добавляем
-                                                    ResponseItem itemMultipleChoice;
-                                                    if (MainActivity.feedback.getResponses().get(j).getResponseItems().size() != 0) {
-                                                        itemMultipleChoice = MainActivity.feedback.getResponses().get(j).getResponseItems().get(0);
-                                                        for (int z = 0; z < itemMultipleChoice.getLinkedItems().size(); z++) {
-                                                            if (!itemMultipleChoice.getLinkedItems().get(z).getItemText().equals(view.getText())) {
-                                                                itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
-                                                                MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).addLinkedAnswerItem(answeritemMultipleChoice);
-                                                                //System.out.println("Touch! Multiple OLD");
-                                                            }
-                                                        }
-                                                    } else {
-                                                        //System.out.println("Touch! Multiple NEW ANSWER"+MainActivity.feedback.getResponses().get(j).getResponseItems().size());
-                                                        itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
-                                                        itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
-                                                        MainActivity.feedback.getResponses().get(j).addResponseItem(itemMultipleChoice);
-                                                        //System.out.println("Touch! Multiple NEW ANSWER");
-                                                    }
-                                                    ////////////////////////////////////////////////////////////////
-
-                                                    flag++;
-                                                }
-                                            }
-                                            if (flag == 0) {
-                                                //вопрос
-                                                Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
-                                                //тип ответов
-                                                Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
-                                                //ответ выбранный
-                                                AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
-                                                Response responseMultipleChoice = new Response(questionMultipleChoice.getUri(), questionMultipleChoice.getUri());
-                                                ResponseItem itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
-                                                itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
-                                                responseMultipleChoice.addResponseItem(itemMultipleChoice);
-                                                MainActivity.feedback.addResponse(responseMultipleChoice);
-                                            }
-                                        }
-                                    }///////
-                                    System.out.println("Touch! Multiple Add ANSWER");
-                                } else {
-                                    end:
-                                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                                        if (MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
-                                            for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
-                                                    for (int z = 0; z < MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().size(); z++) {
-                                                        if (MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().get(z).getUri().equals(MainActivity.questionnaire.getQuestions().get(i).getAnswer().getItems().get(view.getId()).getUri())) {
-                                                            MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().remove(z);
-                                                            System.out.println("Touch! Multiple Delete ANSWER");
-                                                            break end;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            */
+//                            System.out.println("Touch! Multiple " + view.getId() + " " + uri);view.isShown()
+//                                if (isChecked) {
+//                                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
+//                                        if (MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                                            int flag = 0;
+//                                            for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
+//                                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+//                                                    // MainActivity.feedback.getResponses().get(j).getResponseItems().clear();//?
+//                                                    Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
+//                                                    Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
+//                                                    AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
+//                                                    // По Response Item пройтись и найти нужный, если нет то создать
+//                                                    // Другое если есть ResponseItem, то по нему смотрим сколько AnswerItem'ов если есть нужный, то ничего иначе добавляем
+//                                                    ResponseItem itemMultipleChoice;
+//                                                    if (MainActivity.feedback.getResponses().get(j).getResponseItems().size() != 0) {
+//                                                        itemMultipleChoice = MainActivity.feedback.getResponses().get(j).getResponseItems().get(0);
+//                                                        for (int z = 0; z < itemMultipleChoice.getLinkedItems().size(); z++) {
+//                                                            if (!itemMultipleChoice.getLinkedItems().get(z).getItemText().equals(view.getText())) {
+//                                                                itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+//                                                                MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).addLinkedAnswerItem(answeritemMultipleChoice);
+//                                                                //System.out.println("Touch! Multiple OLD");
+//                                                            }
+//                                                        }
+//                                                    } else {
+//                                                        // System.out.println("Touch! Multiple NEW ANSWER"+MainActivity.feedback.getResponses().get(j).getResponseItems().size());
+//                                                        itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
+//                                                        itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+//                                                        MainActivity.feedback.getResponses().get(j).addResponseItem(itemMultipleChoice);
+//                                                        // System.out.println("Touch! Multiple NEW ANSWER");
+//                                                    }
+//                                                    flag++;
+//                                                }
+//                                            }
+//                                            if (flag == 0) {
+//                                                Question questionMultipleChoice = MainActivity.questionnaire.getQuestions().get(i);
+//                                                Answer answerMultipleChoice = questionMultipleChoice.getAnswer();
+//                                                AnswerItem answeritemMultipleChoice = answerMultipleChoice.getItems().get(view.getId());
+//                                                Response responseMultipleChoice = new Response(questionMultipleChoice.getUri(), questionMultipleChoice.getUri());
+//                                                ResponseItem itemMultipleChoice = new ResponseItem(answerMultipleChoice.getUri(), answerMultipleChoice.getType(), answerMultipleChoice.getUri());
+//                                                itemMultipleChoice.addLinkedAnswerItem(answeritemMultipleChoice);
+//                                                responseMultipleChoice.addResponseItem(itemMultipleChoice);
+//                                                MainActivity.feedback.addResponse(responseMultipleChoice);
+//                                            }
+//                                        }
+//                                    }
+//                                    System.out.println("Touch! Multiple Add ANSWER");
+//                                } else {
+//                                    end:
+//                                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
+//                                        if (MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                                            for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
+//                                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+//                                                    for (int z = 0; z < MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().size(); z++) {
+//                                                        if (MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().get(z).getUri().equals(MainActivity.questionnaire.getQuestions().get(i).getAnswer().getItems().get(view.getId()).getUri())) {
+//                                                            MainActivity.feedback.getResponses().get(j).getResponseItems().get(0).getLinkedItems().remove(z);
+//                                                            System.out.println("Touch! Multiple Delete ANSWER");
+//                                                            break end;
+//                                                        }
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
                         }
                     });
 
-                    //тут пишу проверку с ответами
-                    for(int fbc = 0; fbc < feedback.size(); fbc++){
-                        if(question.getUri().equals(feedback.get(fbc).getUri())) {
+                    for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                        if (question.getUri().equals(feedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < feedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
-                                if(question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())){
-                                    //
-                                    //MultipleChoiceAnswers[j].setChecked(true);///
+                                if (question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())) {
+//                                    MultipleChoiceAnswers[j].setChecked(true);
                                     MultipleChoiceAnswers[j].setChecked(true);
                                 }
                             }
                         }
                     }
-                    //восстанавливаю отображение
-                    if(holder.MultipleChoiceLayout.getChildCount() < answeritem.size()) {
+                    if (holder.MultipleChoiceLayout.getChildCount() < answeritem.size()) {
                         holder.MultipleChoiceLayout.addView(MultipleChoiceAnswers[j]);
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Singlechoice) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Singlechoice) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -285,37 +242,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     SingleChoiceAnswers[j] = new RadioButton(context);
                     SingleChoiceAnswers[j].setId(j);
                     SingleChoiceAnswers[j].setText(Item.getItemText());
-                    //тут отображение ответов
-                    for(int fbc = 0; fbc < feedback.size(); fbc++){
-                        //System.out.println("Touch! отображение в сигле до вопросов");
-                        if(question.getUri().equals(feedback.get(fbc).getUri())) {
+                    for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                        if (question.getUri().equals(feedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < feedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
-                                //System.out.println("Touch! отображение в сигле до ответов");
-                                if(question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())){
-                                    //
+                                if (question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())) {
                                     SingleChoiceAnswers[j].setChecked(true);///
-                                    //System.out.println("Touch! отображение нашло в сингле");
                                 }
                             }
                         }
                     }
-                    if(holder.SingleChoiceGroup.getChildCount() < answeritem.size()){
+                    if (holder.SingleChoiceGroup.getChildCount() < answeritem.size()) {
                         holder.SingleChoiceGroup.addView(SingleChoiceAnswers[j]);
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == TextField) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.TextField) {
             Question question = Questions.get(position);
             TextFieldViewHolder holder = (TextFieldViewHolder) viewHolder;
             holder.TextFieldQuestion.setText(question.getDescription());
             holder.uri = question.getUri();
-            //тут пишу проверку с ответами
-            for(int fbc = 0; fbc < feedback.size(); fbc++){
-                if(question.getUri().equals(feedback.get(fbc).getUri())) {
+            for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                if (question.getUri().equals(feedback.get(fbc).getUri())) {
                     holder.TextFieldAnswer.setText(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(0).getItemText().toString());
                 }
             }
-        } else if (viewHolder.getItemViewType() == Likertscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Likertscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -329,23 +280,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     LikertScaleAnswers[j] = new RadioButton(context);
                     LikertScaleAnswers[j].setId(j);
                     LikertScaleAnswers[j].setText(Item.getItemText());
-                    //тут отображение ответов
-                    for(int fbc = 0; fbc < feedback.size(); fbc++){
-                        if(question.getUri().equals(feedback.get(fbc).getUri())) {
+                    for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                        if (question.getUri().equals(feedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < feedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
-                                if(question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())){
-                                    //
-                                    LikertScaleAnswers[j].setChecked(true);///
+                                if (question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())) {
+                                    LikertScaleAnswers[j].setChecked(true);
                                 }
                             }
                         }
                     }
-                    if(holder.LikertScaleGroup.getChildCount() < answeritem.size()) {
+                    if (holder.LikertScaleGroup.getChildCount() < answeritem.size()) {
                         holder.LikertScaleGroup.addView(LikertScaleAnswers[j]);
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Guttmanscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Guttmanscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
@@ -359,32 +308,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     GuttmanScaleAnswers[j] = new RadioButton(context);
                     GuttmanScaleAnswers[j].setId(j);
                     GuttmanScaleAnswers[j].setText(Item.getItemText());
-                    //тут отображение ответов
-                    for(int fbc = 0; fbc < feedback.size(); fbc++){
-                        if(question.getUri().equals(feedback.get(fbc).getUri())) {
+                    for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                        if (question.getUri().equals(feedback.get(fbc).getUri())) {
                             for (int aic = 0; aic < feedback.get(fbc).getResponseItems().get(0).getLinkedItems().size(); aic++) {
-                                if(question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())){
-                                    //
-                                    GuttmanScaleAnswers[j].setChecked(true);///
+                                if (question.getAnswer().getItems().get(j).getUri().equals(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(aic).getUri())) {
+                                    GuttmanScaleAnswers[j].setChecked(true);
                                 }
                             }
                         }
                     }
-                    if(holder.GuttmanScaleGroup.getChildCount() < answeritem.size()) {
+                    if (holder.GuttmanScaleGroup.getChildCount() < answeritem.size()) {
                         holder.GuttmanScaleGroup.addView(GuttmanScaleAnswers[j]);
                     }
                 }
             }
-        } else if (viewHolder.getItemViewType() == Continuousscale) {
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.Continuousscale) {
             Question question = Questions.get(position);
             Answer answer = question.getAnswer();
             LinkedList<AnswerItem> answeritem = answer.getItems();
             ContinuousScaleViewHolder holder = (ContinuousScaleViewHolder) viewHolder;
             holder.uri = question.getUri();
 
-            //видимо тут отображать ответ буду
-            for(int fbc = 0; fbc < feedback.size(); fbc++){
-                if(question.getUri().equals(feedback.get(fbc).getUri())) {
+            for (int fbc = 0; fbc < feedback.size(); fbc++) {
+                if (question.getUri().equals(feedback.get(fbc).getUri())) {
                     holder.ContinuousScaleValue.setText(feedback.get(fbc).getResponseItems().get(0).getLinkedItems().get(0).getItemText().toString());
                     holder.ContinuousScaleSeekBar.setProgress(Integer.parseInt(holder.ContinuousScaleValue.getText().toString()));
                 }
@@ -397,8 +343,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Item = answeritem.get(1);
                 int Max = Integer.parseInt(Item.getItemText().replaceAll("[\\D]", ""));
                 holder.ContinuousScaleSeekBar.setMax(Max);
-                //Item = answeritem.get(2);
-                //int Step = Integer.parseInt(Item.getItemText().replaceAll("[\\D]", ""));
+//                Item = answeritem.get(2);
+//                int Step = Integer.parseInt(Item.getItemText().replaceAll("[\\D]", ""));
                 int Step = 10;
                 TextView[] ContinuousScaleAnswers = new TextView[Step + 1];
                 for (int j = 0; j < Step + 1; j++) {
@@ -428,18 +374,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class DichotomousViewHolder extends ViewHolder {
-        /*TextView DichotomousQuestion;
-        RadioButton DichotomousAnswer1, DichotomousAnswer2;
-
-        public DichotomousViewHolder(View v) {
-            super(v);
-            this.DichotomousQuestion = (TextView) v.findViewById(R.id.DichotomousQuestion);
-            this.DichotomousAnswer1 = (RadioButton) v.findViewById(R.id.DichotomousAnswer1);
-            this.DichotomousAnswer2 = (RadioButton) v.findViewById(R.id.DichotomousAnswer2);
-        }*/
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
+    private class DichotomousViewHolder extends ViewHolder {
+//        TextView DichotomousQuestion;
+//        RadioButton DichotomousAnswer1, DichotomousAnswer2;
+//
+//        public DichotomousViewHolder(View v) {
+//            super(v);
+//            this.DichotomousQuestion = (TextView) v.findViewById(R.id.DichotomousQuestion);
+//            this.DichotomousAnswer1 = (RadioButton) v.findViewById(R.id.DichotomousAnswer1);
+//            this.DichotomousAnswer2 = (RadioButton) v.findViewById(R.id.DichotomousAnswer2);
+//        }
 
         TextView DichotomousQuestion;
         RadioGroup DichotomousGroup;
@@ -454,18 +398,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             DichotomousGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    System.out.println("Touch! Dichotomous "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                        if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    System.out.println("Touch! Dichotomous " + checkedId + " " + uri);
+                    for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                if(MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                    //вопрос
-                                    Question questionDichotomous = MainActivity.questionnaire.getQuestions().get(i);
-                                    //тип ответов
+                                    Question questionDichotomous = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     Answer answerDichotomous = questionDichotomous.getAnswer();
-                                    //ответ выбранный
                                     AnswerItem answeritemDichotomous = answerDichotomous.getItems().get(checkedId);
                                     ResponseItem itemDichotomous = new ResponseItem(answerDichotomous.getUri(), answerDichotomous.getType(), answerDichotomous.getUri());
                                     itemDichotomous.addLinkedAnswerItem(answeritemDichotomous);
@@ -473,12 +414,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     flag++;
                                 }
                             }
-                            if(flag == 0) {
-                                //вопрос
-                                Question questionDichotomous = MainActivity.questionnaire.getQuestions().get(i);
-                                //тип ответов
+                            if (flag == 0) {
+                                Question questionDichotomous = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                 Answer answerDichotomous = questionDichotomous.getAnswer();
-                                //ответ выбранный
                                 AnswerItem answeritemDichotomous = answerDichotomous.getItems().get(checkedId);
                                 Response responseDichotomous = new Response(questionDichotomous.getUri(), questionDichotomous.getUri());
                                 ResponseItem itemDichotomous = new ResponseItem(answerDichotomous.getUri(), answerDichotomous.getType(), answerDichotomous.getUri());
@@ -491,11 +429,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
         }
-
-        //////////////////////////////////////////////////////////////////////////////////////////////
     }
 
-    public class SingleChoiceViewHolder extends ViewHolder {
+    private class SingleChoiceViewHolder extends ViewHolder {
         TextView SingleChoiceQuestion;
         RadioGroup SingleChoiceGroup;
         RadioButton SingleChoiceAnswer;
@@ -510,18 +446,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             SingleChoiceGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    //System.out.println("Touch! SingleChoice "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                        if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                    System.out.println("Touch! SingleChoice "+checkedId+" "+uri);
+                    for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                if(MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                    //вопрос
-                                    Question questionSingleChoice = MainActivity.questionnaire.getQuestions().get(i);
-                                    //тип ответов
+                                    Question questionSingleChoice = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     Answer answerSingleChoice = questionSingleChoice.getAnswer();
-                                    //ответ выбранный
                                     AnswerItem answeritemSingleChoice = answerSingleChoice.getItems().get(checkedId);
                                     ResponseItem itemSingleChoice = new ResponseItem(answerSingleChoice.getUri(), answerSingleChoice.getType(), answerSingleChoice.getUri());
                                     itemSingleChoice.addLinkedAnswerItem(answeritemSingleChoice);
@@ -529,12 +462,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     flag++;
                                 }
                             }
-                            if(flag == 0) {
-                                //вопрос
-                                Question questionSingleChoice = MainActivity.questionnaire.getQuestions().get(i);
-                                //тип ответов
+                            if (flag == 0) {
+                                Question questionSingleChoice = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                 Answer answerSingleChoice = questionSingleChoice.getAnswer();
-                                //ответ выбранный
                                 AnswerItem answeritemSingleChoice = answerSingleChoice.getItems().get(checkedId);
                                 Response responseSingleChoice = new Response(questionSingleChoice.getUri(), questionSingleChoice.getUri());
                                 ResponseItem itemSingleChoice = new ResponseItem(answerSingleChoice.getUri(), answerSingleChoice.getType(), answerSingleChoice.getUri());
@@ -550,33 +480,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class TextFieldViewHolder extends ViewHolder {
+    private class TextFieldViewHolder extends ViewHolder {
         TextView TextFieldQuestion;
         EditText TextFieldAnswer;
         String uri;
+
         public TextFieldViewHolder(View v) {
             super(v);
             this.TextFieldQuestion = (TextView) v.findViewById(R.id.TextQuestion);
-            // get answer
             this.TextFieldAnswer = (EditText) v.findViewById(R.id.editText);
-            //this.TextFieldAnswer.setText("текст при создании");
+//            this.TextFieldAnswer.setText("текст при создании");
 
             TextFieldAnswer.setOnFocusChangeListener(new EditText.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
-                    //System.out.println("Touch! TextField "+hasFocus+" "+uri);
-                    if(false == hasFocus) {
-                        for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                            if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                    System.out.println("Touch! TextField "+hasFocus+" "+uri);
+                    if (!hasFocus) {
+                        for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                            if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                 int flag = 0;
                                 for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
                                     if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                         MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                        //вопрос
-                                        Question questionTextField = MainActivity.questionnaire.getQuestions().get(i);
-                                        //тип ответов
+                                        Question questionTextField = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                         Answer answerTextField = questionTextField.getAnswer();
-                                        //ответ выбранный
                                         AnswerItem answeritemTextField = new AnswerItem(answerTextField.getItems().get(0).getUri(), answerTextField.getItems().get(0).getItemScore(), TextFieldAnswer.getText().toString());
                                         ResponseItem itemTextField = new ResponseItem(answerTextField.getUri(), answerTextField.getType(), answerTextField.getUri());
                                         itemTextField.addLinkedAnswerItem(answeritemTextField);
@@ -584,12 +511,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         flag++;
                                     }
                                 }
-                                if(flag == 0) {
-                                    //вопрос
-                                    Question questionTextField = MainActivity.questionnaire.getQuestions().get(i);
-                                    //тип ответов
+                                if (flag == 0) {
+                                    Question questionTextField = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     Answer answerTextField = questionTextField.getAnswer();
-                                    //ответ выбранный
                                     AnswerItem answeritemTextField = new AnswerItem(answerTextField.getItems().get(0).getUri(), answerTextField.getItems().get(0).getItemScore(), TextFieldAnswer.getText().toString());
                                     Response responseTextField = new Response(questionTextField.getUri(), questionTextField.getUri());
                                     ResponseItem itemTextField = new ResponseItem(answerTextField.getUri(), answerTextField.getType(), answerTextField.getUri());
@@ -605,7 +529,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class MultipleChoiceViewHolder extends ViewHolder {
+    private class MultipleChoiceViewHolder extends ViewHolder {
         TextView MultipleChoiceQuestion;
         LinearLayout MultipleChoiceLayout;
         CheckBox MultipleChoiceAnswer;
@@ -619,7 +543,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class BipolarQuestionViewHolder extends ViewHolder {
+    private class BipolarQuestionViewHolder extends ViewHolder {
         TextView BipolarQuestionQuestion;
         TextView BipolarQuestionValue;
         SeekBar BipolarQuestionSeekBar;
@@ -641,23 +565,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
 
                         public void onStartTrackingTouch(SeekBar seekBar) {
-
                         }
 
                         public void onStopTrackingTouch(SeekBar seekBar) {
                             BipolarQuestionValue.setText(String.valueOf(progress));
-                            //System.out.println("Touch! Bipolar "+uri+" "+BipolarQuestionValue.getText());////////////////
-                            for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                                if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                            System.out.println("Touch! Bipolar "+uri+" "+BipolarQuestionValue.getText());////////////////
+                            for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                                if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                     int flag = 0;
                                     for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
                                         if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                             MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                            //вопрос
-                                            Question questionBipolarQuestion = MainActivity.questionnaire.getQuestions().get(i);
-                                            //тип ответов
+                                            Question questionBipolarQuestion = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                             Answer answerBipolarQuestion = questionBipolarQuestion.getAnswer();
-                                            //ответ выбранный
                                             AnswerItem answeritemBipolarQuestion = new AnswerItem(answerBipolarQuestion.getItems().get(0).getUri(), answerBipolarQuestion.getItems().get(0).getItemScore(), BipolarQuestionValue.getText().toString());
                                             ResponseItem itemBipolarQuestion = new ResponseItem(answerBipolarQuestion.getUri(), answerBipolarQuestion.getType(), answerBipolarQuestion.getUri());
                                             itemBipolarQuestion.addLinkedAnswerItem(answeritemBipolarQuestion);
@@ -665,12 +585,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             flag++;
                                         }
                                     }
-                                    if(flag == 0) {
-                                        //вопрос
-                                        Question questionBipolarQuestion = MainActivity.questionnaire.getQuestions().get(i);
-                                        //тип ответов
+                                    if (flag == 0) {
+                                        Question questionBipolarQuestion = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                         Answer answerBipolarQuestion = questionBipolarQuestion.getAnswer();
-                                        //ответ выбранный
                                         AnswerItem answeritemBipolarQuestion = new AnswerItem(answerBipolarQuestion.getItems().get(0).getUri(), answerBipolarQuestion.getItems().get(0).getItemScore(), BipolarQuestionValue.getText().toString());
                                         Response responseBipolarQuestion = new Response(questionBipolarQuestion.getUri(), questionBipolarQuestion.getUri());
                                         ResponseItem itemBipolarQuestion = new ResponseItem(answerBipolarQuestion.getUri(), answerBipolarQuestion.getType(), answerBipolarQuestion.getUri());
@@ -686,7 +603,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class LikertScaleViewHolder extends ViewHolder {
+    private class LikertScaleViewHolder extends ViewHolder {
         TextView LikertScaleQuestion;
         RadioGroup LikertScaleGroup;
         RadioButton LikertScaleAnswer;
@@ -701,18 +618,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             LikertScaleGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    //System.out.println("Touch! LikertScale "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                        if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                    System.out.println("Touch! LikertScale "+checkedId+" "+uri);
+                    for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                if(MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                    //вопрос
-                                    Question questionLikertScale = MainActivity.questionnaire.getQuestions().get(i);
-                                    //тип ответов
+                                    Question questionLikertScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     Answer answerLikertScale = questionLikertScale.getAnswer();
-                                    //ответ выбранный
                                     AnswerItem answeritemLikertScale = answerLikertScale.getItems().get(checkedId);
                                     ResponseItem itemLikertScale = new ResponseItem(answerLikertScale.getUri(), answerLikertScale.getType(), answerLikertScale.getUri());
                                     itemLikertScale.addLinkedAnswerItem(answeritemLikertScale);
@@ -720,12 +634,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     flag++;
                                 }
                             }
-                            if(flag == 0) {
-                                //вопрос
-                                Question questionLikertScale = MainActivity.questionnaire.getQuestions().get(i);
-                                //тип ответов
+                            if (flag == 0) {
+                                Question questionLikertScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                 Answer answerLikertScale = questionLikertScale.getAnswer();
-                                //ответ выбранный
                                 AnswerItem answeritemLikertScale = answerLikertScale.getItems().get(checkedId);
                                 Response responseLikertScale = new Response(questionLikertScale.getUri(), questionLikertScale.getUri());
                                 ResponseItem itemLikertScale = new ResponseItem(answerLikertScale.getUri(), answerLikertScale.getType(), answerLikertScale.getUri());
@@ -740,7 +651,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class GuttmanScaleViewHolder extends ViewHolder {
+    private class GuttmanScaleViewHolder extends ViewHolder {
         TextView GuttmanScaleQuestion;
         RadioGroup GuttmanScaleGroup;
         RadioButton GuttmanScaleAnswer;
@@ -754,18 +665,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             GuttmanScaleGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    //System.out.println("Touch! GuttmanScale "+checkedId+" "+uri);
-                    for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                        if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+                    System.out.println("Touch! GuttmanScale " + checkedId + " " + uri);
+                    for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                        if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                             int flag = 0;
                             for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
-                                if(MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
+                                if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                     MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                    //вопрос
-                                    Question questionGuttmanScale = MainActivity.questionnaire.getQuestions().get(i);
-                                    //тип ответов
+                                    Question questionGuttmanScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     Answer answerGuttmanScale = questionGuttmanScale.getAnswer();
-                                    //ответ выбранный
                                     AnswerItem answeritemGuttmanScale = answerGuttmanScale.getItems().get(checkedId);
                                     ResponseItem itemGuttmanScale = new ResponseItem(answerGuttmanScale.getUri(), answerGuttmanScale.getType(), answerGuttmanScale.getUri());
                                     itemGuttmanScale.addLinkedAnswerItem(answeritemGuttmanScale);
@@ -773,12 +681,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     flag++;
                                 }
                             }
-                            if(flag == 0) {
-                                //вопрос
-                                Question questionGuttmanScale = MainActivity.questionnaire.getQuestions().get(i);
-                                //тип ответов
+                            if (flag == 0) {
+                                Question questionGuttmanScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                 Answer answerGuttmanScale = questionGuttmanScale.getAnswer();
-                                //ответ выбранный
                                 AnswerItem answeritemGuttmanScale = answerGuttmanScale.getItems().get(checkedId);
                                 Response responseGuttmanScale = new Response(questionGuttmanScale.getUri(), questionGuttmanScale.getUri());
                                 ResponseItem itemGuttmanScale = new ResponseItem(answerGuttmanScale.getUri(), answerGuttmanScale.getType(), answerGuttmanScale.getUri());
@@ -793,7 +698,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class ContinuousScaleViewHolder extends ViewHolder {
+    private class ContinuousScaleViewHolder extends ViewHolder {
         TextView ContinuousScaleQuestion;
         TextView ContinuousScaleAnswer;
         TextView ContinuousScaleValue;
@@ -815,29 +720,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             ContinuousScaleSeekBar.setOnSeekBarChangeListener(
                     new SeekBar.OnSeekBarChangeListener() {
                         int Step = 10;
+
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            progress = ((int)Math.round(progress/Step))*Step;
+                            progress = ((int) Math.round(progress / Step)) * Step;
                             seekBar.setProgress(progress);
                             ContinuousScaleValue.setText(progress + "");
                         }
 
                         public void onStartTrackingTouch(SeekBar seekBar) {
-
                         }
 
                         public void onStopTrackingTouch(SeekBar seekBar) {
-                            //System.out.println("Touch! ContinuousScale "+uri+" "+ContinuousScaleValue.getText());////////////////
-                            for (int i = 0; i < MainActivity.questionnaire.getQuestions().size(); i++) {
-                                if(MainActivity.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
+//                            System.out.println("Touch! ContinuousScale "+uri+" "+ContinuousScaleValue.getText());
+                            for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                                if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getUri().equals(uri)) {
                                     int flag = 0;
                                     for (int j = 0; j < MainActivity.feedback.getResponses().size(); j++) {
                                         if (MainActivity.feedback.getResponses().get(j).getUri().equals(uri)) {
                                             MainActivity.feedback.getResponses().get(j).getResponseItems().clear();
-                                            //вопрос
-                                            Question questionContinuousScale = MainActivity.questionnaire.getQuestions().get(i);
-                                            //тип ответов
+                                            Question questionContinuousScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                             Answer answerContinuousScale = questionContinuousScale.getAnswer();
-                                            //ответ выбранный
                                             AnswerItem answeritemContinuousScale = new AnswerItem(answerContinuousScale.getItems().get(0).getUri(), answerContinuousScale.getItems().get(0).getItemScore(), ContinuousScaleValue.getText().toString());
                                             ResponseItem itemContinuousScale = new ResponseItem(answerContinuousScale.getUri(), answerContinuousScale.getType(), answerContinuousScale.getUri());
                                             itemContinuousScale.addLinkedAnswerItem(answeritemContinuousScale);
@@ -845,12 +747,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             flag++;
                                         }
                                     }
-                                    if(flag == 0) {
-                                        //вопрос
-                                        Question questionContinuousScale = MainActivity.questionnaire.getQuestions().get(i);
-                                        //тип ответов
+                                    if (flag == 0) {
+                                        Question questionContinuousScale = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                         Answer answerContinuousScale = questionContinuousScale.getAnswer();
-                                        //ответ выбранный
                                         AnswerItem answeritemContinuousScale = new AnswerItem(answerContinuousScale.getItems().get(0).getUri(), answerContinuousScale.getItems().get(0).getItemScore(), ContinuousScaleValue.getText().toString());
                                         Response responseContinuousScale = new Response(questionContinuousScale.getUri(), questionContinuousScale.getUri());
                                         ResponseItem itemContinuousScale = new ResponseItem(answerContinuousScale.getUri(), answerContinuousScale.getType(), answerContinuousScale.getUri());

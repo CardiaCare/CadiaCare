@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
                 android:padding="15dp"
-                android:text="@string/start_inctruction"
+                android:text="@string/start_instruction"
                 android:textAlignment="center"
                 android:textSize="24sp"
                 android:textColor="#fff"

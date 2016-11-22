@@ -35,7 +35,7 @@ tools:context="ru.cardiacare.cardiacare.AboutActivity">
 
             <TextView
                 android:layout_height="match_parent"
-                android:text="@string/Content_About"
+                android:text="@string/content_about"
                 android:layout_width="match_parent" />
         </LinearLayout>
     </ScrollView>
