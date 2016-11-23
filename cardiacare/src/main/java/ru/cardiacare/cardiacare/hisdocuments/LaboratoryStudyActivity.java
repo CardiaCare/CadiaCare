@@ -55,15 +55,11 @@ public class LaboratoryStudyActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         MainActivity.backgroundFlag = 0;
-        MainActivity.ConnectToSmartSpace();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
-        }
     }
 
     @Override

@@ -36,12 +36,12 @@ public class QuestionnaireHelper {
     static public void showQuestionnaire(Context context) {
         questionnaireType = "periodic";
         String QuestionnaireVersion = MainActivity.storage.getQuestionnaireVersion();
-        String qst = MainActivity.smart.getQuestionnaire(MainActivity.nodeDescriptor);
-        String QuestionnaireServerVersion = MainActivity.smart.getQuestionnaireVersion(MainActivity.nodeDescriptor, qst);
+
+        String QuestionnaireServerVersion = "1.0";
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
         if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (!questionnaireDownloaded)) {
-            serverUri = MainActivity.smart.getQuestionnaireSeverUri(MainActivity.nodeDescriptor, qst);
+            serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
             Log.i("serverUri = ", serverUri);
             MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
             MainActivity.storage.setVersion(QuestionnaireServerVersion);

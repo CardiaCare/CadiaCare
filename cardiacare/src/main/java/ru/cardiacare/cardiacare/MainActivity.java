@@ -29,7 +29,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 import org.json.JSONObject;
@@ -46,16 +45,11 @@ import ru.cardiacare.cardiacare.user.Userdata;
 public class MainActivity extends AppCompatActivity {
 
     public Context context = this;
-    public static Context mContext;
-
     Button btnCont;
     Button nextButton;
     Button btnDisconnect;
     static public Button alarmButton;
     static public ImageButton serveyButton;
-    EditText etSibName;
-    EditText etSibIp;
-    EditText etSibPort;
     EditText etFirstName;
     EditText etSecondName;
     EditText etEmail;
@@ -64,18 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayAdapter<String> connectListArrayAdapter;
 
-    static public SmartCareLibrary smart;
-    static public long nodeDescriptor = -1;
-    static public String patientUri;
-    static public String locationUri;
-    static protected String alarmUri;
-    static public String feedbackUri;
-    static public String alarmFeedbackUri;
-
     static public String authorization_token = "";
 
     public static boolean connectedState = false;
-    public static boolean loginState = false; // Авторизирован ли пользователь, true - авторизирован / false - неавторизирован
 
     static public String TAG = "SS-main";
     static public AccountStorage storage;
@@ -84,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     static public LocationService gps;
     static public boolean alarmButtonFlag = false; // Была ли нажата кнопка SOS, 1 - была нажата / 0 - не была
     static public int gpsEnabledFlag = 1; // Включена ли передача геоданных, 1 - вкл / 0 - выкл
-    static public int sibConnectedFlag = 0; // Установлено ли соединение с SIB'ом, 1 - установлено / 0 - не установлено
     static public int backgroundFlag = 0; // Добровольное ли закрытие активности (инициировано из приложения),
     // 1 - добровольное / 0 - недобровольное
     // Перед каждым переходом на другую активность устанавливаем флаг = 1
@@ -98,18 +82,11 @@ public class MainActivity extends AppCompatActivity {
         // Установка ТОЛЬКО вертикальной ориентации
         // Такая строка должна быть прописана в КАЖДОЙ активности
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        smart = new SmartCareLibrary();
 
         setLoadingScreen();
-//        if (connectedState == false) {
-//            setRegisteredScreen();
 
-//        } else {
-//            // Стартовое окно при подключенном bluetooth-устройстве
-//            // FIXME не работает
-//            setConnectedToDriverState();
-//        }
-        mContext = this;
+        feedback = new Feedback("", "Student", "feedback");
+        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
     }
 
     // Загрузочный экран.
@@ -136,32 +113,15 @@ public class MainActivity extends AppCompatActivity {
             netFlag = 1;
             storage = new AccountStorage();
             storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            if (ConnectToSmartSpace()) {
-                GPSLoad gpsLoad = new GPSLoad(context);
-                gpsLoad.execute();
+            GPSLoad gpsLoad = new GPSLoad(context);
+            gpsLoad.execute();
 
-                if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                    setSibAuthorizationScreen();
-                } else {
-                    setRegisteredScreen();
-                }
+            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+                Log.i(TAG,"setUserAuthorizationScreen");
+                setUserAuthorizationScreen();
             } else {
-                android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
-                alertDialog.setTitle(R.string.dialog_ss_title);
-                alertDialog.setMessage(R.string.dialog_ss_message);
-                alertDialog.setPositiveButton(R.string.dialog_ss_positive_button,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                setLoadingScreen();
-                            }
-                        });
-                alertDialog.setNegativeButton(R.string.dialog_ss_negative_button,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        });
-                alertDialog.show();
+                Log.i(TAG,"setRegisteredScreen");
+                setRegisteredScreen();
             }
         } else {
             netFlag = 0;
@@ -186,67 +146,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Интерфейс для ввода данных об интеллектуальном пространстве
-    public void setSibAuthorizationScreen() {
-        setContentView(R.layout.screen_main_sib_authorization);
-
-        etSibName = (EditText) findViewById(R.id.etSibName);
-        etSibIp = (EditText) findViewById(R.id.etSibIp);
-        etSibPort = (EditText) findViewById(R.id.etSibPort);
-
-
-        etSibName.setText(storage.getSibName());
-        etSibIp.setText(storage.getSibIp());
-        etSibPort.setText(storage.getSibPort());
-
-        nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if ((etSibName.getText().toString().isEmpty()) || (etSibIp.getText().toString().isEmpty()) || (etSibPort.getText().toString().isEmpty())) {
-                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-                    builder.setMessage(R.string.dialog_authorization_message)
-                            .setTitle(R.string.dialog_authorization_title)
-                            .setCancelable(true)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            }).show();
-                } else {
-                    // Если данные о SIB'е поменялись, то переподключаемся по новым данным
-                    if ((!storage.getSibName().equals("")) && ((!etSibName.getText().toString().equals(storage.getSibName())) || (!etSibIp.getText().toString().equals(storage.getSibIp())) || (!etSibPort.getText().toString().equals(storage.getSibPort())))) {
-                        storage.setAccountPreferences(etSibName.getText().toString(), etSibIp.getText().toString(), etSibPort.getText().toString(), "", "", "", "", "", "", "", "", "", "", "0", "");
-                        DisconnectFromSmartSpace();
-                        if (!ConnectToSmartSpace()) {
-                            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
-                            builder.setMessage(R.string.dialog_authorization_message)
-                                    .setTitle(R.string.dialog_authorization_title)
-                                    .setCancelable(true)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    }).show();
-                        }
-                    }
-                    setUserAuthorizationScreen();
-                }
-            }
-        });
-    }
-
     // Интерфейс для авторизации пользователя
     public void setUserAuthorizationScreen() {
         setContentView(R.layout.screen_main_user_authorization);
 //        Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
-        if (patientUri == null) {
-            return;
-        }
 
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
@@ -257,13 +161,13 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                authorization(etSibName.getText().toString(), etSibIp.getText().toString(), etSibPort.getText().toString(), etFirstName.getText().toString(), etSecondName.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString());
+                authorization(etFirstName.getText().toString(), etSecondName.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString());
             }
         });
     }
 
     // Авторизация
-    public void authorization(String sibName, String sibIp, String sibPort, String first, String second, String email, String password) {
+    public void authorization(String first, String second, String email, String password) {
         // Если не все поля заполнены, то выводим диалог об ошибке
         if ((first.isEmpty()) || (second.isEmpty()) || (email.isEmpty())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
@@ -295,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences(sibName, sibIp, sibPort, patientUri, authorization_token, email, first, second, "", "", "", "", "", "0", "");
+                storage.setAccountPreferences("", "", "", "", authorization_token, email, first, second, "", "", "", "", "", "0", "");
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
@@ -403,7 +307,6 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         alarmButton.setEnabled(false);
                         alarmButton.setBackgroundColor(0x77a71000);
-                        alarmUri = smart.sendAlarm(nodeDescriptor, patientUri);
                         alarmButtonFlag = false;
                         QuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
@@ -412,7 +315,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
     }
 
     // Древняя функция. Не используется
@@ -435,7 +337,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intentECG = new Intent(context, ECGActivity.class);
                 // TODO change methods
                 startActivity(intentECG);
-//                 startActivityForResult(intent,1);
             }
         });
 
@@ -447,7 +348,6 @@ public class MainActivity extends AppCompatActivity {
     final BroadcastReceiver connectReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             connectListArrayAdapter.add("Alive Bluetooth Monitor");
-
             connectListArrayAdapter.notifyDataSetChanged();
         }
     };
@@ -519,11 +419,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO: удалять токен доступа на сервере
                     backgroundFlag = 0;
                     patientUriFlag = -1;
-                    String sibName = storage.getSibName();
-                    String sibIp = storage.getSibIp();
-                    String sibPort = storage.getSibPort();
-                    storage.setAccountPreferences(sibName, sibIp, sibPort, "", "", "", "", "", "", "", "", "", "", "0", "");
-                    DisconnectFromSmartSpace();
+                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "");
                     setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");
@@ -537,10 +433,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Старинная функция. Не используется
-//    public static void setLoginState(boolean state) {
-//        loginState = state;
-//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -565,71 +457,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Подключение к интеллектуальному пространству
-    static public boolean ConnectToSmartSpace() {
-        //Если есть доступ к интернету и соединение с SIB'ом не установлено, то устанавливаем его
-        if ((netFlag == 1) && (sibConnectedFlag != 1)) {
-//            Log.i(TAG,"ПОДКЛЮЧАЕМСЯ К СИБУ");
-            String sibName = storage.getSibName();
-            String sibIp = storage.getSibIp();
-            String sibPort = storage.getSibPort();
-            nodeDescriptor = smart.connectSmartSpace("X", "78.46.130.194", 10010);
-//            nodeDescriptor = smart.connectSmartSpace(sibName, sibIp, Integer.parseInt(sibPort));
-            if (nodeDescriptor == -1) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                mContext.startActivity(intent);
-                return false;
-            } else {
-                // Если удалось подключиться к SIB'у, то устанавливаем соответствующий флаг
-                sibConnectedFlag = 1;
-            }
-            InitObjects();
-        }
-        return true;
-    }
-
-    // Инициализация объектов в интеллектуальном пространстве
-    static public boolean InitObjects() {
-        if (backgroundFlag == 0) {
-//            Log.i(TAG, "СОЗДАНИЕ НОВЫХ ОБЪЕКТОВ");
-            feedbackUri = SmartCareLibrary.initFeedback();
-            feedback = new Feedback(feedbackUri, "Student", "feedback");
-            alarmFeedbackUri = SmartCareLibrary.initFeedback();
-            alarmFeedback = new Feedback(alarmFeedbackUri, "Student", "alarmFeedback");
-
-            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                patientUri = smart.initPatient(nodeDescriptor);
-            } else {
-                if ((patientUriFlag == 1) || (patientUriFlag == -1)) {
-                    patientUri = storage.getAccountId();
-                    smart.initPatientWithId(nodeDescriptor, patientUri);
-                    SmartCareLibrary.insertPersonName(nodeDescriptor, patientUri, storage.getAccountFirstName() + " " + storage.getAccountSecondName());
-                }
-            }
-            locationUri = smart.initLocation(nodeDescriptor, patientUri);
-        }
-        backgroundFlag = 0;
-        return true;
-    }
-
-
-    // Отключение от интеллектуального пространства
-    static public boolean DisconnectFromSmartSpace() {
-        // Разрываем соединение, если оно было установлено ранее
-        if (sibConnectedFlag == 1) {
-//            Log.i(TAG, "РАЗРЫВАЕМ СОЕДИНЕНИЕ");
-            smart.removeIndividual(nodeDescriptor, locationUri);
-            smart.removeIndividual(nodeDescriptor, patientUri);
-            smart.removeIndividual(nodeDescriptor, feedbackUri);
-            smart.removeIndividual(nodeDescriptor, alarmUri);
-            smart.removeIndividual(nodeDescriptor, alarmFeedbackUri);
-            smart.disconnectSmartSpace(nodeDescriptor);
-            nodeDescriptor = -1;
-            sibConnectedFlag = -1;
-        }
-        return true;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -649,14 +476,13 @@ public class MainActivity extends AppCompatActivity {
             if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
                 setLoadingScreen();
                 if (patientUriFlag == 1) {
-                    if ((isNetworkAvailable(context)) && (ConnectToSmartSpace()) && (gps.canGetLocation())) {
-                        alarmUri = MainActivity.smart.sendAlarm(MainActivity.nodeDescriptor, MainActivity.patientUri);
+                    if ((isNetworkAvailable(context)) && (gps.canGetLocation())) {
                         alarmButtonFlag = false;
                         backgroundFlag = 1;
                         QuestionnaireHelper.showAlarmQuestionnaire(context);
                     }
                 } else {
-                    Toast toast = Toast.makeText(mContext,
+                    Toast toast = Toast.makeText(this,
                             R.string.unregistered_user_toast, Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -691,16 +517,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        ConnectToSmartSpace();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        // Если активность закрывается не из приложения, то разрываем соединение с SIB'ом
-        if (backgroundFlag == 0) {
-            DisconnectFromSmartSpace();
-        }
         backgroundFlag = 0;
     }
 
@@ -708,12 +529,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d(TAG, "onDestroy Main Activity");
         // Старинный комментарий: TODO unregisterReceiver(connectReceiver);
-        if (backgroundFlag == 0) {
-            DisconnectFromSmartSpace();
-        }
         backgroundFlag = 0;
         patientUriFlag = -1;
-
         super.onDestroy();
     }
 }

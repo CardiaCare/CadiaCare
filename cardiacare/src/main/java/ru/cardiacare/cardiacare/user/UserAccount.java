@@ -63,7 +63,6 @@ public class UserAccount extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
         super.onBackPressed();
         MainActivity.backgroundFlag = 1;
     }
@@ -94,7 +93,7 @@ public class UserAccount extends AppCompatActivity {
                 etSibName.getText().toString(),
                 etSibIp.getText().toString(),
                 etSibPort.getText().toString(),
-                MainActivity.patientUri,
+                "",
                 MainActivity.authorization_token,
                 etEmail.getText().toString(),
                 etFirstName.getText().toString(),
@@ -106,9 +105,6 @@ public class UserAccount extends AppCompatActivity {
                 version,
                 lastquestionnairepassdate,
                 periodpassservey);
-        if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
-        }
     }
 
     protected void onResume() {
@@ -127,6 +123,5 @@ public class UserAccount extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         MainActivity.backgroundFlag = 0;
-        MainActivity.ConnectToSmartSpace();
     }
 }

@@ -14,8 +14,6 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
-
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
@@ -152,8 +150,9 @@ public class LocationService extends Service implements LocationListener {
                 MainActivity.gpsEnabledFlag = 1;
                 double latitude = getLatitude();
                 double longitude = getLongitude();
-                SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri,
-                        MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+                /**
+                 * send location
+                 **/
             } else {
                 // Сan't get location
                 // GPS or Network is not enabled

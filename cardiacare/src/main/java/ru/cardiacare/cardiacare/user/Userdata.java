@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -97,9 +96,6 @@ public class Userdata extends AppCompatActivity {
 
         editor.apply();
 
-        if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
-        }
     }
 
     protected void onResume() {
@@ -145,7 +141,6 @@ public class Userdata extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         MainActivity.backgroundFlag = 0;
-        MainActivity.ConnectToSmartSpace();
     }
 
     @Override

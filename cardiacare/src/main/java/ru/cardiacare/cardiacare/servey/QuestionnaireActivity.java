@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
 import com.petrsu.cardiacare.smartcare.servey.Answer;
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 import com.petrsu.cardiacare.smartcare.servey.Question;
@@ -220,7 +219,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         MainActivity.backgroundFlag = 0;
-        MainActivity.ConnectToSmartSpace();
     }
 
     @Override
@@ -237,7 +235,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 // To SIB
                 Long timestamp = System.currentTimeMillis() / 1000;
                 String ts = timestamp.toString();
-                SmartCareLibrary.sendFeedback(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.feedbackUri, ts);
                 MainActivity.storage.setLastQuestionnairePassDate(ts);
             }
             FeedbackPOST feedbackPOST = new FeedbackPOST(context);
@@ -246,7 +243,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
         super.onPause();
         refreshFlag = false;
         if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
         }
     }
 

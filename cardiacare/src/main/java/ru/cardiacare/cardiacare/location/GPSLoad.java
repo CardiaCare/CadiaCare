@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.petrsu.cardiacare.smartcare.SmartCareLibrary;
-
 import ru.cardiacare.cardiacare.MainActivity;
 
 /* Отправка геоданных */
@@ -31,8 +29,9 @@ public class GPSLoad extends AsyncTask<Void, Integer, Void> {
             double longitude = MainActivity.gps.getLongitude();
             if (MainActivity.isNetworkAvailable(context)) {
                 Log.i("SS", "" + Double.toString(latitude) + " " + Double.toString(longitude));
-                if (MainActivity.locationUri != null && MainActivity.patientUri != null)
-                    SmartCareLibrary.sendLocation(MainActivity.nodeDescriptor, MainActivity.patientUri, MainActivity.locationUri, Double.toString(latitude), Double.toString(longitude));
+                    /**
+                     * send location
+                     **/
             }
         } else {
             MainActivity.gpsEnabledFlag = 0;
