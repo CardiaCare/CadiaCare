@@ -28,14 +28,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/name"
-            android:id="@+id/Name"
-            android:padding="8dp"
-            android:layout_height="wrap_content" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,14 +40,13 @@
             android:textColor="#ffffff"
             android:text="Ivan"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/surname"
-            android:id="@+id/Surname"
-            android:padding="8dp" />
+            android:text="@string/name"
+            android:id="@+id/Name"
+            android:padding="8dp"
+            android:layout_height="wrap_content" />
 
         <EditText
             android:layout_width="match_parent"
@@ -70,13 +61,12 @@
             android:textColor="#ffffff"
             android:editable="false"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/patronymic"
-            android:id="@+id/Patronymic"
+            android:text="@string/surname"
+            android:id="@+id/Surname"
             android:padding="8dp" />
 
         <EditText
@@ -92,13 +82,12 @@
             android:editable="false"
             android:text="Ivanovich"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/birthDate"
-            android:id="@+id/BirthDate"
+            android:text="@string/patronymic"
+            android:id="@+id/Patronymic"
             android:padding="8dp" />
 
         <EditText
@@ -112,14 +101,15 @@
             android:editable="false"
             android:text="01.01.1970"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/sex"
-            android:id="@+id/Sex"
+            android:text="@string/birthDate"
+            android:id="@+id/BirthDate"
             android:padding="8dp" />
+
+
 
         <EditText
             android:layout_width="match_parent"
@@ -134,14 +124,15 @@
             android:editable="false"
             android:text="Male"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/residence"
-            android:id="@+id/tvResidence"
+            android:text="@string/sex"
+            android:id="@+id/Sex"
             android:padding="8dp" />
+
+
 
         <EditText
             android:layout_width="match_parent"
@@ -156,14 +147,14 @@
             android:editable="false"
             android:text="Petrozavodsk"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/contactInformation"
-            android:id="@+id/ContactInformation"
+            android:text="@string/residence"
+            android:id="@+id/tvResidence"
             android:padding="8dp" />
+
 
         <EditText
             android:layout_width="match_parent"
@@ -178,6 +169,14 @@
             android:editable="false"
             android:text="8-800-***-**-**"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="@string/contactInformation"
+            android:id="@+id/ContactInformation"
+            android:padding="8dp" />
+
     </LinearLayout>
 </ScrollView>
 </RelativeLayout>

@@ -22,13 +22,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/clean"
                 android:id="@+id/buttonOk"
-                android:src="@drawable/ic_action_navigation_refresh"
+                android:src="@android:drawable/ic_menu_send"
                 android:layout_gravity="right"
                 android:visibility="visible"
                 style="@style/Widget.AppCompat.ImageButton"
                 android:background="@android:drawable/ic_menu_send"
                 android:contentDescription=""
-                tools:ignore="ContentDescription,RtlHardcoded" />
+                tools:ignore="ContentDescription,RtlHardcoded"
+                android:layout_marginRight="4dp" />
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -41,7 +42,8 @@
                 style="@style/Widget.AppCompat.ImageButton"
                 android:background="@drawable/ic_action_navigation_refresh"
                 android:contentDescription=""
-                tools:ignore="ContentDescription,RtlHardcoded" />
+                tools:ignore="ContentDescription,RtlHardcoded"
+                android:layout_marginRight="4dp" />
 
         </android.support.v7.widget.Toolbar>
 

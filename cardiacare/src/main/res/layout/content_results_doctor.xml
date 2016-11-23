@@ -26,13 +26,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/examinationReason"
-                android:id="@+id/ExaminationReason"
-                android:padding="8dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -46,14 +39,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/visitOrder"
-                android:id="@+id/VisitOrder"
+                android:text="@string/examinationReason"
+                android:id="@+id/ExaminationReason"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -67,14 +60,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/diagnoses"
-                android:id="@+id/Diagnoses"
+                android:text="@string/visitOrder"
+                android:id="@+id/VisitOrder"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -88,14 +81,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/medications"
-                android:id="@+id/Medications"
+                android:text="@string/diagnoses"
+                android:id="@+id/Diagnoses"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -109,14 +102,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/smoking"
-                android:id="@+id/Smooking"
+                android:text="@string/medications"
+                android:id="@+id/Medications"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -130,14 +123,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/drinking"
-                android:id="@+id/Drinking"
+                android:text="@string/smoking"
+                android:id="@+id/Smooking"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -151,14 +144,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/height"
-                android:id="@+id/Height"
+                android:text="@string/drinking"
+                android:id="@+id/Drinking"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -172,14 +165,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="@string/weight"
-            android:id="@+id/Weight"
-            android:padding="8dp" />
+                android:text="@string/height"
+                android:id="@+id/Height"
+                android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -193,14 +186,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/diseasePredisposition"
-                android:id="@+id/DiseasePredisposition"
+                android:text="@string/weight"
+                android:id="@+id/Weight"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -214,6 +207,13 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="@string/diseasePredisposition"
+                android:id="@+id/DiseasePredisposition"
+                android:padding="8dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
