@@ -177,6 +177,7 @@
     <string name="userdata">Account</string>
     <string name="exit">Exit</string>
     <string name="ecg">ECG</string>
+    <string name="fake_ecg">Fake-ECG</string>
     <string name="sos">SOS</string>
     <string name="pass_survey">Pass survey</string>
     <string name="documents">Documents</string>

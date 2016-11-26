@@ -9,7 +9,7 @@
         android:id="@+id/ecg"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:title="@string/ecg"/>
+        android:title="@string/fake_ecg"/>
 
     <item
         android:id="@+id/menuAbout"

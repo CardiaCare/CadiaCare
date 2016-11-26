@@ -206,6 +206,7 @@
     <string name="userdata">Учетная запись</string>
     <string name="exit">Выход</string>
     <string name="ecg">ЭКГ</string>
+    <string name="fake_ecg">Демонстрация ЭКГ</string>
     <string name="sos">SOS</string>
     <string name="pass_survey">Пройти опрос</string>
     <string name="documents">Документы</string>

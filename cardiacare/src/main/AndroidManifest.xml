@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".bluetooth.BluetoothFindActivity"
+            android:name=".bluetooth_old.BluetoothFindActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_bluetooth_find"
             android:noHistory="true"
@@ -81,9 +81,9 @@
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".ecgviewer.ECGActivity"
+            android:name=".ecgviewer_old.ECGActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="ЭКГ"
+            android:label="@string/fake_ecg"
             android:screenOrientation="portrait" />
         <activity
             android:name=".servey.QuestionnaireActivity"
@@ -121,17 +121,13 @@
             android:name=".hisdocuments.DoctorExaminationActivity"
             android:label="@string/title_activity_results_doctor"
             android:theme="@style/AppBaseTheme"></activity>
-        <receiver
-            android:name=".SosWidget">
-            <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
-                </action>
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_metadata">
-            </meta-data>
-        </receiver>
+        <activity
+            android:name=".idt_ecg.BluetoothFindActivity"
+            android:label="@string/title_activity_bluetooth_find"
+            android:theme="@style/AppBaseTheme"></activity>
+        <activity
+            android:name=".idt_ecg.ECGActivity"
+            android:label="@string/ecg"
+            android:theme="@style/AppBaseTheme"></activity>
     </application>
 </manifest>

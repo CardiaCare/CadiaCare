@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.ecgviewer;
+package ru.cardiacare.cardiacare.idt_ecg;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,8 +11,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.cardiacare.cardiacare.R;
-
-/* Отрисовка ЭКГ */
 
 public class ECGView extends View {
 
@@ -210,6 +208,7 @@ public class ECGView extends View {
     }
 
     public void getECGData(int[] ecg_buffer) {
+//public void getECGData(byte[] ecg_buffer) {
 
         double[] sig = new double[ecg_buffer.length];
         for (int i = 0; i < ecg_buffer.length; i++) {

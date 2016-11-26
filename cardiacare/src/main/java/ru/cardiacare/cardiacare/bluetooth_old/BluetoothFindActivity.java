@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.bluetooth;
+package ru.cardiacare.cardiacare.bluetooth_old;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -35,7 +35,7 @@ import java.util.TimerTask;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
+import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
 
 /* Экран "Alive Bluetooth Monitor */
 

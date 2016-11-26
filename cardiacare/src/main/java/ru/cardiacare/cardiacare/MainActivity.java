@@ -3,7 +3,6 @@ package ru.cardiacare.cardiacare;
 /* Главный экран */
 
 import android.app.AlertDialog;
-import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,14 +26,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 import org.json.JSONObject;
 
-import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
-import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
+import ru.cardiacare.cardiacare.bluetooth_old.BluetoothFindActivity;
+import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
@@ -241,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 backgroundFlag = 1;
                 //TODO выбор способа подключения
-                Intent intentBluetoothFind = new Intent(getApplicationContext(), BluetoothFindActivity.class);
+                Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
                 intentBluetoothFind.putExtra("deviceType", id);
                 //TODO change methods
                 startActivity(intentBluetoothFind);
@@ -462,33 +460,33 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         backgroundFlag = 0;
         Intent intent = getIntent();
-        // Проверяем каким способом запущено приложение (обычным или через виджет)
-        if ((intent.getAction() != null) && (intent.getAction().equalsIgnoreCase("ru.cardiacare.cardiacare.open_from_widget"))) {
-            int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                mAppWidgetId = extras.getInt(
-                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-                        AppWidgetManager.INVALID_APPWIDGET_ID);
-            }
-            // Если приложение запустили с помощью виджета "ТРЕВОГА"
-            // то отправляем сигнал SOS и открываем экстренный опросник
-            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-                setLoadingScreen();
-                if (patientUriFlag == 1) {
-                    if ((isNetworkAvailable(context)) && (gps.canGetLocation())) {
-                        alarmButtonFlag = false;
-                        backgroundFlag = 1;
-                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-                    }
-                } else {
-                    Toast toast = Toast.makeText(this,
-                            R.string.unregistered_user_toast, Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-            }
-            // Если приложение запустили обычным способом
-        } else {
+//        // Проверяем каким способом запущено приложение (обычным или через виджет)
+//        if ((intent.getAction() != null) && (intent.getAction().equalsIgnoreCase("ru.cardiacare.cardiacare.open_from_widget"))) {
+//            int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+//            Bundle extras = intent.getExtras();
+//            if (extras != null) {
+//                mAppWidgetId = extras.getInt(
+//                        AppWidgetManager.EXTRA_APPWIDGET_ID,
+//                        AppWidgetManager.INVALID_APPWIDGET_ID);
+//            }
+//            // Если приложение запустили с помощью виджета "ТРЕВОГА"
+//            // то отправляем сигнал SOS и открываем экстренный опросник
+//            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+//                setLoadingScreen();
+//                if (patientUriFlag == 1) {
+//                    if ((isNetworkAvailable(context)) && (gps.canGetLocation())) {
+//                        alarmButtonFlag = false;
+//                        backgroundFlag = 1;
+//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
+//                    }
+//                } else {
+//                    Toast toast = Toast.makeText(this,
+//                            R.string.unregistered_user_toast, Toast.LENGTH_SHORT);
+//                    toast.show();
+//                }
+//            }
+//            // Если приложение запустили обычным способом
+//        } else {
             // Условие выполняется только для авторизированного пользователя
             if (patientUriFlag == 1) {
                 // Если с момента последнего прохождения периодического опроса прошла минута, то
@@ -511,7 +509,7 @@ public class MainActivity extends AppCompatActivity {
                     serveyButton.setBackgroundResource(R.drawable.servey_white);
                 }
             }
-        }
+//        }
     }
 
     @Override

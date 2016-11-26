@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.bluetooth;
+package ru.cardiacare.cardiacare.bluetooth_old;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

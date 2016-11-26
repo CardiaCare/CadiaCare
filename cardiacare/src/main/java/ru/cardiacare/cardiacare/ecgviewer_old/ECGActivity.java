@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.ecgviewer;
+package ru.cardiacare.cardiacare.ecgviewer_old;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
