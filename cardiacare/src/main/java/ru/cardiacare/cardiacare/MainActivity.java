@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.bluetooth.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
@@ -261,13 +262,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton docsButton = (ImageButton) findViewById(R.id.docsButton);
-        assert docsButton != null;
-        docsButton.setOnClickListener(new ImageButton.OnClickListener() {
+        ImageButton bpButton = (ImageButton) findViewById(R.id.bpButton);
+        assert bpButton != null;
+        bpButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (isNetworkAvailable(context)) {
                     backgroundFlag = 1;
-                    startActivity(new Intent(getApplicationContext(), DocumentsActivity.class));
+                    startActivity(new Intent(getApplicationContext(), BloodPressureActivity.class));
                 } else {
                     setLoadingScreen();
                 }

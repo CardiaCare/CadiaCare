@@ -1,19 +1,23 @@
 package com.petrsu.cardiacare.smartcare.hisdocuments;
 
+import java.io.Serializable;
+
 /**
  * Created by Iuliia Zavialova on 04.10.16.
  */
 
-public class ResultBloodPressure {
+public class ResultBloodPressure implements Serializable {
 
     String systolicPressure;
     String diastolicPressure;
     String pulse;
+    String time;
 
-    public ResultBloodPressure(String systolicPressure, String diastolicPressure, String pulse) {
+    public ResultBloodPressure(String systolicPressure, String diastolicPressure, String pulse,String time) {
         this.systolicPressure = systolicPressure;
         this.diastolicPressure = diastolicPressure;
         this.pulse = pulse;
+        this.time = time;
     }
 
     public String getSystolicPressure() {
@@ -38,5 +42,13 @@ public class ResultBloodPressure {
 
     public void setPulse(String pulse) {
         this.pulse = pulse;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

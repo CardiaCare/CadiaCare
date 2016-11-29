@@ -1,7 +1,6 @@
 package ru.cardiacare.cardiacare.ecgviewer;
 
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -52,10 +51,10 @@ public class ECGActivity extends AppCompatActivity {
         assert v != null;
         v.addView(myView);
 
-        Resources res = getResources();
-        viewDemoSignal = res.getIntArray(R.array.demosignal);
-
-        myView.getECGData(viewDemoSignal);
+//        Resources res = getResources();
+//        viewDemoSignal = res.getIntArray(R.array.demosignal);
+//
+//        myView.getECGData(viewDemoSignal);
 
         Handler handler;
 
@@ -64,16 +63,16 @@ public class ECGActivity extends AppCompatActivity {
                 switch (msg.what) {
                     case Data:
                         int[] readBuf = (int[]) msg.obj;
-//                        String strIncom = new String(readBuf, 0, msg.arg1);
-//                        mytext.setText("Данные от Arduino: " + strIncom);
-//                        Log.i ("TAG","Данные от Alive: " + readBuf.length);
+                        String strIncom = new String(readBuf, 0, msg.arg1);
+                        //mytext.setText("Данные от Arduino: " + strIncom);
+                        Log.i ("TAG","Данные от Alive: " + readBuf.length);
                         myView.getECGData(readBuf);
                 }
             }
 
             ;
         };
-//        mBluetoothService = new BluetoothService(getApplicationContext(), handler);
+        //mBluetoothService = new BluetoothService(getApplicationContext(), handler);
     }
 
     private double setViewWidthInMillimeter() {
