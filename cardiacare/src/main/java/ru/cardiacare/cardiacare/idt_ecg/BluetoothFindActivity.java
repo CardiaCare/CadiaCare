@@ -11,7 +11,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
@@ -39,35 +38,15 @@ public class BluetoothFindActivity extends AppCompatActivity implements EcgRecei
 
     public static Context mContext;
     private int HeartRate = 0;
-    public boolean beStarted = false;
+    static public boolean beStarted = false;
+    static private LocationUtils location = null;
     static Time beginTime = new Time();
     static private EcgBle ecg = null;
-    private LocationUtils location = null;
-    Time nowTime = new Time();
     private SensorsUtils sensors = null;
-    private int timeEnd = 70;
     ProgressDialog dialog;
     private BluetoothAdapter myBluetoothAdapter;
     private ListView myListView;
     private ArrayAdapter<String> BTArrayAdapter;
-    public static int deviceType;
-
-    Handler timerHandler = new Handler();
-    Runnable timerRunnable = new Runnable() {
-        public void run() {
-            if (BluetoothFindActivity.this.timerStop) {
-                BluetoothFindActivity.this.timerStop = false;
-                return;
-            }
-            BluetoothFindActivity.this.doRefresh();
-            if (BluetoothFindActivity.this.timerStop) {
-                BluetoothFindActivity.this.timerStop = false;
-            } else {
-                BluetoothFindActivity.this.timerHandler.postDelayed(this, 500);
-            }
-        }
-    };
-    public boolean timerStop = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +60,6 @@ public class BluetoothFindActivity extends AppCompatActivity implements EcgRecei
         setContentView(R.layout.activity_bluetooth_find);
 
         Intent intent = getIntent();
-        deviceType = intent.getIntExtra("deviceType", 0);
 
         dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(getString(R.string.bluetoothSearching));
@@ -161,34 +139,19 @@ public class BluetoothFindActivity extends AppCompatActivity implements EcgRecei
         return true;
     }
 
-    // Остановить получение ЭКГ
-    public boolean doStop() {
-        this.timerStop = true;
-        if (this.location.isActive()) {
-            this.location.Stop();
+    static public boolean doStop() {
+        if (location.isActive()) {
+            location.Stop();
         }
-        if (!this.ecg.Stop()) {
+        if (!ecg.Stop()) {
             return false;
         }
-        if (this.beStarted) {
-            Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        if (beStarted) {
+            Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
             editor.commit();
-            this.beStarted = false;
+            beStarted = false;
         }
         return true;
-    }
-
-    // Сброс таймера
-    public void doRefresh() {
-        this.nowTime.setToNow();
-        long msec = this.nowTime.toMillis(true) - this.beginTime.toMillis(true);
-        int sec = (int) (msec / 1000);
-        float ang = (float) ((sec * 360) / this.timeEnd);
-        if (sec >= this.timeEnd) {
-            this.timerStop = true;
-            doStop();
-        }
-        this.nowTime.set(msec);
     }
 
     // Получение пульса
@@ -209,7 +172,7 @@ public class BluetoothFindActivity extends AppCompatActivity implements EcgRecei
     // Начало получения ЭКГ
     public void measurementStart(String mac) {
         this.beStarted = true;
-        this.timerHandler.postDelayed(this.timerRunnable, 500);
+//        this.timerHandler.postDelayed(this.timerRunnable, 500);
         this.beginTime.setToNow();
     }
 

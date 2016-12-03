@@ -125,7 +125,6 @@ public class EcgBleIdt extends EcgBleDevice {
 
                         if (isDisconnected) return;
 
-//                        byte[] array = characteristic.getValue();
                         array = characteristic.getValue();
 
                         final int hr = array[1] & 0xff;
@@ -136,35 +135,22 @@ public class EcgBleIdt extends EcgBleDevice {
                         final int Data = 1;
 
 //                        Log.i("ECGBELT", "Receive Hr=" + String.format("%d", hr));
-//                        Log.i("ECGBELT", "Receive array=" + array);
 
                         for (int i = 2; i < 12; i++) {
-//                            Log.i("EchBleldt", "array[i] = " + array[i]);
-
-//                            mHandler = new Handler(Looper.getMainLooper());
-//                            mHandler.obtainMessage(0, -1).sendToTarget();
-//                            Message msg = mHandler.obtainMessage(0);
-//                            Bundle bundle = new Bundle();
-//                            bundle.putString("ECG_BLE", "ECG_BLE");
-//                            msg.setData(bundle);
-//                            mHandler.sendMessage(msg);
-//                            mHandler.obtainMessage(Data, array).sendToTarget();
-
                             val = byteToUnsignedInt(array[i]);
+                            intdata[arrayPos] = val;
+//                            Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
 
                             // Shift and reamp signal
                             val = val - 127;
                             val = (val * 687) / 10;
-//                            Log.i("EchBleldt", "sdata[arrayPos] = " + val);
 
                             sdata[arrayPos] = (short) val;
-                            intdata[arrayPos] = val;
                             arrayPos++;
                             if (arrayPos == 30) {
                                 arrayPos = 0;
                                 mHandler.obtainMessage(1, intdata).sendToTarget();
                                 bpBle.onEcgReceived(hr, sdata, 200); // 200 Hz
-//                                Log.i("EchBleldt", "sdata = " + sdata);
                             }
                         }
                     }
