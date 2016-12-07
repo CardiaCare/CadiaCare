@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -131,11 +132,14 @@ public class ECGView extends View {
 
         double x0 = gridOrigin[0];
         // TODO убрать 1000
-        double y0 = gridBaselinePosition - s[0] * 2 * squareSize / 1000.0;
+//        double y0 = gridBaselinePosition - s[0] * 2 * squareSize / 1000.0;
+        double y0 = gridBaselinePosition - (s[0]-127)*32 * 2 * squareSize / 1000.0;
 //        context.moveTo(x, y)
         for (int i = 1; i < s.length; i++) {
             double x = gridOrigin[0] + i * 2 * squareSize / 50.0;
-            double y = gridBaselinePosition - s[i] * 2 * squareSize / 1000.0 + 0.5;
+//            double y = gridBaselinePosition - s[i] * 2 * squareSize / 1000.0 + 0.5;
+            double y = gridBaselinePosition - (s[i] - 127)*32 * 2 * squareSize / 1000.0 + 0.5;
+            Log.i("QQQ", "y = " + y);
             canvas.drawLine((float) x0, (float) y0, (float) x, (float) y, paint);
             x0 = x;
             y0 = y;
@@ -213,6 +217,7 @@ public class ECGView extends View {
         double[] sig = new double[ecg_buffer.length];
         for (int i = 0; i < ecg_buffer.length; i++) {
             sig[i] = new Double(ecg_buffer[i]).doubleValue();
+//            Log.i("QQQ", "sig[i] = " + sig[i]);
             ecgForHeartRate.add(new Double(ecg_buffer[i]).doubleValue());
         }
 
