@@ -139,7 +139,7 @@ public class ECGView extends View {
             double x = gridOrigin[0] + i * 2 * squareSize / 50.0;
 //            double y = gridBaselinePosition - s[i] * 2 * squareSize / 1000.0 + 0.5;
             double y = gridBaselinePosition - (s[i] - 127)*32 * 2 * squareSize / 1000.0 + 0.5;
-            Log.i("QQQ", "y = " + y);
+//            Log.i("QQQ", "y = " + y);
             canvas.drawLine((float) x0, (float) y0, (float) x, (float) y, paint);
             x0 = x;
             y0 = y;

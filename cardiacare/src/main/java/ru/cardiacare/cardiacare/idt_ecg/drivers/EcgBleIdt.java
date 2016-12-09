@@ -26,6 +26,7 @@ public class EcgBleIdt extends EcgBleDevice {
     public boolean isDisconnected = false;
 
     static public byte[] array;
+    static public String ecgstr = "";
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -132,13 +133,13 @@ public class EcgBleIdt extends EcgBleDevice {
 
                         BatteryLevel = array[0] & 0xff;
 
-                        final int Data = 1;
-
 //                        Log.i("ECGBELT", "Receive Hr=" + String.format("%d", hr));
 
                         for (int i = 2; i < 12; i++) {
                             val = byteToUnsignedInt(array[i]);
                             intdata[arrayPos] = val;
+                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
+                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
 //                            Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
 
                             // Shift and reamp signal
@@ -161,4 +162,10 @@ public class EcgBleIdt extends EcgBleDevice {
         return 0x00 << 24 | b & 0xff;
     }
 
+    static public String getJSONPart() {
+        String result_str = "";
+
+        result_str = new StringBuilder(String.valueOf(result_str)).append(ecgstr).toString();
+        return result_str;
+    }
 }

@@ -32,6 +32,7 @@ import ru.cardiacare.cardiacare.idt_ecg.common.DateTimeUtl;
 import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
+import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
 
 public class BluetoothFindActivity extends AppCompatActivity implements EcgReceiveHandler {
@@ -195,5 +196,12 @@ public class BluetoothFindActivity extends AppCompatActivity implements EcgRecei
         }
         json = new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(json)).append("\"object\": {").toString())).append("\"timestamp\": \"").append(DateFormat.format("yyyy-MM-dd'T'HH:mm:ssZ", this.beginTime.toMillis(true))).append("\",").toString())).append("\"utc_offset\": \"").append(DateTimeUtl.getCurrentUTCOffset()).append("\",").toString())).append("\"namespace\": \"ecg\",").toString())).append("\"channels\": \"1\",").toString())).append("\"format\": \"cds\",").toString())).append("\"filename\":\"").append(fileid).append("\",").toString())).append("\"pulse\":\"").append(String.format("%d", new Object[]{Integer.valueOf(hr)})).append("\"").toString())).append("}}").toString();
         Log.i("ECGBELT", "JSON=" + json);
+
+//        String ecgdata = "100, 101, 102";
+        String ecgdata = EcgBleIdt.getJSONPart();
+        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
+        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
+        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
+        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
     }
 }
