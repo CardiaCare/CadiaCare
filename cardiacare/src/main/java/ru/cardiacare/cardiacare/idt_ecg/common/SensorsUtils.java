@@ -12,7 +12,9 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Handler;
 
-import ru.cardiacare.cardiacare.idt_ecg.drivers.GattUtils;
+import ru.cardiacare.cardiacare.idt_ecg.ECGService;
+
+//import ru.cardiacare.cardiacare.idt_ecg.drivers.GattUtils;
 
 @SuppressLint({"InlinedApi"})
 public class SensorsUtils {
@@ -83,7 +85,7 @@ public class SensorsUtils {
                     sensorsUtils = SensorsUtils.this;
                     sensorsUtils.activatedSensors = sensorsUtils.activatedSensors - 1;
                     return;
-                case GattUtils.FOURTH_BITMASK /*8*/:
+                case ECGService.GattUtils.FOURTH_BITMASK /*8*/:
                     if (value >= event.sensor.getMaximumRange()) {
                         SensorsUtils.this.sensorManager.unregisterListener(SensorsUtils.this.proximityListener);
                         sensorsUtils = SensorsUtils.this;

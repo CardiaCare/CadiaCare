@@ -1,13 +1,19 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -25,6 +31,12 @@ public class ECGActivity extends AppCompatActivity {
 
     private static final String TAG = "ECGActivity";
     private static final float TWO_INCHES = 2f;
+//    boolean bound = false;
+//    ServiceConnection sConn;
+//    Intent intent;
+//    ECGService ecgService;
+
+    public final static String FILE_NAME = "ITS ALIVE!";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +52,24 @@ public class ECGActivity extends AppCompatActivity {
         assert v != null;
         v.addView(myView);
 
+//        intent = new Intent(this, ECGService.class);
+//        sConn = new ServiceConnection() {
+//
+//            public void onServiceConnected(ComponentName name, IBinder binder) {
+//                Log.d("QQQ", "MainActivity onServiceConnected");
+//                ecgService = ((ECGService.MyBinder) binder).getService();
+//                bound = true;
+//            }
+//
+//            public void onServiceDisconnected(ComponentName name) {
+//                Log.d("QQQ", "MainActivity onServiceDisconnected");
+//                bound = false;
+//            }
+//        };
+//
+//
+//        startService(intent);
+//        bindService(intent, sConn, 0);
 
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -91,13 +121,17 @@ public class ECGActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int item) {
                         if (item == 0) {
                             dialog.cancel();
-                            BluetoothFindActivity.doStop();
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            //TODO: Закрывать приложение. finish()?
                         }
                         if (item == 1) {
                             dialog.cancel();
-                            BluetoothFindActivity.doStop();
+//                            BluetoothFindActivity.doStop();
+                            ECGService.doStop();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                            if (!bound) return;
+//                            unbindService(sConn);
+//                            stopService(intent);
+//                            bound = false;
                         }
                         if (item == 2) {
                             dialog.cancel();

@@ -129,5 +129,17 @@
             android:name=".idt_ecg.ECGActivity"
             android:label="@string/ecg"
             android:theme="@style/AppBaseTheme"></activity>
+        <activity
+            android:name=".idt_ecg.NotificationHelperActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"></activity>
+        <service
+            android:name=".idt_ecg.ECGService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="ru.cardiacare.cardiacare.idt_ecg.ECGService" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

@@ -2,6 +2,7 @@ package ru.cardiacare.cardiacare;
 
 /* Главный экран */
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     EditText etEmail;
     EditText etPassword;
     ListView connectListView;
+    static public Activity activity;
 
     private ArrayAdapter<String> connectListArrayAdapter;
 
@@ -85,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
         feedback = new Feedback("", "Student", "feedback");
         alarmFeedback = new Feedback("", "Student", "alarmFeedback");
+        activity = this;
+
     }
 
     // Загрузочный экран.
