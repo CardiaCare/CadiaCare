@@ -14,7 +14,7 @@ import ru.cardiacare.cardiacare.R;
 public class ServiceNotification extends Notification {
 
     private Context ctx;
-    private NotificationManager mNotificationManager;
+    static public NotificationManager mNotificationManager;
     static public Notification notification;
 
     public ServiceNotification(Context ctx) {
@@ -42,11 +42,13 @@ public class ServiceNotification extends Notification {
 
     public void setListeners(RemoteViews view) {
         Intent app = new Intent(ctx, NotificationHelperActivity.class);
+//        Intent app = new Intent(ctx, ECGActivity.class);
         app.putExtra("DO", "app");
         PendingIntent pApp = PendingIntent.getActivity(ctx, 0, app, 0);
         view.setOnClickPendingIntent(R.id.app, pApp);
 
         Intent stopservice = new Intent(ctx, NotificationHelperActivity.class);
+//        Intent stopservice = new Intent(ctx, ECGActivity.class);
         stopservice.putExtra("DO", "stopservice");
         PendingIntent pStopservice = PendingIntent.getActivity(ctx, 2, stopservice, 0);
         view.setOnClickPendingIntent(R.id.stopservice, pStopservice);

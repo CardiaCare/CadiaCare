@@ -78,17 +78,24 @@ public class ECGService extends Service {
 //    private SensorsUtils sensors = null;
 
     static boolean connected_flag = false; // Установлено ли подключение к монитору
+    static public ECGService myService;
 
     public void onCreate() {
         super.onCreate();
         Log.d(LOG_TAG, "MyService onCreate");
         mContext = this;
+        myService = this;
         this.ecg = new ECGService.EcgBle(MainActivity.activity, EcgBle.bpReceiveHandler);
         fornotif2 = 0;
         fornotif3 = 0;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         timer = new Timer();
         schedule();
+    }
+
+    static public ECGService returnService() {
+        Log.i("QQQ", "ECGService, returnService()");
+        return myService;
     }
 
 
@@ -214,7 +221,7 @@ public class ECGService extends Service {
      *********************************************************************************************************************/
     static public class EcgBleIdt extends EcgBleDevice {
 
-        public Handler mHandler;
+        static public Handler mHandler;
 
         public final UUID BATTERY_SERVICE = UUID.fromString("0000180f-0000-1000-8000-00805f9b34fb");
         public final UUID BP_SERVICE = new UUID((0x1810L << 32) | 0x1000, GattUtils.leastSigBits);
@@ -338,7 +345,7 @@ public class ECGService extends Service {
                                 intdata[arrayPos] = val;
                                 ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
                                 ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
-                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
+//                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                                 fornotif = intdata[arrayPos];
 
                                 // Shift and reamp signal
@@ -352,6 +359,7 @@ public class ECGService extends Service {
                                     sendNotif(fornotif, fornotif2);
                                     arrayPos = 0;
                                     mHandler.obtainMessage(1, intdata).sendToTarget();
+//                                    Log.i("QQQ", "Отправляю в хандлер");
                                     EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
                                 }
                             }
@@ -559,7 +567,7 @@ public class ECGService extends Service {
             mBluetoothGatt = null;
             connected_flag = false;
             sendNotif(fornotif, fornotif2);
-            BluetoothFindActivity.stopTimeService();
+            myService.stopSelf();
 
             Log.i("ECGBELT", "onDeviceDisconnected");
 

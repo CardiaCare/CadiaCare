@@ -56,9 +56,9 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
     static Intent intent;
     static ECGService ecgService;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("QQQ", "BluetoothFindActivity, onCreate()");
         mContext = this;
 //        this.ecg = new ECGService.EcgBle(this, this);
         this.location = new LocationUtils(this);
@@ -70,23 +70,24 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
 
         Intent intent = getIntent();
         intent = new Intent(this, ECGService.class);
-        sConn = new ServiceConnection() {
+        if (bound == false) {
+            sConn = new ServiceConnection() {
 
-            public void onServiceConnected(ComponentName name, IBinder binder) {
-                Log.d("QQQ", "MainActivity onServiceConnected");
-                ecgService = ((ECGService.MyBinder) binder).getService();
-                bound = true;
+                public void onServiceConnected(ComponentName name, IBinder binder) {
+                    Log.d("QQQ", "MainActivity onServiceConnected");
+                    ecgService = ((ECGService.MyBinder) binder).getService();
+                    bound = true;
 //                new ServiceNotification(mContext);
-            }
+                }
 
-            public void onServiceDisconnected(ComponentName name) {
-                Log.d("QQQ", "MainActivity onServiceDisconnected");
-                bound = false;
-            }
-        };
-
-        startService(intent);
-        bindService(intent, sConn, 0);
+                public void onServiceDisconnected(ComponentName name) {
+                    Log.d("QQQ", "MainActivity onServiceDisconnected");
+                    bound = false;
+                }
+            };
+            startService(intent);
+            bindService(intent, sConn, 0);
+        }
 
         dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
         dialog.setMessage(getString(R.string.bluetoothSearching));
@@ -168,6 +169,7 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
 
     static public void stopTimeService() {
         ecgService.stopSelf();
+        Log.i("QQQ", "STOP TIME SERVICE");
     }
 
 //    // Начать получение ЭКГ

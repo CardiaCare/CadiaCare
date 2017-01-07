@@ -217,7 +217,7 @@ public class ECGView extends View {
         double[] sig = new double[ecg_buffer.length];
         for (int i = 0; i < ecg_buffer.length; i++) {
             sig[i] = new Double(ecg_buffer[i]).doubleValue();
-//            Log.i("QQQ", "sig[i] = " + sig[i]);
+//            Log.i("QQQ", "ECGView, sig[i] = " + sig[i]);
             ecgForHeartRate.add(new Double(ecg_buffer[i]).doubleValue());
         }
 
