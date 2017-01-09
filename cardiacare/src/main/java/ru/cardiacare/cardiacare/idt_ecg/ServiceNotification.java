@@ -5,11 +5,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import ru.cardiacare.cardiacare.R;
 
-//Виджет в статус-баре
+//Виджет с кнопками в статус-баре
 
 public class ServiceNotification extends Notification {
 
@@ -22,7 +23,7 @@ public class ServiceNotification extends Notification {
         this.ctx = ctx;
         String ns = Context.NOTIFICATION_SERVICE;
         mNotificationManager = (NotificationManager) ctx.getSystemService(ns);
-        CharSequence tickerText = "Shortcuts";
+        CharSequence tickerText = "ECG connected";
         long when = System.currentTimeMillis();
         Builder builder = new Builder(ctx);
         notification = builder.getNotification();
@@ -37,18 +38,18 @@ public class ServiceNotification extends Notification {
         notification.contentView = contentView;
         notification.flags |= Notification.FLAG_ONGOING_EVENT;
         mNotificationManager.notify(548853, notification);
-        BluetoothFindActivity.ecgService.startForeground (548853, notification);
+        BluetoothFindActivity.ecgService.startForeground(548853, notification);
     }
 
     public void setListeners(RemoteViews view) {
-        Intent app = new Intent(ctx, NotificationHelperActivity.class);
-//        Intent app = new Intent(ctx, ECGActivity.class);
-        app.putExtra("DO", "app");
-        PendingIntent pApp = PendingIntent.getActivity(ctx, 0, app, 0);
-        view.setOnClickPendingIntent(R.id.app, pApp);
+//        Intent openecgview = new Intent(ctx, NotificationHelperActivity.class);
+        Intent openecgview = new Intent(ctx, ECGActivity.class);
+        openecgview.putExtra("DO", "openecgview");
+        PendingIntent pOpenecgview = PendingIntent.getActivity(ctx, 0, openecgview, 0);
+        view.setOnClickPendingIntent(R.id.openecgview, pOpenecgview);
 
-        Intent stopservice = new Intent(ctx, NotificationHelperActivity.class);
-//        Intent stopservice = new Intent(ctx, ECGActivity.class);
+//        Intent stopservice = new Intent(ctx, NotificationHelperActivity.class);
+        Intent stopservice = new Intent(ctx, ECGActivity.class);
         stopservice.putExtra("DO", "stopservice");
         PendingIntent pStopservice = PendingIntent.getActivity(ctx, 2, stopservice, 0);
         view.setOnClickPendingIntent(R.id.stopservice, pStopservice);

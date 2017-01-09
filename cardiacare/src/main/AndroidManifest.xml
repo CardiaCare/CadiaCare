@@ -25,8 +25,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppBaseTheme">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -129,14 +129,11 @@
             android:name=".idt_ecg.ECGActivity"
             android:label="@string/ecg"
             android:theme="@style/AppBaseTheme"></activity>
-        <activity
-            android:name=".idt_ecg.NotificationHelperActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"></activity>
+
         <service
             android:name=".idt_ecg.ECGService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="ru.cardiacare.cardiacare.idt_ecg.ECGService" />
             </intent-filter>

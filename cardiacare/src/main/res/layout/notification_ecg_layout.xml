@@ -6,24 +6,17 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/tvTime"
+        android:id="@+id/tvName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CardiaCare"></TextView>
 
     <Button
-        android:id="@+id/app"
+        android:id="@+id/openecgview"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open ECG View" />
-
-    <!--<Button-->
-        <!--android:id="@+id/toast"-->
-        <!--style="?android:attr/buttonStyleSmall"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Toast" />-->
+        android:text="Open ECGView" />
 
     <Button
         android:id="@+id/stopservice"

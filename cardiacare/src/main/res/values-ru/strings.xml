@@ -247,4 +247,7 @@
     <!--MainActivity.java-->
     <string name="unregistered_user_toast">Незарегистрированный пользователь</string>
 
+    <!--activity_ecg.xml-->
+    <string name="stop_ecg">Стоп ЭКГ</string>
+
 </resources>

@@ -3,6 +3,7 @@ package ru.cardiacare.cardiacare;
 /* Главный экран */
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,9 +33,9 @@ import com.petrsu.cardiacare.smartcare.servey.Feedback;
 
 import org.json.JSONObject;
 
-import ru.cardiacare.cardiacare.bluetooth_old.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
+import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
 import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
@@ -81,14 +82,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Установка ТОЛЬКО вертикальной ориентации
         // Такая строка должна быть прописана в КАЖДОЙ активности
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        setLoadingScreen();
-
-        feedback = new Feedback("", "Student", "feedback");
-        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
-        activity = this;
-
+        // Если монитор работает в фоновом режиме, то открываем ECGActivity, иначе MainActivity
+        if (isMyServiceRunning(ECGService.class)) {
+            Intent intent = new Intent(this, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
+            this.startActivity(intent);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setLoadingScreen();
+            feedback = new Feedback("", "Student", "feedback");
+            alarmFeedback = new Feedback("", "Student", "alarmFeedback");
+            activity = this;
+        }
     }
 
     // Загрузочный экран.
@@ -119,10 +124,10 @@ public class MainActivity extends AppCompatActivity {
             gpsLoad.execute();
 
             if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
-                Log.i(TAG,"setUserAuthorizationScreen");
+                Log.i(TAG, "setUserAuthorizationScreen");
                 setUserAuthorizationScreen();
             } else {
-                Log.i(TAG,"setRegisteredScreen");
+                Log.i(TAG, "setRegisteredScreen");
                 setRegisteredScreen();
             }
         } else {
@@ -459,6 +464,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Проверка запущен ли сервис
+    // Если сервис работает, то возращает True, иначе False
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -491,28 +508,28 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //            // Если приложение запустили обычным способом
 //        } else {
-            // Условие выполняется только для авторизированного пользователя
-            if (patientUriFlag == 1) {
-                // Если с момента последнего прохождения периодического опроса прошла минута, то
-                // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
-                Long timestamp = System.currentTimeMillis() / 1000;
-                String ts = timestamp.toString();
-                Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
-                Integer period;
-                // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
-                // Иначе ставим период по умолчанию (1 минута)
-                if (!storage.getPeriodPassServey().equals("")) {
-                    period = Integer.parseInt(storage.getPeriodPassServey());
-                } else {
-                    period = 60;
-                    storage.setPeriodPassServey("60");
-                }
-                if (time >= period) {
-                    serveyButton.setBackgroundResource(R.drawable.servey);
-                } else {
-                    serveyButton.setBackgroundResource(R.drawable.servey_white);
-                }
+        // Условие выполняется только для авторизированного пользователя
+        if (patientUriFlag == 1) {
+            // Если с момента последнего прохождения периодического опроса прошла минута, то
+            // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
+            Long timestamp = System.currentTimeMillis() / 1000;
+            String ts = timestamp.toString();
+            Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
+            Integer period;
+            // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
+            // Иначе ставим период по умолчанию (1 минута)
+            if (!storage.getPeriodPassServey().equals("")) {
+                period = Integer.parseInt(storage.getPeriodPassServey());
+            } else {
+                period = 60;
+                storage.setPeriodPassServey("60");
             }
+            if (time >= period) {
+                serveyButton.setBackgroundResource(R.drawable.servey);
+            } else {
+                serveyButton.setBackgroundResource(R.drawable.servey_white);
+            }
+        }
 //        }
     }
 

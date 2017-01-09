@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -14,7 +14,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -33,16 +32,11 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
-import android.widget.Toast;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.idt_ecg.common.DateTimeUtl;
-import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
-import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 //import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
 //import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleDevice;
 //import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
@@ -50,87 +44,53 @@ import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 
 public class ECGService extends Service {
 
-    long date;
-    SimpleDateFormat sdf;
-    static String dateString;
-    final String LOG_TAG = "myLogs";
     static Context mContext;
-    static public int fornotif;
-    static public int fornotif2;
-    static public int fornotif3;
+    static public ECGService myService;
+    static private ECGService.EcgBle ecg = null;
 
-    static NotificationManager manager;
-    static Notification myNotication;
-    static Notification myNotication2;
+    static boolean connected_flag = false; // Установлено ли подключение к монитору, true - установлено, false - не установлено
+    long startTime;                        // Время начала работы сервиса
+    static String pastTime;                // Прошедшее время с начала работы сервиса
+    static public int ecgValue;            // Значения ЭКГ (с кардиомонитора)
+    static private int heartRate = 0;      // Пульс (с кардиомонитора)
+    static public int charge = 0;          // Уровень заряда батареи кардиомонитора
+
+    static NotificationManager notificationManager;
+    static Notification ecgNotification;
 
     MyBinder binder = new MyBinder();
 
-    Timer timer;
-    TimerTask tTask;
-    long interval = 1000;
+    Timer pastTimeTimer;
+    TimerTask timerTask;
+    long timerInterval = 1000;
 
-    static private ECGService.EcgBle ecg = null;
     static Time beginTime = new Time();
-    //    static private LocationUtils location = null;
     static public boolean beStarted = false;
 
-    private int HeartRate = 0;
-//    private SensorsUtils sensors = null;
-
-    static boolean connected_flag = false; // Установлено ли подключение к монитору
-    static public ECGService myService;
+    //    static private LocationUtils location = null;
+    //    private SensorsUtils sensors = null;
 
     public void onCreate() {
         super.onCreate();
-        Log.d(LOG_TAG, "MyService onCreate");
+        Log.d("ECGService", "ECGService onCreate");
         mContext = this;
         myService = this;
         this.ecg = new ECGService.EcgBle(MainActivity.activity, EcgBle.bpReceiveHandler);
-        fornotif2 = 0;
-        fornotif3 = 0;
-        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        timer = new Timer();
-        schedule();
-    }
-
-    static public ECGService returnService() {
-        Log.i("QQQ", "ECGService, returnService()");
-        return myService;
-    }
-
-
-    public void onDestroy() {
-        timer.cancel();
-        tTask.cancel();
-        doStop();
-        super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy");
-    }
-
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        return super.onStartCommand(intent, flags, startId);
-//    }
-
-    void schedule() {
-        if (tTask != null) tTask.cancel();
-        if (interval > 0) {
-            tTask = new TimerTask() {
-                public void run() {
-                    date = System.currentTimeMillis();
-                    sdf = new SimpleDateFormat("h:mm:ss");
-                    dateString = sdf.format(date);
-//                    Log.d(LOG_TAG, "time = " + dateString);
-                    fornotif3++;
-                    sendTimeNotif(dateString, fornotif3);
-                }
-            };
-            timer.schedule(tTask, 1000, interval);
-        }
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        pastTimeTimer = new Timer();
+        startTime = System.currentTimeMillis(); // Фиксируем время начала работы сервиса
+        pastTimeCounter();
     }
 
     public IBinder onBind(Intent arg0) {
-        Log.d(LOG_TAG, "MyService onBind");
+        Log.d("ECGService", "ECGService onBind");
         return binder;
+    }
+
+    public boolean onUnbind(Intent intent) {
+        Log.d("ECGService", "ECGService onUnbind");
+//        return super.onUnbind(intent);
+        return true;
     }
 
     public class MyBinder extends Binder {
@@ -139,53 +99,58 @@ public class ECGService extends Service {
         }
     }
 
-    static void sendNotif(int fornotif, int fornotif2) {
-//        Intent intent = new Intent("com.rj.notitfications.SECACTIVITY");
-//        PendingIntent pendingIntent = PendingIntent.getService(ECGService.mContext, 1, intent, 0);
+    public void onDestroy() {
+        // При завершении работы сервиса завершаем работу с монитором
+        pastTimeTimer.cancel();
+        timerTask.cancel();
+        doStop();
+        Log.d("ECGService", "ECGService onDestroy");
+        super.onDestroy();
+    }
 
-        Notification.Builder builder = new Notification.Builder(mContext);
+    static public ECGService returnService() {
+        return myService;
+    }
 
-//        builder.setAutoCancel(false);
-//        builder.setTicker("this is ticker text");
-        if (connected_flag == false) {
-            builder.setContentTitle("CardiaCare NOT WORK");
-        } else {
-            builder.setContentTitle("CardiaCare WORK");
+    // Счётчик сколько времени работает сервис
+    void pastTimeCounter() {
+        if (timerTask != null) timerTask.cancel();
+        if (timerInterval > 0) {
+            timerTask = new TimerTask() {
+                public void run() {
+                    long totalTime = System.currentTimeMillis() - startTime;
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(totalTime);
+                    int pastMinutes = cal.get(Calendar.MINUTE);
+                    int pastSeconds = cal.get(Calendar.SECOND);
+                    pastTime = pastMinutes + ":" + pastSeconds;
+                }
+            };
+            pastTimeTimer.schedule(timerTask, 1000, timerInterval);
         }
-        builder.setContentText("Показания с монитора = " + fornotif);
+    }
+
+    // Отправка уведомлений с показаниями, полученными с монитора
+    static void sendECGNotification(int ecgValue, int heartrate, int charge) {
+        Notification.Builder builder = new Notification.Builder(mContext);
+        if (connected_flag == false) {
+            builder.setContentTitle("CardiaCare. ECG disconnected");
+        } else {
+            builder.setContentTitle("CardiaCare. ECG connected");
+        }
         builder.setSmallIcon(R.drawable.ic_launcher);
-//        builder.setContentIntent(pendingIntent);
-//        builder.setOngoing(true);
-        builder.setSubText("Уведомление " + fornotif2);   //API level 16
-//        builder.setNumber(100);
+        builder.setContentText("Показания с монитора: " + ecgValue + ". Пульс: " + heartrate);
+        builder.setSubText("Заряд: " + charge + "%. Прошло: " + pastTime);   //API level 16
         builder.build();
-
-        myNotication = builder.getNotification();
-        myNotication.flags |= Notification.FLAG_AUTO_CANCEL; // ставим флаг, чтобы уведомление пропало после нажатия
-        manager.notify(1, myNotication);
-//        BluetoothFindActivity.ecgService.startForeground (1, myNotication);
-
+        ecgNotification = builder.getNotification();
+        ecgNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notificationManager.notify(1, ecgNotification); // 1 - это идентификатор уведомления
     }
 
-    static void sendTimeNotif(String dateString, int fornotif3) {
-        Notification.Builder builder2 = new Notification.Builder(mContext);
-
-        builder2.setContentTitle("CardiaCareTime");
-        builder2.setContentText("Время = " + dateString);
-        builder2.setSmallIcon(R.drawable.ic_launcher);
-//        builder2.setOngoing(true);
-        builder2.setSubText("Уведомление " + fornotif3);   //API level 16
-        builder2.build();
-
-        myNotication2 = builder2.getNotification();
-        myNotication2.flags |= Notification.FLAG_AUTO_CANCEL; // ставим флаг, чтобы уведомление пропало после нажатия
-        manager.notify(11, myNotication2);
-//        BluetoothFindActivity.ecgService.startForeground (11, myNotication2);
-    }
     /*********************************************************************************************************************
-     *********************************************************************************************************************
-     ************************************************EcgBleDevice.java****************************************************
-     *********************************************************************************************************************
+     * ********************************************************************************************************************
+     * ***********************************************EcgBleDevice.java****************************************************
+     * ********************************************************************************************************************
      *********************************************************************************************************************/
     static public class EcgBleDevice {
 
@@ -214,10 +179,11 @@ public class ECGService extends Service {
             return service.getCharacteristic(characteristicUuid);
         }
     }
+
     /*********************************************************************************************************************
-     *********************************************************************************************************************
-     **************************************************EcgBleIdt.java*****************************************************
-     *********************************************************************************************************************
+     * ********************************************************************************************************************
+     * *************************************************EcgBleIdt.java*****************************************************
+     * ********************************************************************************************************************
      *********************************************************************************************************************/
     static public class EcgBleIdt extends EcgBleDevice {
 
@@ -334,9 +300,11 @@ public class ECGService extends Service {
                             array = characteristic.getValue();
 
                             final int hr = array[1] & 0xff;
+                            heartRate = hr;
                             int val;
 
                             BatteryLevel = array[0] & 0xff;
+                            charge = BatteryLevel - 100;
 
 //                        Log.i("ECGBELT", "Receive Hr=" + String.format("%d", hr));
 
@@ -346,7 +314,7 @@ public class ECGService extends Service {
                                 ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
                                 ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
 //                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
-                                fornotif = intdata[arrayPos];
+                                ecgValue = intdata[arrayPos];
 
                                 // Shift and reamp signal
                                 val = val - 127;
@@ -355,11 +323,9 @@ public class ECGService extends Service {
                                 sdata[arrayPos] = (short) val;
                                 arrayPos++;
                                 if (arrayPos == 30) {
-                                    fornotif2++;
-                                    sendNotif(fornotif, fornotif2);
+                                    sendECGNotification(ecgValue, heartRate, charge);
                                     arrayPos = 0;
                                     mHandler.obtainMessage(1, intdata).sendToTarget();
-//                                    Log.i("QQQ", "Отправляю в хандлер");
                                     EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
                                 }
                             }
@@ -378,10 +344,11 @@ public class ECGService extends Service {
             return result_str;
         }
     }
+
     /*********************************************************************************************************************
-     *********************************************************************************************************************
-     ***************************************************EcgBle.java*******************************************************
-     *********************************************************************************************************************
+     * ********************************************************************************************************************
+     * **************************************************EcgBle.java*******************************************************
+     * ********************************************************************************************************************
      *********************************************************************************************************************/
     static public class EcgBle {
 
@@ -401,7 +368,7 @@ public class ECGService extends Service {
         static public String StorageFileId;
 
         static public BluetoothGatt mBluetoothGatt = null;
-        static  public EcgBleDevice driver = null;
+        static public EcgBleDevice driver = null;
 
         public EcgBle(Activity activity, EcgReceiveHandler handler) {
 
@@ -566,7 +533,7 @@ public class ECGService extends Service {
         static public void onDeviceDisconnected() {
             mBluetoothGatt = null;
             connected_flag = false;
-            sendNotif(fornotif, fornotif2);
+            sendECGNotification(ecgValue, heartRate, charge);
             myService.stopSelf();
 
             Log.i("ECGBELT", "onDeviceDisconnected");
@@ -636,7 +603,7 @@ public class ECGService extends Service {
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    bpReceiveHandler.measurementReceived(HeartRate, array, Frequency);
+//                    bpReceiveHandler.measurementReceived(heartRate, array, Frequency);
                 }
             });
 
@@ -648,10 +615,11 @@ public class ECGService extends Service {
             return bb.array();
         }
     }
+
     /*********************************************************************************************************************
-     *********************************************************************************************************************
-     ***************************************************GattUtils.java*******************************************************
-     *********************************************************************************************************************
+     * ********************************************************************************************************************
+     * **************************************************GattUtils.java*******************************************************
+     * ********************************************************************************************************************
      *********************************************************************************************************************/
     static public class GattUtils {
         public static final long leastSigBits = 0x800000805f9b34fbL;
@@ -813,14 +781,17 @@ public class ECGService extends Service {
             return data;
         }
     }
+
     /*********************************************************************************************************************
-     *********************************************************************************************************************
-     ***************************************************EcgReceiveHandler.java*******************************************************
-     *********************************************************************************************************************
+     * ********************************************************************************************************************
+     * **************************************************EcgReceiveHandler.java*******************************************************
+     * ********************************************************************************************************************
      *********************************************************************************************************************/
     public interface EcgReceiveHandler {
         void measurementStart(String mac);
+
         void measurementReceived(int HeartRate, short array[], int Frequency);
+
         void measurementEnd();
     }
 
@@ -856,7 +827,7 @@ public class ECGService extends Service {
 
     // Получение пульса
     public void measurementReceived(int heartrate, short[] array, int Frequency) {
-        this.HeartRate = heartrate;
+        this.heartRate = heartrate;
     }
 
     // Конец получения ЭКГ
@@ -866,7 +837,7 @@ public class ECGService extends Service {
 //        if (this.location.isActive()) {
 //            this.location.Stop();
 //        }
-//        updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.HeartRate);
+//        updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
     }
 
     // Начало получения ЭКГ

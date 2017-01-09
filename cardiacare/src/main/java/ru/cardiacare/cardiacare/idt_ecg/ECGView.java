@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -133,12 +132,12 @@ public class ECGView extends View {
         double x0 = gridOrigin[0];
         // TODO убрать 1000
 //        double y0 = gridBaselinePosition - s[0] * 2 * squareSize / 1000.0;
-        double y0 = gridBaselinePosition - (s[0]-127)*32 * 2 * squareSize / 1000.0;
+        double y0 = gridBaselinePosition - (s[0] - 127) * 32 * 2 * squareSize / 1000.0;
 //        context.moveTo(x, y)
         for (int i = 1; i < s.length; i++) {
             double x = gridOrigin[0] + i * 2 * squareSize / 50.0;
 //            double y = gridBaselinePosition - s[i] * 2 * squareSize / 1000.0 + 0.5;
-            double y = gridBaselinePosition - (s[i] - 127)*32 * 2 * squareSize / 1000.0 + 0.5;
+            double y = gridBaselinePosition - (s[i] - 127) * 32 * 2 * squareSize / 1000.0 + 0.5;
 //            Log.i("QQQ", "y = " + y);
             canvas.drawLine((float) x0, (float) y0, (float) x, (float) y, paint);
             x0 = x;
@@ -325,8 +324,8 @@ public class ECGView extends View {
         for (int i = 0; i < RPeaks.size() - 1; i++) {
             double rr = (RPeaks.get(i + 1) - RPeaks.get(i)) / 300.0;
             RRIntervals.add(rr);
-//            cout << rr <<" RR-interval\n";
-//            Log.i("TAG","RR-interval " + rr);
+//            cout << rr <<" RR-timerInterval\n";
+//            Log.i("TAG","RR-timerInterval " + rr);
         }
     }
 
