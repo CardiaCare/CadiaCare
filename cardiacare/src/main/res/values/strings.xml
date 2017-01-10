@@ -161,6 +161,8 @@
     <string name="systolicPressure">Systolic pressure</string>
     <string name="diastolicPressure">Diastolic pressure</string>
     <string name="pulse">Pulse</string>
+    <string name="dialog_bp_title">Delete</string>
+    <string name="dialog_bp_del">Do you want to delete this measurement?</string>
 
     <!--content_results_doctor.xml-->
     <string name="examinationReason">Examination reason</string>
@@ -181,6 +183,7 @@
     <string name="sos">SOS</string>
     <string name="pass_survey">Pass survey</string>
     <string name="documents">Documents</string>
+    <string name="bp">Blood pressure</string>
 
     <!--main.xml(land)-->
     <string name="content_description">Picture</string>
