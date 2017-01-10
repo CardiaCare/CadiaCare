@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,16 +30,11 @@ import java.util.TimerTask;
 import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
-//import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
-//import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
-//import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
-//import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
 
-public class BluetoothFindActivity extends AppCompatActivity /*implements ECGService.EcgReceiveHandler*/ {
+public class BluetoothFindActivity extends AppCompatActivity {
 
     public static Context mContext;
-    static private LocationUtils location = null;
-    private SensorsUtils sensors = null;
+    public static Activity activity;
     ProgressDialog dialog;
     private BluetoothAdapter myBluetoothAdapter;
     private ListView myListView;
@@ -53,10 +48,7 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
         super.onCreate(savedInstanceState);
         Log.i("QQQ", "BluetoothFindActivity, onCreate()");
         mContext = this;
-        this.location = new LocationUtils(this);
-        this.sensors = new SensorsUtils(this);
-        new File(new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append("/").append("EcgBelt").toString()).mkdirs();
-        this.sensors.Start(true);
+        activity = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_bluetooth_find);
 
@@ -69,11 +61,13 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
                     Log.d("QQQ", "MainActivity onServiceConnected");
                     ecgService = ((ECGService.MyBinder) binder).getService();
                     bound = true;
+                    ECGService.location.Start(true); // Раньше находилось в onStart()
                 }
 
                 public void onServiceDisconnected(ComponentName name) {
                     Log.d("QQQ", "MainActivity onServiceDisconnected");
                     bound = false;
+                    ECGService.location.Stop(); // Раньше находилось в onStop()
                 }
             };
             startService(intent);
@@ -112,11 +106,9 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
 
     protected void onStart() {
         super.onStart();
-        this.location.Start(true);
     }
 
     protected void onStop() {
-        this.location.Stop();
         super.onStop();
     }
 
