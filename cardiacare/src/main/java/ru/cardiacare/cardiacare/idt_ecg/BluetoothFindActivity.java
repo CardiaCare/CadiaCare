@@ -100,7 +100,6 @@ public class BluetoothFindActivity extends AppCompatActivity /*implements ECGSer
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     ecgService.doStart();
-                    new ServiceNotification(mContext);
                 }
             });
         }

@@ -20,7 +20,6 @@ public class ECGActivity extends AppCompatActivity {
     static public Handler handler;
     public static Context mContext;
 
-    private static final String TAG = "ECGActivity";
     private static final float TWO_INCHES = 2f;
 
     @Override
@@ -35,8 +34,6 @@ public class ECGActivity extends AppCompatActivity {
 
         assert v != null;
         v.addView(myView);
-//        if (NotificationHelperActivity.selfintent != null)
-//            NotificationHelperActivity.selfintent.finish();
 
         handler = new Handler() {
             public void handleMessage(android.os.Message msg) {
@@ -60,20 +57,6 @@ public class ECGActivity extends AppCompatActivity {
                 ECGActivity.stopTimeService();
             }
         });
-
-        // Обработка событий из виджета в статус-баре
-        if (getIntent().getExtras() != null) {
-            String action = (String) getIntent().getExtras().get("DO");
-
-            if (action.equals("openecgview")) {
-                Intent intent = new Intent(this, ECGActivity.class);
-                this.startActivity(intent);
-
-            }
-            if (action.equals("stopservice")) {
-                ECGActivity.stopTimeService();
-            }
-        }
     }
 
     private double setViewWidthInMillimeter() {

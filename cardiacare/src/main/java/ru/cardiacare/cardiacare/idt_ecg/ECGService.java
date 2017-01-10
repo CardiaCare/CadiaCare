@@ -14,6 +14,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -56,7 +57,7 @@ public class ECGService extends Service {
     static public int charge = 0;          // Уровень заряда батареи кардиомонитора
 
     static NotificationManager notificationManager;
-    static Notification ecgNotification;
+    static public Notification ecgNotification;
 
     MyBinder binder = new MyBinder();
 
@@ -132,19 +133,29 @@ public class ECGService extends Service {
 
     // Отправка уведомлений с показаниями, полученными с монитора
     static void sendECGNotification(int ecgValue, int heartrate, int charge) {
+        String notificationText = "Показания с монитора: " + ecgValue + "\nПульс: " + heartrate + "\nЗаряд: " + charge + "%\nПрошло: " + pastTime;
+
+        Intent intent = new Intent(mContext, ECGActivity.class);
+        PendingIntent pIntentOpenECG = PendingIntent.getActivity(mContext, 0, intent, 0);
+//        PendingIntent pIntentStopECG = ECGActivity.stopTimeService();
         Notification.Builder builder = new Notification.Builder(mContext);
         if (connected_flag == false) {
             builder.setContentTitle("CardiaCare. ECG disconnected");
         } else {
             builder.setContentTitle("CardiaCare. ECG connected");
         }
+        builder.setTicker("ECG state change");
+        builder.setPriority(Notification.PRIORITY_MAX);
         builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.setContentText("Показания с монитора: " + ecgValue + ". Пульс: " + heartrate);
-        builder.setSubText("Заряд: " + charge + "%. Прошло: " + pastTime);   //API level 16
+        builder.addAction(R.drawable.ic_launcher, "Открыть ЭКГ",
+                pIntentOpenECG);
         builder.build();
         ecgNotification = builder.getNotification();
-        ecgNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+        ecgNotification = new Notification.BigTextStyle(builder)
+                .bigText(notificationText).build();
+        ecgNotification.contentIntent = pIntentOpenECG;
         notificationManager.notify(1, ecgNotification); // 1 - это идентификатор уведомления
+        BluetoothFindActivity.ecgService.startForeground(1, ecgNotification);
     }
 
     /*********************************************************************************************************************
