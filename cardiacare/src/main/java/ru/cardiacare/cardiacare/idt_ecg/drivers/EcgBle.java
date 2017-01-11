@@ -181,11 +181,9 @@ public class EcgBle {
                     synchronized (this) {
                         if (!isScanning)
                             break;
-
                         bluetoothAdapter.startLeScan(mLeScanCallback);
                     }
                     sleep(SCAN_PERIOD);
-
                     /*synchronized (this) {
                         bluetoothAdapter.stopLeScan(mLeScanCallback);
                     }*/

@@ -46,6 +46,7 @@ import ru.cardiacare.cardiacare.user.Userdata;
 public class MainActivity extends AppCompatActivity {
 
     public Context context = this;
+    static public Context mContext;
     Button btnCont;
     Button nextButton;
     Button btnDisconnect;
@@ -84,17 +85,12 @@ public class MainActivity extends AppCompatActivity {
         // Установка ТОЛЬКО вертикальной ориентации
         // Такая строка должна быть прописана в КАЖДОЙ активности
 
-        // Если монитор работает в фоновом режиме, то открываем ECGActivity, иначе MainActivity
-        if (isMyServiceRunning(ECGService.class)) {
-            Intent intent = new Intent(this, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
-            this.startActivity(intent);
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            setLoadingScreen();
-            feedback = new Feedback("", "Student", "feedback");
-            alarmFeedback = new Feedback("", "Student", "alarmFeedback");
-            activity = this;
-        }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setLoadingScreen();
+        feedback = new Feedback("", "Student", "feedback");
+        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
+        activity = this;
+        mContext = this;
     }
 
     // Загрузочный экран.
@@ -467,8 +463,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Проверка запущен ли сервис
     // Если сервис работает, то возращает True, иначе False
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    public static boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;

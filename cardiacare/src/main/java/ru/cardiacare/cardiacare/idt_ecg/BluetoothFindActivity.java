@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
@@ -46,70 +47,68 @@ public class BluetoothFindActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i("QQQ", "BluetoothFindActivity, onCreate()");
-        mContext = this;
-        activity = this;
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_bluetooth_find);
-
-        // Устанавливаем подключение к сервису
-        intent = new Intent(this, ECGService.class);
-        if (bound == false) {
-            sConn = new ServiceConnection() {
-
-                public void onServiceConnected(ComponentName name, IBinder binder) {
-                    Log.d("QQQ", "MainActivity onServiceConnected");
-                    ecgService = ((ECGService.MyBinder) binder).getService();
-                    bound = true;
-                    ECGService.location.Start(true); // Раньше находилось в onStart()
-                }
-
-                public void onServiceDisconnected(ComponentName name) {
-                    Log.d("QQQ", "MainActivity onServiceDisconnected");
-                    bound = false;
-                    ECGService.location.Stop(); // Раньше находилось в onStop()
-                }
-            };
-            startService(intent);
-            bindService(intent, sConn, 0);
-        }
-
-        dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-        dialog.setMessage(getString(R.string.bluetoothSearching));
-
-        myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (myBluetoothAdapter == null) {
-            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
-                    Toast.LENGTH_LONG).show();
+        // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
+        if (MainActivity.isMyServiceRunning(ECGService.class)) {
+            Intent intent = new Intent(this, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
+            this.startActivity(intent);
         } else {
-            on();
-            myTimerExecute();
-            myListView = (ListView) findViewById(R.id.mListView);
-            BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-            myListView.setAdapter(BTArrayAdapter);
-            myListView.setOnItemClickListener(new OnItemClickListener() {
+            Log.i("QQQ", "BluetoothFindActivity, onCreate()");
+            mContext = this;
+            activity = this;
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setContentView(R.layout.activity_bluetooth_find);
+
+            // Устанавливаем подключение к сервису
+            intent = new Intent(this, ECGService.class);
+            if (bound == false) {
+                sConn = new ServiceConnection() {
+
+                    public void onServiceConnected(ComponentName name, IBinder binder) {
+                        Log.d("QQQ", "MainActivity onServiceConnected");
+                        ecgService = ((ECGService.MyBinder) binder).getService();
+                        bound = true;
+//                    ECGService.location.Start(true); // Раньше находилось в onStart()
+                    }
+
+                    public void onServiceDisconnected(ComponentName name) {
+                        Log.d("QQQ", "MainActivity onServiceDisconnected");
+                        bound = false;
+//                    ECGService.location.Stop(); // Раньше находилось в onStop()
+                    }
+                };
+                startService(intent);
+                bindService(intent, sConn, 0);
+            }
+
+            dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage(getString(R.string.bluetoothSearching));
+
+            myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (myBluetoothAdapter == null) {
+                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
+                        Toast.LENGTH_LONG).show();
+            } else {
+                on();
+                myTimerExecute();
+                myListView = (ListView) findViewById(R.id.mListView);
+                BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
+                myListView.setAdapter(BTArrayAdapter);
+                myListView.setOnItemClickListener(new OnItemClickListener() {
 
 
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-                    ecgService.doStart();
-                }
-            });
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view,
+                                            int position, long id) {
+                        ecgService.doStart();
+                    }
+                });
+            }
         }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-    }
-
-    protected void onStart() {
-        super.onStart();
-    }
-
-    protected void onStop() {
-        super.onStop();
     }
 
     private void myTimerExecute() {
@@ -126,8 +125,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
     public void on() {
         myBluetoothAdapter.startDiscovery();
         dialog.show();
-        // Если вернуться стрелочкой "назад" на главный экран с экрана посика устройств,
-        // то приложение не упадёт, но выдаст ошибку, указывая на строчку ниже
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
     }
 
@@ -141,4 +138,10 @@ public class BluetoothFindActivity extends AppCompatActivity {
             }
         }
     };
+
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(bReceiver);
+        unbindService(sConn);
+    }
 }

@@ -1,6 +1,7 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
 
 public class ECGActivity extends AppCompatActivity {
@@ -71,6 +74,11 @@ public class ECGActivity extends AppCompatActivity {
         ecgService.stopForeground(true);
 //        ecgService.unbindService(BluetoothFindActivity.sConn);
         ecgService.stopSelf();
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 
     @Override

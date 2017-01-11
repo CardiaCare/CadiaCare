@@ -29,7 +29,7 @@ import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
 
-public class ECGService extends Service implements EcgReceiveHandler {
+public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     static public Context mContext;
     static public ECGService myService;
@@ -54,7 +54,7 @@ public class ECGService extends Service implements EcgReceiveHandler {
     static Time beginTime = new Time();
     static public boolean beStarted = false;
 
-    static public LocationUtils location = null;
+    //    static public LocationUtils location = null;
     private SensorsUtils sensors = null;
 
     public void onCreate() {
@@ -63,7 +63,7 @@ public class ECGService extends Service implements EcgReceiveHandler {
         mContext = this;
         myService = this;
         this.ecg = new EcgBle(MainActivity.activity, EcgBle.bpReceiveHandler);
-        this.location = new LocationUtils(BluetoothFindActivity.activity);
+//        this.location = new LocationUtils(BluetoothFindActivity.activity);
         this.sensors = new SensorsUtils(BluetoothFindActivity.activity);
         new File(new StringBuilder(String.valueOf(Environment.getExternalStorageDirectory().toString())).append("/").append("EcgBelt").toString()).mkdirs();
         this.sensors.Start(true);
@@ -163,9 +163,9 @@ public class ECGService extends Service implements EcgReceiveHandler {
     }
 
     static public boolean doStop() {
-        if (location.isActive()) {
-            location.Stop();
-        }
+//        if (location.isActive()) {
+//            location.Stop();
+//        }
         if (!ecg.Stop()) {
             return false;
         }
@@ -177,30 +177,14 @@ public class ECGService extends Service implements EcgReceiveHandler {
         return true;
     }
 
-    // Получение пульса
-    public void measurementReceived(int heartrate, short[] array, int Frequency) {
-        this.heartRate = heartrate;
-    }
-
-    // Конец получения ЭКГ
-    // Вызов функции сборки данных для отправки данных на сервер
-    public void measurementEnd() {
-        Log.i("ECGBELT", "measurementEnd()");
-        if (this.location.isActive()) {
-            this.location.Stop();
-        }
-//        updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
-    }
-
-    // Начало получения ЭКГ
-    public void measurementStart(String mac) {
-        this.beStarted = true;
-//        this.timerHandler.postDelayed(this.timerRunnable, 500);
-        this.beginTime.setToNow();
-    }
-
     // Формирование файлов для отправки на сервер
     static public void updateOnServer(/*String filename, String path, String fileid, int hr*/) {
+        String ecgdata = EcgBleIdt.getJSONPart();
+        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
+        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
+        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
+        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
+
 //        String context = this.location.getJSONPart();
 //        String sensdata = this.sensors.getJSONPart();
 //        String systemdata = this.sensors.getSystemJSONPart();
@@ -218,11 +202,21 @@ public class ECGService extends Service implements EcgReceiveHandler {
 //        }
 //        json = new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(json)).append("\"object\": {").toString())).append("\"timestamp\": \"").append(DateFormat.format("yyyy-MM-dd'T'HH:mm:ssZ", this.beginTime.toMillis(true))).append("\",").toString())).append("\"utc_offset\": \"").append(DateTimeUtl.getCurrentUTCOffset()).append("\",").toString())).append("\"namespace\": \"ecg\",").toString())).append("\"channels\": \"1\",").toString())).append("\"format\": \"cds\",").toString())).append("\"filename\":\"").append(fileid).append("\",").toString())).append("\"pulse\":\"").append(String.format("%d", new Object[]{Integer.valueOf(hr)})).append("\"").toString())).append("}}").toString();
 //        Log.i("ECGBELT", "JSON=" + json);
-
-        String ecgdata = EcgBleIdt.getJSONPart();
-        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
-        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
-        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
-        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
     }
+
+//    public void measurementReceived(int heartrate, short[] array, int Frequency) {
+//        this.heartRate = heartrate;
+//    }
+//    public void measurementEnd() {
+//        Log.i("ECGBELT", "measurementEnd()");
+//        if (this.location.isActive()) {
+//            this.location.Stop();
+//        }
+//        updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
+//    }
+//    public void measurementStart(String mac) {
+//        this.beStarted = true;
+//        this.timerHandler.postDelayed(this.timerRunnable, 500);
+//        this.beginTime.setToNow();
+//    }
 }
