@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    // Цвета, которые были раньше: colorPrimary: #0097A7 и colorAccent: #6b7770
+    <color name="cardiacare_color_grid">#0097A7</color>
+    <color name="alarm_button_standart_color">#FF0000</color>
+    <color name="colorPrimary">#2196f3</color>
+    <color name="colorPrimaryDark">#0d47a1</color>
+    <color name="colorAccent">#e91e63</color>
+    <color name="textColorPrimary">#000000</color>
+    <color name="navigationBarColor">#0d47a1</color>
+    <color name="colorBackground">#ffffff</color>
+    <color name="colorForeground">#000000</color>
+    <color name="textColorSecondary">#0d47a1</color>
+    <color name="windowBackground">#fafafa</color>
+    <color name="statusBarColor">#1976d2</color>
+    <color name="textColorPrimaryInverse">#ffffff</color>
+    <color name="textColorSecondaryInverse">#ffffff</color>
+    <color name="textColorTertiary">#0d47a1</color>
+
+
+</resources>

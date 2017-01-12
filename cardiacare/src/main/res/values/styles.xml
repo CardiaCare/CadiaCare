@@ -1,16 +1,29 @@
 <resources>
 
-
-    <style name="AppBaseTheme" parent="Theme.AppCompat.NoActionBar">
-
-        <item name="colorPrimary">@color/cardiacare_color_primary</item>
-        <item name="colorPrimaryDark">@color/cardiacare_color_primary_darker</item>
-        <item name="colorAccent">@color/cardiacare_color_accent</item>
-
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:colorForeground">@color/colorForeground</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:textColorSecondaryInverse">@color/textColorSecondaryInverse</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
     </style>
 
     <style name="AppBaseTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--<style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="android:background">@color/windowBackground</item>-->
+    <!--</style>-->
 
 </resources>

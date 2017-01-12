@@ -20,6 +20,7 @@ tools:context="ru.cardiacare.cardiacare.AboutActivity">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <LinearLayout
+
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

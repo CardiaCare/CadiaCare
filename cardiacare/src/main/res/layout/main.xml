@@ -91,9 +91,8 @@
             android:text="@string/start_instruction"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:textColor="#fff"
             android:gravity="center" /> <!--android:layout_centerInParent="true"-->
-
+                                        <!--android:textColor="#fff"-->
         <ListView
             android:id="@+id/ConnectListView"
             android:layout_width="fill_parent"
