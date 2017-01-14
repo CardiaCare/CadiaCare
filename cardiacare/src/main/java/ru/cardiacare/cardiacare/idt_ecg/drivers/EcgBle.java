@@ -6,8 +6,10 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.io.FileNotFoundException;
@@ -16,6 +18,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.idt_ecg.ECGActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
@@ -48,10 +52,31 @@ public class EcgBle {
         bluetoothManager = (BluetoothManager) ECGService.mContext.getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
+        // Системный диалог.
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             mainActivity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
+
+        // Не работает здесь из-за контекста. Возможно, стоит перенест в BluetoothFindActivity.
+//        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+//        alertDialog.setTitle(R.string.dialog_bluetooth_title);
+//        alertDialog.setMessage(R.string.dialog_bluetooth_message);
+//        alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        mBluetoothAdapter.enable();
+//                    }
+//                });
+//
+//        alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//        alertDialog.show();
     }
 
     public boolean Start() {

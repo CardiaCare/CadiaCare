@@ -4,7 +4,6 @@ package ru.cardiacare.cardiacare;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -129,13 +129,15 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             netFlag = 0;
-            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this);
+            final WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             alertDialog.setTitle(R.string.dialog_wifi_title);
             alertDialog.setMessage(R.string.dialog_wifi_message);
             alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                            wifiManager.setWifiEnabled(true);
+                            //startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                             WifiButton.setVisibility(View.VISIBLE);
                         }
                     });
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     public void authorization(String first, String second, String email, String password) {
         // Если не все поля заполнены, то выводим диалог об ошибке
         if ((first.isEmpty()) || (second.isEmpty()) || (email.isEmpty())) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
                     .setCancelable(true)
@@ -207,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
                 builder.setMessage(R.string.dialog_authorization_message)
                         .setTitle(R.string.dialog_authorization_title)
                         .setCancelable(true)
@@ -290,8 +292,7 @@ public class MainActivity extends AppCompatActivity {
                     backgroundFlag = 1;
                     if (!gps.canGetLocation()) {
                         alarmButtonFlag = true;
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                        alertDialog.setTitle(R.string.dialog_sos_title);
+                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);                        alertDialog.setTitle(R.string.dialog_sos_title);
                         alertDialog.setMessage(R.string.dialog_sos_message);
                         alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

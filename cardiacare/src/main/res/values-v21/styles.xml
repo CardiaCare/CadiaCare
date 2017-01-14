@@ -16,12 +16,13 @@
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>
         <item name="android:textColorTertiary">@color/textColorTertiary</item>
+    </style>
 
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <!--<item name="android:windowBackground">@color/windowBackground</item>-->
-        <!--<item name="android:textColorPrimary">@color/textColorPrimary</item>-->
-        <!--<item name="android:textColorSecondary">@color/textColorSecondary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/dialogTextColorPrimary</item>
+        <item name="colorPrimary">@color/dialogColorPrimary</item>
+        <item name="android:background">@color/dialogColorBackground</item>
+        <item name="android:textColorSecondary">@color/dialogTextColorSecondary</item>
+        <item name="colorAccent">@color/dialogColorAccent</item>
     </style>
 </resources>

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -125,7 +126,8 @@ public class LocationService extends Service implements LocationListener {
 
     // Диалоговое окно при отключенной GPS.
     public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+//        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
         alertDialog.setTitle(R.string.dialog_gps_title);
         alertDialog.setMessage(R.string.dialog_gps_message);
         alertDialog.setPositiveButton(R.string.dialog_gps_positive_button, new DialogInterface.OnClickListener() {
@@ -139,7 +141,6 @@ public class LocationService extends Service implements LocationListener {
                 dialog.cancel();
             }
         });
-        alertDialog.show();
     }
 
     @Override

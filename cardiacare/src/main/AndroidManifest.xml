@@ -116,19 +116,19 @@
         <activity
             android:name=".hisdocuments.BloodPressureActivity"
             android:label="@string/title_activity_results_blood"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".hisdocuments.DoctorExaminationActivity"
             android:label="@string/title_activity_results_doctor"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".idt_ecg.BluetoothFindActivity"
             android:label="@string/title_activity_bluetooth_find"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".idt_ecg.ECGActivity"
             android:label="@string/ecg"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
 
         <service
             android:name=".idt_ecg.ECGService"

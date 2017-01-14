@@ -38,9 +38,9 @@
 
     <!--Диалог при запуске приложения с выключенным Wi-Fi-->
     <string name="dialog_wifi_title">Отсутствует подключение к сети</string>
-    <string name="dialog_wifi_message">Включите Wi-Fi и перезапустите приложение</string>
-    <string name="dialog_wifi_positive_button">Перейти к настройкам Wi-Fi</string>
-    <string name="dialog_wifi_negative_button">Перезапустить приложение</string>
+    <string name="dialog_wifi_message">Вы хотите включить Wi-Fi?</string>
+    <string name="dialog_wifi_positive_button">Да</string>
+    <string name="dialog_wifi_negative_button">Нет</string>
 
     <!--Диалог при нажатии на кнопку SOS с выключенным GPS-->
     <string name="dialog_sos_title">Не удалось получить геоданные</string>

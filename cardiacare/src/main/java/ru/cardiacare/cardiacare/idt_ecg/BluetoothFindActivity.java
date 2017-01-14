@@ -62,7 +62,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
             intent = new Intent(this, ECGService.class);
             if (bound == false) {
                 sConn = new ServiceConnection() {
-
                     public void onServiceConnected(ComponentName name, IBinder binder) {
                         Log.d("QQQ", "MainActivity onServiceConnected");
                         ecgService = ((ECGService.MyBinder) binder).getService();
@@ -82,7 +81,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
 
             dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
             dialog.setMessage(getString(R.string.bluetoothSearching));
-
             myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (myBluetoothAdapter == null) {
                 Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
@@ -123,6 +121,12 @@ public class BluetoothFindActivity extends AppCompatActivity {
     }
 
     public void on() {
+//        if (!myBluetoothAdapter.isEnabled()) {
+//            Log.i(MainActivity.TAG, "dialog");
+//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBtIntent, 1);
+//        }
+
         myBluetoothAdapter.startDiscovery();
         dialog.show();
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));

@@ -20,10 +20,12 @@
 
     <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!--<style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
-        <!--<item name="android:textColorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="android:background">@color/windowBackground</item>-->
-    <!--</style>-->
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/dialogTextColorPrimary</item>
+        <item name="colorPrimary">@color/dialogColorPrimary</item>
+        <item name="android:background">@color/dialogColorBackground</item>
+        <item name="android:textColorSecondary">@color/dialogTextColorSecondary</item>
+        <item name="colorAccent">@color/dialogColorAccent</item>
+    </style>
 
 </resources>
