@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -11,8 +12,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,6 +48,13 @@ public class BluetoothFindActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Поддерживает устройство работу с BLE или нет
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "Don't support", Toast.LENGTH_SHORT).show();
+            finish();
+        } else Toast.makeText(this, "Support", Toast.LENGTH_SHORT).show();
+
         // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
         if (MainActivity.isMyServiceRunning(ECGService.class)) {
             Intent intent = new Intent(this, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
@@ -82,18 +90,27 @@ public class BluetoothFindActivity extends AppCompatActivity {
             dialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
             dialog.setMessage(getString(R.string.bluetoothSearching));
             myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
             if (myBluetoothAdapter == null) {
                 Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
                         Toast.LENGTH_LONG).show();
             } else {
                 on();
-                myTimerExecute();
+                BTArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
                 myListView = (ListView) findViewById(R.id.mListView);
-                BTArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
                 myListView.setAdapter(BTArrayAdapter);
+
+                // Для версии андроида 6 и выше, нужны следующие разрешения
+                if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+                    int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
+                    permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
+                    if (permissionCheck != 0) {
+                        this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    }
+                }
+                myTimerExecute();
+//                myListView.setAdapter(BTArrayAdapter);
                 myListView.setOnItemClickListener(new OnItemClickListener() {
-
-
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
@@ -117,7 +134,7 @@ public class BluetoothFindActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         };
-        timer.schedule(task, 11000);
+        timer.schedule(task, 15000);
     }
 
     public void on() {
@@ -126,7 +143,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
 //            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 //            startActivityForResult(enableBtIntent, 1);
 //        }
-
         myBluetoothAdapter.startDiscovery();
         dialog.show();
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));

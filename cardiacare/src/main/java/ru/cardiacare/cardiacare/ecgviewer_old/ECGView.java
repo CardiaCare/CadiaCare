@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 
 import java.util.LinkedList;
@@ -109,7 +110,7 @@ public class ECGView extends View {
         paint.setAntiAlias(true);
 
         // Закрашиваем холст белым цветом
-        paint.setColor(Color.BLACK);
+        paint.setColor(Color.WHITE);
         canvas.drawPaint(paint);
 
         // Draw squares
@@ -118,7 +119,7 @@ public class ECGView extends View {
         // Рисуем линии по точкам из массива points1
         drawSignal(canvas, points1);
 
-        paint.setColor(Color.WHITE);
+        paint.setColor(ResourcesCompat.getColor(getResources(), R.color.color_ECG, null));
         paint.setTextSize(24);
         canvas.drawText(new Integer(pulse).toString(), 10, 25, paint);
     }
@@ -126,7 +127,7 @@ public class ECGView extends View {
     public void drawSignal(Canvas canvas, double[] s) {
 
         double gridBaselinePosition = getHeight() / 2;
-        paint.setColor(Color.WHITE);
+        paint.setColor(ResourcesCompat.getColor(getResources(), R.color.color_ECG, null));
 //        context.lineWidth = 2;
 //        context.strokeStyle = color;
 //        context.beginPath();
@@ -160,7 +161,7 @@ public class ECGView extends View {
         long strokeLine = Math.round(i * 5 + 2);
 
         // 1 mm lines
-        paint.setColor(getResources().getColor(R.color.cardiacare_color_grid));
+        paint.setColor(ResourcesCompat.getColor(getResources(), R.color.cardiacare_color_grid, null));
         paint.setStrokeWidth(1);
         for (int x = 0; x < maxColumn + 1; x++)
             canvas.drawLine((float) (x * getWidth() / maxColumn), 0, (float) (x * getWidth() / maxColumn), getHeight(), paint);
@@ -168,7 +169,7 @@ public class ECGView extends View {
             canvas.drawLine(0, (float) (y * getHeight() / maxRow), getWidth(), (float) (y * getHeight() / maxRow), paint);
 
         // 5 mm lines
-        paint.setColor(getResources().getColor(R.color.cardiacare_color_grid));
+        paint.setColor(ResourcesCompat.getColor(getResources(), R.color.cardiacare_color_grid, null));
         paint.setStrokeWidth(3);
         double max5Row = maxRow / 5;
         double max5Column = maxColumn / 5;
@@ -196,7 +197,7 @@ public class ECGView extends View {
 //        context.lineWidth = 1;
 //        context.strokeStyle = "red";
 //        context.beginPath();
-        paint.setColor(getResources().getColor(R.color.cardiacare_color_grid));
+        paint.setColor(ResourcesCompat.getColor(getResources(), R.color.cardiacare_color_grid, null));
         for (int i = 0; i < bottomRow; i++) {
             double lineOffset = i * (ppmm + 1);
             double lineLength = squareSize - 1;

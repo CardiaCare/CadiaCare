@@ -1,6 +1,7 @@
 package ru.cardiacare.cardiacare.ecgviewer_old;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +31,7 @@ public class ECGActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate ECGActivity Activity");
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_ecg);
+        setContentView(R.layout.activity_demo_ecg);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.ecg_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -51,27 +52,26 @@ public class ECGActivity extends AppCompatActivity {
         assert v != null;
         v.addView(myView);
 
-//        Resources res = getResources();
-//        viewDemoSignal = res.getIntArray(R.array.demosignal);
+        Resources res = getResources();
+        viewDemoSignal = res.getIntArray(R.array.demosignal);
+        myView.getECGData(viewDemoSignal);
+
+//        Handler handler;
 //
-//        myView.getECGData(viewDemoSignal);
-
-        Handler handler;
-
-        handler = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case Data:
-                        int[] readBuf = (int[]) msg.obj;
-                        String strIncom = new String(readBuf, 0, msg.arg1);
-                        //mytext.setText("Данные от Arduino: " + strIncom);
-                        Log.i ("TAG","Данные от Alive: " + readBuf.length);
-                        myView.getECGData(readBuf);
-                }
-            }
-
-            ;
-        };
+//        handler = new Handler() {
+//            public void handleMessage(android.os.Message msg) {
+//                switch (msg.what) {
+//                    case Data:
+//                        int[] readBuf = (int[]) msg.obj;
+//                        String strIncom = new String(readBuf, 0, msg.arg1);
+//                        //mytext.setText("Данные от Arduino: " + strIncom);
+//                        Log.i ("TAG","Данные от Alive: " + readBuf.length);
+//                        myView.getECGData(readBuf);
+//                }
+//            }
+//
+//            ;
+//        };
         //mBluetoothService = new BluetoothService(getApplicationContext(), handler);
     }
 

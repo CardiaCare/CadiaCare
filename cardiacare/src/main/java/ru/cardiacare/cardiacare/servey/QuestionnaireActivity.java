@@ -169,7 +169,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             MainActivity.serveyButton.setEnabled(true);
         else {
             MainActivity.alarmButton.setEnabled(true);
-            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standart_color);
+            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
         }
 
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия

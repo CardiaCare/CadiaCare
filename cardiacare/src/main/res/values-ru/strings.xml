@@ -56,9 +56,9 @@
 
     <!--Диалог при нажатии на Alive Bluetooth Monitor c выключенным Bluetooth-->
     <string name="dialog_bluetooth_title">Bluetooth выключен</string>
-    <string name="dialog_bluetooth_message">Функция Bluetooth отключен. Некоторые функции могут быть недоступны. Желаете перейти к настройкам, чтобы включить Bluetooth?</string>
-    <string name="dialog_bluetooth_positive_button">Перейти к настройкам Bluetooth</string>
-    <string name="dialog_bluetooth_negative_button">Отмена</string>
+    <string name="dialog_bluetooth_message">Вы хотите включить Bluetooth?</string>
+    <string name="dialog_bluetooth_positive_button">Да</string>
+    <string name="dialog_bluetooth_negative_button">Нет</string>
 
     <!--Диалог при невозможности подключения к SIB'у-->
     <string name="dialog_ss_title">Приложение недоступно</string>
