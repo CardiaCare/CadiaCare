@@ -10,9 +10,9 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
     // Настроки подключения к SIB'у
-    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname"; // Имя
-    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip"; // IP
-    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport"; // Порт
+//    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname"; // Имя
+//    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip"; // IP
+//    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport"; // Порт
 
     private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
     private static final String ACCOUNT_PREFERENCES_TOKEN = "token"; // Токен доступа, полученный с сервера
@@ -48,9 +48,9 @@ public class AccountStorage {
     public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey) {
         SharedPreferences.Editor editor = sPref.edit();
 
-        editor.putString(ACCOUNT_PREFERENCES_SIBNAME, sibName);
-        editor.putString(ACCOUNT_PREFERENCES_SIBIP, sibIp);
-        editor.putString(ACCOUNT_PREFERENCES_SIBPORT, sibPort);
+//        editor.putString(ACCOUNT_PREFERENCES_SIBNAME, sibName);
+//        editor.putString(ACCOUNT_PREFERENCES_SIBIP, sibIp);
+//        editor.putString(ACCOUNT_PREFERENCES_SIBPORT, sibPort);
 
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
         editor.putString(ACCOUNT_PREFERENCES_TOKEN, token);
@@ -86,26 +86,26 @@ public class AccountStorage {
         editor.apply();
     }
 
-    public String getSibName() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
-            strSibName = sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, "");
-        } else strSibName = "";
-        return strSibName;
-    }
-
-    public String getSibIp() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
-            strSibIp = sPref.getString(ACCOUNT_PREFERENCES_SIBIP, "");
-        } else strSibIp = "";
-        return strSibIp;
-    }
-
-    public String getSibPort() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
-            strSibPort = sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, "");
-        } else strSibPort = "";
-        return strSibPort;
-    }
+//    public String getSibName() {
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
+//            strSibName = sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, "");
+//        } else strSibName = "";
+//        return strSibName;
+//    }
+//
+//    public String getSibIp() {
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
+//            strSibIp = sPref.getString(ACCOUNT_PREFERENCES_SIBIP, "");
+//        } else strSibIp = "";
+//        return strSibIp;
+//    }
+//
+//    public String getSibPort() {
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
+//            strSibPort = sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, "");
+//        } else strSibPort = "";
+//        return strSibPort;
+//    }
 
     public String getAccountId() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PATIENTID)) {

@@ -19,9 +19,9 @@ public class Userdata extends AppCompatActivity {
 
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
-    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname";
-    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip";
-    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport";
+//    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname";
+//    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip";
+//    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport";
 
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
@@ -82,9 +82,9 @@ public class Userdata extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor editor = sPref.edit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_EMAIL, etEmail.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBNAME, etSibName.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBIP, etSibIp.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBPORT, etSibPort.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBNAME, etSibName.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBIP, etSibIp.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBPORT, etSibPort.getText().toString()).commit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_FIRSTNAME, etFirstName.getText().toString()).commit();
 //        Log.i("TAG", "1 " + sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
         sPref.edit().putString(ACCOUNT_PREFERENCES_SECONDNAME, etSecondName.getText().toString()).commit();
@@ -102,15 +102,15 @@ public class Userdata extends AppCompatActivity {
         super.onResume();
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
 
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
-            etSibName.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
-            etSibIp.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBIP, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
-            etSibPort.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, ""));
-        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
+//            etSibName.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
+//            etSibIp.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBIP, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
+//            etSibPort.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, ""));
+//        }
         if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
             etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
         }

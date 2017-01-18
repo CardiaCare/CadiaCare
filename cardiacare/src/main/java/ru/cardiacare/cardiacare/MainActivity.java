@@ -389,11 +389,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent4);
                 break;
             // Помощь
-            case R.id.menuHelp:
-                backgroundFlag = 1;
-                Intent intent2 = new Intent(this, Help.class);
-                startActivity(intent2);
-                break;
+//            case R.id.menuHelp:
+//                backgroundFlag = 1;
+//                Intent intent2 = new Intent(this, Help.class);
+//                startActivity(intent2);
+//                break;
             // Учетная запись
             case R.id.menuUserData:
                 if (isNetworkAvailable(context)) {

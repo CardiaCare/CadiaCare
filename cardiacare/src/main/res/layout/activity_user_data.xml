@@ -27,74 +27,74 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <TextView
-                android:id="@+id/tvSib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Настройки ИП"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvSib"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="Настройки ИП"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <TextView
-                android:id="@+id/tvSibName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Name"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvSibName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="Name"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <EditText
-                android:id="@+id/etSibName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp" />
+            <!--<EditText-->
+                <!--android:id="@+id/etSibName"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp"-->
+                <!--android:paddingLeft="0dp"-->
+                <!--android:paddingRight="0dp" />-->
 
-            <TextView
-                android:id="@+id/tvSibIp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="IP"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvSibIp"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="IP"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <EditText
-                android:id="@+id/etSibIp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp" />
+            <!--<EditText-->
+                <!--android:id="@+id/etSibIp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp"-->
+                <!--android:paddingLeft="0dp"-->
+                <!--android:paddingRight="0dp" />-->
 
-            <TextView
-                android:id="@+id/tvSibPort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Port"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvSibPort"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="Port"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <EditText
-                android:id="@+id/etSibPort"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp" />
+            <!--<EditText-->
+                <!--android:id="@+id/etSibPort"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp"-->
+                <!--android:paddingLeft="0dp"-->
+                <!--android:paddingRight="0dp" />-->
 
-            <TextView
-                android:id="@+id/tvUser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Учетная запись"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+            <!--<TextView-->
+                <!--android:id="@+id/tvUser"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="Учетная запись"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
             <TextView
                 android:id="@+id/tvFirstName"

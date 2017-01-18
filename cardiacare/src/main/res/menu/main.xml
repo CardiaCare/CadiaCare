@@ -19,11 +19,11 @@
         android:id="@+id/passSurvey"
         app:showAsAction="never"
         android:title="@string/pass_survey"/>
-    <item
-        android:id="@+id/menuHelp"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/help"/>
+    <!--<item-->
+        <!--android:id="@+id/menuHelp"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="@string/help"/>-->
     <!--   <item
            android:id="@+id/menuDownload"
            android:orderInCategory="100"

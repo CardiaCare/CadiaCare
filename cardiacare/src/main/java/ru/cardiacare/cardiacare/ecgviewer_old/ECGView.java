@@ -120,6 +120,7 @@ public class ECGView extends View {
         drawSignal(canvas, points1);
 
         paint.setColor(ResourcesCompat.getColor(getResources(), R.color.color_ECG, null));
+        // Размер шрифта у пульса
         paint.setTextSize(24);
         canvas.drawText(new Integer(pulse).toString(), 10, 25, paint);
     }
@@ -128,6 +129,8 @@ public class ECGView extends View {
 
         double gridBaselinePosition = getHeight() / 2;
         paint.setColor(ResourcesCompat.getColor(getResources(), R.color.color_ECG, null));
+        // Толщина линии кардиограммы
+        paint.setStrokeWidth(7);
 //        context.lineWidth = 2;
 //        context.strokeStyle = color;
 //        context.beginPath();
