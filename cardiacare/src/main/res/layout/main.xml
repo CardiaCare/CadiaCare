@@ -62,15 +62,15 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/sos"
-        android:textSize="20sp"
-        android:id="@+id/alarmButton"
-        android:background="#ff0000"
-        android:layout_margin="20dp"
-        android:elevation="0dp" />
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/sos"-->
+        <!--android:textSize="20sp"-->
+        <!--android:id="@+id/alarmButton"-->
+        <!--android:background="#ff0000"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:elevation="0dp" />-->
 
     <!--android:scaleType="centerCrop"-->
                                           <!--android:layout_gravity="center_horizontal|top"-->

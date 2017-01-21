@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="ru.cardiacare.cardiacare.hisdocuments.DemographicData"
+    tools:context="ru.cardiacare.cardiacare.hisdocuments.DemographicDataActivity"
     tools:showIn="@layout/activity_demographic_data">
 
     <ScrollView
@@ -37,12 +37,10 @@
             android:padding="8dp"
             android:enabled="false"
             android:editable="false"
-            android:textColor="#ffffff"
             android:text="Ivan"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/name"
             android:id="@+id/Name"
             android:padding="8dp"
@@ -58,13 +56,11 @@
             android:padding="8dp"
             android:text="Ivanov"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/surname"
             android:id="@+id/Surname"
             android:padding="8dp" />
@@ -78,14 +74,12 @@
             android:paddingRight="0dp"
             android:padding="8dp"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
             android:text="Ivanovich"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/patronymic"
             android:id="@+id/Patronymic"
             android:padding="8dp" />
@@ -97,19 +91,15 @@
             android:ems="10"
             android:id="@+id/etBirthDate"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
             android:text="01.01.1970"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/birthDate"
             android:id="@+id/BirthDate"
             android:padding="8dp" />
-
-
 
         <EditText
             android:layout_width="match_parent"
@@ -120,19 +110,15 @@
             android:paddingRight="0dp"
             android:padding="8dp"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
             android:text="Male"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/sex"
             android:id="@+id/Sex"
             android:padding="8dp" />
-
-
 
         <EditText
             android:layout_width="match_parent"
@@ -143,18 +129,15 @@
             android:paddingRight="0dp"
             android:padding="8dp"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
             android:text="Petrozavodsk"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/residence"
             android:id="@+id/tvResidence"
             android:padding="8dp" />
-
 
         <EditText
             android:layout_width="match_parent"
@@ -165,14 +148,12 @@
             android:paddingRight="0dp"
             android:padding="8dp"
             android:enabled="false"
-            android:textColor="#ffffff"
             android:editable="false"
             android:text="8-800-***-**-**"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            android:textAppearance="?android:attr/textAppearanceLarge" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:text="@string/contactInformation"
             android:id="@+id/ContactInformation"
             android:padding="8dp" />

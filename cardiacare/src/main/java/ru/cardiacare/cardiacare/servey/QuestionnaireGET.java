@@ -93,7 +93,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
     protected void onPostExecute(Integer result) {
         super.onPostExecute(result);
         if (result == -1) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
             alertDialog.setTitle(R.string.dialog_server_error_title);
             alertDialog.setMessage(R.string.dialog_server_error_message);
             alertDialog.setNegativeButton(R.string.dialog_server_error_positive_button,

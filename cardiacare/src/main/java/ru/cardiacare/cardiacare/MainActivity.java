@@ -280,46 +280,46 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        alarmButton = (Button) findViewById(R.id.alarmButton);
+//        alarmButton = (Button) findViewById(R.id.alarmButton);
 //        Display display = getWindowManager().getDefaultDisplay();
 //        DisplayMetrics metricsB = new DisplayMetrics();
 //        display.getMetrics(metricsB);
 
-        alarmButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    if (!gps.canGetLocation()) {
-                        alarmButtonFlag = true;
-                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);                        alertDialog.setTitle(R.string.dialog_sos_title);
-                        alertDialog.setMessage(R.string.dialog_sos_message);
-                        alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Переход к настройкам GPS
-                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                context.startActivity(intent);
-                            }
-                        });
-                        alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                GPSLoad gpsLoad2 = new GPSLoad(context);
-                                gpsLoad2.execute();
-                                dialog.cancel();
-                            }
-                        });
-                        alertDialog.show();
-                    } else {
-                        alarmButton.setEnabled(false);
-                        alarmButton.setBackgroundColor(0x77a71000);
-                        alarmButtonFlag = false;
-                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-                    }
-                } else {
-                    setLoadingScreen();
-                }
-            }
-        });
+//        alarmButton.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (isNetworkAvailable(context)) {
+//                    backgroundFlag = 1;
+//                    if (!gps.canGetLocation()) {
+//                        alarmButtonFlag = true;
+//                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);                        alertDialog.setTitle(R.string.dialog_sos_title);
+//                        alertDialog.setMessage(R.string.dialog_sos_message);
+//                        alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // Переход к настройкам GPS
+//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//                                context.startActivity(intent);
+//                            }
+//                        });
+//                        alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                GPSLoad gpsLoad2 = new GPSLoad(context);
+//                                gpsLoad2.execute();
+//                                dialog.cancel();
+//                            }
+//                        });
+//                        alertDialog.show();
+//                    } else {
+//                        alarmButton.setEnabled(false);
+//                        alarmButton.setBackgroundColor(0x77a71000);
+//                        alarmButtonFlag = false;
+//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
+//                    }
+//                } else {
+//                    setLoadingScreen();
+//                }
+//            }
+//        });
     }
 
     // Древняя функция. Не используется
@@ -410,14 +410,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             // Документы
-            case R.id.documentsData:
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    startActivity(new Intent(this, DocumentsActivity.class));
-                } else {
-                    setLoadingScreen();
-                }
-                break;
+//            case R.id.documentsData:
+//                if (isNetworkAvailable(context)) {
+//                    backgroundFlag = 1;
+//                    startActivity(new Intent(this, DocumentsActivity.class));
+//                } else {
+//                    setLoadingScreen();
+//                }
+//                break;
             // Выход
             case R.id.exitAccount:
                 if (isNetworkAvailable(context)) {
