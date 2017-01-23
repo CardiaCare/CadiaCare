@@ -14,7 +14,4 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="edit_text_size">34sp</dimen>
-    <dimen name="text_view_size">14sp</dimen>
-
 </resources>
