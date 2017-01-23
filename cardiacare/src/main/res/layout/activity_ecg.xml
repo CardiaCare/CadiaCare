@@ -36,13 +36,16 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/stop_ecg" />
-
-<!--    <ru.cardiacare.cardiacare.ECGView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/view"
+        android:text="@string/stop_ecg"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />-->
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <!--    <ru.cardiacare.cardiacare.ECGView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/view"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />-->
 </RelativeLayout>

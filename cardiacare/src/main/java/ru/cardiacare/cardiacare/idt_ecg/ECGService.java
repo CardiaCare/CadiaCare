@@ -71,6 +71,7 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         pastTimeTimer = new Timer();
         startTime = System.currentTimeMillis(); // Фиксируем время начала работы сервиса
         pastTimeCounter();
+        doStart();
     }
 
     public IBinder onBind(Intent arg0) {

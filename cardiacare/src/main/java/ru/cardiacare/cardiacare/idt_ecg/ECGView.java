@@ -89,13 +89,14 @@ public class ECGView extends View {
             @Override
             public void run() {
                 // Data update
-                if (RRIntervals.size() > 1) {
-                    Double rr = RRIntervals.remove();
-                    if ((60.0 / rr) > 40 && (60.0 / rr < 200))
-                        pulse = (int) Math.round(60.0 / rr);
+//                if (RRIntervals.size() > 1) {
+//                    Double rr = RRIntervals.remove();
+//                    if ((60.0 / rr) > 40 && (60.0 / rr < 200))
+//                        pulse = (int) Math.round(60.0 / rr);
+                        pulse = ECGService.heartRate;
 //                    Log.i("TAG","pulse " + pulse+ " ecgForHeartRate " + rr);
                     postInvalidate();
-                }
+//                }
             }
         }, 1000, 500);
         super.onSizeChanged(xNew, yNew, xOld, yOld);
@@ -120,7 +121,7 @@ public class ECGView extends View {
         paint.setColor(ResourcesCompat.getColor(getResources(), R.color.color_ECG, null));
         // Размер шрифта у пульса
         paint.setTextSize(50);
-        canvas.drawText(new Integer(pulse).toString(), 10, 25, paint);
+        canvas.drawText(new Integer(pulse).toString(), 10, 45, paint);
     }
 
     public void drawSignal(Canvas canvas, double[] s) {

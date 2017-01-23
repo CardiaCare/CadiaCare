@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,17 @@ public class ECGActivity extends AppCompatActivity {
         mContext = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_ecg);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.ecg_activity_toolbar);
+        setSupportActionBar(toolbar);
+        assert toolbar != null;
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.backgroundFlag = 1;
+                onBackPressed();
+            }
+        });
 
         RelativeLayout v = (RelativeLayout) findViewById(R.id.ecg_view);
         myView = new ECGView(this, setViewWidthInMillimeter());

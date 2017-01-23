@@ -210,6 +210,7 @@
     <string name="sos">SOS</string>
     <string name="pass_survey">Пройти опрос</string>
     <string name="documents">Документы</string>
+    <string name="search_devices">Поиск устройств</string>
 
     <!--main.xml(land)-->
     <string name="content_description">Рисунок</string>

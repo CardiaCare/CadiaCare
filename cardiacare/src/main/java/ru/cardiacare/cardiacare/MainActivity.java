@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     Button nextButton;
     Button btnDisconnect;
     static public Button alarmButton;
+    static public Button searchDevicesButton;
     static public ImageButton serveyButton;
     EditText etFirstName;
     EditText etSecondName;
@@ -234,23 +235,43 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(toolbar);
 
-        connectListView = (ListView) findViewById(R.id.ConnectListView);
+//        connectListView = (ListView) findViewById(R.id.ConnectListView);
+//
+//        connectListArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+//        connectListView.setAdapter(connectListArrayAdapter);
+//        connectListArrayAdapter.add("Alive Bluetooth Monitor");
+//        connectListArrayAdapter.add("ECG-BTLE");
+//
+//        connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                backgroundFlag = 1;
+//                // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
+//                if (isMyServiceRunning(ECGService.class)) {
+//                    Intent intent = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
+//                    startActivity(intent);
+//                } else {
+//                    Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
+//                    intentBluetoothFind.putExtra("deviceType", id);
+//                    startActivity(intentBluetoothFind);
+//                }
+//            }
+//        });
 
-        connectListArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        connectListView.setAdapter(connectListArrayAdapter);
-        connectListArrayAdapter.add("Alive Bluetooth Monitor");
-        connectListArrayAdapter.add("ECG-BTLE");
-
-        connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        searchDevicesButton = (Button) findViewById(R.id.searchDevicesButton) ;
+        searchDevicesButton.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View v) {
                 backgroundFlag = 1;
-                //TODO выбор способа подключения
-                Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
-                intentBluetoothFind.putExtra("deviceType", id);
-                //TODO change methods
-                startActivity(intentBluetoothFind);
+                // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
+                if (isMyServiceRunning(ECGService.class)) {
+                    Intent intent = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
+                    startActivity(intentBluetoothFind);
+                }
             }
         });
 
