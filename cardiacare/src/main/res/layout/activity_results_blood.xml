@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bp_deary_layout"
@@ -7,92 +7,112 @@
     android:orientation="vertical"
     tools:context="ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
+        android:fitsSystemWindows="true"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:theme="@style/AppBaseTheme.AppBarOverlay"
+        android:layout_gravity="@+id/tool">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:padding="10dp"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="227dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:weightSum="1"
-            android:layout_margin="10dp">
-
-            <ImageView
-                android:layout_width="155dp"
-                android:layout_height="168dp"
-                app:srcCompat="@drawable/bp_icon"
-                android:id="@+id/imageView" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:weightSum="2"
-            android:layout_margin="10dp">
-
-            <EditText
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool"
+                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppBaseTheme.AppBarOverlay" />
+
+            <LinearLayout
+                android:layout_below="@+id/tool"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/systolicEditText" />
+                android:padding="10dp"
+                android:gravity="center">
 
-            <TextView
-                android:text="Sys"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/systolicText" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="10dp">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberSigned"
-                android:ems="10"
-                android:id="@+id/diastolicEditText" />
+                    <EditText
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:ems="3"
+                        android:id="@+id/systolicEditText"
+                        android:layout_width="match_parent"
+                        android:textSize="40dp"
+                        android:hint="..."/>
 
-            <TextView
-                android:text="D/A"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView2" />
+                    <TextView
+                        android:text="Sys"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/systolicText" />
+                    </LinearLayout>
+                <TextView
+                    android:text="/"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textFix"
+                    android:textSize="40sp"/>
 
-            <Button
-                android:text="Add"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/addBPButton"
-                android:layout_margin="10dp" />
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center">
 
-        </LinearLayout>
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:ems="3"
+                        android:id="@+id/diastolicEditText"
+                        android:textSize="40dp"
+                        android:hint="..."
+                        android:singleLine="false" />
 
-    </LinearLayout>
+                    <TextView
+                        android:text="D/A"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView2" />
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:text=" Last measurement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView8"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:layout_margin="10dp" />
-    <ListView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="385.15"
-        android:id="@+id/bpListView">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_margin="10dp">
 
-    </ListView>
-</LinearLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/bpListView">
+        </ListView>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addBPButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/app_bar"
+        app:layout_anchorGravity="bottom|end"
+        app:srcCompat="@drawable/ic_add_white_24dp" />
+
+</android.support.design.widget.CoordinatorLayout>
