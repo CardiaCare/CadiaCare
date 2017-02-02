@@ -7,25 +7,20 @@
     <color name="alarm_button_standard_color">#FF0000</color>
 
     // Цвета для темы AppBaseTheme (для всего приложения)
-    <color name="colorPrimary">#2196f3</color>
-    <color name="colorPrimaryDark">#0d47a1</color>
-    <color name="colorAccent">#e91e63</color>
-    <color name="textColorPrimary">#000000</color>
-    <color name="navigationBarColor">#0d47a1</color>
-    <color name="colorBackground">#ffffff</color>
-    <color name="colorForeground">#000000</color>
-    <color name="textColorSecondary">#0d47a1</color>
-    <color name="windowBackground">#fafafa</color>
-    <color name="statusBarColor">#1976d2</color>
-    <color name="textColorTertiary">#0d47a1</color>
-    <color name="documentsEditTextColor">#000000</color>
-    <color name="documentsTextViewColor">#0d47a1</color>
+    <color name="colorPrimary">#0288AD</color>
+    <color name="colorPrimaryDark">#015870</color>
+    <color name="colorAccent">#763a7a</color>
+    <color name="textColorPrimary">#015870</color>
+    <color name="colorBackground">#F6F3EC</color>
+    <color name="textColorSecondary">#F6F3EC</color>
+    <color name="statusBarColor">#015870</color>
+
 
     // Цвета для темы AppCompatAlertDialogStyle (диалоговые окна)
-    <color name="dialogColorPrimary">#ffffff</color>
-    <color name="dialogColorBackground">#81D4FA</color>
-    <color name="dialogTextColorPrimary">#ffffff</color>
-    <color name="dialogTextColorSecondary">#ffffff</color>
-    <color name="dialogColorAccent">#0d47a1</color>
+    <color name="dialogColorPrimary">#0288AD</color>
+    <color name="dialogColorBackground">#F6F3EC</color>
+    <color name="dialogTextColorPrimary">#763A7A</color>
+    <color name="dialogTextColorSecondary">#015870</color>
+    <color name="dialogColorAccent">#763A7A</color>
 
 </resources>
