@@ -17,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import android.util.Base64;
 
+import org.json.JSONObject;
+
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
@@ -51,8 +53,8 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             urlConnection.setRequestProperty("Authorization", "Basic "+ Base64.encodeToString((MainActivity.storage.getAccountToken()+":").getBytes("UTF-8"), Base64.DEFAULT) );//MainActivity.authorization_token);///
             urlConnection.connect();
            // urlConnection.getResponseCode();
-            System.out.println("Test! url " + urlConnection.getResponseCode());
-            System.out.println("Test! base64 " + Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT));
+           // System.out.println("Test! url " + urlConnection.getResponseCode());
+            // System.out.println("Test! base64 " + Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT));
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
@@ -63,6 +65,12 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
                 buffer.append(line);
             }
             resultJson = buffer.toString();
+
+            JSONObject dataJsonObj = null;
+            dataJsonObj = new JSONObject(resultJson);
+            resultJson = dataJsonObj.getString("data");
+
+
         } catch (Exception e) {
             e.printStackTrace();
             return -1;

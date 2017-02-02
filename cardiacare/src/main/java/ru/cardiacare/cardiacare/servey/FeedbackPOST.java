@@ -2,6 +2,7 @@ package ru.cardiacare.cardiacare.servey;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -43,8 +44,8 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
             if (QuestionnaireHelper.questionnaireType.equals("periodic"))
                 jsonFeedback = json.toJson(MainActivity.feedback);
             else jsonFeedback = json.toJson(MainActivity.alarmFeedback);
-//            jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
-
+           // jsonFeedback = "{\"user_id\":" + "123456" + ", \"date\":" + "123456"+jsonFeedback+"}";
+            jsonFeedback = "{\"questionnaire_id\":" + "4" + ", \"data\":\"" + jsonFeedback + "\"}";
             // TODO feedback отправляется всегда, независимо от того, изменились ответы или нет.
 //            String jsonFeedbackOld = readSavedData();
 //            String newfb = jsonFeedback.substring(jsonFeedback.indexOf("personUri"), jsonFeedback.length());
@@ -55,12 +56,17 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 //            }
             writeData(jsonFeedback);
 
-            String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
-            String parameters;
+            //String myURL = "http://api.cardiacare.ru/index.php?r=feedback/create";
+            String myURL = "http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId() +"/feedback";
+            System.out.println("Test!!!!!! account id " + MainActivity.storage.getAccountId());
+            System.out.println("Test!!!!!! json send " + jsonFeedback);
+            /*String parameters;
             if (QuestionnaireHelper.questionnaireType.equals("periodic"))
-                parameters = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
-            else parameters = "user_id=" + "654321" + "&date=" + "654321" + "&feedback=" + jsonFeedback;
-            byte[] data = null;
+                //parameters = "user_id=" + "123456" + "&date=" + "123456" + "&feedback=" + jsonFeedback;
+                parameters = "questionnaire_id=" + "4";
+            else //parameters = "user_id=" + "654321" + "&date=" + "654321" + "&feedback=" + jsonFeedback;
+                parameters = "questionnaire_id=" + "4";
+            byte[] data = null;*/
             InputStream is = null;
 
             try {
@@ -70,13 +76,19 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
 
-                conn.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+                //conn.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setRequestProperty("Authorization", "Basic "+ Base64.encodeToString((MainActivity.storage.getAccountToken()+":").getBytes("UTF-8"), Base64.DEFAULT) );
                 OutputStream os = conn.getOutputStream();
-                data = parameters.getBytes("UTF-8");
+               /* data = parameters.getBytes("UTF-8");
                 os.write(data);
                 data = null;
-
+*/
                 conn.connect();
+
+                System.out.println("Test! url " + conn.getResponseCode());
+
                 int responseCode = conn.getResponseCode();
 
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
