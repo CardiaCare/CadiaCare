@@ -178,7 +178,7 @@
     <string name="demographicData">Демографические данные</string>
     <string name="laboratoryStudies">Лабораторные исследования</string>
     <string name="resultsDoctor">Результаты обследования врачом</string>
-    <string name="resultsBlood">Результаты измерения артериального давления</string>
+    <string name="resultsBlood">Дневник артериального давления</string>
 
     <!--content_laboratory_studies.xml-->
     <string name="organizationName">Название организации</string>

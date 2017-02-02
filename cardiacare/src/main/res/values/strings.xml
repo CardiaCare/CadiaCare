@@ -149,7 +149,7 @@
     <string name="demographicData">Demographic data</string>
     <string name="laboratoryStudies">Laboratory studies</string>
     <string name="resultsDoctor">Survey results doctor</string>
-    <string name="resultsBlood">Results measuring blood pressure</string>
+    <string name="resultsBlood">Blood pressure diary</string>
 
     <!--content_laboratory_studies.xml-->
     <string name="organizationName">Organization name</string>
