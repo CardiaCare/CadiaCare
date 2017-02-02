@@ -41,8 +41,10 @@ public class QuestionnaireHelper {
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
         if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (!questionnaireDownloaded)) {
-            serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
+            serverUri = "http://api.cardiacare.ru/survey/4";
+            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
             Log.i("serverUri = ", serverUri);
+            System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
             MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
             MainActivity.storage.setVersion(QuestionnaireServerVersion);
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
@@ -65,7 +67,8 @@ public class QuestionnaireHelper {
         questionnaireType = "alarm";
         // Если опросник ещё не был загружен, то загружаем опросник
         if (!alarmQuestionnaireDownloaded) {
-            serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
+            serverUri = "http://api.cardiacare.ru/survey/2";
+            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {

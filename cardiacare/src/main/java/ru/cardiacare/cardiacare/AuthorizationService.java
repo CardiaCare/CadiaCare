@@ -26,8 +26,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
     @Override
     protected String doInBackground(JSONObject... data) {
         JSONObject json = data[0];
-        String url = "http://platov.cardiacare.ru/emr/web/index.php/tokens";
-
+        String url = "http://api.cardiacare.ru/tokens";
+        //String url = "http://platov.cardiacare.ru/emr/web/index.php/tokens";
         try {
             URL object = new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -53,6 +53,19 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
             token = sb.toString();
             result = con.getResponseMessage();
         } catch (Exception e) {}
+
+        /////////////////////////////////////////////
+        try {
+            JSONObject dataJsonObj = null;
+            dataJsonObj = new JSONObject(token);
+            //JSONObject friends = dataJsonObj.getJSONObject("token");
+            //token = friends.getString("token");
+            //System.out.println("Test! auth " + dataJsonObj.getString("token"));
+            token = dataJsonObj.getString("token");
+        } catch (Exception e) {}
+        /////////////////////////////////
+
+        //System.out.println("Test!" + token + result + json.toString());
 
         if (result.equals("Created")) {
             return token;

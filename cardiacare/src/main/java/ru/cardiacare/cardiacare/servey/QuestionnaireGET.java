@@ -15,7 +15,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import android.util.Base64;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Загрузка периодического опросника с сервера */
@@ -43,6 +45,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             URL url = new URL(QuestionnaireHelper.serverUri);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
+            urlConnection.setRequestProperty("Authorization: Basic ", Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT) );//MainActivity.authorization_token);////
             urlConnection.connect();
 
             InputStream inputStream = urlConnection.getInputStream();
@@ -86,6 +89,8 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
         if (QuestionnaireHelper.questionnaireType.equals("periodic"))
             QuestionnaireHelper.questionnaireDownloaded = true;
         else QuestionnaireHelper.alarmQuestionnaireDownloaded = true;
+
+        System.out.println("Test! resultJson" + MainActivity.storage.getAccountToken() + " " + resultJson);
         return 0;
     }
 

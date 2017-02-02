@@ -192,8 +192,10 @@ public class MainActivity extends AppCompatActivity {
             JSONGenerator jsonGen = new JSONGenerator();
             // Чтобы не вводить каждый раз e-mail и password зарегистрированного пользователя.
             // Для корректной работы авторизации - удалить две строки ниже.
-            email = "test_patient@test.ru";
-            password = "test_patient";
+            //email = "test_patient@test.ru";
+            //password = "test_patient";
+            email = etEmail.getText().toString();
+            password = etPassword.getText().toString();
             JSONObject json = jsonGen.generateAuthJSON(email, password);
             AuthorizationService intServ = new AuthorizationService();
             intServ.execute(json);
@@ -281,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isNetworkAvailable(context)) {
                     backgroundFlag = 1;
                     QuestionnaireHelper.showQuestionnaire(context);
-                    serveyButton.setEnabled(false);
+                    //serveyButton.setEnabled(false);
                 } else {
                     setLoadingScreen();
                 }
