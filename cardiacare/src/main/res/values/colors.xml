@@ -7,11 +7,11 @@
     <color name="alarm_button_standard_color">#FF0000</color>
 
     // Цвета для темы AppBaseTheme (для всего приложения)
-    <color name="colorPrimary">#0288AD</color>
+    <color name="colorPrimary">#0288ad</color>
     <color name="colorPrimaryDark">#015870</color>
     <color name="colorAccent">#763a7a</color>
     <color name="textColorPrimary">#015870</color>
-    <color name="colorBackground">#F6F3EC</color>
+    <color name="colorBackground">#f6f3ec</color>
     <color name="textColorSecondary">#F6F3EC</color>
     <color name="statusBarColor">#015870</color>
 
