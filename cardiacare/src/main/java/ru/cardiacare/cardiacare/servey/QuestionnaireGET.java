@@ -45,8 +45,14 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             URL url = new URL(QuestionnaireHelper.serverUri);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.setRequestProperty("Authorization: Basic ", Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT) );//MainActivity.authorization_token);////
+            urlConnection.setReadTimeout(10000 /* milliseconds */);
+            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setDoInput(true);
+            urlConnection.setRequestProperty("Authorization", "Basic "+ Base64.encodeToString((MainActivity.storage.getAccountToken()+":").getBytes("UTF-8"), Base64.DEFAULT) );//MainActivity.authorization_token);///
             urlConnection.connect();
+           // urlConnection.getResponseCode();
+            System.out.println("Test! url " + urlConnection.getResponseCode());
+            System.out.println("Test! base64 " + Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT));
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
