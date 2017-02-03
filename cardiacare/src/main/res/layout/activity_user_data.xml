@@ -94,7 +94,7 @@
                     android:layout_toRightOf="@id/ivContactItem"
                     android:text="123@mail.com"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#212121" />
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -151,7 +151,7 @@
                     android:layout_toRightOf="@id/imNumber"
                     android:text="1234556789"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#212121" />
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -204,7 +204,7 @@
                         android:layout_toRightOf="@id/imHeight"
                         android:text="170"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#212121" />
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -247,7 +247,7 @@
                         android:layout_toRightOf="@id/imWeight"
                         android:text="123"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#212121" />
+                        android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -293,7 +293,7 @@
                     android:layout_toRightOf="@id/imAge"
                     android:text="65"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="#212121" />
+                    android:textColor="@color/colorPrimaryDark" />
 
                 <TextView
                     android:layout_width="wrap_content"
