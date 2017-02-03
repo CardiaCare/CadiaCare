@@ -11,13 +11,24 @@ public class Feedback {
     private String personUri;
     private String questionnaireUri;
     LinkedList<Response> responses;
+    LinkedList<Respond> responds;
 
     public Feedback(String uri, String personUri, String questionnaireUri) {
         this.uri = uri;
         this.personUri = personUri;
         this.questionnaireUri = questionnaireUri;
         this.responses = new LinkedList<Response>();
+        this.responds = new LinkedList<Respond>();
     }
+
+    public void addRespond(Respond newRespond) {
+        this.responds.addLast(newRespond);
+    }
+
+    public LinkedList<Respond> getResponds() {
+        return responds;
+    }
+
 
     public void setUri(String uri) {
         this.uri = uri;

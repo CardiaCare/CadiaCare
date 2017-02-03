@@ -7,6 +7,12 @@ import java.util.LinkedList;
  */
 public class Response {
 
+    private Integer id;
+    private Integer answerId;
+    private String textItem;
+    private String fileUri;
+    LinkedList<ResponseItem> responseItems;
+
     private String uri;
     private String questionUri;
 
@@ -19,8 +25,6 @@ public class Response {
         this.questionUri = questionUri;
         this.responseItems = new LinkedList<ResponseItem>();
     }
-
-    LinkedList<ResponseItem> responseItems;
 
     public void addResponseItem(ResponseItem newResponseItem) {
         this.responseItems.addLast(newResponseItem);
@@ -44,5 +48,37 @@ public class Response {
 
     public String getQuestionUri() {
         return questionUri;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Integer answerId) {
+        this.answerId = answerId;
+    }
+
+    public String getTextItem() {
+        return textItem;
+    }
+
+    public void setTextItem(String textItem) {
+        this.textItem = textItem;
+    }
+
+    public String getFileUri() {
+        return fileUri;
+    }
+
+    public void setFileUri(String fileUri) {
+        this.fileUri = fileUri;
     }
 }
