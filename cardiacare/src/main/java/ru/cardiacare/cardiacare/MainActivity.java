@@ -13,7 +13,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +33,6 @@ import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
-import ru.cardiacare.cardiacare.hisdocuments.DocumentsActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
@@ -53,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
     static public Button alarmButton;
     static public Button searchDevicesButton;
     static public ImageButton serveyButton;
-    EditText etFirstName;
-    EditText etSecondName;
+
     EditText etEmail;
     EditText etPassword;
     ListView connectListView;
@@ -160,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
 //        Log.i(TAG, "setUnregisteredActivity see");
         patientUriFlag = 0;
 
-        etFirstName = (EditText) findViewById(R.id.etFirstName);
-        etSecondName = (EditText) findViewById(R.id.etSecondName);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPassword = (EditText) findViewById(R.id.etPassword);
 
@@ -169,15 +163,16 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                authorization(etFirstName.getText().toString(), etSecondName.getText().toString(), etEmail.getText().toString(), etPassword.getText().toString());
+                authorization(etEmail.getText().toString(), etPassword.getText().toString());
             }
         });
     }
 
     // Авторизация
-    public void authorization(String first, String second, String email, String password) {
+    public void authorization(String email, String password) {
+        Log.i(TAG, "authorization" + email + " " + password);
         // Если не все поля заполнены, то выводим диалог об ошибке
-        if ((first.isEmpty()) || (second.isEmpty()) || (email.isEmpty())) {
+        if ( (email.isEmpty())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -195,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
             // Для корректной работы авторизации - удалить две строки ниже.
             //email = "test_patient@test.ru";
             //password = "test_patient";
-            email = etEmail.getText().toString();
-            password = etPassword.getText().toString();
+            //email = etEmail.getText().toString();
+            //password = etPassword.getText().toString();
             JSONObject json = jsonGen.generateAuthJSON(email, password);
             AuthorizationService intServ = new AuthorizationService();
             intServ.execute(json);
@@ -209,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, first, second, "", "", "", "", "", "0", "");
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "");
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
