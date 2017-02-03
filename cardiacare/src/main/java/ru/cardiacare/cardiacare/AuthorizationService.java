@@ -58,10 +58,15 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         try {
             JSONObject dataJsonObj = null;
             dataJsonObj = new JSONObject(token);
-            //JSONObject friends = dataJsonObj.getJSONObject("token");
-            //token = friends.getString("token");
-            //System.out.println("Test! auth " + dataJsonObj.getString("token"));
             token = dataJsonObj.getString("token");
+
+            JSONObject dataUser = null;
+            dataUser = new JSONObject(dataJsonObj.getString("user"));
+
+            JSONObject dataPerson = null;
+            dataPerson = new JSONObject(dataUser.getString("person"));
+            MainActivity.authorization_id_patient = dataPerson.getString("id");
+
         } catch (Exception e) {}
         /////////////////////////////////
 

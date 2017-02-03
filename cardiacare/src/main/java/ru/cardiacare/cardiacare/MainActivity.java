@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<String> connectListArrayAdapter;
 
     static public String authorization_token = "";
+    static public String authorization_id_patient = "";
 
     public static boolean connectedState = false;
 
@@ -208,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", "", authorization_token, email, first, second, "", "", "", "", "", "0", "");
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, first, second, "", "", "", "", "", "0", "");
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
