@@ -1,223 +1,525 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/help_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:id="@+id/activity_user_data"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
     tools:context="ru.cardiacare.cardiacare.user.Userdata">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/account_activity_toolbar"
-        android:layout_width="match_parent"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize" />
+        android:layout_width="match_parent"
+        android:theme="@style/AppBaseTheme.AppBarOverlay"
+        android:layout_gravity="@+id/toolBlood"
+        android:fitsSystemWindows="true">
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+           >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/account_activity_toolbar"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_width="match_parent"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/tvFirstName"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/tvSecondName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="@string/tvSecondName"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                </LinearLayout>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/account_activity_toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_margin="10dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/account_activity_toolbar"
-            android:layout_centerHorizontal="true"
-            android:gravity="left"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvSib"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="Настройки ИП"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tvSibName"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="Name"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/etSibName"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp"-->
-                <!--android:paddingLeft="0dp"-->
-                <!--android:paddingRight="0dp" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tvSibIp"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="IP"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/etSibIp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp"-->
-                <!--android:paddingLeft="0dp"-->
-                <!--android:paddingRight="0dp" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tvSibPort"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="Port"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/etSibPort"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp"-->
-                <!--android:paddingLeft="0dp"-->
-                <!--android:paddingRight="0dp" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/tvUser"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="Учетная запись"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <TextView
-                android:id="@+id/tvFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/tvFirstName"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/etFirstName"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tvSecondName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/tvSecondName"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <ImageView
+                    android:id="@+id/ivContactItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
-            <EditText
-                android:id="@+id/etSecondName"
+                <TextView
+                    android:id="@+id/tvEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/ivContactItem"
+                    android:layout_toRightOf="@id/ivContactItem"
+                    android:text="123@mail.com"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvEmail"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/ivContactItem"
+                    android:layout_toRightOf="@id/ivContactItem"
+                    android:text="Email"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+
+                <!--<ToggleButton-->
+                    <!--android:id="@+id/chkState"-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+                    <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                    <!--android:background="@drawable/toggle_selector"-->
+                    <!--android:checked="false"-->
+                    <!--android:padding="6dp"-->
+                    <!--android:textOff=""-->
+                    <!--android:textOn="" />-->
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="E-mail"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <ImageView
+                    android:id="@+id/imNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
-            <EditText
-                android:id="@+id/etEmail"
+                <TextView
+                    android:id="@+id/tvNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/imNumber"
+                    android:layout_toRightOf="@id/imNumber"
+                    android:text="1234556789"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvNumber"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/imNumber"
+                    android:layout_toRightOf="@id/imNumber"
+                    android:text="@string/phoneNumber"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+
+            </RelativeLayout>
+
+            <include layout="@layout/item_divider" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:padding="8dp" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tvPhoneNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/phoneNumber"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin">
 
-            <EditText
-                android:id="@+id/etPhoneNumber"
+                    <ImageView
+                        android:id="@+id/imHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                    <!--android:src="@drawable/ic_phone_black_24dp" />-->
+
+                    <TextView
+                        android:id="@+id/tvHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/imHeight"
+                        android:layout_toRightOf="@id/imHeight"
+                        android:text="170"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvHeight"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/imHeight"
+                        android:layout_toRightOf="@id/imHeight"
+                        android:text="@string/height"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:padding="@dimen/activity_horizontal_margin">
+
+                    <ImageView
+                        android:id="@+id/imWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                    <!--android:src="@drawable/ic_phone_black_24dp" />-->
+
+                    <TextView
+                        android:id="@+id/tvWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@id/imWeight"
+                        android:layout_toRightOf="@id/imWeight"
+                        android:text="123"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="#212121" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvWeight"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginStart="@dimen/activity_horizontal_margin"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@id/imWeight"
+                        android:layout_toRightOf="@id/imWeight"
+                        android:text="@string/weight"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <include layout="@layout/item_divider" />
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="phone" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tvHeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/height"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <ImageView
+                    android:id="@+id/imAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
-            <EditText
-                android:id="@+id/etHeight"
+                <TextView
+                    android:id="@+id/tvAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/imAge"
+                    android:layout_toRightOf="@id/imAge"
+                    android:text="65"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#212121" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvAge"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/imAge"
+                    android:layout_toRightOf="@id/imAge"
+                    android:text="@string/age"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+
+            </RelativeLayout>
+
+            <include layout="@layout/item_divider" />
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:padding="8dp" />
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/activity_horizontal_margin">
 
-            <TextView
-                android:id="@+id/tvWeight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/weight"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                <ImageView
+                    android:id="@+id/imPeriodPassServey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
-            <EditText
-                android:id="@+id/etWeight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:padding="8dp" />
+                <EditText
+                    android:id="@+id/etPeriodPassServey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/imPeriodPassServey"
+                    android:layout_toRightOf="@id/imPeriodPassServey"/>
 
-            <TextView
-                android:id="@+id/tvAge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/age"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/etPeriodPassServey"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/imPeriodPassServey"
+                    android:layout_toRightOf="@id/imPeriodPassServey"
+                    android:text="Периодичность опросов, сек"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
 
-            <EditText
-                android:id="@+id/etAge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:padding="8dp" />
-
-
-            <TextView
-                android:id="@+id/tvPeriodPassServey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Периодичность опросов, сек"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-            <EditText
-                android:id="@+id/etPeriodPassServey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:padding="8dp" />
+            </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/addBPButton"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--app:layout_anchor="@id/app_bar"-->
+    <!--app:layout_anchorGravity="bottom|end"-->
+    <!--app:srcCompat="@drawable/ic_add_white_24dp" />-->
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/help_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context="ru.cardiacare.cardiacare.user.Userdata">-->
+
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:id="@+id/account_activity_toolbar"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="?attr/colorPrimary"-->
+        <!--android:minHeight="?attr/actionBarSize" />-->
+
+    <!--<ScrollView-->
+        <!--android:id="@+id/scrollView2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/account_activity_toolbar">-->
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_below="@+id/account_activity_toolbar"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:gravity="left"-->
+            <!--android:orientation="vertical"-->
+            <!--android:padding="8dp">-->
+            <!---->
+            <!--<TextView-->
+                <!--android:id="@+id/tvFirstName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/tvFirstName"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etFirstName"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp"-->
+                <!--android:paddingLeft="0dp"-->
+                <!--android:paddingRight="0dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvSecondName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/tvSecondName"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etSecondName"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvEmail"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="E-mail"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etEmail"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="text"-->
+                <!--android:padding="8dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvPhoneNumber"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/phoneNumber"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etPhoneNumber"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="phone" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvHeight"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/height"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etHeight"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="number"-->
+                <!--android:padding="8dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvWeight"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/weight"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etWeight"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="number"-->
+                <!--android:padding="8dp" />-->
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvAge"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="@string/age"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etAge"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="number"-->
+                <!--android:padding="8dp" />-->
+
+
+            <!--<TextView-->
+                <!--android:id="@+id/tvPeriodPassServey"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="8dp"-->
+                <!--android:text="Периодичность опросов, сек"-->
+                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+
+            <!--<EditText-->
+                <!--android:id="@+id/etPeriodPassServey"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:inputType="number"-->
+                <!--android:padding="8dp" />-->
+
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
+<!--</RelativeLayout>-->

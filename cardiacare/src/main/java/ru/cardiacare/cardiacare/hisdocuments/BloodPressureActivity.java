@@ -52,6 +52,7 @@ public class BloodPressureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_results_blood);
+        setTitle("");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBlood);
         setSupportActionBar(toolbar);

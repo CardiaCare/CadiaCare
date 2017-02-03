@@ -50,6 +50,7 @@ public class Userdata extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_user_data);
+        setTitle("");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.account_activity_toolbar);
         setSupportActionBar(toolbar);
@@ -63,17 +64,20 @@ public class Userdata extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+
+
         etEmail = (EditText) findViewById(R.id.etEmail);
-        etSibName = (EditText) findViewById(R.id.etSibName);
-        etSibIp = (EditText) findViewById(R.id.etSibIp);
-        etSibPort = (EditText) findViewById(R.id.etSibPort);
+//        etSibName = (EditText) findViewById(R.id.etSibName);
+//        etSibIp = (EditText) findViewById(R.id.etSibIp);
+//        etSibPort = (EditText) findViewById(R.id.etSibPort);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
-        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+        //etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
     }
@@ -81,18 +85,18 @@ public class Userdata extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         SharedPreferences.Editor editor = sPref.edit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_EMAIL, etEmail.getText().toString()).commit();
-//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBNAME, etSibName.getText().toString()).commit();
-//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBIP, etSibIp.getText().toString()).commit();
-//        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBPORT, etSibPort.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_FIRSTNAME, etFirstName.getText().toString()).commit();
-//        Log.i("TAG", "1 " + sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
-        sPref.edit().putString(ACCOUNT_PREFERENCES_SECONDNAME, etSecondName.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_PHONENUMBER, etPhoneNumber.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_HEIGHT, etHeight.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_WEIGHT, etWeight.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_AGE, etAge.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_EMAIL, etEmail.getText().toString()).commit();
+////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBNAME, etSibName.getText().toString()).commit();
+////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBIP, etSibIp.getText().toString()).commit();
+////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBPORT, etSibPort.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_FIRSTNAME, etFirstName.getText().toString()).commit();
+////        Log.i("TAG", "1 " + sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_SECONDNAME, etSecondName.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_PHONENUMBER, etPhoneNumber.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_HEIGHT, etHeight.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_WEIGHT, etWeight.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_AGE, etAge.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
 
         editor.apply();
 
@@ -111,30 +115,30 @@ public class Userdata extends AppCompatActivity {
 //        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
 //            etSibPort.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, ""));
 //        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
-            etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_FIRSTNAME)) {
-            etFirstName.setText(sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
-            etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
-            etPhoneNumber.setText(sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_HEIGHT)) {
-            etHeight.setText(sPref.getString(ACCOUNT_PREFERENCES_HEIGHT, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_WEIGHT)) {
-            etWeight.setText(sPref.getString(ACCOUNT_PREFERENCES_WEIGHT, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_AGE)) {
-            etAge.setText(sPref.getString(ACCOUNT_PREFERENCES_AGE, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
-            etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
-        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
+//            etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_FIRSTNAME)) {
+//            etFirstName.setText(sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
+//            etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
+//            etPhoneNumber.setText(sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_HEIGHT)) {
+//            etHeight.setText(sPref.getString(ACCOUNT_PREFERENCES_HEIGHT, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_WEIGHT)) {
+//            etWeight.setText(sPref.getString(ACCOUNT_PREFERENCES_WEIGHT, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_AGE)) {
+//            etAge.setText(sPref.getString(ACCOUNT_PREFERENCES_AGE, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
+//            etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
+//        }
     }
 
     @Override
