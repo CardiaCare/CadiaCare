@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
             GPSLoad gpsLoad = new GPSLoad(context);
             gpsLoad.execute();
 
-            if (storage.getAccountFirstName().isEmpty() || storage.getAccountSecondName().isEmpty()) {
+            if (storage.getAccountToken().isEmpty()) {
                 Log.i(TAG, "setUserAuthorizationScreen");
                 setUserAuthorizationScreen();
             } else {
@@ -170,9 +170,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Авторизация
     public void authorization(String email, String password) {
-        Log.i(TAG, "authorization" + email + " " + password);
         // Если не все поля заполнены, то выводим диалог об ошибке
-        if ( (email.isEmpty())) {
+        if ( (email.isEmpty())||(password.isEmpty())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -186,12 +185,6 @@ public class MainActivity extends AppCompatActivity {
             // Если все поля заполнены, формируем запрос на авторизацию и отправляем его на сервер
         } else {
             JSONGenerator jsonGen = new JSONGenerator();
-            // Чтобы не вводить каждый раз e-mail и password зарегистрированного пользователя.
-            // Для корректной работы авторизации - удалить две строки ниже.
-            //email = "test_patient@test.ru";
-            //password = "test_patient";
-            //email = etEmail.getText().toString();
-            //password = etPassword.getText().toString();
             JSONObject json = jsonGen.generateAuthJSON(email, password);
             AuthorizationService intServ = new AuthorizationService();
             intServ.execute(json);

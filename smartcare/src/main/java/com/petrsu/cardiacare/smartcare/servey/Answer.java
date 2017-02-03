@@ -6,6 +6,7 @@ import java.util.LinkedList;
  * Created by Iuliia Zavialova on 09.03.16.
  */
 public class Answer {
+    private String id;
     private String uri;
     private String type;
 
@@ -20,7 +21,7 @@ public class Answer {
     public Answer(Answer answer){
         this.uri = answer.getUri();
         this.type = answer.getType();
-        this.items = answer.items;
+        this.items = new LinkedList<AnswerItem>();
     }
 
     // Получение идентификатора ответа из ИП
@@ -38,10 +39,23 @@ public class Answer {
         return t;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     // Добавить вариант ответа в конец списка
     public void addAnswerItem(AnswerItem item){
         AnswerItem newItem = new AnswerItem(item);
         this.items.addLast(newItem);
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

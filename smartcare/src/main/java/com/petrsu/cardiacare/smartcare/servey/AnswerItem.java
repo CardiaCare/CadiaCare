@@ -6,6 +6,7 @@ import java.util.LinkedList;
  * Created by Iuliia Zavialova on 09.03.16.
  */
 public class AnswerItem {
+    private Integer id;
     private String uri;
     private String itemScore;
     private String itemText;
@@ -47,5 +48,13 @@ public class AnswerItem {
     // Получение текста варианта ответа
     public String getItemText() {
         return itemText;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

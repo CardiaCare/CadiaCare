@@ -6,9 +6,13 @@ import java.util.LinkedList;
  * Created by Iuliia Zavialova on 04.03.16.
  */
 public class Questionnaire {
+    private Integer id;
     private String uri;
     private String serverURI;
     private String version;
+    private String lang;
+    private String description;
+    private boolean emergency;
     // questions - связный список элементов типа Question
     LinkedList <Question> questions;
 
@@ -47,4 +51,39 @@ public class Questionnaire {
         return serverURI;
     }
 
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isEmergency() {
+        return emergency;
+    }
+
+    public void setEmergency(boolean emergency) {
+        this.emergency = emergency;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }
