@@ -227,7 +227,7 @@ public class EcgBle {
 //        ECGService.updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
         ECGService.updateOnServer();
         ECGService.connected_flag = false;
-        ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
+//        ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
         ECGService.myService.stopSelf();
 
         Log.i("ECGBELT", "onDeviceDisconnected");

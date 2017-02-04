@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -43,6 +44,7 @@ public class BluetoothFindActivity extends AppCompatActivity {
     ProgressDialog dialog;
     private BluetoothAdapter myBluetoothAdapter;
     private ListView myListView;
+    String checkedDeviceName;
     private ArrayAdapter<String> BTArrayAdapter;
     boolean bound = false; // Установлено ли подключение к сервису, true - установлено, false - не установлено
     static ServiceConnection sConn;
@@ -119,23 +121,29 @@ public class BluetoothFindActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        if (bound == false) {
-                            sConn = new ServiceConnection() {
-                                public void onServiceConnected(ComponentName name, IBinder binder) {
-                                    Log.d("QQQ", "MainActivity onServiceConnected");
-                                    ecgService = ((ECGService.MyBinder) binder).getService();
-                                    bound = true;
+                        checkedDeviceName = BTArrayAdapter.getItem(position);
+                        if (checkedDeviceName.contains("ECG")) {
+                            if (bound == false) {
+                                sConn = new ServiceConnection() {
+                                    public void onServiceConnected(ComponentName name, IBinder binder) {
+                                        Log.d("QQQ", "MainActivity onServiceConnected");
+                                        ecgService = ((ECGService.MyBinder) binder).getService();
+                                        bound = true;
 //                    ECGService.location.Start(true); // Раньше находилось в onStart()
-                                }
+                                    }
 
-                                public void onServiceDisconnected(ComponentName name) {
-                                    Log.d("QQQ", "MainActivity onServiceDisconnected");
-                                    bound = false;
+                                    public void onServiceDisconnected(ComponentName name) {
+                                        Log.d("QQQ", "MainActivity onServiceDisconnected");
+                                        bound = false;
 //                    ECGService.location.Stop(); // Раньше находилось в onStop()
-                                }
-                            };
-                            startService(intent);
-                            bindService(intent, sConn, 0);
+                                    }
+                                };
+                                startService(intent);
+                                bindService(intent, sConn, 0);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });

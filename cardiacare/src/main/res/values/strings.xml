@@ -216,6 +216,8 @@
     <string name="bluetooth_toast3">Bluetooth is already on</string>
     <string name="bluetooth_toast4">Status: enabled</string>
     <string name="bluetooth_toast5">Status: disabled</string>
+    <string name="bluetooth_toast6">Connect to ECG_BELT</string>
+
 
     <!--LocationService.java-->
     <string name="wifi_toast">There is no network connection</string>

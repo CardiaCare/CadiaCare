@@ -241,6 +241,7 @@
     <string name="bluetooth_toast3">Bluetooth уже включен</string>
     <string name="bluetooth_toast4">Статус: доступен</string>
     <string name="bluetooth_toast5">Статус: недоступен</string>
+    <string name="bluetooth_toast6">Подключитесь к кардиомонитору</string>
 
     <!--LocationService.java-->
     <string name="wifi_toast">Отсутствует подключение к сети</string>
