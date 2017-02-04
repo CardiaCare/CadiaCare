@@ -101,7 +101,8 @@ public class BluetoothFindActivity extends AppCompatActivity {
         if (myBluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
                     Toast.LENGTH_LONG).show();
-        } else {
+        }
+        else {
             on();
             BTArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             myListView = (ListView) findViewById(R.id.mListView);
