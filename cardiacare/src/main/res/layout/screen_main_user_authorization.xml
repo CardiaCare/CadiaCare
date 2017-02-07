@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main_account_connection"
     android:layout_width="match_parent"
@@ -16,15 +17,6 @@
         android:layout_marginTop="100dp"
         android:layout_alignParentTop="true">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:nestedScrollingEnabled="false"
-            android:text="@string/app_name"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/colorBackground" />
     </LinearLayout>
 
     <ScrollView
@@ -86,6 +78,15 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        app:srcCompat="@drawable/cardiacare"
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        tools:ignore="ContentDescription"
+        android:layout_above="@+id/login_form"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>
