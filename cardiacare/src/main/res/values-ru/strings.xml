@@ -252,4 +252,15 @@
     <!--activity_ecg.xml-->
     <string name="stop_ecg">Стоп ЭКГ</string>
 
+    <!--Диалог при нажатии кнопки "назад" на главном экране-->
+    <string name="dialog_main_back_title">Закрытие приложения</string>
+    <string name="dialog_main_back_message">Вы уверены, что хотите выйти из приложения?</string>
+    <string name="dialog_main_back_positive_button">Выход</string>
+    <string name="dialog_main_back_negative_button">Отмена</string>
+    <string name="dialog_main_back_serviceMessage">Вы уверены, что хотите выйти из приложения? При закрытии приложения работа с кардиомонитором будет продолжена в фоновом режиме</string>
+
+    <!--Диалог при остановке сервиса по нажатию на кнопку "СТОП ЭКГ" на ECGActivity-->
+    <string name="dialog_ecg_stop_title">Завершение работы</string>
+    <string name="dialog_ecg_stop_message">Работа с кардиомонитором была завершена</string>
+    <string name="dialog_ecg_stop_positive_button">ОК</string>
 </resources>

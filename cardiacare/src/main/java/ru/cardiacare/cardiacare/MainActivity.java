@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             netFlag = 0;
-            final WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             alertDialog.setTitle(R.string.dialog_wifi_title);
             alertDialog.setMessage(R.string.dialog_wifi_message);
@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     // Авторизация
     public void authorization(String email, String password) {
         // Если не все поля заполнены, то выводим диалог об ошибке
-        if ( (email.isEmpty())||(password.isEmpty())) {
+        if ((email.isEmpty()) || (password.isEmpty())) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "");
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "", "");
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
@@ -252,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        searchDevicesButton = (Button) findViewById(R.id.searchDevicesButton) ;
+        searchDevicesButton = (Button) findViewById(R.id.searchDevicesButton);
         searchDevicesButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -462,7 +462,7 @@ public class MainActivity extends AppCompatActivity {
                     // TODO: удалять токен доступа на сервере
                     backgroundFlag = 0;
                     patientUriFlag = -1;
-                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "");
+                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
                     setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");
@@ -576,6 +576,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_main_back_title);
+        if (isMyServiceRunning(ECGService.class)) {
+            alertDialog.setMessage(R.string.dialog_main_back_serviceMessage);
+        } else {
+            alertDialog.setMessage(R.string.dialog_main_back_message);
+        }
+        alertDialog.setPositiveButton(R.string.dialog_main_back_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_HOME);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_main_back_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
     }
 
     @Override
