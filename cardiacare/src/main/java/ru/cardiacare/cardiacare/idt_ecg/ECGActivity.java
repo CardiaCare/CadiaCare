@@ -1,6 +1,7 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -69,6 +70,16 @@ public class ECGActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ECGActivity.stopTimeService();
+                android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                alertDialog.setTitle(R.string.dialog_ecg_stop_title);
+                alertDialog.setMessage(R.string.dialog_ecg_stop_message);
+                alertDialog.setPositiveButton(R.string.dialog_ecg_stop_positive_button,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
+                        });
+                alertDialog.show();
             }
         });
     }
@@ -86,6 +97,7 @@ public class ECGActivity extends AppCompatActivity {
         ecgService.stopForeground(true);
 //        ecgService.unbindService(BluetoothFindActivity.sConn);
         ecgService.stopSelf();
+        ECGService.notificationManager.cancel(1);
     }
 
     @Override

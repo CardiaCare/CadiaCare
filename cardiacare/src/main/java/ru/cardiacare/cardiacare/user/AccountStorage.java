@@ -26,6 +26,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
     private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
+    private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
 
 
     private String strSibName;
@@ -44,8 +45,9 @@ public class AccountStorage {
     private String strQuestionnaireVersion;
     private String strLastQuestionnairePassDate;
     private String strPeriodPassServey;
+    private String strPeriodECGSending;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending) {
         SharedPreferences.Editor editor = sPref.edit();
 
 //        editor.putString(ACCOUNT_PREFERENCES_SIBNAME, sibName);
@@ -64,6 +66,7 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
         editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
         editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
+        editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
 
         editor.apply();
     }
@@ -83,6 +86,12 @@ public class AccountStorage {
     public void setPeriodPassServey (String periodpassservey) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
+        editor.apply();
+    }
+
+    public void setPeriodECGSending (String periodecgsending) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
         editor.apply();
     }
 
@@ -189,5 +198,12 @@ public class AccountStorage {
             strPeriodPassServey = sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, "");
         } else strPeriodPassServey = "";
         return strPeriodPassServey;
+    }
+
+    public String getPeriodECGSending() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
+            strPeriodECGSending = sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, "");
+        } else strPeriodECGSending = "";
+        return strPeriodECGSending;
     }
 }

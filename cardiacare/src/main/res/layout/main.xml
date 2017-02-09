@@ -34,8 +34,7 @@
             android:background="@drawable/bpresure"
             android:layout_weight="0.5"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -60,6 +59,56 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView6"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:layout_height="198dp"
+        android:weightSum="1">
+
+        <ImageButton
+            android:id="@+id/monitorButton"
+            android:background="@drawable/monitor"
+            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageButton
+            android:id="@+id/documentsButton"
+            android:background="@drawable/documents"
+            android:layout_weight="0.5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.00">
+
+        <TextView
+            android:text="@string/fake_ecg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView7"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textColor="@color/colorAccent" />
+
+        <TextView
+            android:text="@string/title_activity_userdata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="20sp"

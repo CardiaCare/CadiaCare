@@ -31,6 +31,8 @@ public class Userdata extends AppCompatActivity {
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
+    private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
+
 
     EditText etSibName;
     EditText etSibIp;
@@ -44,6 +46,7 @@ public class Userdata extends AppCompatActivity {
     EditText etWeight;
     EditText etAge;
     EditText etPeriodPassServey;
+    EditText etPeriodECGSending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +80,8 @@ public class Userdata extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
-        //etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+        etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
     }
@@ -96,7 +100,8 @@ public class Userdata extends AppCompatActivity {
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_HEIGHT, etHeight.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_WEIGHT, etWeight.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_AGE, etAge.getText().toString()).commit();
-//        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
+        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
+        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, etPeriodECGSending.getText().toString()).commit();
 
         editor.apply();
 
@@ -136,9 +141,12 @@ public class Userdata extends AppCompatActivity {
 //        if (sPref.contains(ACCOUNT_PREFERENCES_AGE)) {
 //            etAge.setText(sPref.getString(ACCOUNT_PREFERENCES_AGE, ""));
 //        }
-//        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
-//            etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
-//        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
+            etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
+        }
+                if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
+            etPeriodECGSending.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, ""));
+        }
     }
 
     @Override

@@ -27,6 +27,8 @@ public class UserAccount extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
+    EditText etPeriodPassServey;
+    EditText etPeriodECGSending;
 
     AccountStorage storage;
 
@@ -56,6 +58,8 @@ public class UserAccount extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
+        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+        etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
@@ -89,6 +93,7 @@ public class UserAccount extends AppCompatActivity {
         String version = storage.getQuestionnaireVersion();
         String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
         String periodpassservey = storage.getPeriodPassServey();
+        String periodecgsending = storage.getPeriodECGSending();
         storage.setAccountPreferences(
                 etSibName.getText().toString(),
                 etSibIp.getText().toString(),
@@ -104,7 +109,8 @@ public class UserAccount extends AppCompatActivity {
                 etAge.getText().toString(),
                 version,
                 lastquestionnairepassdate,
-                periodpassservey);
+                periodpassservey,
+                periodecgsending);
     }
 
     protected void onResume() {
@@ -117,6 +123,8 @@ public class UserAccount extends AppCompatActivity {
         etHeight.setText(storage.getAccountHeight());
         etWeight.setText(storage.getAccountWeight());
         etAge.setText(storage.getAccountAge());
+        etPeriodPassServey.setText(storage.getPeriodPassServey());
+        etPeriodECGSending.setText(storage.getPeriodECGSending());
     }
 
     @Override
