@@ -1,4 +1,4 @@
-package com.petrsu.cardiacare.smartcare.servey;
+package com.petrsu.cardiacare.smartcare.survey;
 
 import java.util.LinkedList;
 
@@ -7,12 +7,16 @@ import java.util.LinkedList;
  */
 public class Questionnaire {
     private Integer id;
+    private Integer doctor_id;
+    private String version;
+    private String description;
+    private String created_at;
+    private String lang;
+    private Integer emergency;
+
     private String uri;
     private String serverURI;
-    private String version;
-    private String lang;
-    private String description;
-    private boolean emergency;
+
     // questions - связный список элементов типа Question
     LinkedList <Question> questions;
 
@@ -71,11 +75,11 @@ public class Questionnaire {
         this.description = description;
     }
 
-    public boolean isEmergency() {
+    public Integer isEmergency() {
         return emergency;
     }
 
-    public void setEmergency(boolean emergency) {
+    public void setEmergency(Integer emergency) {
         this.emergency = emergency;
     }
 
@@ -85,5 +89,21 @@ public class Questionnaire {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public Integer getDoctor_id() {
+        return doctor_id;
+    }
+
+    public void setDoctor_id(Integer doctor_id) {
+        this.doctor_id = doctor_id;
     }
 }

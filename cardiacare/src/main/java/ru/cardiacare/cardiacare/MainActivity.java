@@ -28,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.petrsu.cardiacare.smartcare.servey.Feedback;
+import com.petrsu.cardiacare.smartcare.survey.Feedback;
 
 import org.json.JSONObject;
 
@@ -37,7 +37,7 @@ import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.location.GPSLoad;
 import ru.cardiacare.cardiacare.location.LocationService;
-import ru.cardiacare.cardiacare.servey.QuestionnaireHelper;
+import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.user.Userdata;
 

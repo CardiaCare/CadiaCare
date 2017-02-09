@@ -1,13 +1,12 @@
-package ru.cardiacare.cardiacare.servey;
+package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
+import com.petrsu.cardiacare.smartcare.survey.Questionnaire;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -66,10 +66,9 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             }
             resultJson = buffer.toString();
 
-            JSONObject dataJsonObj = null;
-            dataJsonObj = new JSONObject(resultJson);
-            resultJson = dataJsonObj.getString("data");
-
+//            JSONObject dataJsonObj = null;
+//            dataJsonObj = new JSONObject(resultJson);
+//            resultJson = dataJsonObj.getString("data");
 
         } catch (Exception e) {
             e.printStackTrace();

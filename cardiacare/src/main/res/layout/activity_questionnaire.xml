@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="ru.cardiacare.cardiacare.servey.QuestionnaireActivity">
+    tools:context="ru.cardiacare.cardiacare.survey.QuestionnaireActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,7 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary">
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppCompatActionBarStyle" >
 
             <ImageButton
                 android:layout_width="wrap_content"

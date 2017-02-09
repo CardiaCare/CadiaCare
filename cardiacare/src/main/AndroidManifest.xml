@@ -32,7 +32,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppBaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,7 +45,8 @@
             android:label="@string/title_activity_bluetooth_find"
             android:noHistory="true"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
@@ -54,7 +56,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_help"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
@@ -64,7 +67,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
@@ -73,11 +77,13 @@
             android:name=".user.Userdata"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_userdata"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".user.UserAccount"
             android:label="@string/title_activity_user_account"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
@@ -86,9 +92,10 @@
             android:name=".ecgviewer_old.ECGActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/fake_ecg"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".servey.QuestionnaireActivity"
+            android:name=".survey.QuestionnaireActivity"
             android:label="@string/title_activity_questionnaire"
             android:theme="@style/AppBaseTheme" />
         <!--

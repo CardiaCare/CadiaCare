@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.servey;
+package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.servey.Answer;
-import com.petrsu.cardiacare.smartcare.servey.Feedback;
-import com.petrsu.cardiacare.smartcare.servey.Question;
+import com.petrsu.cardiacare.smartcare.survey.Answer;
+import com.petrsu.cardiacare.smartcare.survey.Feedback;
+import com.petrsu.cardiacare.smartcare.survey.Question;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -95,35 +96,41 @@ public class QuestionnaireActivity extends AppCompatActivity {
         int[] Types = new int[questionnaire.size()];
 
         for (int i = 0; i < questionnaire.size(); i++) {
+//            Question question = questionnaire.get(i);
+//            Answer answer = question.getAnswer();
             Question question = questionnaire.get(i);
-            Answer answer = question.getAnswer();
-            switch (answer.getType()) {
-                case "Text":
-                    Types[i] = TextField;
-                    break;
-                case "MultipleChoise":
-                    Types[i] = Multiplechoice;
-                    break;
-                case "SingleChoise":
-                    Types[i] = Singlechoice;
-                    break;
-                case "BipolarQuestion":
-                    Types[i] = Bipolarquestion;
-                    break;
-                case "Dichotomous":
-                    Types[i] = Dichotomous;
-                    break;
-                case "GuttmanScale":
-                    Types[i] = Guttmanscale;
-                    break;
-                case "LikertScale":
-                    Types[i] = Likertscale;
-                    break;
-                case "ContinuousScale":
-                    Types[i] = Continuousscale;
-                    break;
-                default:
-                    Types[i] = DefaultValue;
+            LinkedList <Answer> answers = question.getAnswers();
+            for (int j = 0; j < answers.size(); j++) {
+                Answer answer = answers.get(j);
+                Log.i("Questionnaire", i + " question, " + j+ " answer, " + answer.getType());
+                switch (answer.getType()) {
+                    case "Text":
+                        Types[i] = TextField;
+                        break;
+                    case "MultipleChoise":
+                        Types[i] = Multiplechoice;
+                        break;
+                    case "SingleChoise":
+                        Types[i] = Singlechoice;
+                        break;
+                    case "BipolarQuestion":
+                        Types[i] = Bipolarquestion;
+                        break;
+                    case "Dichotomous":
+                        Types[i] = Dichotomous;
+                        break;
+                    case "GuttmanScale":
+                        Types[i] = Guttmanscale;
+                        break;
+                    case "LikertScale":
+                        Types[i] = Likertscale;
+                        break;
+                    case "ContinuousScale":
+                        Types[i] = Continuousscale;
+                        break;
+                    default:
+                        Types[i] = DefaultValue;
+                }
             }
         }
         if (QuestionnaireHelper.questionnaireType.equals(periodic)) {

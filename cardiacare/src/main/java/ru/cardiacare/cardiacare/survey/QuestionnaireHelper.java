@@ -1,14 +1,14 @@
-package ru.cardiacare.cardiacare.servey;
+package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.petrsu.cardiacare.smartcare.servey.Answer;
-import com.petrsu.cardiacare.smartcare.servey.AnswerItem;
-import com.petrsu.cardiacare.smartcare.servey.Question;
-import com.petrsu.cardiacare.smartcare.servey.Questionnaire;
+import com.petrsu.cardiacare.smartcare.survey.Answer;
+import com.petrsu.cardiacare.smartcare.survey.AnswerItem;
+import com.petrsu.cardiacare.smartcare.survey.Question;
+import com.petrsu.cardiacare.smartcare.survey.Questionnaire;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -41,7 +41,7 @@ public class QuestionnaireHelper {
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
         if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (!questionnaireDownloaded)) {
-            serverUri = "http://api.cardiacare.ru/survey/4";
+            serverUri = "http://api.cardiacare.ru/questionnaire/7";
             //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
             Log.i("serverUri = ", serverUri);
             System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
@@ -50,9 +50,10 @@ public class QuestionnaireHelper {
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {
-//            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-//            feedbackPOST.execute();
+            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+            feedbackPOST.execute();
             String jsonFromFile = readSavedData(context);
+            //String jsonFromFile = "{\"emergency\": false,\"version\": \"1.0\",\"description\": \"Description\",\"lang\": \"RU\",\"questions\":[{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[{\"items\":[],\"type\":\"Text\",\"uri\":\"http://oss.fruct.org/smartcare#8117516\"}],\"uri\":\"http://oss.fruct.org/smartcare#3511018\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558817\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117516\"}],\"description\":\"Intense headaches?\",\"uri\":\"http://oss.fruct.org/smartcare#5532215\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511022\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558821\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117520\"}],\"description\":\"Severe dizziness?\",\"uri\":\"http://oss.fruct.org/smartcare#5532219\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511026\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558825\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117524\"}],\"description\":\"Nausea, vomiting?\",\"uri\":\"http://oss.fruct.org/smartcare#5532223\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511030\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558829\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117528\"}],\"description\":\"Acute visual impairment?\",\"uri\":\"http://oss.fruct.org/smartcare#5532227\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511034\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558833\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117532\"}],\"description\":\"Severe chest pain?\",\"uri\":\"http://oss.fruct.org/smartcare#5532231\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511038\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558837\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117536\"}],\"description\":\"The lack of air?\",\"uri\":\"http://oss.fruct.org/smartcare#5532235\"}]}";
             Gson json = new Gson();
             questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
 //            printQuestionnaire(questionnaire);

@@ -9,9 +9,9 @@
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
-        <!--<item name="android:textColorSecondaryInverse">@color/textColorSecondaryInverse</item>-->
+        <item name="android:itemBackground">@color/colorItemBackground</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
-        <!--<item name="android:textColorPrimaryInverse">@color/textColorPrimaryInverse</item>-->
     </style>
 
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -21,4 +21,30 @@
         <item name="android:textColorSecondary">@color/dialogTextColorSecondary</item>
         <item name="colorAccent">@color/dialogColorAccent</item>
     </style>
+
+    <style name="AppCompatActionBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="android:itemTextAppearance">@style/AppCompatActionBarMenuTextStyle</item>
+    </style>
+
+    <style name="AppCompatActionBarMenuTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/toolbarMenuTextColor</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="UserAuthorizationPageTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/userAuthorizationColorPrimary</item>
+        <item name="colorAccent">@color/userAuthorizationColorAccent</item>
+        <item name="android:textColorPrimary">@color/userAuthorizationTextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/userAuthorizationTextColorSecondary</item>
+        <item name="android:textColorHint">@color/userAuthorizationTextColorHint</item>
+    </style>
+
+    <style name="AppCompatButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorBackground</item>
+    </style>
+
 </resources>

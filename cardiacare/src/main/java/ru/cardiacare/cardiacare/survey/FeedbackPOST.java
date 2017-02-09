@@ -1,4 +1,4 @@
-package ru.cardiacare.cardiacare.servey;
+package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -16,7 +16,6 @@ import java.net.URL;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.*;
-import java.net.MalformedURLException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
