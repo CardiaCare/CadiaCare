@@ -20,13 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary"
-           >
+            app:contentScrim="?attr/colorPrimary">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/account_activity_toolbar"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
+                app:layout_collapseMode="pin"
                 android:theme="@style/AppCompatActionBarStyle" />
 
             <LinearLayout

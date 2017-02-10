@@ -56,6 +56,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolBlood);
         setSupportActionBar(toolbar);
+
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

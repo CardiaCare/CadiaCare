@@ -209,6 +209,7 @@
     <string name="fake_ecg">Демонстрация ЭКГ</string>
     <string name="sos">SOS</string>
     <string name="pass_survey">Пройти опрос</string>
+    <string name="bp">Дневник давления</string>
     <string name="documents">Документы</string>
     <string name="search_devices">Поиск устройств</string>
 
