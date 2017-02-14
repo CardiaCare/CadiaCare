@@ -471,7 +471,8 @@ public class MainActivity extends AppCompatActivity {
                     patientUriFlag = -1;
                     DeleteToken deletetoken = new DeleteToken();
                     deletetoken.execute();
-                    //storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
+                    authorization_token = MainActivity.storage.getAccountToken();
+                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
                     setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");
