@@ -208,6 +208,8 @@
 
     <!--screen_main_user_authorization.xml-->
     <string name="user_enter_name">Authorization</string>
+    <string name="user_create_account">Create account?</string>
+    <string name="user_forgot_password">Forgot password?</string>
 
     <!--BluetoothFindActivity.java-->
     <string name="bluetoothSearching">Searching, please wait&#8230;</string>

@@ -77,8 +77,38 @@
                 android:textColor="@color/colorBackground"
                 android:theme="@style/AppCompatButtonStyle"/>
 
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.00">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/createAccount"
+                    android:textColor="@color/toolbarTextColor"
+                    android:clickable="true"
+                    android:text="@string/user_create_account"
+                    android:textSize="15sp"
+                    android:layout_marginTop="15sp"/>
+
+                <TextView
+                    android:text="@string/user_forgot_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/forgotPassword"
+                    android:textColor="@color/toolbarTextColor"
+                    android:clickable="true"
+                    android:gravity="end"
+                    android:textSize="15sp"
+                    android:layout_marginTop="15sp"/>
+            </LinearLayout>
+
         </LinearLayout>
+
     </ScrollView>
+
 
     <ImageView
         app:srcCompat="@drawable/cardiacare"

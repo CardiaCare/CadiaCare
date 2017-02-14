@@ -264,4 +264,11 @@
     <string name="dialog_ecg_stop_title">Завершение работы</string>
     <string name="dialog_ecg_stop_message">Работа с кардиомонитором была завершена</string>
     <string name="dialog_ecg_stop_positive_button">ОК</string>
+    <string name="user_forgot_fassword">Забыли пароль?</string>
+    <string name="user_create_account">Создать аккаунт?</string>
+    <string name="action_sign_in">Войти</string>
+    <string name="action_sign_in_short">Войти</string>
+    <string name="dialog_bp_title">Удалить</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="prompt_email">Почта</string>
 </resources>

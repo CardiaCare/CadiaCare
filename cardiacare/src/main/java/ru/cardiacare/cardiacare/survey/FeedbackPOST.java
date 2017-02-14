@@ -43,7 +43,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
             try {
                 String str = "{" +" \"questionnaire_id\": 7," +
-                        "  \"patient_id\": 2," +
+                        "  \"lang\": \"en\"," +
                         "  \"data\": \"new feedback\"}";
 
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -55,7 +55,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
                 String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
 
                 Request request = new Request.Builder()
-                        .url("http://api.cardiacare.ru/patients/14/feedback")
+                        .url("http://api.cardiacare.ru/feedback")
                         .addHeader("Authorization", credential )
                         .addHeader("Content-Type", "application/json")
                         .post(body)

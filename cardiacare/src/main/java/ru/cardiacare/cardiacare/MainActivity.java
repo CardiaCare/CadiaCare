@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.petrsu.cardiacare.smartcare.survey.Feedback;
 
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     static public Context mContext;
     Button btnCont;
     Button nextButton;
+    TextView forgotPassword;
+    TextView createAccount;
     Button btnDisconnect;
     static public Button alarmButton;
     static public Button searchDevicesButton;
@@ -173,6 +176,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 authorization(etEmail.getText().toString(), etPassword.getText().toString());
+            }
+        });
+
+        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //authorization(etEmail.getText().toString(), etPassword.getText().toString());
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+            }
+        });
+
+        createAccount = (TextView) findViewById(R.id.createAccount);
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //authorization(etEmail.getText().toString(), etPassword.getText().toString());
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
             }
         });
     }
