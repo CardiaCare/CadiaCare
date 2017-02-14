@@ -103,7 +103,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             QuestionnaireHelper.questionnaireDownloaded = true;
         else QuestionnaireHelper.alarmQuestionnaireDownloaded = true;
 
-        System.out.println("Test! resultJson" + MainActivity.storage.getAccountToken() + " " + resultJson);
+        //System.out.println("Test! resultJson" + MainActivity.storage.getAccountToken() + " " + resultJson);
         return 0;
     }
 

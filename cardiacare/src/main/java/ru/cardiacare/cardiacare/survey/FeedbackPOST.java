@@ -40,7 +40,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
     @Override
     public Integer doInBackground(Void... params) {
-
+        //System.out.println("Test! post in background ");
             try {
                 String str = "{" +" \"questionnaire_id\": 7," +
                         "  \"lang\": \"en\"," +
