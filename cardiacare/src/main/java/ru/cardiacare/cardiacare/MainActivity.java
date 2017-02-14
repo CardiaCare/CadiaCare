@@ -16,6 +16,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,12 @@ import android.widget.ProgressBar;
 import com.petrsu.cardiacare.smartcare.survey.Feedback;
 
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
 import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
@@ -462,7 +469,9 @@ public class MainActivity extends AppCompatActivity {
                     // TODO: удалять токен доступа на сервере
                     backgroundFlag = 0;
                     patientUriFlag = -1;
-                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
+                    DeleteToken deletetoken = new DeleteToken();
+                    deletetoken.execute();
+                    //storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
                     setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");
