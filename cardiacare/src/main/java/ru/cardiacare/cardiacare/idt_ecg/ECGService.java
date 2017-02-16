@@ -129,7 +129,7 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                     pastTime = pastMinutes + ":" + pastSeconds;
                     totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
                     // Если пора отправлять ответы на сервер и есть что отправлять
-                    if ((totalTime >= periodECGSending) /*&& (!MainActivity.storage.getECGFile().equals(""))*/) {
+                    if ((totalTime >= periodECGSending) && (!MainActivity.storage.getECGFile().equals(""))) {
                         // Если есть доступ к сети
                         if (MainActivity.isNetworkAvailable(mContext)) {
                             // Отправляем данные на сервер
@@ -138,13 +138,11 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                             Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
                             // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
                             MainActivity.storage.setECGFile("");
-                            Log.d("ECGService", "Индикатор отправки на сервер = none");
                             connectedTime = System.currentTimeMillis() / 1000;
                         } else {
                             // Устанавливаем индикатор отправки на сервер в SharedPreferences устанавливаем равным "имя_файла"
-                            if (!MainActivity.storage.getECGFile().equals("filename")) {
-                                MainActivity.storage.setECGFile("filename");
-                                Log.d("ECGService", "Индикатор отправки на сервер = имя_файла");
+                            if (!MainActivity.storage.getECGFile().equals("ecgfile")) {
+                                MainActivity.storage.setECGFile("ecgfile");
                             }
                         }
                     }
@@ -187,8 +185,8 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
             return false;
         }
         beginTime.setToNow();
-        ecg.StorageFileName = String.format("%d.cds", new Object[]{Long.valueOf(beginTime.toMillis(true) / 1000)});
-        ecg.StorageFileId = String.format("a%de", new Object[]{Long.valueOf(beginTime.toMillis(true) / 1000)});
+//        ecg.StorageFileName = String.format("%d.cds", new Object[]{Long.valueOf(beginTime.toMillis(true) / 1000)});
+//        ecg.StorageFileId = String.format("a%de", new Object[]{Long.valueOf(beginTime.toMillis(true) / 1000)});
         Intent intent = new Intent(mContext, ECGActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
@@ -211,32 +209,32 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
     }
 
     // Формирование файлов для отправки на сервер
-    static public void updateOnServer(/*String filename, String path, String fileid, int hr*/) {
-        // Записывать не в JSON, а в файл
-        String ecgdata = EcgBleIdt.getJSONPart();
-        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
-        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
-        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
-        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
-
-//        String context = this.location.getJSONPart();
-//        String sensdata = this.sensors.getJSONPart();
-//        String systemdata = this.sensors.getSystemJSONPart();
-//        if (context == "") {
-//            context = sensdata;
-//        } else if (sensdata != "") {
-//            context = new StringBuilder(String.valueOf(context)).append(",").append(sensdata).toString();
-//        }
-//        String json = "{ \"app\": \"ecgsend\", ";
-//        if (context != "") {
-//            json = new StringBuilder(String.valueOf(json)).append("\"context\": {").append(context).append("},").toString();
-//        }
-//        if (systemdata != "") {
-//            json = new StringBuilder(String.valueOf(json)).append("\"system\": {").append(systemdata).append("},").toString();
-//        }
-//        json = new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(json)).append("\"object\": {").toString())).append("\"timestamp\": \"").append(DateFormat.format("yyyy-MM-dd'T'HH:mm:ssZ", this.beginTime.toMillis(true))).append("\",").toString())).append("\"utc_offset\": \"").append(DateTimeUtl.getCurrentUTCOffset()).append("\",").toString())).append("\"namespace\": \"ecg\",").toString())).append("\"channels\": \"1\",").toString())).append("\"format\": \"cds\",").toString())).append("\"filename\":\"").append(fileid).append("\",").toString())).append("\"pulse\":\"").append(String.format("%d", new Object[]{Integer.valueOf(hr)})).append("\"").toString())).append("}}").toString();
-//        Log.i("ECGBELT", "JSON=" + json);
-    }
+//    static public void updateOnServer(/*String filename, String path, String fileid, int hr*/) {
+//        // Записывать не в JSON, а в файл
+//        String ecgdata = EcgBleIdt.getJSONPart();
+//        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
+//        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
+//        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
+//        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
+//
+////        String context = this.location.getJSONPart();
+////        String sensdata = this.sensors.getJSONPart();
+////        String systemdata = this.sensors.getSystemJSONPart();
+////        if (context == "") {
+////            context = sensdata;
+////        } else if (sensdata != "") {
+////            context = new StringBuilder(String.valueOf(context)).append(",").append(sensdata).toString();
+////        }
+////        String json = "{ \"app\": \"ecgsend\", ";
+////        if (context != "") {
+////            json = new StringBuilder(String.valueOf(json)).append("\"context\": {").append(context).append("},").toString();
+////        }
+////        if (systemdata != "") {
+////            json = new StringBuilder(String.valueOf(json)).append("\"system\": {").append(systemdata).append("},").toString();
+////        }
+////        json = new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(json)).append("\"object\": {").toString())).append("\"timestamp\": \"").append(DateFormat.format("yyyy-MM-dd'T'HH:mm:ssZ", this.beginTime.toMillis(true))).append("\",").toString())).append("\"utc_offset\": \"").append(DateTimeUtl.getCurrentUTCOffset()).append("\",").toString())).append("\"namespace\": \"ecg\",").toString())).append("\"channels\": \"1\",").toString())).append("\"format\": \"cds\",").toString())).append("\"filename\":\"").append(fileid).append("\",").toString())).append("\"pulse\":\"").append(String.format("%d", new Object[]{Integer.valueOf(hr)})).append("\"").toString())).append("}}").toString();
+////        Log.i("ECGBELT", "JSON=" + json);
+//    }
 
 //    public void measurementReceived(int heartrate, short[] array, int Frequency) {
 //        this.heartRate = heartrate;

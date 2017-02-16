@@ -6,14 +6,23 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothProfile;
+import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.UUID;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class EcgBleIdt extends EcgBleDevice {
 
@@ -30,9 +39,11 @@ public class EcgBleIdt extends EcgBleDevice {
 
     public byte[] array;
     static public String ecgstr = "";
-    static public String StorageFileName;
+    static public String StorageFileName = "ecgfile";
     static public FileOutputStream storageFile = null;
+    static public FileInputStream storageFile2 = null;
 
+    static public BufferedWriter bw;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public EcgBleIdt(EcgBle handle, Handler handler) {
@@ -65,6 +76,12 @@ public class EcgBleIdt extends EcgBleDevice {
                         Long timestamp = System.currentTimeMillis() / 1000;
                         ECGService.connectedTime = timestamp;
                         Log.i("ECGBELT", "onDescriptorWrite.");
+                        try {
+                            bw = new BufferedWriter(new OutputStreamWriter(ECGService.mContext.openFileOutput(StorageFileName, MODE_PRIVATE)));
+                            bw.write("{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
@@ -146,8 +163,14 @@ public class EcgBleIdt extends EcgBleDevice {
                         for (int i = 2; i < 12; i++) {
                             val = byteToUnsignedInt(array[i]);
                             intdata[arrayPos] = val;
-                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
-                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
+                            try {
+                                bw.write(Integer.toString(val));
+                                bw.write(", ");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+//                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
+//                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
 //                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                             ECGService.ecgValue = intdata[arrayPos];
 
@@ -161,7 +184,7 @@ public class EcgBleIdt extends EcgBleDevice {
                                 ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
                                 arrayPos = 0;
                                 mHandler.obtainMessage(1, intdata).sendToTarget();
-                                EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
+//                                EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
                             }
                         }
                     }
