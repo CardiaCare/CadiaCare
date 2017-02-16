@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "", "");
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "", "", "");
                 setRegisteredScreen();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
@@ -345,6 +345,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // Если файл с данными ЭКГ не был отправлен во время последнего сеанса, то отправляем его
+        if ((!storage.getECGFile().equals(""))) {
+            if (isNetworkAvailable(context)) {
+                // Отправляем данные на сервер
+                Log.d("MainActivity", "Отправляем данные на сервер");
+                // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
+                Log.d("MainActivity", "Обнуляем файл с данными ЭКГ");
+                // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
+                Log.d("MainActivity", "Индикатор отправки на сервер = none");
+                MainActivity.storage.setECGFile("");
+            }
+        }
+
 
 //        alarmButton = (Button) findViewById(R.id.alarmButton);
 //        Display display = getWindowManager().getDefaultDisplay();
@@ -493,7 +507,7 @@ public class MainActivity extends AppCompatActivity {
                     DeleteToken deletetoken = new DeleteToken();
                     deletetoken.execute();
                     authorization_token = MainActivity.storage.getAccountToken();
-                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "");
+                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "");
                     setLoadingScreen();
                     deleteFile("feedback.json");
                     deleteFile("alarmFeedback.json");

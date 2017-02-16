@@ -27,6 +27,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
+    private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файла для отправки на сервер
 
 
     private String strSibName;
@@ -46,8 +47,9 @@ public class AccountStorage {
     private String strLastQuestionnairePassDate;
     private String strPeriodPassServey;
     private String strPeriodECGSending;
+    private String strECGFile;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile) {
         SharedPreferences.Editor editor = sPref.edit();
 
 //        editor.putString(ACCOUNT_PREFERENCES_SIBNAME, sibName);
@@ -67,6 +69,7 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
         editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
         editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
+        editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
 
         editor.apply();
     }
@@ -92,6 +95,12 @@ public class AccountStorage {
     public void setPeriodECGSending (String periodecgsending) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
+        editor.apply();
+    }
+
+    public void setECGFile (String ecgfile) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
         editor.apply();
     }
 
@@ -205,5 +214,12 @@ public class AccountStorage {
             strPeriodECGSending = sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, "");
         } else strPeriodECGSending = "";
         return strPeriodECGSending;
+    }
+
+    public String getECGFile() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_ECGFILE)) {
+            strECGFile = sPref.getString(ACCOUNT_PREFERENCES_ECGFILE, "");
+        } else strECGFile = "";
+        return strECGFile;
     }
 }

@@ -32,6 +32,7 @@ public class Userdata extends AppCompatActivity {
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
+    private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile";
 
 
     EditText etSibName;

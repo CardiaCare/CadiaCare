@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
+import java.io.FileOutputStream;
 import java.util.UUID;
 
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
@@ -29,6 +30,9 @@ public class EcgBleIdt extends EcgBleDevice {
 
     public byte[] array;
     static public String ecgstr = "";
+    static public String StorageFileName;
+    static public FileOutputStream storageFile = null;
+
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public EcgBleIdt(EcgBle handle, Handler handler) {
@@ -58,6 +62,8 @@ public class EcgBleIdt extends EcgBleDevice {
                     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
                         super.onDescriptorWrite(gatt, descriptor, status);
                         ECGService.connected_flag = true;
+                        Long timestamp = System.currentTimeMillis() / 1000;
+                        ECGService.connectedTime = timestamp;
                         Log.i("ECGBELT", "onDescriptorWrite.");
                     }
 

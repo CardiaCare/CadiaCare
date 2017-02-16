@@ -12,9 +12,12 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -197,6 +200,8 @@ public class EcgBle {
     }
 
     static private FileOutputStream storageFile = null;
+    static private FileInputStream storageFile2 = null;
+
 
     static public void onDeviceDisconnected() {
         mBluetoothGatt = null;
@@ -205,6 +210,20 @@ public class EcgBle {
         ECGService.connected_flag = false;
 //        ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
         ECGService.myService.stopSelf();
+        // Если есть доступ к сети  и есть что отправлять на сервер
+        if ((MainActivity.isNetworkAvailable(ECGService.mContext)) /*&& (!MainActivity.storage.getECGFile().equals(""))*/) {
+            // Отправляем данные на сервер
+            Log.d("ECGService", "Отправляем данные на сервер");
+            // Обнуляем файл с данными ЭКГ
+            Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
+            // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
+            MainActivity.storage.setECGFile("");
+            Log.d("ECGService", "Индикатор отправки на сервер = none");
+        } else {
+            // Устанавливаем индикатор отправки на сервер в SharedPreferences устанавливаем равным "имя_файла"
+            MainActivity.storage.setECGFile("filename");
+            Log.d("ECGService", "Индикатор отправки на сервер = имя_файла");
+        }
 
         Log.i("ECGBELT", "onDeviceDisconnected");
 
@@ -224,6 +243,19 @@ public class EcgBle {
                 }
             });
         }
+
+//        try {
+//            storageFile2 = ECGService.mContext.openFileInput(StorageFileName);
+//            BufferedReader br = new BufferedReader(new InputStreamReader(storageFile2));
+//            String str = "";
+//            while ((str = br.readLine()) != null) {
+//                Log.d("QQQ", str);
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     static public void onEcgReceived(final int HeartRate, final short array[], final int Frequency) {

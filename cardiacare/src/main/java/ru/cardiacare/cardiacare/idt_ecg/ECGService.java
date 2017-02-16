@@ -37,10 +37,13 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     static public boolean connected_flag = false; // Установлено ли подключение к монитору, true - установлено, false - не установлено
     long startTime;                               // Время начала работы сервиса
+    static public long connectedTime;             // Время подключения к кардиомонитору
     static String pastTime;                       // Прошедшее время с начала работы сервиса
     static public int ecgValue;                   // Значения ЭКГ (с кардиомонитора)
     static public int heartRate = 0;              // Пульс (с кардиомонитора)
     static public int charge = 0;                 // Уровень заряда батареи кардиомонитора
+    static public int periodECGSending;           // Период отправки ЭКГ на сервер
+
 
     static NotificationManager notificationManager;
     static public Notification ecgNotification;
@@ -72,6 +75,14 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         startTime = System.currentTimeMillis(); // Фиксируем время начала работы сервиса
         pastTimeCounter();
         doStart();
+        // Если приод отправки ответов на сервер задан пользователем, то отправляем согласно данному периоду
+        // Иначе ставим период по умолчанию (1 минута)
+        if (!MainActivity.storage.getPeriodECGSending().equals("")) {
+            periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending());
+        } else {
+            periodECGSending = 60;
+            MainActivity.storage.setPeriodECGSending("60");
+        }
     }
 
     public IBinder onBind(Intent arg0) {
@@ -116,6 +127,27 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                     int pastMinutes = cal.get(Calendar.MINUTE);
                     int pastSeconds = cal.get(Calendar.SECOND);
                     pastTime = pastMinutes + ":" + pastSeconds;
+                    totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
+                    // Если пора отправлять ответы на сервер и есть что отправлять
+                    if ((totalTime >= periodECGSending) /*&& (!MainActivity.storage.getECGFile().equals(""))*/) {
+                        // Если есть доступ к сети
+                        if (MainActivity.isNetworkAvailable(mContext)) {
+                            // Отправляем данные на сервер
+                            Log.d("ECGService", "Отправляем данные на сервер");
+                            // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
+                            Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
+                            // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
+                            MainActivity.storage.setECGFile("");
+                            Log.d("ECGService", "Индикатор отправки на сервер = none");
+                            connectedTime = System.currentTimeMillis() / 1000;
+                        } else {
+                            // Устанавливаем индикатор отправки на сервер в SharedPreferences устанавливаем равным "имя_файла"
+                            if (!MainActivity.storage.getECGFile().equals("filename")) {
+                                MainActivity.storage.setECGFile("filename");
+                                Log.d("ECGService", "Индикатор отправки на сервер = имя_файла");
+                            }
+                        }
+                    }
                 }
             };
             pastTimeTimer.schedule(timerTask, 1000, timerInterval);
@@ -180,6 +212,7 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     // Формирование файлов для отправки на сервер
     static public void updateOnServer(/*String filename, String path, String fileid, int hr*/) {
+        // Записывать не в JSON, а в файл
         String ecgdata = EcgBleIdt.getJSONPart();
         String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
         ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();

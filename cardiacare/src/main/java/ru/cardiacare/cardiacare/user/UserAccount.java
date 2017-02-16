@@ -94,6 +94,7 @@ public class UserAccount extends AppCompatActivity {
         String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
         String periodpassservey = storage.getPeriodPassServey();
         String periodecgsending = storage.getPeriodECGSending();
+        String ecgfile = storage.getECGFile();
         storage.setAccountPreferences(
                 etSibName.getText().toString(),
                 etSibIp.getText().toString(),
@@ -110,7 +111,8 @@ public class UserAccount extends AppCompatActivity {
                 version,
                 lastquestionnairepassdate,
                 periodpassservey,
-                periodecgsending);
+                periodecgsending,
+                ecgfile);
     }
 
     protected void onResume() {
