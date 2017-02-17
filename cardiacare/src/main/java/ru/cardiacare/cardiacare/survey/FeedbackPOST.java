@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
@@ -42,9 +43,18 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
     public Integer doInBackground(Void... params) {
         //System.out.println("Test! post in background ");
             try {
+
+//                Gson json = new Gson();
+//                String jsonFeedback;
+//                jsonFeedback = json.toJson(MainActivity.feedback);
+
                 String str = "{" +" \"questionnaire_id\": 7," +
                         "  \"lang\": \"en\"," +
-                        "  \"data\": \"new feedback\"}";
+                        "  \"data\":" + "\"new feedback\"" + "}";
+
+//                String str = "{" +" \"questionnaire_id\": 7," +
+//                        "  \"lang\": \"en\"," +
+//                        "  \"data\": [" + jsonFeedback.replaceAll("/", "") + "]}"; //\"new feedback\"}";
 
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 

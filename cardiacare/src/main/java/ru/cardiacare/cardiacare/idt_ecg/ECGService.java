@@ -134,6 +134,8 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                         if (MainActivity.isNetworkAvailable(mContext)) {
                             // Отправляем данные на сервер
                             Log.d("ECGService", "Отправляем данные на сервер");
+                            ECGPost ecgPost = new ECGPost();
+                            ecgPost.execute();
                             // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
                             Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
                             // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
