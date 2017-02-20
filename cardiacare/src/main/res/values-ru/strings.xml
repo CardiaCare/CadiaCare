@@ -29,6 +29,8 @@
     <string name="title_activity_laboratory_studies">Лабораторные исследования</string>
     <string name="title_activity_results_doctor">Результаты обследования врачом</string>
     <string name="title_activity_results_blood">Результаты измерения артериального давления</string>
+    <string name="title_activity_create_account">Создать аккаунт</string>
+    <string name="title_activity_forgot_password">Восстановление пароля</string>
 
     <!--Диалог на странице регистрации-->
     <string name="dialog_title">Неверно введено имя</string>
@@ -264,7 +266,7 @@
     <string name="dialog_ecg_stop_title">Завершение работы</string>
     <string name="dialog_ecg_stop_message">Работа с кардиомонитором была завершена</string>
     <string name="dialog_ecg_stop_positive_button">ОК</string>
-    <string name="user_forgot_fassword">Забыли пароль?</string>
+    <string name="user_forgot_password">Забыли пароль?</string>
     <string name="user_create_account">Создать аккаунт?</string>
     <string name="action_sign_in">Войти</string>
     <string name="action_sign_in_short">Войти</string>

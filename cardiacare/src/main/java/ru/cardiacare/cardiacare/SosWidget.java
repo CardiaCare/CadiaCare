@@ -108,7 +108,7 @@ import android.widget.RemoteViews;
 //        }
 //        }
 
-// Добавить в манифет:
+// Добавить в манифест:
 //<receiver
 //        android:name=".SosWidget">
 //        <intent-filter>

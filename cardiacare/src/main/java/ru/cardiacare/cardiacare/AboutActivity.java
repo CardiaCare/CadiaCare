@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
+
 /* Экран "Справка" */
 
 public class AboutActivity extends AppCompatActivity {
@@ -23,27 +25,11 @@ public class AboutActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
-    }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
+        ECGPost ecgPost = new ECGPost();
+        ecgPost.execute();
     }
 }

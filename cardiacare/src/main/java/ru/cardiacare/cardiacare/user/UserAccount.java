@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -29,6 +30,7 @@ public class UserAccount extends AppCompatActivity {
     EditText etAge;
     EditText etPeriodPassServey;
     EditText etPeriodECGSending;
+    CheckBox cbPageViewOnMainactivity;
 
     AccountStorage storage;
 
@@ -46,7 +48,6 @@ public class UserAccount extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -60,15 +61,10 @@ public class UserAccount extends AppCompatActivity {
         etAge = (EditText) findViewById(R.id.etAge);
         etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
+        cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        MainActivity.backgroundFlag = 1;
     }
 
     @Override
@@ -112,7 +108,8 @@ public class UserAccount extends AppCompatActivity {
                 lastquestionnairepassdate,
                 periodpassservey,
                 periodecgsending,
-                ecgfile);
+                ecgfile,
+                cbPageViewOnMainactivity.isChecked());
     }
 
     protected void onResume() {
@@ -127,11 +124,6 @@ public class UserAccount extends AppCompatActivity {
         etAge.setText(storage.getAccountAge());
         etPeriodPassServey.setText(storage.getPeriodPassServey());
         etPeriodECGSending.setText(storage.getPeriodECGSending());
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
+        cbPageViewOnMainactivity.setChecked(storage.getPageViewOnMainactivity());
     }
 }

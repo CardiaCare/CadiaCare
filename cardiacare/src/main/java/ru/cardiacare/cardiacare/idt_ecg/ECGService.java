@@ -1,6 +1,10 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,7 +49,7 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
     static public int periodECGSending;           // Период отправки ЭКГ на сервер
 
 
-    static NotificationManager notificationManager;
+    static public NotificationManager notificationManager;
     static public Notification ecgNotification;
 
     MyBinder binder = new MyBinder();

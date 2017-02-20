@@ -29,6 +29,8 @@
     <string name="title_activity_laboratory_studies">Laboratory studies</string>
     <string name="title_activity_results_doctor">Survey results doctor</string>
     <string name="title_activity_results_blood">Results measuring blood pressure</string>
+    <string name="title_activity_create_account">Create Account</string>
+    <string name="title_activity_forgot_password">Password Reset</string>
 
     <!--Диалог на странице регистрации-->
     <string name="dialog_title">Incorrect name</string>

@@ -5,7 +5,6 @@ package ru.cardiacare.cardiacare;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,583 +13,102 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.petrsu.cardiacare.smartcare.survey.Feedback;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
+import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
+import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph1;
+import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
+import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
+import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
-import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
-import ru.cardiacare.cardiacare.location.GPSLoad;
-import ru.cardiacare.cardiacare.location.LocationService;
 import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.user.Userdata;
 
 public class MainActivity extends AppCompatActivity {
 
+    static public String TAG = "MainActivity";
     public Context context = this;
     static public Context mContext;
-    Button btnCont;
-    Button nextButton;
-    TextView forgotPassword;
-    TextView createAccount;
-    Button btnDisconnect;
-    static public Button alarmButton;
-    static public Button searchDevicesButton;
-    static public ImageButton serveyButton;
-
-    EditText etEmail;
-    EditText etPassword;
-    ListView connectListView;
     static public Activity activity;
-
-    private ArrayAdapter<String> connectListArrayAdapter;
-    private BluetoothAdapter myBluetoothAdapter;
-
+    static public BluetoothAdapter myBluetoothAdapter;
     static public String authorization_token = "";
     static public String authorization_id_patient = "";
-
-    public static boolean connectedState = false;
-
-    static public String TAG = "SS-main";
     static public AccountStorage storage;
     static public Feedback feedback;
     static public Feedback alarmFeedback;
-    static public LocationService gps;
-    static public boolean alarmButtonFlag = false; // Была ли нажата кнопка SOS, 1 - была нажата / 0 - не была
-    static public int gpsEnabledFlag = 1; // Включена ли передача геоданных, 1 - вкл / 0 - выкл
-    static public int backgroundFlag = 0; // Добровольное ли закрытие активности (инициировано из приложения),
-    // 1 - добровольное / 0 - недобровольное
-    // Перед каждым переходом на другую активность устанавливаем флаг = 1
-    static public int patientUriFlag = -1; // Статус пользователя, -1 - первый запуск приложения / 1 - зарегистрированный пользователь / 0 - незарегистрированный пользователь
-    static public int netFlag = 0; // Установлено ли соединение с интернетом, 1 - установлено / 0 - не установлено
+    Toolbar toolbar;
+    ViewPager viewPager;
+    static FragmentTransaction fTrans;
+    FragmentManager fManager;
+    static FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
+    static FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
+    FragmentAuthorizationScreen fragmentAuthorizationScreen;
+    FragmentExampleGraph1 fragmentExampleGraph1;
+    FragmentExampleGraph2 fragmentExampleGraph2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        Log.d(TAG, "onCreate Main Activity");
         super.onCreate(savedInstanceState);
-        // Установка ТОЛЬКО вертикальной ориентации
-        // Такая строка должна быть прописана в КАЖДОЙ активности
-
+        setContentView(R.layout.main);
+        // Установка ТОЛЬКО вертикальной ориентации. Такая строка должна быть прописана в КАЖДОЙ активности
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setLoadingScreen();
+
+        storage = new AccountStorage();
+        storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         feedback = new Feedback("", "Student", "feedback");
         alarmFeedback = new Feedback("", "Student", "alarmFeedback");
         activity = this;
         mContext = this;
-    }
 
-    // Загрузочный экран.
-    // Осуществляется подготовка к работе
-    public void setLoadingScreen() {
-        setContentView(R.layout.screen_main_loading);
-
-        ProgressBar mLoadingProgressBar;
-        mLoadingProgressBar = (ProgressBar) findViewById(R.id.loadingProgressBar);
-        assert mLoadingProgressBar != null;
-        mLoadingProgressBar.setVisibility(View.VISIBLE);
-
-        final Button WifiButton = (Button) findViewById(R.id.WifiButton);
-        assert WifiButton != null;
-        WifiButton.setVisibility(View.INVISIBLE);
-        WifiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLoadingScreen();
-            }
-        });
-
-        if (isNetworkAvailable(this)) {
-            netFlag = 1;
-            storage = new AccountStorage();
-            storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-            GPSLoad gpsLoad = new GPSLoad(context);
-            gpsLoad.execute();
-
-            if (storage.getAccountToken().isEmpty()) {
-                Log.i(TAG, "setUserAuthorizationScreen");
-                setUserAuthorizationScreen();
-            } else {
-                Log.i(TAG, "setRegisteredScreen");
-                setRegisteredScreen();
-            }
-        } else {
-            netFlag = 0;
-            final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-            alertDialog.setTitle(R.string.dialog_wifi_title);
-            alertDialog.setMessage(R.string.dialog_wifi_message);
-            alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            wifiManager.setWifiEnabled(true);
-                            //startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                            WifiButton.setVisibility(View.VISIBLE);
-                        }
-                    });
-            alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                            setLoadingScreen();
-                        }
-                    });
-            alertDialog.show();
+        fManager = getSupportFragmentManager();
+        fragmentRegisteredScreenSmallIcons = new FragmentRegisteredScreenSmallIcons();
+        fragmentRegisteredScreenBigIcons = new FragmentRegisteredScreenBigIcons();
+        fragmentExampleGraph1 = new FragmentExampleGraph1();
+        fragmentExampleGraph2 = new FragmentExampleGraph2();
+        fTrans = fManager.beginTransaction();
+        // Если нет токена, то открываем экран авторизации, иначе - экран авторизированного пользователя
+        if (storage.getAccountToken().equals("")) {
+            fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
+            fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
         }
-    }
-
-    // Интерфейс для авторизации пользователя
-    public void setUserAuthorizationScreen() {
-        setContentView(R.layout.screen_main_user_authorization);
-//        Log.i(TAG, "setUnregisteredActivity see");
-        patientUriFlag = 0;
-
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etPassword = (EditText) findViewById(R.id.etPassword);
-
-        nextButton = (Button) findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                authorization(etEmail.getText().toString(), etPassword.getText().toString());
-            }
-        });
-
-        forgotPassword = (TextView) findViewById(R.id.forgotPassword);
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //authorization(etEmail.getText().toString(), etPassword.getText().toString());
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-            }
-        });
-
-        createAccount = (TextView) findViewById(R.id.createAccount);
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //authorization(etEmail.getText().toString(), etPassword.getText().toString());
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-            }
-        });
-    }
-
-    // Авторизация
-    public void authorization(String email, String password) {
-        // Если не все поля заполнены, то выводим диалог об ошибке
-        if ((email.isEmpty()) || (password.isEmpty())) {
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-            builder.setMessage(R.string.dialog_authorization_message)
-                    .setTitle(R.string.dialog_authorization_title)
-                    .setCancelable(true)
-                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    }).show();
-            // Если все поля заполнены, формируем запрос на авторизацию и отправляем его на сервер
-        } else {
-            JSONGenerator jsonGen = new JSONGenerator();
-            JSONObject json = jsonGen.generateAuthJSON(email, password);
-            AuthorizationService intServ = new AuthorizationService();
-            intServ.execute(json);
-
-            // Получаем ответ от сервера
-            try {
-                authorization_token = intServ.get();
-            } catch (Exception e) {
-            }
-
-            // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
-            if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "", "", "");
-                setRegisteredScreen();
-                // Если авторизация не успешна, то выводим диалог об ошибке
-            } else {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-                builder.setMessage(R.string.dialog_authorization_message)
-                        .setTitle(R.string.dialog_authorization_title)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        }).show();
-            }
-        }
-    }
-
-    // Интерфейс для зарегистрированного пользователя
-    public void setRegisteredScreen() {
-        setContentView(R.layout.main);
-        patientUriFlag = 1;
-//        registerReceiver(connectReceiver, new IntentFilter(???));
-//        btnStart = (Button) findViewById(R.id.start);
-//        btnStart.setOnClickListener(this);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
-        setSupportActionBar(toolbar);
-
-//        connectListView = (ListView) findViewById(R.id.ConnectListView);
-//
-//        connectListArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-//        connectListView.setAdapter(connectListArrayAdapter);
-//        connectListArrayAdapter.add("Alive Bluetooth Monitor");
-//        connectListArrayAdapter.add("ECG-BTLE");
-//
-//        connectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                backgroundFlag = 1;
-//                // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
-//                if (isMyServiceRunning(ECGService.class)) {
-//                    Intent intent = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
-//                    intentBluetoothFind.putExtra("deviceType", id);
-//                    startActivity(intentBluetoothFind);
-//                }
-//            }
-//        });
-
-        searchDevicesButton = (Button) findViewById(R.id.searchDevicesButton);
-        searchDevicesButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backgroundFlag = 1;
-                myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                if (myBluetoothAdapter == null || !myBluetoothAdapter.isEnabled()) {
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            mainActivity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-
-                    android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
-                    alertDialog.setTitle(R.string.dialog_bluetooth_title);
-                    alertDialog.setMessage(R.string.dialog_bluetooth_message);
-                    alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    myBluetoothAdapter.enable();
-                                }
-                            });
-
-                    alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    alertDialog.show();
-                } else {
-                    // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
-                    if (isMyServiceRunning(ECGService.class)) {
-                        Intent intent = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
-                        startActivity(intent);
-                    } else {
-                        Intent intentBluetoothFind = new Intent(getApplicationContext(), ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
-                        startActivity(intentBluetoothFind);
-                    }
-                }
-            }
-        });
-
-        serveyButton = (ImageButton) findViewById(R.id.serveyButton);
-        serveyButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    QuestionnaireHelper.showQuestionnaire(context);
-                    //serveyButton.setEnabled(false);
-                } else {
-                    setLoadingScreen();
-                }
-            }
-        });
-
-        ImageButton bpButton = (ImageButton) findViewById(R.id.bpButton);
-        assert bpButton != null;
-        bpButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    startActivity(new Intent(getApplicationContext(), BloodPressureActivity.class));
-                } else {
-                    setLoadingScreen();
-                }
-            }
-        });
-
-        // Если файл с данными ЭКГ не был отправлен во время последнего сеанса, то отправляем его
-        if ((!storage.getECGFile().equals(""))) {
-            if (isNetworkAvailable(context)) {
-                // Отправляем данные на сервер
-                Log.d("MainActivity", "Отправляем данные на сервер");
-                // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
-                Log.d("MainActivity", "Обнуляем файл с данными ЭКГ");
-                // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
-                Log.d("MainActivity", "Индикатор отправки на сервер = none");
-                MainActivity.storage.setECGFile("");
-            }
-        }
-
-
-//        alarmButton = (Button) findViewById(R.id.alarmButton);
-//        Display display = getWindowManager().getDefaultDisplay();
-//        DisplayMetrics metricsB = new DisplayMetrics();
-//        display.getMetrics(metricsB);
-
-//        alarmButton.setOnClickListener(new Button.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (isNetworkAvailable(context)) {
-//                    backgroundFlag = 1;
-//                    if (!gps.canGetLocation()) {
-//                        alarmButtonFlag = true;
-//                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);                        alertDialog.setTitle(R.string.dialog_sos_title);
-//                        alertDialog.setMessage(R.string.dialog_sos_message);
-//                        alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                // Переход к настройкам GPS
-//                                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-//                                context.startActivity(intent);
-//                            }
-//                        });
-//                        alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                GPSLoad gpsLoad2 = new GPSLoad(context);
-//                                gpsLoad2.execute();
-//                                dialog.cancel();
-//                            }
-//                        });
-//                        alertDialog.show();
-//                    } else {
-//                        alarmButton.setEnabled(false);
-//                        alarmButton.setBackgroundColor(0x77a71000);
-//                        alarmButtonFlag = false;
-//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-//                    }
-//                } else {
-//                    setLoadingScreen();
-//                }
-//            }
-//        });
-    }
-
-    // Древняя функция. Не используется
-    public void setConnectedToDriverState() {
-        setContentView(R.layout.screen_main_bluetooth_connected);
-        btnDisconnect = (Button) findViewById(R.id.disconnect);
-        btnDisconnect.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                connectedState = false;
-                setRegisteredScreen();
-            }
-        });
-
-        btnCont = (Button) findViewById(R.id.continueConnection);
-        btnCont.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                backgroundFlag = 1;
-                Intent intentECG = new Intent(context, ECGActivity.class);
-                // TODO change methods
-                startActivity(intentECG);
-            }
-        });
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar_connected);
-        setSupportActionBar(toolbar);
-    }
-
-    // Древняя функция. Не используется
-    final BroadcastReceiver connectReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            connectListArrayAdapter.add("Alive Bluetooth Monitor");
-            connectListArrayAdapter.notifyDataSetChanged();
-        }
-    };
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    // Тулбар
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // О приложении (справка)
-            case R.id.menuAbout:
-                backgroundFlag = 1;
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                break;
-            // Пройти опрос
-            case R.id.passSurvey:
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-                    QuestionnaireHelper.showQuestionnaire(context);
-                } else {
-                    setLoadingScreen();
-                }
-                break;
-            // ЭКГ
-            case R.id.ecg:
-                backgroundFlag = 1;
-                Intent intent4 = new Intent(this, ECGActivity.class);
-                startActivity(intent4);
-                break;
-            // Помощь
-//            case R.id.menuHelp:
-//                backgroundFlag = 1;
-//                Intent intent2 = new Intent(this, Help.class);
-//                startActivity(intent2);
-//                break;
-            // Учетная запись
-            case R.id.menuUserData:
-                if (isNetworkAvailable(context)) {
-                    backgroundFlag = 1;
-//                    //TODO Переделать (откуда берутся настройки юзера БД?)
-//                    if (!loginState) {
-//                        Intent intent3 = new Intent(this, Login.class);
-//                        startActivity(intent3);
-//                    } else {
-                    startActivity(new Intent(this, Userdata.class));
-//                    }
-                } else {
-                    setLoadingScreen();
-                }
-                break;
-            // Документы
-//            case R.id.documentsData:
-//                if (isNetworkAvailable(context)) {
-//                    backgroundFlag = 1;
-//                    startActivity(new Intent(this, DocumentsActivity.class));
-//                } else {
-//                    setLoadingScreen();
-//                }
-//                break;
-            // Выход
-            case R.id.exitAccount:
-                if (isNetworkAvailable(context)) {
-                    // TODO: удалять токен доступа на сервере
-                    backgroundFlag = 0;
-                    patientUriFlag = -1;
-                    DeleteToken deletetoken = new DeleteToken();
-                    deletetoken.execute();
-                    authorization_token = MainActivity.storage.getAccountToken();
-                    storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "");
-                    setLoadingScreen();
-                    deleteFile("feedback.json");
-                    deleteFile("alarmFeedback.json");
-                } else {
-                    setLoadingScreen();
-                }
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        Log.e("TAG", "onActivityResult ");
-        if (data == null) {
-            return;
-        }
-        String adress = data.getStringExtra("adress");
-//        Log.i("TAG", "adress " + adress);
-    }
-
-    // Проверка подключения к интернету
-    // Если подключение установлено, возвращает True, иначе False
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    // Проверка запущен ли сервис
-    // Если сервис работает, то возращает True, иначе False
-    public static boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        fTrans.commit();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        backgroundFlag = 0;
-        Intent intent = getIntent();
-//        // Проверяем каким способом запущено приложение (обычным или через виджет)
-//        if ((intent.getAction() != null) && (intent.getAction().equalsIgnoreCase("ru.cardiacare.cardiacare.open_from_widget"))) {
-//            int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-//            Bundle extras = intent.getExtras();
-//            if (extras != null) {
-//                mAppWidgetId = extras.getInt(
-//                        AppWidgetManager.EXTRA_APPWIDGET_ID,
-//                        AppWidgetManager.INVALID_APPWIDGET_ID);
-//            }
-//            // Если приложение запустили с помощью виджета "ТРЕВОГА"
-//            // то отправляем сигнал SOS и открываем экстренный опросник
-//            if (mAppWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-//                setLoadingScreen();
-//                if (patientUriFlag == 1) {
-//                    if ((isNetworkAvailable(context)) && (gps.canGetLocation())) {
-//                        alarmButtonFlag = false;
-//                        backgroundFlag = 1;
-//                        QuestionnaireHelper.showAlarmQuestionnaire(context);
-//                    }
-//                } else {
-//                    Toast toast = Toast.makeText(this,
-//                            R.string.unregistered_user_toast, Toast.LENGTH_SHORT);
-//                    toast.show();
-//                }
-//            }
-//            // Если приложение запустили обычным способом
-//        } else {
-        // Условие выполняется только для авторизированного пользователя
-        if (patientUriFlag == 1) {
+        // Условия выполняются только для авторизированного пользователя
+        if (!storage.getAccountToken().equals("")) {
+            setMainScreenForAuthorizedUser();
+            // Если файл с данными ЭКГ не был отправлен во время последнего сеанса, то отправляем его
+            if ((!storage.getECGFile().equals(""))) {
+                if (isNetworkAvailable(context)) {
+                    // Отправляем данные на сервер
+                    Log.d(TAG, "Отправляем данные на сервер");
+                    // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
+                    Log.d(TAG, "Обнуляем файл с данными ЭКГ");
+                    // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
+                    MainActivity.storage.setECGFile("");
+                }
+            }
+
             // Если с момента последнего прохождения периодического опроса прошла минута, то
             // делаем иконку опроса красной. Короткий промежуток времени (1 минута) - для демонстрации
             Long timestamp = System.currentTimeMillis() / 1000;
@@ -605,18 +123,13 @@ public class MainActivity extends AppCompatActivity {
                 period = 60;
                 storage.setPeriodPassServey("60");
             }
-            if (time >= period) {
-                serveyButton.setBackgroundResource(R.drawable.servey);
-            } else {
-                serveyButton.setBackgroundResource(R.drawable.servey_white);
-            }
+            //TODO Восстановить изменение цвета иконки опросника по истечению заданного интервала
+//            if (time >= period) {
+//                serveyButton.setBackgroundResource(R.drawable.servey);
+//            } else {
+//                serveyButton.setBackgroundResource(R.drawable.servey_white);
+//            }
         }
-//        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     @Override
@@ -646,18 +159,224 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        backgroundFlag = 0;
-    }
 
     @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy Main Activity");
-        // Старинный комментарий: TODO unregisterReceiver(connectReceiver);
-        backgroundFlag = 0;
-        patientUriFlag = -1;
-        super.onDestroy();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Тулбар
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // О приложении (справка)
+            case R.id.menuAbout:
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                break;
+            // Пройти опрос
+            case R.id.passSurvey:
+                if (isNetworkAvailable(context)) {
+                    QuestionnaireHelper.showQuestionnaire(context);
+                } else {
+                    wiFiAlertDialog();
+                }
+                break;
+            // ЭКГ
+            case R.id.ecg:
+                Intent intent4 = new Intent(this, ECGActivity.class);
+                startActivity(intent4);
+                break;
+            // Учетная запись
+            case R.id.menuUserData:
+                //TODO Переделать (Откуда берутся настройки юзера БД?)
+                startActivity(new Intent(this, Userdata.class));
+                break;
+            // Документы
+//            case R.id.documentsData:
+//                if (isNetworkAvailable(context)) {
+//                    backgroundFlag = 1;
+//                    startActivity(new Intent(this, DocumentsActivity.class));
+//                } else {
+//                    setLoadingScreen();
+//                }
+//                break;
+            // Выход
+            case R.id.exitAccount:
+                //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
+                authorization_token = MainActivity.storage.getAccountToken();
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false);
+                fTrans = fManager.beginTransaction();
+                if (fragmentRegisteredScreenBigIcons != null) {
+                    fTrans.remove(fragmentRegisteredScreenBigIcons);
+                }
+                if (viewPager != null) {
+                    viewPager.setVisibility(View.GONE);
+                    fTrans.remove(fragmentRegisteredScreenSmallIcons);
+                }
+                fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
+                fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
+                fTrans.commit();
+                toolbar.setVisibility(View.GONE);
+                deleteFile("feedback.json");
+                deleteFile("alarmFeedback.json");
+                if (isNetworkAvailable(context)) {
+                    DeleteToken deletetoken = new DeleteToken();
+                    deletetoken.execute();
+                }
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch (pos) {
+
+                case 0:
+                    return FragmentExampleGraph1.newInstance();
+                case 1:
+                    return FragmentExampleGraph2.newInstance();
+                default:
+                    return FragmentExampleGraph1.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
+
+    // Проверка подключения к интернету
+    // Если подключение установлено, возвращает True, иначе False
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Проверка запущен ли сервис
+    // Если сервис работает,  возращает True, иначе False
+    public static boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Авторизация
+    public void authorization(String email, String password) {
+        // Если не все поля заполнены, то выводим диалог об ошибке
+        if ((email.isEmpty()) || (password.isEmpty())) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+            // Если все поля заполнены, формируем запрос на авторизацию и отправляем его на сервер
+        } else {
+            JSONGenerator jsonGen = new JSONGenerator();
+            JSONObject json = jsonGen.generateAuthJSON(email, password);
+            AuthorizationService intServ = new AuthorizationService();
+            intServ.execute(json);
+
+            // Получаем ответ от сервера
+            try {
+                authorization_token = intServ.get();
+            } catch (Exception e) {
+            }
+
+            // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
+            if (!authorization_token.equals("error_authorization")) {
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, email, "", "", "", "", "", "", "", "0", "", "", "", false);
+                fTrans = fManager.beginTransaction();
+                fTrans.remove(fragmentAuthorizationScreen);
+                fTrans.commit();
+                setMainScreenForAuthorizedUser();
+                // Если авторизация не успешна, то выводим диалог об ошибке
+            } else {
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                builder.setMessage(R.string.dialog_authorization_message)
+                        .setTitle(R.string.dialog_authorization_title)
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        }).show();
+            }
+        }
+    }
+
+    // WiFi диалог
+    static public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public void setMainScreenForAuthorizedUser() {
+        toolbar = (Toolbar) findViewById(R.id.main_activity_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setVisibility(View.VISIBLE);
+        viewPager = (ViewPager) activity.findViewById(R.id.viewPager);
+        fTrans = fManager.beginTransaction();
+        // Если установлена галочка "показывать графики" в личном кабинете
+        if (storage.getPageViewOnMainactivity()) {
+            if (fManager.findFragmentByTag(FragmentRegisteredScreenBigIcons.TAG) != null) {
+                fTrans.remove(fragmentRegisteredScreenBigIcons);
+            }
+            if (fManager.findFragmentByTag(FragmentRegisteredScreenSmallIcons.TAG) == null) {
+                fTrans.add(R.id.frgmCont, fragmentRegisteredScreenSmallIcons, FragmentRegisteredScreenSmallIcons.TAG);
+                viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+                viewPager.setVisibility(View.VISIBLE);
+            }
+        } else {
+            viewPager.setVisibility(View.GONE);
+            if (fManager.findFragmentByTag(FragmentRegisteredScreenSmallIcons.TAG) != null) {
+                fTrans.remove(fragmentRegisteredScreenSmallIcons);
+            }
+            if (fManager.findFragmentByTag(FragmentRegisteredScreenBigIcons.TAG) == null) {
+                fTrans.add(R.id.frgmCont, fragmentRegisteredScreenBigIcons, FragmentRegisteredScreenBigIcons.TAG);
+            }
+        }
+        fTrans.commit();
     }
 }

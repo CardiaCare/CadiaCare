@@ -31,7 +31,6 @@ public class DemographicDataActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -60,27 +59,5 @@ public class DemographicDataActivity extends AppCompatActivity {
         EditText etContactInformation = (EditText) findViewById(R.id.etContactInformation);
         assert etContactInformation != null;
         etContactInformation.setText(dd.getContactInformation());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
     }
 }

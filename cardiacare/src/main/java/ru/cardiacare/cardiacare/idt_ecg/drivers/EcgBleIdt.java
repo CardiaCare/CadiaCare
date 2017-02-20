@@ -39,7 +39,9 @@ public class EcgBleIdt extends EcgBleDevice {
 
     public byte[] array;
     static public String ecgstr = "";
-    static public String StorageFileName = "ecgfile";
+    static public String StorageFileName = "ecgfile1";
+    static public String StorageFileName2 = "ecgfile2";
+
     static public FileOutputStream storageFile = null;
     static public FileInputStream storageFile2 = null;
 

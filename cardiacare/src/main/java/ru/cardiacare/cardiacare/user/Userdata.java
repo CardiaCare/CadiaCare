@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -33,11 +34,7 @@ public class Userdata extends AppCompatActivity {
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile";
-
-
-    EditText etSibName;
-    EditText etSibIp;
-    EditText etSibPort;
+    private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity";
 
     EditText etEmail;
     EditText etFirstName;
@@ -48,6 +45,7 @@ public class Userdata extends AppCompatActivity {
     EditText etAge;
     EditText etPeriodPassServey;
     EditText etPeriodECGSending;
+    CheckBox cbPageViewOnMainactivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +61,11 @@ public class Userdata extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
 
-
-
         etEmail = (EditText) findViewById(R.id.etEmail);
-//        etSibName = (EditText) findViewById(R.id.etSibName);
-//        etSibIp = (EditText) findViewById(R.id.etSibIp);
-//        etSibPort = (EditText) findViewById(R.id.etSibPort);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etSecondName = (EditText) findViewById(R.id.etSecondName);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
@@ -82,6 +74,7 @@ public class Userdata extends AppCompatActivity {
         etAge = (EditText) findViewById(R.id.etAge);
         etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
+        cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
     }
@@ -90,9 +83,6 @@ public class Userdata extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor editor = sPref.edit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_EMAIL, etEmail.getText().toString()).commit();
-////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBNAME, etSibName.getText().toString()).commit();
-////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBIP, etSibIp.getText().toString()).commit();
-////        sPref.edit().putString(ACCOUNT_PREFERENCES_SIBPORT, etSibPort.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_FIRSTNAME, etFirstName.getText().toString()).commit();
 ////        Log.i("TAG", "1 " + sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_SECONDNAME, etSecondName.getText().toString()).commit();
@@ -102,6 +92,7 @@ public class Userdata extends AppCompatActivity {
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_AGE, etAge.getText().toString()).commit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, etPeriodECGSending.getText().toString()).commit();
+        sPref.edit().putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, cbPageViewOnMainactivity.isChecked()).commit();
 
         editor.apply();
 
@@ -110,16 +101,6 @@ public class Userdata extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
-
-//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
-//            etSibName.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, ""));
-//        }
-//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
-//            etSibIp.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBIP, ""));
-//        }
-//        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
-//            etSibPort.setText(sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, ""));
-//        }
 //        if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
 //            etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
 //        }
@@ -144,20 +125,11 @@ public class Userdata extends AppCompatActivity {
         if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
             etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
         }
-                if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
+        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
             etPeriodECGSending.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, ""));
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-    }
-
-    @Override
-    public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
+        if (sPref.contains(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY)) {
+            cbPageViewOnMainactivity.setChecked(sPref.getBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, false));
+        }
     }
 }

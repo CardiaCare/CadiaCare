@@ -39,7 +39,6 @@ public class ECGActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });

@@ -28,7 +28,6 @@ public class DocumentsActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -40,7 +39,6 @@ public class DocumentsActivity extends AppCompatActivity {
         demographicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.backgroundFlag = 1;
                 startActivity(new Intent(DocumentsActivity.this, DemographicDataActivity.class));
             }
         });
@@ -50,7 +48,6 @@ public class DocumentsActivity extends AppCompatActivity {
         laboratoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.backgroundFlag = 1;
                 startActivity(new Intent(DocumentsActivity.this, LaboratoryStudyActivity.class));
             }
         });
@@ -60,7 +57,6 @@ public class DocumentsActivity extends AppCompatActivity {
         resultsDoctorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.backgroundFlag = 1;
                 startActivity(new Intent(DocumentsActivity.this, DoctorExaminationActivity.class));
             }
         });
@@ -70,38 +66,8 @@ public class DocumentsActivity extends AppCompatActivity {
         resultsBloodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity.backgroundFlag = 1;
                 startActivity(new Intent(DocumentsActivity.this, BloodPressureActivity.class));
             }
         });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
-        super.onBackPressed();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        MainActivity.backgroundFlag = 0;
-
     }
 }

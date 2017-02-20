@@ -9,33 +9,33 @@
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/AppBaseTheme.AppBarOverlay"
+        android:layout_height="wrap_content"
         android:layout_gravity="@+id/toolBlood"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppBaseTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary">
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/account_activity_toolbar"
-                android:layout_height="?attr/actionBarSize"
                 android:layout_width="match_parent"
-                app:layout_collapseMode="pin"
-                android:theme="@style/AppCompatActionBarStyle" />
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/AppCompatActionBarStyle"
+                app:layout_collapseMode="pin" />
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_marginTop="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="10dp"
-                android:gravity="center">
+                android:layout_marginTop="?attr/actionBarSize"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/tvFirstName"
@@ -52,7 +52,7 @@
                     android:padding="8dp"
                     android:text="@string/tvSecondName"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
-                </LinearLayout>
+            </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -60,9 +60,9 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_margin="10dp"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -83,7 +83,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:src="@android:drawable/ic_dialog_email"/>
+                    android:src="@android:drawable/ic_dialog_email" />
 
                 <TextView
                     android:id="@+id/tvEmail"
@@ -107,22 +107,22 @@
                     android:layout_toEndOf="@id/ivContactItem"
                     android:layout_toRightOf="@id/ivContactItem"
                     android:text="Email"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <!--<ToggleButton-->
-                    <!--android:id="@+id/chkState"-->
-                    <!--android:layout_width="24dp"-->
-                    <!--android:layout_height="24dp"-->
-                    <!--android:layout_alignParentEnd="true"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_centerVertical="true"-->
-                    <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-                    <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-                    <!--android:background="@drawable/toggle_selector"-->
-                    <!--android:checked="false"-->
-                    <!--android:padding="6dp"-->
-                    <!--android:textOff=""-->
-                    <!--android:textOn="" />-->
+                <!--android:id="@+id/chkState"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
+                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
+                <!--android:background="@drawable/toggle_selector"-->
+                <!--android:checked="false"-->
+                <!--android:padding="6dp"-->
+                <!--android:textOff=""-->
+                <!--android:textOn="" />-->
 
             </RelativeLayout>
 
@@ -164,7 +164,7 @@
                     android:layout_toEndOf="@id/imNumber"
                     android:layout_toRightOf="@id/imNumber"
                     android:text="@string/phoneNumber"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </RelativeLayout>
 
@@ -281,7 +281,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
                 <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
                 <TextView
@@ -306,7 +306,7 @@
                     android:layout_toEndOf="@id/imAge"
                     android:layout_toRightOf="@id/imAge"
                     android:text="@string/age"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </RelativeLayout>
 
@@ -325,21 +325,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
                 <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
                 <EditText
                     android:id="@+id/etPeriodPassServey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:inputType="number"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_toEndOf="@id/imPeriodPassServey"
-                    android:layout_toRightOf="@id/imPeriodPassServey"/>
+                    android:layout_toRightOf="@id/imPeriodPassServey"
+                    android:inputType="number"
+                    android:maxLines="1" />
 
-                 <TextView
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/etPeriodPassServey"
@@ -349,7 +349,7 @@
                     android:layout_toEndOf="@id/imPeriodPassServey"
                     android:layout_toRightOf="@id/imPeriodPassServey"
                     android:text="Периодичность опросов, сек"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </RelativeLayout>
 
@@ -368,19 +368,19 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
                 <!--android:src="@drawable/ic_phone_black_24dp" />-->
 
                 <EditText
                     android:id="@+id/etPeriodECGSending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:inputType="number"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_toEndOf="@id/imPeriodECGSending"
-                    android:layout_toRightOf="@id/imPeriodECGSending"/>
+                    android:layout_toRightOf="@id/imPeriodECGSending"
+                    android:inputType="number"
+                    android:maxLines="1" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -392,9 +392,28 @@
                     android:layout_toEndOf="@id/imPeriodECGSending"
                     android:layout_toRightOf="@id/imPeriodECGSending"
                     android:text="Периодичность отправки данных ЭКГ на сервер, сек"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"  />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/needGraphButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false" />
+
+                <TextView
+                    android:id="@+id/needGraphText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Отображать графики на главном экране?" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -412,158 +431,43 @@
 </android.support.design.widget.CoordinatorLayout>
 
 
+    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/help_layout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--tools:context="ru.cardiacare.cardiacare.user.Userdata">-->
 
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:id="@+id/help_layout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--tools:context="ru.cardiacare.cardiacare.user.Userdata">-->
+    <!--<android.support.v7.widget.Toolbar--><!--android:id="@+id/account_activity_toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="?attr/colorPrimary"--><!--android:minHeight="?attr/actionBarSize" />-->
 
-    <!--<android.support.v7.widget.Toolbar-->
-        <!--android:id="@+id/account_activity_toolbar"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="?attr/colorPrimary"-->
-        <!--android:minHeight="?attr/actionBarSize" />-->
+    <!--<ScrollView--><!--android:id="@+id/scrollView2"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:layout_below="@+id/account_activity_toolbar">-->
 
-    <!--<ScrollView-->
-        <!--android:id="@+id/scrollView2"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@+id/account_activity_toolbar">-->
+    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:layout_below="@+id/account_activity_toolbar"--><!--android:layout_centerHorizontal="true"--><!--android:gravity="left"--><!--android:orientation="vertical"--><!--android:padding="8dp">--><!----><!--<TextView--><!--android:id="@+id/tvFirstName"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/tvFirstName"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_below="@+id/account_activity_toolbar"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:gravity="left"-->
-            <!--android:orientation="vertical"-->
-            <!--android:padding="8dp">-->
-            <!---->
-            <!--<TextView-->
-                <!--android:id="@+id/tvFirstName"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/tvFirstName"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etFirstName"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp"--><!--android:paddingLeft="0dp"--><!--android:paddingRight="0dp" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etFirstName"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp"-->
-                <!--android:paddingLeft="0dp"-->
-                <!--android:paddingRight="0dp" />-->
+    <!--<TextView--><!--android:id="@+id/tvSecondName"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/tvSecondName"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvSecondName"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/tvSecondName"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etSecondName"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etSecondName"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp" />-->
+    <!--<TextView--><!--android:id="@+id/tvEmail"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="E-mail"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvEmail"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="E-mail"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etEmail"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etEmail"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="text"-->
-                <!--android:padding="8dp" />-->
+    <!--<TextView--><!--android:id="@+id/tvPhoneNumber"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/phoneNumber"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvPhoneNumber"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/phoneNumber"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etPhoneNumber"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="phone" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etPhoneNumber"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="phone" />-->
+    <!--<TextView--><!--android:id="@+id/tvHeight"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/height"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvHeight"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/height"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etHeight"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etHeight"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="number"-->
-                <!--android:padding="8dp" />-->
+    <!--<TextView--><!--android:id="@+id/tvWeight"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/weight"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvWeight"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/weight"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<EditText--><!--android:id="@+id/etWeight"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etWeight"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="number"-->
-                <!--android:padding="8dp" />-->
+    <!--<TextView--><!--android:id="@+id/tvAge"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/age"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvAge"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="@string/age"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-            <!--<EditText-->
-                <!--android:id="@+id/etAge"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="number"-->
-                <!--android:padding="8dp" />-->
+    <!--<EditText--><!--android:id="@+id/etAge"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
 
 
-            <!--<TextView-->
-                <!--android:id="@+id/tvPeriodPassServey"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="8dp"-->
-                <!--android:text="Периодичность опросов, сек"-->
-                <!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
+    <!--<TextView--><!--android:id="@+id/tvPeriodPassServey"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="Периодичность опросов, сек"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
 
-            <!--<EditText-->
-                <!--android:id="@+id/etPeriodPassServey"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:inputType="number"-->
-                <!--android:padding="8dp" />-->
+    <!--<EditText--><!--android:id="@+id/etPeriodPassServey"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
 
-        <!--</LinearLayout>-->
-    <!--</ScrollView>-->
-<!--</RelativeLayout>-->
+    <!--</LinearLayout>--><!--</ScrollView>--><!--</RelativeLayout>-->

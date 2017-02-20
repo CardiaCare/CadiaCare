@@ -61,7 +61,6 @@ public class BloodPressureActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -178,7 +177,6 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        MainActivity.backgroundFlag = 0;
         bp_data = readLastBPMeasuremetsFromFile();
     }
 
@@ -191,7 +189,6 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
         writeLastBPMeasuremetsFromFile(bp_data);
         super.onBackPressed();
     }

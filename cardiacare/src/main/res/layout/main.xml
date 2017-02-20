@@ -1,164 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawer_layout"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    tools:context="MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_activity_toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
         android:theme="@style/AppCompatActionBarStyle" />
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="198dp"
-        android:weightSum="1">
-
-        <ImageButton
-            android:id="@+id/serveyButton"
-            android:background="@drawable/servey"
-            android:layout_weight="0.5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <ImageButton
-            android:id="@+id/bpButton"
-            android:background="@drawable/bpresure"
-            android:layout_weight="0.5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.00">
+        android:layout_gravity="top"
+        android:layout_weight="10">
+    </android.support.v4.view.ViewPager>
 
-        <TextView
-            android:text="@string/pass_survey"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView5"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent" />
-
-        <TextView
-            android:text="@string/bp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="198dp"
-        android:weightSum="1">
-
-        <ImageButton
-            android:id="@+id/monitorButton"
-            android:background="@drawable/monitor"
-            android:layout_weight="0.5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <ImageButton
-            android:id="@+id/documentsButton"
-            android:background="@drawable/documents"
-            android:layout_weight="0.5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <FrameLayout
+        android:id="@+id/frgmCont"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.00">
-
-        <TextView
-            android:text="@string/fake_ecg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView7"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent" />
-
-        <TextView
-            android:text="@string/title_activity_userdata"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView8"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorAccent" />
-    </LinearLayout>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchDevicesButton"
-        android:text="@string/search_devices"
-        android:layout_margin="20dp"
-        android:textColor="@color/colorAccent" />
-
-    <!--<Button-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/sos"-->
-        <!--android:textSize="20sp"-->
-        <!--android:id="@+id/alarmButton"-->
-        <!--android:background="#ff0000"-->
-        <!--android:layout_margin="20dp"-->
-        <!--android:elevation="0dp" />-->
-
-    <!--android:scaleType="centerCrop"-->
-                                          <!--android:layout_gravity="center_horizontal|top"-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:orientation="vertical"-->
-        <!--android:gravity="center" > &lt;!&ndash;android:layout_below="@+id/imageView1"&ndash;&gt;-->
-        <!--<TextView-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="0.5"-->
-            <!--android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"-->
-            <!--android:text="@string/start_instruction"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="24sp"-->
-            <!--android:gravity="center" /> &lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
-                                        <!--&lt;!&ndash;android:textColor="#fff"&ndash;&gt;-->
-        <!--<ListView-->
-            <!--android:id="@+id/ConnectListView"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="16dp"-->
-            <!--android:textAlignment="center" />-->
-    <!--</LinearLayout>-->
+        android:layout_gravity="bottom"
+        android:layout_weight="0">
+    </FrameLayout>
 
 </LinearLayout>

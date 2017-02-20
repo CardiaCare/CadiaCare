@@ -52,17 +52,6 @@
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
         </activity>
         <activity
-            android:name=".Help"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppBaseTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.cardiacare.cardiacare.MainActivity" />
-        </activity>
-        <activity
             android:name=".user.Login"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_login"
@@ -137,6 +126,14 @@
         <activity
             android:name=".idt_ecg.ECGActivity"
             android:label="@string/ecg"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".user.CreateAccountActivity"
+            android:label="@string/title_activity_create_account"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".user.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
             android:theme="@style/AppBaseTheme" />
 
         <service

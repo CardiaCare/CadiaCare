@@ -85,7 +85,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -125,7 +124,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
                     String info = ((TextView) view).getText().toString();
                     String adress = info.substring(info.length() - 17);
 
-                    MainActivity.connectedState = true;
                     Handler handler = new Handler(Looper.getMainLooper());
 
                     Intent intent = new Intent();
@@ -284,7 +282,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        MainActivity.backgroundFlag = 0;
     }
 
     @Override
@@ -294,7 +291,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
         super.onBackPressed();
     }
 }

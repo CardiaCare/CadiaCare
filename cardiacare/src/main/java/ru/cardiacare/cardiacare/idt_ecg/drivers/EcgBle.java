@@ -210,6 +210,22 @@ public class EcgBle {
         ECGService.connected_flag = false;
 //        ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
         ECGService.myService.stopSelf();
+        ECGService.notificationManager.cancel(1);
+        if ((driver != null) && (EcgBleIdt.bw != null)) {
+            try {
+                EcgBleIdt.bw.write("\"]},\"created_at\":\"17022017\"}");
+                EcgBleIdt.bw.close();
+                BufferedReader br = new BufferedReader(new InputStreamReader(ECGService.mContext.openFileInput(EcgBleIdt.StorageFileName)));
+                String str = "";
+                while ((str = br.readLine()) != null) {
+                    Log.d("QQQ", "ecgfile = " + str);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         // Если есть доступ к сети  и есть что отправлять на сервер
         if ((MainActivity.isNetworkAvailable(ECGService.mContext)) /*&& (!MainActivity.storage.getECGFile().equals(""))*/) {
             // Отправляем данные на сервер
@@ -241,21 +257,6 @@ public class EcgBle {
 //                }
 //            });
 //        }
-        if (driver != null) {
-            try {
-                EcgBleIdt.bw.write("\"]},\"created_at\":\"17022017\"}");
-                EcgBleIdt.bw.close();
-                BufferedReader br = new BufferedReader(new InputStreamReader(ECGService.mContext.openFileInput(EcgBleIdt.StorageFileName)));
-                String str = "";
-                while ((str = br.readLine()) != null) {
-                    Log.d("QQQ", "ecgfile = " + str);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 //    static public void onEcgReceived(final int HeartRate, final short array[], final int Frequency) {

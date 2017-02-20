@@ -78,7 +78,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
                 configIntent.setAction(" ");
                 startActivity(configIntent);
@@ -147,7 +146,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String jsonStr = "";
                 refreshFlag = true;
-                MainActivity.backgroundFlag = 1;
                 buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
                     MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
@@ -171,13 +169,12 @@ public class QuestionnaireActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
-        MainActivity.backgroundFlag = 0;
-        if (QuestionnaireHelper.questionnaireType.equals(periodic))
-            MainActivity.serveyButton.setEnabled(true);
-        else {
-            MainActivity.alarmButton.setEnabled(true);
-            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
-        }
+//        if (QuestionnaireHelper.questionnaireType.equals(periodic))
+//            MainActivity.serveyButton.setEnabled(true);
+//        else {
+////            MainActivity.alarmButton.setEnabled(true);
+////            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
+//        }
 
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        buttonRefresh.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
@@ -223,12 +220,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-    }
-
-    @Override
     public void onPause() {
         if (refreshFlag == false) {
             String jsonStr;
@@ -249,13 +240,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
         }
         super.onPause();
         refreshFlag = false;
-        if (MainActivity.backgroundFlag == 0) {
-        }
     }
 
     @Override
     public void onBackPressed() {
-        MainActivity.backgroundFlag = 1;
         Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
         configIntent.setAction(" ");
         startActivity(configIntent);
