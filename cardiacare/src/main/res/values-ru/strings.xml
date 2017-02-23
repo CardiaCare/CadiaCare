@@ -273,4 +273,7 @@
     <string name="dialog_bp_title">Удалить</string>
     <string name="prompt_password">Пароль</string>
     <string name="prompt_email">Почта</string>
+    <string name="action_registration">Регистрация</string>
+    <string name="prompt_password2">Повторите пароль</string>
+    <string name="prompt_invite_code">Код приглашения</string>
 </resources>

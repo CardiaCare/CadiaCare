@@ -117,6 +117,11 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
 
+    <!--activity_create_account.xml-->
+    <string name="prompt_password2">Repeat password</string>
+    <string name="prompt_invite_code">Invite code</string>
+    <string name="action_registration">Registration</string>
+
     <!--activity_questionnaire.xml-->
     <string name="clean">Clean</string>
 
