@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
 
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +34,7 @@ import java.util.LinkedList;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.user.CreateAccountPost;
 
 /* Экран "Результаты измерения артериального давления" */
 
@@ -121,6 +124,10 @@ public class BloodPressureActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    extractLogPass(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                }catch (Exception e){}
+                System.out.println("Test! blood ");
                 String currentDateandTime = sdf.format(new Date());
                 ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString());
                 bp_data.addFirst(rbp);
@@ -132,6 +139,22 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void extractLogPass(int systolic, int diastolic) {
+        JSONObject json = null;
+
+        String str = "{ \"systolic\":" + systolic + ", "
+                + "\"diastolic\":" + diastolic + "} ";
+
+        try {
+            json = new JSONObject(str);
+
+            BloodPressurePOST bloodPost = new BloodPressurePOST();
+            bloodPost.execute(json);
+
+        }
+        catch (Exception e){}
     }
 
     public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile(){

@@ -1,35 +1,37 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
 import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
-
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Credentials;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import ru.cardiacare.cardiacare.MainActivity;
+
+//import com.squareup.okhttp.Callback;
+//import com.squareup.okhttp.Credentials;
+//import com.squareup.okhttp.MediaType;
+//import com.squareup.okhttp.OkHttpClient;
+//import com.squareup.okhttp.Request;
+//import com.squareup.okhttp.RequestBody;
+//import com.squareup.okhttp.Response;
 
 /* Отправка данных ЭКГ на сервер */
 
 public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
-    public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("text/x-markdown; charset=utf-8");
+    public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("text/x-markdown; charset=utf-8"); //MediaType.parse("multipart/form-data; boundary=------------------------dead");
 
     @Override
     protected void onPreExecute() {
@@ -58,6 +60,15 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
             RequestBody body = RequestBody.create(MEDIA_TYPE_MARKDOWN, file);
 
+
+
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    //.addFormDataPart("title", "Square Logo")
+                    .addFormDataPart("data", "ecgfile",
+                            RequestBody.create(MediaType.parse("text/plain"), file))
+                    .build();
+
             System.out.println("Test! body " + body.toString());
 
             String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
@@ -67,7 +78,12 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
             Request request = new Request.Builder()
                     .url("http://api.cardiacare.ru/biosignals")
                     .addHeader("Authorization", credential)
-                    .post(body)
+                    .addHeader("Cache-Control", "no-cache")
+                    .addHeader("Accept", "*/*")
+                    .addHeader("Accept-Encoding", "gzip, deflate")
+                   // .addHeader("Content-Type", "multipart/form-data")
+                    //.post(body)
+                    .post(requestBody)
                     .build();
 
             Response response = client.newCall(request).execute();
@@ -79,14 +95,24 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
-                public void onFailure(Request request, IOException e) {
-                    Log.e("Request", request.body().toString());
+                public void onFailure(Call call, IOException e) {
+                    //Log.e("Request", request.body().toString());
                 }
 
                 @Override
-                public void onResponse(Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     Log.i("Response", response.body().string());
                 }
+
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//                    Log.e("Request", request.body().toString());
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) throws IOException {
+//                    Log.i("Response", response.body().string());
+//                }
             });
 
             System.out.println("Test! POST");
