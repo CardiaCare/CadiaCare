@@ -32,9 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.user.CreateAccountPost;
 
 /* Экран "Результаты измерения артериального давления" */
 
@@ -42,7 +40,8 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
     BPAdapter adapter;
-    LinkedList<ResultBloodPressure> bp_data;
+    static LinkedList<ResultBloodPressure> bp_data;
+    static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
 
@@ -53,6 +52,10 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BloodPressureGET bloodGet = new BloodPressureGET();
+        bloodGet.execute();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_results_blood);
         setTitle("");

@@ -17,7 +17,7 @@ import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
-public class BloodPressurePOST   extends AsyncTask<JSONObject, String, String> {
+public class BloodPressurePOST extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
