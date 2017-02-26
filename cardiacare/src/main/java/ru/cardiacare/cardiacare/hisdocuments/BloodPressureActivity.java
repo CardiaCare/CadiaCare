@@ -21,6 +21,8 @@ import android.widget.TextView;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
 
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Результаты измерения артериального давления" */
@@ -39,7 +40,8 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
     BPAdapter adapter;
-    LinkedList<ResultBloodPressure> bp_data;
+    static LinkedList<ResultBloodPressure> bp_data;
+    static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
 
@@ -50,6 +52,10 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        BloodPressureGET bloodGet = new BloodPressureGET();
+        bloodGet.execute();
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_results_blood);
         setTitle("");
@@ -121,6 +127,10 @@ public class BloodPressureActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    extractLogPass(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                }catch (Exception e){}
+                System.out.println("Test! blood ");
                 String currentDateandTime = sdf.format(new Date());
                 ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString());
                 bp_data.addFirst(rbp);
@@ -132,6 +142,22 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    void extractLogPass(int systolic, int diastolic) {
+        JSONObject json = null;
+
+        String str = "{ \"systolic\":" + systolic + ", "
+                + "\"diastolic\":" + diastolic + "} ";
+
+        try {
+            json = new JSONObject(str);
+
+            BloodPressurePOST bloodPost = new BloodPressurePOST();
+            bloodPost.execute(json);
+
+        }
+        catch (Exception e){}
     }
 
     public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile(){

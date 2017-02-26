@@ -10,6 +10,7 @@ public class AccountStorage {
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
     private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
+    private static final String ACCOUNT_PREFERENCES_DOCTORID = "iddoctor"; // ид лечащего врача
     private static final String ACCOUNT_PREFERENCES_TOKEN = "token"; // Токен доступа, полученный с сервера
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     private static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
@@ -41,10 +42,11 @@ public class AccountStorage {
     private String strECGFile;
     private Boolean blnPageViewOnMainactivity;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId,  String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity) {
         SharedPreferences.Editor editor = sPref.edit();
 
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORID, doctorId);
         editor.putString(ACCOUNT_PREFERENCES_TOKEN, token);
         editor.putString(ACCOUNT_PREFERENCES_EMAIL, email);
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
@@ -102,6 +104,13 @@ public class AccountStorage {
     public String getAccountId() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PATIENTID)) {
             strId = sPref.getString(ACCOUNT_PREFERENCES_PATIENTID, "");
+        } else strId = "";
+        return strId;
+    }
+
+    public String getDoctorId() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORID)) {
+            strId = sPref.getString(ACCOUNT_PREFERENCES_DOCTORID, "");
         } else strId = "";
         return strId;
     }

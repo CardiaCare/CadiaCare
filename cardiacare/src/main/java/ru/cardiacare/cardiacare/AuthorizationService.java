@@ -1,7 +1,6 @@
 package ru.cardiacare.cardiacare;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONObject;
 
@@ -52,6 +51,7 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
 //            Log.i("LOG", "status = " + con.getResponseMessage());
             token = sb.toString();
             result = con.getResponseMessage();
+            System.out.println("Test!" + token);
         } catch (Exception e) {}
 
         /////////////////////////////////////////////
@@ -66,6 +66,11 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
             JSONObject dataPerson = null;
             dataPerson = new JSONObject(dataUser.getString("person"));
             MainActivity.authorization_id_patient = dataPerson.getString("id");
+
+//            Как появиться поле с идентификатором врача - расскоментировать и проверить поле "doctor" "id" или "person" "doctor_id"
+//            JSONObject dataDoctor = null;
+//            dataDoctor = new JSONObject(dataUser.getString("doctor"));
+//            MainActivity.authorization_id_doctor = dataDoctor.getString("id");
 
         } catch (Exception e) {}
         /////////////////////////////////

@@ -97,6 +97,7 @@ public class UserAccount extends AppCompatActivity {
                 etSibPort.getText().toString(),
                 "",
                 MainActivity.authorization_token,
+                MainActivity.authorization_id_patient,
                 etEmail.getText().toString(),
                 etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
