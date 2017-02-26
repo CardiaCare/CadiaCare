@@ -4,14 +4,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:id="@+id/ContinuousScaleCardView">
+    android:id="@+id/ScaleCardView">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/ContinuousScaleQuestion"
+            android:id="@+id/ScaleQuestion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -20,23 +20,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ContinuousScaleIntervals"
-            android:layout_below="@+id/ContinuousScaleQuestion"
+            android:id="@+id/ScaleIntervals"
+            android:layout_below="@+id/ScaleQuestion"
             android:orientation="horizontal">
         </LinearLayout>
 
         <SeekBar
-            android:id="@+id/ContinuousScaleSeekBar"
+            android:id="@+id/ScaleSeekBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ContinuousScaleIntervals"/>
+            android:layout_below="@+id/ScaleIntervals"/>
 
         <TextView
-            android:id="@+id/ContinuousScaleValue"
+            android:id="@+id/ScaleValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:layout_below="@+id/ContinuousScaleSeekBar"
+            android:layout_below="@+id/ScaleSeekBar"
             android:layout_centerHorizontal="true"/>
 
     </RelativeLayout>

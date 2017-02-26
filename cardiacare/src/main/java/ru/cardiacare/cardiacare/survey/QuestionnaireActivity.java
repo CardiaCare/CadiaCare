@@ -84,6 +84,17 @@ public class QuestionnaireActivity extends AppCompatActivity {
             }
         });
 
+        if (!QuestionnaireHelper.questionnaireDownloadedFromFile) {
+            int respondsCount = MainActivity.feedback.getResponds().size();
+            for (int i = respondsCount; i > 0; i--) {
+                MainActivity.feedback.getResponds().remove(i - 1);
+            }
+            String jsonStr = "";
+            Gson json = new Gson();
+            jsonStr = json.toJson(MainActivity.feedback);
+            writeData(jsonStr);
+        }
+
         QuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         QuestionnaireLayoutManager = new LinearLayoutManager(getApplicationContext());
         QuestionnaireRecyclerView.setLayoutManager(QuestionnaireLayoutManager);
@@ -132,13 +143,15 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 }
             }
         }
+
         if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
             QuestionnaireAdapter = new RecyclerViewAdapter(QuestionnaireHelper.questionnaire.getQuestions(), Types, context);
             QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
-        } else {
-            QuestionnaireAdapter = new AlarmRecyclerViewAdapter(QuestionnaireHelper.alarmQuestionnaire.getQuestions(), Types, context);
-            QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
         }
+//        } else {
+//            QuestionnaireAdapter = new AlarmRecyclerViewAdapter(QuestionnaireHelper.alarmQuestionnaire.getQuestions(), Types, context);
+//            QuestionnaireRecyclerView.setAdapter(QuestionnaireAdapter);
+//        }
 
         buttonRefresh = (ImageButton) findViewById(R.id.buttonClean);
         buttonRefresh.setOnClickListener(new View.OnClickListener() {// Clean
@@ -148,8 +161,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 refreshFlag = true;
                 buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                    MainActivity.feedback = new Feedback("1 test", "Student", "feedback");
-                else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
+                    MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+//                else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
 
                 Gson json = new Gson();
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
@@ -227,7 +240,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
                 jsonStr = json.toJson(MainActivity.feedback);
             else jsonStr = json.toJson(MainActivity.alarmFeedback);
-            System.out.println(jsonStr);
+            System.out.println("feedback: " + jsonStr);
             writeData(jsonStr);
             if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
                 // To SIB

@@ -99,10 +99,6 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             return -1;
         }
 //        QuestionnaireHelper.printQuestionnaire(QuestionnaireHelper.questionnaire);
-        if (QuestionnaireHelper.questionnaireType.equals("periodic"))
-            QuestionnaireHelper.questionnaireDownloaded = true;
-        else QuestionnaireHelper.alarmQuestionnaireDownloaded = true;
-
         //System.out.println("Test! resultJson" + MainActivity.storage.getAccountToken() + " " + resultJson);
         return 0;
     }

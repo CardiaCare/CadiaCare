@@ -6,79 +6,72 @@ import java.util.LinkedList;
  * Created by CardiaCareTeam on 20.04.2016.
  */
 public class Response {
-
-    private Integer id;
-    private Integer answerId;
-    private String textItem;
-    private String fileUri;
+    private Integer answer_id;
+    private String responseText;
+    private String responseFile;
     LinkedList<ResponseItem> responseItems;
 
-    private String uri;
-    private String questionUri;
+//    private String uri;
+//    private String questionUri;
 
-    public void setUri(String uri) {
-        this.uri = uri;
+    public Response(Integer answer_id) {
+        this.answer_id = answer_id;
+        responseItems = new LinkedList<>();
     }
 
-    public Response(String uri, String questionUri) {
-        this.uri = uri;
-        this.questionUri = questionUri;
-        this.responseItems = new LinkedList<ResponseItem>();
+    public Integer getAnswer_id() {
+        return answer_id;
     }
 
-    public void addResponseItem(ResponseItem newResponseItem) {
-        this.responseItems.addLast(newResponseItem);
+    public void setAnswer_id(Integer answer_id) {
+        this.answer_id = answer_id;
     }
 
-    public void setQuestionUri(String questionUri) {
-        this.questionUri = questionUri;
+    public String getResponseText() {
+        return responseText;
     }
 
-    public void setResponseItems(LinkedList<ResponseItem> responseItems) {
-        this.responseItems = responseItems;
+    public void setResponseText(String responseText) {
+        this.responseText = responseText;
+    }
+
+    public String getResponseFile() {
+        return responseFile;
+    }
+
+    public void setResponseFile(String responseFile) {
+        this.responseFile = responseFile;
     }
 
     public LinkedList<ResponseItem> getResponseItems() {
         return responseItems;
     }
 
-    public String getUri() {
-        return uri;
+    public void addResponseItem(ResponseItem newResponseItem) {
+        this.responseItems.addLast(newResponseItem);
     }
 
-    public String getQuestionUri() {
-        return questionUri;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getAnswerId() {
-        return answerId;
-    }
-
-    public void setAnswerId(Integer answerId) {
-        this.answerId = answerId;
-    }
-
-    public String getTextItem() {
-        return textItem;
-    }
-
-    public void setTextItem(String textItem) {
-        this.textItem = textItem;
-    }
-
-    public String getFileUri() {
-        return fileUri;
-    }
-
-    public void setFileUri(String fileUri) {
-        this.fileUri = fileUri;
-    }
+//    public Response(String uri, String questionUri) {
+//        this.uri = uri;
+//        this.questionUri = questionUri;
+//        this.responseItems = new LinkedList<ResponseItem>();
+//    }
+//    public String getUri() {
+//        return uri;
+//    }
+//    public void setUri(String uri) {
+//        this.uri = uri;
+//    }
+//
+//    public String getQuestionUri() {
+//        return questionUri;
+//    }
+//
+//    public void setQuestionUri(String questionUri) {
+//        this.questionUri = questionUri;
+//    }
+//
+//    public void setResponseItems(LinkedList<ResponseItem> responseItems) {
+//        this.responseItems = responseItems;
+//    }
 }

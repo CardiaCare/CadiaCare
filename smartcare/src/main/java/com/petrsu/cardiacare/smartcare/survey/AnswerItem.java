@@ -7,47 +7,17 @@ import java.util.LinkedList;
  */
 public class AnswerItem {
     private Integer id;
-    private String uri;
-    private String itemScore;
     private String itemText;
+    private String itemScore;
+    private String uri;
     LinkedList<Answer> subAnswers;
 
-
-    public AnswerItem(String uri_from_sib,String itemScore_from_sib, String itemText_from_sib){
-        uri = uri_from_sib;
-        itemScore = itemScore_from_sib;
-        itemText = itemText_from_sib;
-        subAnswers = new LinkedList<Answer>();
-    }
-
     public AnswerItem(AnswerItem item){
-        this.uri = item.uri;
-        this.itemScore = item.itemScore;
+        this.id = item.id;
         this.itemText = item.itemText;
+        this.itemScore = item.itemScore;
+        this.uri = item.uri;
         this.subAnswers = item.subAnswers;
-    }
-
-    // Добавить подответ в конец списка подответов
-    public void addSubAnswer(Answer answer){
-        Answer subAnswer = new Answer(answer);
-        subAnswers.addLast(subAnswer);
-    }
-
-    // Получение списка подответов
-    public LinkedList<Answer> getSubAnswers() {
-        return subAnswers;
-    }
-    // Получение идентификатора варианта ответа в ИП
-    public String getUri() {
-        return uri;
-    }
-    // Получение значимости варианта ответа
-    public String getItemScore() {
-        return itemScore;
-    }
-    // Получение текста варианта ответа
-    public String getItemText() {
-        return itemText;
     }
 
     public Integer getId() {
@@ -57,4 +27,44 @@ public class AnswerItem {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public String getItemText() {
+        return itemText;
+    }
+
+    public void setItemText(String itemText) {
+        this.itemText = itemText;
+    }
+
+    public String getItemScore() {
+        return itemScore;
+    }
+
+    public void setItemScore(String itemScore) {
+        this.itemScore = itemScore;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public LinkedList<Answer> getSubAnswers() {
+        return subAnswers;
+    }
+
+    public void addSubAnswer(Answer answer){
+        Answer subAnswer = new Answer(answer);
+        subAnswers.addLast(subAnswer);
+    }
+
+    //    public AnswerItem(String uri_from_sib,String itemScore_from_sib, String itemText_from_sib){
+//        uri = uri_from_sib;
+//        itemScore = itemScore_from_sib;
+//        itemText = itemText_from_sib;
+//        subAnswers = new LinkedList<Answer>();
+//    }
 }

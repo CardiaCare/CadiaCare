@@ -72,8 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        feedback = new Feedback("", "Student", "feedback");
-        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
+        feedback = new Feedback(1, "");
+//        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
         activity = this;
         mContext = this;
 

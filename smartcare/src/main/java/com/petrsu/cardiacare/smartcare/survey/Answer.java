@@ -6,33 +6,34 @@ import java.util.LinkedList;
  * Created by Iuliia Zavialova on 09.03.16.
  */
 public class Answer {
-    private String id;
+    private Integer id;
     private String uri;
     private String type;
-
     LinkedList<AnswerItem> items;
 
-    public Answer(String uri_from_sib,String type_from_sib){
-        this.uri = uri_from_sib;
-        this.type = type_from_sib;
-        this.items = new LinkedList<AnswerItem>();
-    }
-
     public Answer(Answer answer){
+        this.id = answer.getId();
         this.uri = answer.getUri();
         this.type = answer.getType();
-        this.items = new LinkedList<AnswerItem>();
+        this.items = new LinkedList<>();
     }
 
-    // Получение идентификатора ответа из ИП
-    public String getUri(){ return uri; }
-
-    // Получение вариантов ответа
-    public LinkedList<AnswerItem> getItems() {
-        return items;
+    public Integer getId() {
+        return id;
     }
 
-    // Получение типа ответа
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
     public String getType() {
         int i = type.indexOf("#");
         String t = type.substring(i+1);
@@ -43,19 +44,18 @@ public class Answer {
         this.type = type;
     }
 
-    // Добавить вариант ответа в конец списка
+    public LinkedList<AnswerItem> getItems() {
+        return items;
+    }
+
     public void addAnswerItem(AnswerItem item){
         AnswerItem newItem = new AnswerItem(item);
         this.items.addLast(newItem);
     }
 
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+//    public Answer(String uri_from_sib,String type_from_sib){
+//        this.uri = uri_from_sib;
+//        this.type = type_from_sib;
+//        this.items = new LinkedList<AnswerItem>();
+//    }
 }

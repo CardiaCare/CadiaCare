@@ -25,9 +25,8 @@ public class QuestionnaireHelper {
     static public String serverUri;
     static public String questionnaireFile = "questionnaire.json";
     static public String alarmQuestionnaireFile = "alarmQuestionnaire.json";
-    static public boolean questionnaireDownloaded = false;
-    static public boolean alarmQuestionnaireDownloaded = false;
     static public String questionnaireType;
+    static public Boolean questionnaireDownloadedFromFile;
 
     static public Questionnaire questionnaire;
     static public Questionnaire alarmQuestionnaire;
@@ -40,20 +39,22 @@ public class QuestionnaireHelper {
         String QuestionnaireServerVersion = "1.0";
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
-        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (!questionnaireDownloaded)) {
+        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (readSavedData(context).isEmpty())) {
+            questionnaireDownloadedFromFile = false;
             serverUri = "http://api.cardiacare.ru/questionnaire/7";
             //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
             Log.i("serverUri = ", serverUri);
             //System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
             MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
             MainActivity.storage.setVersion(QuestionnaireServerVersion);
+
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {
 //            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
 //            feedbackPOST.execute();
             String jsonFromFile = readSavedData(context);
-            //String jsonFromFile = "{\"emergency\": false,\"version\": \"1.0\",\"description\": \"Description\",\"lang\": \"RU\",\"questions\":[{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[{\"items\":[],\"type\":\"Text\",\"uri\":\"http://oss.fruct.org/smartcare#8117516\"}],\"uri\":\"http://oss.fruct.org/smartcare#3511018\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558817\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117516\"}],\"description\":\"Intense headaches?\",\"uri\":\"http://oss.fruct.org/smartcare#5532215\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511022\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558821\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117520\"}],\"description\":\"Severe dizziness?\",\"uri\":\"http://oss.fruct.org/smartcare#5532219\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511026\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558825\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117524\"}],\"description\":\"Nausea, vomiting?\",\"uri\":\"http://oss.fruct.org/smartcare#5532223\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511030\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558829\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117528\"}],\"description\":\"Acute visual impairment?\",\"uri\":\"http://oss.fruct.org/smartcare#5532227\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511034\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558833\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117532\"}],\"description\":\"Severe chest pain?\",\"uri\":\"http://oss.fruct.org/smartcare#5532231\"},{\"answers\":[{\"items\":[{\"itemScore\":\"0\",\"itemText\":\"No\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#3511038\"},{\"itemScore\":\"0\",\"itemText\":\"Yes\",\"subAnswers\":[],\"uri\":\"http://oss.fruct.org/smartcare#7558837\"}],\"type\":\"Dichotomous\",\"uri\":\"http://oss.fruct.org/smartcare#8117536\"}],\"description\":\"The lack of air?\",\"uri\":\"http://oss.fruct.org/smartcare#5532235\"}]}";
+            questionnaireDownloadedFromFile = true;
             Gson json = new Gson();
             questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
 //            printQuestionnaire(questionnaire);
@@ -67,7 +68,7 @@ public class QuestionnaireHelper {
     static public void showAlarmQuestionnaire(Context context) {
         questionnaireType = "alarm";
         // Если опросник ещё не был загружен, то загружаем опросник
-        if (!alarmQuestionnaireDownloaded) {
+        if (readSavedData(context).isEmpty()) {
             serverUri = "http://api.cardiacare.ru/survey/2";
             //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
@@ -92,26 +93,27 @@ public class QuestionnaireHelper {
         for (int i = 0; i < q.size(); i++) {
             Question qst = q.get(i);
             Log.i(MainActivity.TAG, qst.getDescription());
-            Answer a = qst.getAnswer();
-//            if (a.size()>0) {
-//            for(int h = 0; h < a.size(); h++) {
-            Log.i(MainActivity.TAG, a.getType());
-            LinkedList<AnswerItem> ai = a.getItems();
-            if (ai.size() > 0) {
-                Log.i(MainActivity.TAG, "AnswerItem");
-                for (int j = 0; j < ai.size(); j++) {
-                    AnswerItem item = ai.get(j);
-                    Log.i(MainActivity.TAG, item.getItemText());
-                    LinkedList<Answer> suba = item.getSubAnswers();
-                    if (suba.size() > 0) {
-                        for (int k = 0; k < suba.size(); k++) {
-                            Log.i(MainActivity.TAG, "subAnswer");
-                            Answer sitem = suba.get(k);
-                            Log.i(MainActivity.TAG, sitem.getType());
+            LinkedList <Answer> a = qst.getAnswers();
+            if (a.size() > 0) {
+                for(int h = 0; h < a.size(); h++) {
+                    Answer answer = a.get(h);
+                    Log.i(MainActivity.TAG, answer.getType());
+                    LinkedList<AnswerItem> ai = answer.getItems();
+                    if (ai.size() > 0) {
+                        Log.i(MainActivity.TAG, "AnswerItem");
+                        for (int j = 0; j < ai.size(); j++) {
+                            AnswerItem item = ai.get(j);
+                            Log.i(MainActivity.TAG, item.getItemText());
+                            LinkedList<Answer> suba = item.getSubAnswers();
+                            if (suba.size() > 0) {
+                                for (int k = 0; k < suba.size(); k++) {
+                                    Log.i(MainActivity.TAG, "subAnswer");
+                                    Answer sitem = suba.get(k);
+                                    Log.i(MainActivity.TAG, sitem.getType());
+                                }
+                            }
                         }
                     }
-//                     }
-//                    }
                 }
             }
         }

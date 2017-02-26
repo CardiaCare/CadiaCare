@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:id="@+id/BipolarQuestionCardView">
+    android:id="@+id/RadioButtonsCardView">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/BipolarQuestionQuestion"
+            android:id="@+id/RadioButtonsQuestion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <SeekBar
-            android:id="@+id/BipolarQuestionSeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/BipolarQuestionQuestion"
-            android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:id="@+id/BipolarQuestionValue"
+        <RadioGroup
+            android:id="@+id/RadioButtonsAnswers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:layout_below="@+id/BipolarQuestionSeekBar"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/RadioButtonsQuestion"
+            android:orientation="vertical" >
 
+        </RadioGroup>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
-

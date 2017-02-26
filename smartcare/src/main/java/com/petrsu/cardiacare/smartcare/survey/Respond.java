@@ -7,38 +7,27 @@ import java.util.LinkedList;
  */
 
 public class Respond {
-
-    private Integer id;
-    private Integer questionId;
+    private Integer question_id;
     LinkedList<Response> responses;
 
-
-    public Respond(Integer id, Integer questionId, LinkedList<Response> responses) {
-        this.id = id;
-        this.questionId = questionId;
-        this.responses = new LinkedList<Response>();
+    public Respond(Integer question_id) {
+        this.question_id = question_id;
+        this.responses = new LinkedList<>();
     }
 
-    public void addResponse(Response newResponse) {
-        this.responses.addLast(newResponse);
+    public Integer getQuestionId() {
+        return question_id;
     }
+
+    public void setQuestionId(Integer question_id) {
+        this.question_id = question_id;
+    }
+
     public LinkedList<Response> getResponses() {
         return responses;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
+    public void addResponse(Response newResponse) {
+        this.responses.addLast(newResponse);
     }
 }
