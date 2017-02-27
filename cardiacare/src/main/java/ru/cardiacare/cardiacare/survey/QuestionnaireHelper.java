@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
-import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.MainActivity;
 
 /* Работа с периодическим опросником */
@@ -36,21 +35,32 @@ public class QuestionnaireHelper {
         questionnaireType = "periodic";
         String QuestionnaireVersion = MainActivity.storage.getQuestionnaireVersion();
 
-        String QuestionnaireServerVersion = "1.0";
+        //String QuestionnaireServerVersion = "";/////////1.0
 
         // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
-        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (readSavedData(context).isEmpty())) {
-            questionnaireDownloadedFromFile = false;
-            serverUri = "http://api.cardiacare.ru/questionnaire/7";
-            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
-            Log.i("serverUri = ", serverUri);
-            //System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
-            MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
-            MainActivity.storage.setVersion(QuestionnaireServerVersion);
+//        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (readSavedData(context).isEmpty())) {
+//            questionnaireDownloadedFromFile = false;
+//            //serverUri = "http://api.cardiacare.ru/questionnaire/7";
+//            serverUri = "http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/questionnaires";
+//            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
+//            Log.i("serverUri = ", serverUri);
+//            //System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
+//            MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
+//            //MainActivity.storage.setVersion(QuestionnaireServerVersion);
+//
+//            QuestionnaireVersionGET questionnaireVersionGET = new QuestionnaireVersionGET(context);
+//            questionnaireVersionGET.execute();
+//
+////            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
+////            questionnaireGET.execute();
+////            Intent intent = new Intent(context, QuestionnaireActivity.class);
+////            intent.putExtra("questionnaireType", questionnaireType);
+////            context.startActivity(intent);
+//        } else {
 
-            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
-            questionnaireGET.execute();
-        } else {
+            QuestionnaireVersionGET questionnaireVersionGET = new QuestionnaireVersionGET(context);
+            questionnaireVersionGET.execute();
+
 //            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
 //            feedbackPOST.execute();
             String jsonFromFile = readSavedData(context);
@@ -62,7 +72,7 @@ public class QuestionnaireHelper {
             Intent intent = new Intent(context, QuestionnaireActivity.class);
             intent.putExtra("questionnaireType", questionnaireType);
             context.startActivity(intent);
-        }
+      //  }
     }
 
     static public void showAlarmQuestionnaire(Context context) {

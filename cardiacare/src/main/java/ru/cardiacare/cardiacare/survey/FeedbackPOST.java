@@ -44,17 +44,18 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
         //System.out.println("Test! post in background ");
             try {
 
-//                Gson json = new Gson();
-//                String jsonFeedback;
-//                jsonFeedback = json.toJson(MainActivity.feedback);
-
-                String str = "{" +" \"questionnaire_id\": 7," +
-                        "  \"lang\": \"en\"," +
-                        "  \"data\":" + "\"new feedback\"" + "}";
+                Gson json = new Gson();
+                String jsonFeedback;
+                jsonFeedback = json.toJson(MainActivity.feedback);
 
 //                String str = "{" +" \"questionnaire_id\": 7," +
 //                        "  \"lang\": \"en\"," +
-//                        "  \"data\": [" + jsonFeedback.replaceAll("/", "") + "]}"; //\"new feedback\"}";
+//                        "  \"data\":" + "\"new feedback\"" + "}";
+
+                String str = "{" +" \"questionnaire_id\": 7," +
+                        "  \"lang\": \"en\"," +
+                        "  \"data\": \"" + jsonFeedback.replaceAll("\"", "\\\\\"") + "\"}"; //\"new feedback\"}";
+
 
                 MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
