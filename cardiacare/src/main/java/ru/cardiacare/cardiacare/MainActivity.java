@@ -9,10 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -36,6 +40,7 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
+import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
@@ -95,18 +100,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+//        Log.i(TAG, "onStart()");
         // Условия выполняются только для авторизированного пользователя
         if (!storage.getAccountToken().equals("")) {
+//            Log.i(TAG, "Авторизированный пользователь");
             setMainScreenForAuthorizedUser();
-            // Если файл с данными ЭКГ не был отправлен во время последнего сеанса, то отправляем его
+            // Если есть файлы с данными ЭКГ, которые не были отправлены, то пытаемся их отправить
             if ((!storage.getECGFile().equals(""))) {
                 if (isNetworkAvailable(context)) {
-                    // Отправляем данные на сервер
-                    Log.d(TAG, "Отправляем данные на сервер");
-                    // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
-                    Log.d(TAG, "Обнуляем файл с данными ЭКГ");
-                    // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
-                    MainActivity.storage.setECGFile("");
+                    String ecgFiles = storage.getECGFile();
+//                    ECGService.ecgFiles.clear();
+//                    String ecgFiles = MainActivity.storage.getECGFile().replace("[", "").replace("]", "");
+//                    String ecgFiles = "ecg1111111111111, ecg2222222222222, ecg3333333333333, ecg4444444444444";
+
+                    Log.i(TAG, "ECGFile = " + ecgFiles);
+                    String ecgFileName;
+                    while (ecgFiles.length() > 16) {
+                        ecgFileName = ecgFiles.substring(0, 16);
+//                        Log.i(TAG, "ecgFileName = " + ecgFileName);
+                        ECGService.ecgFiles.add(ecgFileName);
+                        ecgFiles = ecgFiles.substring(18, ecgFiles.length());
+//                        Log.i(TAG, "ecgFiles = " + ecgFiles);
+                    }
+                    ECGService.ecgFiles.add(ecgFiles);
+//                    Log.i(TAG, "ecgFiles = " + ECGService.ecgFiles.toString());
+                    ECGPost ecgPost = new ECGPost();
+                    ecgPost.execute();
                 }
             }
 
@@ -206,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exitAccount:
                 //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
-                storage.setAccountPreferences("", "", "", "", "", "","", "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false);
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
                     fTrans.remove(fragmentRegisteredScreenBigIcons);
@@ -310,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor,email, "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, "", "", "", "", "", "", "", "0", "", "", "", false);
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();

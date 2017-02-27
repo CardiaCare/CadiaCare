@@ -23,7 +23,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
-    private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файла для отправки на сервер
+    private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файлов для отправки на сервер
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity"; // Отображать ли PageView на главном экране
 
     private String strId;

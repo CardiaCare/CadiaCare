@@ -248,4 +248,10 @@
     <string name="dialog_ecg_stop_title">Shutdown</string>
     <string name="dialog_ecg_stop_message">The work was completed with cardiomonitor</string>
     <string name="dialog_ecg_stop_positive_button">OK</string>
+
+    <!--Диалог при закрытии опросника без отправки ответов-->
+    <string name="dialog_feedback_title">Sending questionnaires results</string>
+    <string name="dialog_feedback_message">Answers were not send to server. Do you want to send answers?</string>
+    <string name="dialog_feedback_positive_button">Yes</string>
+    <string name="dialog_feedback_negative_button">No</string>
 </resources>

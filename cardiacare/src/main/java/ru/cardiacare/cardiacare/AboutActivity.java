@@ -28,8 +28,5 @@ public class AboutActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
-        ECGPost ecgPost = new ECGPost();
-        ecgPost.execute();
     }
 }

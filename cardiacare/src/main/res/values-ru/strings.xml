@@ -276,4 +276,10 @@
     <string name="action_registration">Регистрация</string>
     <string name="prompt_password2">Повторите пароль</string>
     <string name="prompt_invite_code">Код приглашения</string>
+
+    <!--Диалог при закрытии опросника без отправки ответов-->
+    <string name="dialog_feedback_title">Отправка результатов опроса</string>
+    <string name="dialog_feedback_message">Ответы не были отправлены на сервер. Отправить ответы?</string>
+    <string name="dialog_feedback_positive_button">Да</string>
+    <string name="dialog_feedback_negative_button">Нет</string>
 </resources>

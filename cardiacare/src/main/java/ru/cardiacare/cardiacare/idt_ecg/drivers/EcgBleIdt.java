@@ -6,20 +6,15 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothProfile;
-import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.UUID;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -38,14 +33,6 @@ public class EcgBleIdt extends EcgBleDevice {
     public boolean isDisconnected = false;
 
     public byte[] array;
-    static public String ecgstr = "";
-    static public String StorageFileName = "ecgfile1";
-    static public String StorageFileName2 = "ecgfile2";
-
-    static public FileOutputStream storageFile = null;
-    static public FileInputStream storageFile2 = null;
-
-    static public BufferedWriter bw;
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public EcgBleIdt(EcgBle handle, Handler handler) {
@@ -78,10 +65,15 @@ public class EcgBleIdt extends EcgBleDevice {
                         Long timestamp = System.currentTimeMillis() / 1000;
                         ECGService.connectedTime = timestamp;
                         Log.i("ECGBELT", "onDescriptorWrite.");
+                        ECGService.ecgFileName = "ecg" + System.currentTimeMillis();
+//        Log.i("EcgBleIdt", "ecgFileName = " + ecgFileName);
+                        ECGService.ecgFiles.add(ECGService.ecgFileName);
+//        Log.i("EcgBleIdt", "ecgFiles = " + ecgFiles.toString());
                         try {
-                            bw = new BufferedWriter(new OutputStreamWriter(ECGService.mContext.openFileOutput(StorageFileName, MODE_PRIVATE)));
-                            bw.write("{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"");
+//                            Log.i("EcgBleIdt", "Создаём буффер, TRY");
+                            ECGService.bw = new BufferedWriter(new OutputStreamWriter(ECGService.mContext.openFileOutput(ECGService.ecgFileName, MODE_PRIVATE)));
                         } catch (IOException e) {
+//                            Log.i("EcgBleIdt", "Создаём буффер, CATCH");
                             e.printStackTrace();
                         }
                     }
@@ -166,13 +158,11 @@ public class EcgBleIdt extends EcgBleDevice {
                             val = byteToUnsignedInt(array[i]);
                             intdata[arrayPos] = val;
                             try {
-                                bw.write(Integer.toString(val));
-                                bw.write(", ");
+                                ECGService.bw.write(Integer.toString(val));
+                                ECGService.bw.write(",");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-//                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(val).toString();
-//                            ecgstr = new StringBuilder(String.valueOf(ecgstr)).append(", ").toString();
 //                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                             ECGService.ecgValue = intdata[arrayPos];
 
@@ -186,6 +176,7 @@ public class EcgBleIdt extends EcgBleDevice {
                                 ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
                                 arrayPos = 0;
                                 mHandler.obtainMessage(1, intdata).sendToTarget();
+//                                Log.i("EcgBleIdt", "Отправляем данные на отрисовку");
 //                                EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
                             }
                         }
@@ -195,12 +186,5 @@ public class EcgBleIdt extends EcgBleDevice {
 
     private int byteToUnsignedInt(byte b) {
         return 0x00 << 24 | b & 0xff;
-    }
-
-    static public String getJSONPart() {
-        String result_str = "";
-
-        result_str = new StringBuilder(String.valueOf(result_str)).append(ecgstr).toString();
-        return result_str;
     }
 }

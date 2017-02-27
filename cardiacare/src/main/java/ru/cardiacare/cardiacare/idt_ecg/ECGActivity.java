@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -23,6 +26,7 @@ public class ECGActivity extends AppCompatActivity {
     ECGView myView;
     static public Handler handler;
     public static Context mContext;
+    static public Handler mHandler;
 
     private static final float TWO_INCHES = 2f;
 
@@ -69,18 +73,39 @@ public class ECGActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ECGActivity.stopTimeService();
-                android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
-                alertDialog.setTitle(R.string.dialog_ecg_stop_title);
-                alertDialog.setMessage(R.string.dialog_ecg_stop_message);
-                alertDialog.setPositiveButton(R.string.dialog_ecg_stop_positive_button,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            }
-                        });
-                alertDialog.show();
+//                android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+//                alertDialog.setTitle(R.string.dialog_ecg_stop_title);
+//                alertDialog.setMessage(R.string.dialog_ecg_stop_message);
+//                alertDialog.setPositiveButton(R.string.dialog_ecg_stop_positive_button,
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                            }
+//                        });
+//                alertDialog.show();
             }
         });
+
+        mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message message) {
+                ru.cardiacare.cardiacare.idt_ecg.ECGActivity.stopECGAlertDialog();
+            }
+        };
+    }
+
+    // Диалог, уведомляющий о прекращении работы с монитором
+    static public void stopECGAlertDialog() {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_ecg_stop_title);
+        alertDialog.setMessage(R.string.dialog_ecg_stop_message);
+        alertDialog.setPositiveButton(R.string.dialog_ecg_stop_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mContext.startActivity(new Intent(mContext, MainActivity.class));
+                    }
+                });
+        alertDialog.show();
     }
 
     private double setViewWidthInMillimeter() {

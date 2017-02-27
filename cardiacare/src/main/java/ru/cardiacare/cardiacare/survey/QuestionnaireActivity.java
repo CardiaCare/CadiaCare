@@ -1,9 +1,11 @@
 package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,18 +48,19 @@ public class QuestionnaireActivity extends AppCompatActivity {
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
-    boolean refreshFlag = false; // Была ли нажата кнопка "Обновить", true - была нажата / false - не была
+    boolean sendFlag = false; // Была ли нажата кнопка "Отправить", true - была нажата / false - не была
     static ImageButton buttonRefresh;
+    static ImageButton buttonSend;
     String periodic = "periodic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        FileInputStream fIn;
+        final FileInputStream fIn;
         try {
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                 fIn = openFileInput("feedback.json");
+                fIn = openFileInput("feedback.json");
             else fIn = openFileInput("alarmFeedback.json");
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
@@ -78,9 +81,14 @@ public class QuestionnaireActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
-                configIntent.setAction(" ");
-                startActivity(configIntent);
+//                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+//                configIntent.setAction(" ");
+//                startActivity(configIntent);
+                if ((!sendFlag) && (MainActivity.feedback.getResponds().size() > 0)) {
+                    feedbackDialog();
+                } else {
+                    onBackPressed();
+                }
             }
         });
 
@@ -109,10 +117,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //            Question question = questionnaire.get(i);
 //            Answer answer = question.getAnswer();
             Question question = questionnaire.get(i);
-            LinkedList <Answer> answers = question.getAnswers();
+            LinkedList<Answer> answers = question.getAnswers();
             for (int j = 0; j < answers.size(); j++) {
                 Answer answer = answers.get(j);
-                Log.i("Questionnaire", i + " question, " + j+ " answer, " + answer.getType());
+                Log.i("Questionnaire", i + " question, " + j + " answer, " + answer.getType());
                 switch (answer.getType()) {
                     case "Text":
                         Types[i] = TextField;
@@ -158,7 +166,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
             @Override // Clean
             public void onClick(View v) {
                 String jsonStr = "";
-                refreshFlag = true;
                 buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
                     MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
@@ -177,6 +184,36 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 startActivity(intent);
             }// Clean
         });
+
+        buttonSend = (ImageButton) findViewById(R.id.buttonSend);
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendAnswers();
+            }
+        });
+    }
+
+    public void sendAnswers() {
+        String jsonStr;
+        Gson json = new Gson();
+        if (QuestionnaireHelper.questionnaireType.equals(periodic))
+            jsonStr = json.toJson(MainActivity.feedback);
+        else jsonStr = json.toJson(MainActivity.alarmFeedback);
+        System.out.println("feedback: " + jsonStr);
+        writeData(jsonStr);
+        if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+            // To SIB
+            Long timestamp = System.currentTimeMillis() / 1000;
+            String ts = timestamp.toString();
+            MainActivity.storage.setLastQuestionnairePassDate(ts);
+        }
+        if (MainActivity.feedback.getResponds().size() > 0) {
+            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+            feedbackPOST.execute();
+        }
+        sendFlag = true;
+        startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
     }
 
     @Override
@@ -234,32 +271,38 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     @Override
     public void onPause() {
-        if (refreshFlag == false) {
-            String jsonStr;
-            Gson json = new Gson();
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                jsonStr = json.toJson(MainActivity.feedback);
-            else jsonStr = json.toJson(MainActivity.alarmFeedback);
-            System.out.println("feedback: " + jsonStr);
-            writeData(jsonStr);
-            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
-                // To SIB
-                Long timestamp = System.currentTimeMillis() / 1000;
-                String ts = timestamp.toString();
-                MainActivity.storage.setLastQuestionnairePassDate(ts);
-            }
-            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-            feedbackPOST.execute();
-        }
         super.onPause();
-        refreshFlag = false;
+        sendFlag = false;
     }
 
     @Override
     public void onBackPressed() {
-        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
-        configIntent.setAction(" ");
-        startActivity(configIntent);
-//        super.onBackPressed();
+//        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+//        configIntent.setAction(" ");
+//        startActivity(configIntent);
+        if ((!sendFlag) && (MainActivity.feedback.getResponds().size() > 0)) {
+            feedbackDialog();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void feedbackDialog() {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_feedback_title);
+        alertDialog.setMessage(R.string.dialog_feedback_message);
+        alertDialog.setPositiveButton(R.string.dialog_feedback_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendAnswers();
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_feedback_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+                    }
+                });
+        alertDialog.show();
     }
 }

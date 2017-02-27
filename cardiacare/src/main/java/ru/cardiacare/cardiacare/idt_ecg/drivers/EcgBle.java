@@ -9,24 +9,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
-import android.provider.Settings;
+import android.os.Message;
 import android.util.Log;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGActivity;
+import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
-import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 
 public class EcgBle {
 
@@ -40,10 +33,6 @@ public class EcgBle {
 
     static public EcgReceiveHandler bpReceiveHandler;
     static private Activity mainActivity;
-
-    //public String StoragePath;
-//    static public String StorageFileName;
-//    static public String StorageFileId;
 
     static public BluetoothGatt mBluetoothGatt = null;
     static public EcgBleDevice driver = null;
@@ -122,7 +111,6 @@ public class EcgBle {
         Log.i("ECGBELT", "checkLeDevice()");
 
         if (device.getName().contains("ECG")) {
-//            driver = new EcgBleIdt(this);
             driver = new EcgBleIdt(this, ECGActivity.handler);
         } else
             return;
@@ -188,9 +176,6 @@ public class EcgBle {
                         bluetoothAdapter.startLeScan(mLeScanCallback);
                     }
                     sleep(SCAN_PERIOD);
-                    /*synchronized (this) {
-                        bluetoothAdapter.stopLeScan(mLeScanCallback);
-                    }*/
                 }
             } catch (InterruptedException ignore) {
             } finally {
@@ -199,117 +184,41 @@ public class EcgBle {
         }
     }
 
-//    static public FileOutputStream storageFile = null;
-//    static private FileInputStream storageFile2 = null;
-
-
     static public void onDeviceDisconnected() {
         mBluetoothGatt = null;
-//        ECGService.updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
-//        ECGService.updateOnServer();
-        ECGService.connected_flag = false;
-//        ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
-        ECGService.myService.stopSelf();
-        ECGService.notificationManager.cancel(1);
-        if ((driver != null) && (EcgBleIdt.bw != null)) {
+
+        // Закрываю файл
+        if (ECGService.bw != null) {
             try {
-                EcgBleIdt.bw.write("\"]},\"created_at\":\"17022017\"}");
-                EcgBleIdt.bw.close();
-                BufferedReader br = new BufferedReader(new InputStreamReader(ECGService.mContext.openFileInput(EcgBleIdt.StorageFileName)));
-                String str = "";
-                while ((str = br.readLine()) != null) {
-                    Log.d("QQQ", "ecgfile = " + str);
-                }
+                ECGService.bw.close();
+//                Log.i("EcgBle", "Закрываем последний файл, TRY");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        // Если есть доступ к сети  и есть что отправлять на сервер
-        if ((MainActivity.isNetworkAvailable(ECGService.mContext)) /*&& (!MainActivity.storage.getECGFile().equals(""))*/) {
-            // Отправляем данные на сервер
-            Log.d("ECGService", "Отправляем данные на сервер");
-            // Обнуляем файл с данными ЭКГ
-            Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
-            // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
-            MainActivity.storage.setECGFile("");
+        // Если есть доступ к сети
+        if (MainActivity.isNetworkAvailable(ECGService.mContext)) {
+            // Отправляем файл(ы) на сервер
+            ECGPost ecgPost = new ECGPost();
+            ecgPost.execute();
         } else {
-            // Устанавливаем индикатор отправки на сервер в SharedPreferences устанавливаем равным "имя_файла"
-            MainActivity.storage.setECGFile("ecgfile");
+            // Если доступа к сети нет, но есть неотправленные файлы, записываем их имена в SharedPreferences
+            if (ECGService.ecgFiles.size() > 0) {
+                MainActivity.storage.setECGFile(ECGService.ecgFiles.toString());
+                MainActivity.storage.setECGFile(MainActivity.storage.getECGFile().replace( "[", "" ).replace( "]", "" ));
+                ECGService.ecgFiles.clear();
+            }
         }
 
+        ECGService.connected_flag = false;
+        ECGService.myService.stopSelf();
+        ECGService.notificationManager.cancel(1);
+
+        Message message = ECGActivity.mHandler.obtainMessage();
+        message.sendToTarget();
+
         Log.i("ECGBELT", "onDeviceDisconnected");
-
-//        if (storageFile != null) {
-//            try {
-//                storageFile.close();
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            storageFile = null;
-//
-//            mainActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-////                        bpReceiveHandler.measurementEnd();
-//                }
-//            });
-//        }
     }
-
-//    static public void onEcgReceived(final int HeartRate, final short array[], final int Frequency) {
-//
-//        if (storageFile == null) {
-//            mainActivity.runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-////                        bpReceiveHandler.measurementStart(LocationUtils.wifi.toString());
-//                }
-//            });
-//
-//            Log.i("ECGBELT", "openFile: " + StorageFileName);
-//
-//            try {
-//                storageFile = mainActivity.openFileOutput(StorageFileName, Context.MODE_PRIVATE);
-//                //storageFile = new FileOutputStream(new File(StoragePath+StorageFileName));
-//            } catch (FileNotFoundException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            String hdr = "CardioDump1 ";
-//            try {
-//                storageFile.write(hdr.getBytes());
-//                storageFile.write(intToBytes(Frequency)); // freq
-//                storageFile.write(intToBytes(1)); // channels
-//            } catch (IOException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        try {
-//            ByteBuffer buffer = ByteBuffer.allocate(array.length * 2);
-//            buffer.order(ByteOrder.LITTLE_ENDIAN);
-//            buffer.asShortBuffer().put(array);
-//            storageFile.write(buffer.array());
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//        mainActivity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-////                    bpReceiveHandler.measurementReceived(ECGService.heartRate, array, Frequency);
-//            }
-//        });
-//    }
-//
-//    static public byte[] intToBytes(final int i) {
-//        ByteBuffer bb = ByteBuffer.allocate(4);
-//        bb.order(ByteOrder.LITTLE_ENDIAN).putInt(i);
-//        return bb.array();
-//    }
 }
