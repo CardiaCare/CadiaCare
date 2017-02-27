@@ -49,10 +49,10 @@ public class BloodPressurePOST extends AsyncTask<JSONObject, String, String> {
                     .post(body)
                     .build();
 
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+         //   Response response = client.newCall(request).execute();
+         //   if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            System.out.println("Test! response " + response.body().string());
+         //   System.out.println("Test! response " + response.body().string());
 
             System.out.println("Test! request " + request.body().toString());
 

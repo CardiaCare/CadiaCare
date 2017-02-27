@@ -115,7 +115,7 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
                 // Pulling items from the array
                 //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
                 //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
-                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0", oneObject.getString("created_at").replaceAll("\n", " ")));
+                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0", oneObject.getString("created_at").substring(0,16)));
             } catch (JSONException e) {
                 // Oops
             }

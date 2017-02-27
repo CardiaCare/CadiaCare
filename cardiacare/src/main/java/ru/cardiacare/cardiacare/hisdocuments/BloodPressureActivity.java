@@ -128,7 +128,7 @@ public class BloodPressureActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    extractLogPass(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                    POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
                 }catch (Exception e){}
                 System.out.println("Test! blood ");
                 String currentDateandTime = sdf.format(new Date());
@@ -144,7 +144,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     }
 
-    void extractLogPass(int systolic, int diastolic) {
+    void POSTsysdias(int systolic, int diastolic) {
         JSONObject json = null;
 
         String str = "{ \"systolic\":" + systolic + ", "
