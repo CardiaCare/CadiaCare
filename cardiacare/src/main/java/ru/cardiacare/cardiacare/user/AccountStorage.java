@@ -69,6 +69,8 @@ public class AccountStorage {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
         editor.apply();
+
+        System.out.println("Test! save " + questionnaireversion + " ? " + strQuestionnaireVersion);
     }
 
     public void setLastQuestionnairePassDate (String lastquestionnairepassdate) {
@@ -176,6 +178,14 @@ public class AccountStorage {
             strQuestionnaireVersion = sPref.getString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, "");
         } else strQuestionnaireVersion = "";
         return strQuestionnaireVersion;
+    }
+
+    public void setQuestionnaireVersion(String version) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, version);
+        editor.apply();
+
+        System.out.println("Test! save " + version + " ? ");
     }
 
     public String getLastQuestionnairePassDate() {

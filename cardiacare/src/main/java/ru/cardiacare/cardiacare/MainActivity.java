@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                 //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
                 storage.setAccountPreferences("", "", "", "", "", "","", "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setVersion("");
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
                     fTrans.remove(fragmentRegisteredScreenBigIcons);
