@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import ru.cardiacare.cardiacare.MainActivity;
@@ -27,6 +28,9 @@ public class UserAccount extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
+    EditText etPeriodPassServey;
+    EditText etPeriodECGSending;
+    CheckBox cbPageViewOnMainactivity;
 
     AccountStorage storage;
 
@@ -44,7 +48,6 @@ public class UserAccount extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.backgroundFlag = 1;
                 onBackPressed();
             }
         });
@@ -56,16 +59,12 @@ public class UserAccount extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
+        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+        etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
+        cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-    }
-
-    @Override
-    public void onBackPressed() {
-//        MainActivity.smart.updatePersonName(MainActivity.nodeDescriptor, MainActivity.patientUri, etFirstName.getText() + " "+ etSecondName.getText());
-        super.onBackPressed();
-        MainActivity.backgroundFlag = 1;
     }
 
     @Override
@@ -90,12 +89,15 @@ public class UserAccount extends AppCompatActivity {
         String version = storage.getQuestionnaireVersion();
         String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
         String periodpassservey = storage.getPeriodPassServey();
+        String periodecgsending = storage.getPeriodECGSending();
+        String ecgfile = storage.getECGFile();
         storage.setAccountPreferences(
                 etSibName.getText().toString(),
                 etSibIp.getText().toString(),
                 etSibPort.getText().toString(),
-                MainActivity.patientUri,
+                "",
                 MainActivity.authorization_token,
+                MainActivity.authorization_id_patient,
                 etEmail.getText().toString(),
                 etFirstName.getText().toString(),
                 etSecondName.getText().toString(),
@@ -105,10 +107,10 @@ public class UserAccount extends AppCompatActivity {
                 etAge.getText().toString(),
                 version,
                 lastquestionnairepassdate,
-                periodpassservey);
-        if (MainActivity.backgroundFlag == 0) {
-            MainActivity.DisconnectFromSmartSpace();
-        }
+                periodpassservey,
+                periodecgsending,
+                ecgfile,
+                cbPageViewOnMainactivity.isChecked());
     }
 
     protected void onResume() {
@@ -121,12 +123,8 @@ public class UserAccount extends AppCompatActivity {
         etHeight.setText(storage.getAccountHeight());
         etWeight.setText(storage.getAccountWeight());
         etAge.setText(storage.getAccountAge());
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        MainActivity.backgroundFlag = 0;
-        MainActivity.ConnectToSmartSpace();
+        etPeriodPassServey.setText(storage.getPeriodPassServey());
+        etPeriodECGSending.setText(storage.getPeriodECGSending());
+        cbPageViewOnMainactivity.setChecked(storage.getPageViewOnMainactivity());
     }
 }

@@ -9,12 +9,8 @@ public class AccountStorage {
     public SharedPreferences sPref;
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
-    // Настроки подключения к SIB'у
-    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname"; // Имя
-    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip"; // IP
-    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport"; // Порт
-
     private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
+    private static final String ACCOUNT_PREFERENCES_DOCTORID = "iddoctor"; // ид лечащего врача
     private static final String ACCOUNT_PREFERENCES_TOKEN = "token"; // Токен доступа, полученный с сервера
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     private static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
@@ -26,11 +22,9 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
     private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
     private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
-
-
-    private String strSibName;
-    private String strSibIp;
-    private String strSibPort;
+    private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
+    private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файла для отправки на сервер
+    private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity"; // Отображать ли PageView на главном экране
 
     private String strId;
     private String strToken;
@@ -44,15 +38,15 @@ public class AccountStorage {
     private String strQuestionnaireVersion;
     private String strLastQuestionnairePassDate;
     private String strPeriodPassServey;
+    private String strPeriodECGSending;
+    private String strECGFile;
+    private Boolean blnPageViewOnMainactivity;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId,  String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity) {
         SharedPreferences.Editor editor = sPref.edit();
 
-        editor.putString(ACCOUNT_PREFERENCES_SIBNAME, sibName);
-        editor.putString(ACCOUNT_PREFERENCES_SIBIP, sibIp);
-        editor.putString(ACCOUNT_PREFERENCES_SIBPORT, sibPort);
-
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORID, doctorId);
         editor.putString(ACCOUNT_PREFERENCES_TOKEN, token);
         editor.putString(ACCOUNT_PREFERENCES_EMAIL, email);
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
@@ -64,6 +58,9 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
         editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
         editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
+        editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
+        editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
+        editor.putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, pageviewonmainactivity);
 
         editor.apply();
     }
@@ -86,30 +83,34 @@ public class AccountStorage {
         editor.apply();
     }
 
-    public String getSibName() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBNAME)) {
-            strSibName = sPref.getString(ACCOUNT_PREFERENCES_SIBNAME, "");
-        } else strSibName = "";
-        return strSibName;
+    public void setPeriodECGSending (String periodecgsending) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
+        editor.apply();
     }
 
-    public String getSibIp() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBIP)) {
-            strSibIp = sPref.getString(ACCOUNT_PREFERENCES_SIBIP, "");
-        } else strSibIp = "";
-        return strSibIp;
+    public void setECGFile (String ecgfile) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
+        editor.apply();
     }
 
-    public String getSibPort() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_SIBPORT)) {
-            strSibPort = sPref.getString(ACCOUNT_PREFERENCES_SIBPORT, "");
-        } else strSibPort = "";
-        return strSibPort;
+    public void setPageViewOnMainactivity (Boolean pageviewonmainactivity) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, pageviewonmainactivity);
+        editor.apply();
     }
 
     public String getAccountId() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PATIENTID)) {
             strId = sPref.getString(ACCOUNT_PREFERENCES_PATIENTID, "");
+        } else strId = "";
+        return strId;
+    }
+
+    public String getDoctorId() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORID)) {
+            strId = sPref.getString(ACCOUNT_PREFERENCES_DOCTORID, "");
         } else strId = "";
         return strId;
     }
@@ -189,5 +190,26 @@ public class AccountStorage {
             strPeriodPassServey = sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, "");
         } else strPeriodPassServey = "";
         return strPeriodPassServey;
+    }
+
+    public String getPeriodECGSending() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
+            strPeriodECGSending = sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, "");
+        } else strPeriodECGSending = "";
+        return strPeriodECGSending;
+    }
+
+    public String getECGFile() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_ECGFILE)) {
+            strECGFile = sPref.getString(ACCOUNT_PREFERENCES_ECGFILE, "");
+        } else strECGFile = "";
+        return strECGFile;
+    }
+
+    public Boolean getPageViewOnMainactivity() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY)) {
+            blnPageViewOnMainactivity = sPref.getBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, false);
+        } else blnPageViewOnMainactivity = false;
+        return blnPageViewOnMainactivity;
     }
 }

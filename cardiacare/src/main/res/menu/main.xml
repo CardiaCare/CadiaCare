@@ -9,7 +9,7 @@
         android:id="@+id/ecg"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:title="@string/ecg"/>
+        android:title="@string/fake_ecg"/>
 
     <item
         android:id="@+id/menuAbout"
@@ -19,26 +19,26 @@
         android:id="@+id/passSurvey"
         app:showAsAction="never"
         android:title="@string/pass_survey"/>
-    <item
-        android:id="@+id/menuHelp"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/help"/>
+    <!--<item-->
+        <!--android:id="@+id/menuHelp"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="@string/help"/>-->
     <!--   <item
            android:id="@+id/menuDownload"
            android:orderInCategory="100"
            app:showAsAction="never"
            android:title="@string/download"/> -->
-       <item
-           android:id="@+id/menuUserData"
-           android:orderInCategory="100"
-           app:showAsAction="never"
-           android:title="@string/userdata"/>
     <item
-        android:id="@+id/documentsData"
+        android:id="@+id/menuUserData"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:title="@string/documents"/>
+        android:title="@string/userdata"/>
+    <!--<item-->
+        <!--android:id="@+id/documentsData"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="never"-->
+        <!--android:title="@string/documents"/>-->
        <item
            android:id="@+id/exitAccount"
            android:orderInCategory="100"

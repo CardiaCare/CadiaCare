@@ -10,7 +10,24 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"/>
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppCompatActionBarStyle" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:id="@+id/buttonRefresh"
+            android:src="@drawable/ic_action_navigation_refresh"
+            android:layout_gravity="right"
+            android:visibility="visible"
+            style="@style/Widget.AppCompat.ImageButton"
+            android:background="@drawable/ic_action_navigation_refresh"
+            android:contentDescription=""
+            tools:ignore="ContentDescription,RtlHardcoded"
+            android:layout_marginRight="4dp" />
+
+    </android.support.v7.widget.Toolbar>
 
     <ListView
         android:padding="16dp"

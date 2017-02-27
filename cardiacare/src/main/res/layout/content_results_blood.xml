@@ -26,13 +26,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/systolicPressure"
-                android:id="@+id/SystolicPressure"
-                android:padding="8dp" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -46,14 +39,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/diastolicPressure"
-                android:id="@+id/DiastolicPressure"
+                android:text="@string/systolicPressure"
+                android:id="@+id/SystolicPressure"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -67,14 +60,14 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="@string/pulse"
-                android:id="@+id/Pulse"
+                android:text="@string/diastolicPressure"
+                android:id="@+id/DiastolicPressure"
                 android:padding="8dp" />
+
 
             <EditText
                 android:layout_width="match_parent"
@@ -88,6 +81,13 @@
                 android:editable="false"
                 android:text="Ivanov Corporation"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="@string/pulse"
+                android:id="@+id/Pulse"
+                android:padding="8dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

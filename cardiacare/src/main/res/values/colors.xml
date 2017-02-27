@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    // Colors that used previously: colorPrimary: #0097A7 and colorAccent: #6b7770
+
+    <color name="cardiacare_color_grid">#2196f3</color>
+    <color name="color_ECG">#0d47a1</color>
+    <color name="alarm_button_standard_color">#FF0000</color>
+
+    // Colors for theme AppBaseTheme (for application)
+    <color name="colorPrimary">#0288ad</color>
+    <color name="colorPrimaryDark">#015870</color>
+    <color name="colorAccent">#763a7a</color>
+    <color name="textColorPrimary">#015870</color>
+    <color name="colorBackground">#f6f3ec</color>
+    <color name="colorItemBackground">#f6f3ec</color>
+    <color name="textColorSecondary">#015870</color>
+    <color name="statusBarColor">#015870</color>
+    <color name="textColorTertiary">#763a7a</color>
+
+    // Colors for theme AppCompatAlertDialogStyle (dialog windows)
+    <color name="dialogColorPrimary">#0288AD</color>
+    <color name="dialogColorBackground">#F6F3EC</color>
+    <color name="dialogTextColorPrimary">#763A7A</color>
+    <color name="dialogTextColorSecondary">#015870</color>
+    <color name="dialogColorAccent">#763A7A</color>
+
+    // Colors for theme AppCompatActionBarStyle (ActionBar)
+    <color name="toolbarTextColor">#FFFFFF</color>
+    <color name="toolbarMenuTextColor">#015870</color>
+
+    // Colors for theme UserAuthorizationPageTheme
+    <color name="userAuthorizationColorPrimary">#0288ad</color>
+    <color name="userAuthorizationColorAccent">#f6f3ec</color>
+    <color name="userAuthorizationTextColorPrimary">#f6f3ec</color>
+    <color name="userAuthorizationTextColorSecondary">#f6f3ec</color>
+    <color name="userAuthorizationTextColorHint">#f6f3ec</color>
+
+</resources>

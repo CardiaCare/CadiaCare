@@ -1,16 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ecg_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.cardiacare.cardiacare.ecgviewer.ECGActivity">
+    tools:context="ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/ecg_activity_toolbar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary" />
+        android:background="?attr/colorPrimary"
+        android:theme="@style/AppCompatActionBarStyle" />
 
     <RelativeLayout
         android:id="@+id/ecg_view"
@@ -21,11 +23,47 @@
         android:layout_alignParentStart="true">
         </RelativeLayout>
 
-<!--    <ru.cardiacare.cardiacare.ECGView
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="STOP SERVICE"-->
+        <!--android:textSize="20sp"-->
+        <!--android:id="@+id/stopButton"-->
+        <!--android:background="#ff0000"-->
+        <!--android:layout_margin="20dp"-->
+        <!--android:elevation="0dp" />-->
+
+    <Button
+        android:id="@+id/stopButton"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/view"
+        android:text="@string/stop_ecg"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />-->
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clean"
+        android:id="@+id/imageButton6"
+        android:layout_toLeftOf="@+id/stopButton"
+        android:layout_toStartOf="@+id/stopButton"
+
+        android:layout_gravity="right"
+        android:visibility="visible"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:background="@drawable/stop_ecg"
+        android:contentDescription=""
+        tools:ignore="ContentDescription,RtlHardcoded"
+        android:layout_marginRight="4dp" />
+
+    <!--    <ru.cardiacare.cardiacare.ECGView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/view"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />-->
 </RelativeLayout>

@@ -20,39 +20,33 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppBaseTheme"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@style/AppBaseTheme">
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/AppBaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".bluetooth.BluetoothFindActivity"
+            android:name=".bluetooth_old.BluetoothFindActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_bluetooth_find"
             android:noHistory="true"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.cardiacare.cardiacare.MainActivity" />
-        </activity>
-        <activity
-            android:name=".Help"
-            android:configChanges="keyboardHidden|orientation"
-            android:label="@string/title_activity_help"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
@@ -62,7 +56,8 @@
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_login"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.cardiacare.cardiacare.MainActivity" />
@@ -71,22 +66,25 @@
             android:name=".user.Userdata"
             android:configChanges="keyboardHidden|orientation"
             android:label="@string/title_activity_userdata"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".user.UserAccount"
             android:label="@string/title_activity_user_account"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppBaseTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
         <activity
-            android:name=".ecgviewer.ECGActivity"
+            android:name=".ecgviewer_old.ECGActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="ЭКГ"
-            android:screenOrientation="portrait" />
+            android:label="@string/fake_ecg"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppBaseTheme" />
         <activity
-            android:name=".servey.QuestionnaireActivity"
+            android:name=".survey.QuestionnaireActivity"
             android:label="@string/title_activity_questionnaire"
             android:theme="@style/AppBaseTheme" />
         <!--
@@ -116,22 +114,35 @@
         <activity
             android:name=".hisdocuments.BloodPressureActivity"
             android:label="@string/title_activity_results_blood"
-            android:theme="@style/AppBaseTheme"></activity>
+            android:theme="@style/AppBaseTheme" />
         <activity
             android:name=".hisdocuments.DoctorExaminationActivity"
             android:label="@string/title_activity_results_doctor"
-            android:theme="@style/AppBaseTheme"></activity>
-        <receiver
-            android:name=".SosWidget">
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".idt_ecg.BluetoothFindActivity"
+            android:label="@string/title_activity_bluetooth_find"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".idt_ecg.ECGActivity"
+            android:label="@string/ecg"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".user.CreateAccountActivity"
+            android:label="@string/title_activity_create_account"
+            android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".user.ForgotPasswordActivity"
+            android:label="@string/title_activity_forgot_password"
+            android:theme="@style/AppBaseTheme" />
+
+        <service
+            android:name=".idt_ecg.ECGService"
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
-                <action
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE">
-                </action>
+                <action android:name="ru.cardiacare.cardiacare.idt_ecg.ECGService" />
             </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_metadata">
-            </meta-data>
-        </receiver>
+        </service>
     </application>
 </manifest>
