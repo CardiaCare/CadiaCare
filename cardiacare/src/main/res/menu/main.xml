@@ -1,29 +1,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="ru.cardiacare.cardiacare.MainActivity" >
-<!--android:showAsAction="withText|ifRoom"-->
-
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ru.cardiacare.cardiacare.MainActivity">
+    <!--android:showAsAction="withText|ifRoom"-->
 
     <item
         android:id="@+id/ecg"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/fake_ecg"/>
+        android:title="@string/fake_ecg"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/menuAbout"
-        app:showAsAction="never"
-        android:title="@string/about"/>
+        android:title="@string/about"
+        app:showAsAction="never" />
     <item
         android:id="@+id/passSurvey"
-        app:showAsAction="never"
-        android:title="@string/pass_survey"/>
+        android:title="@string/pass_survey"
+        app:showAsAction="never" />
     <!--<item-->
-        <!--android:id="@+id/menuHelp"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never"-->
-        <!--android:title="@string/help"/>-->
+    <!--android:id="@+id/menuHelp"-->
+    <!--android:orderInCategory="100"-->
+    <!--app:showAsAction="never"-->
+    <!--android:title="@string/help"/>-->
     <!--   <item
            android:id="@+id/menuDownload"
            android:orderInCategory="100"
@@ -32,23 +31,23 @@
     <item
         android:id="@+id/menuUserData"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/userdata"/>
+        android:title="@string/userdata"
+        app:showAsAction="never" />
     <!--<item-->
-        <!--android:id="@+id/documentsData"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never"-->
-        <!--android:title="@string/documents"/>-->
-       <item
-           android:id="@+id/exitAccount"
-           android:orderInCategory="100"
-           app:showAsAction="never"
-           android:title="@string/exit"/>
+    <!--android:id="@+id/documentsData"-->
+    <!--android:orderInCategory="100"-->
+    <!--app:showAsAction="never"-->
+    <!--android:title="@string/documents"/>-->
+    <item
+        android:id="@+id/exitAccount"
+        android:orderInCategory="100"
+        android:title="@string/exit"
+        app:showAsAction="never" />
 
-   <!--    <item
-           android:id="@+id/menuExit"
-           android:orderInCategory="100"
-           android:showAsAction="never"
-           android:title="@string/exit"/>-->
+    <!--    <item
+            android:id="@+id/menuExit"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/exit"/>-->
 
 </menu>

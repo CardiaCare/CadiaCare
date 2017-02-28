@@ -48,18 +48,24 @@ public class QuestionnaireActivity extends AppCompatActivity {
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
+    static public Context mContext;
     boolean sendFlag = false; // Была ли нажата кнопка "Отправить", true - была нажата / false - не была
     static ImageButton buttonRefresh;
     static ImageButton buttonSend;
-    String periodic = "periodic";
+    static String periodic = "periodic";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         final FileInputStream fIn;
+        mContext = this;
         MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
-        Log.i("FEEDBACK", MainActivity.feedback.getLang() + " " + MainActivity.feedback.getQuestionnaire_id());
+//        Gson json2 = new Gson();
+//        String jsonFeedback;
+//        jsonFeedback = json2.toJson(MainActivity.feedback);
+//        String str = jsonFeedback.replaceAll("\"", "\\\\\"");
+//        Log.i("QActivity", "feedback = " + str);
         try {
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
                 fIn = openFileInput("feedback.json");
@@ -210,10 +216,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 feedbackPOST.execute();
             }
             sendFlag = true;
-            if (MainActivity.storage.getFeedbackRefresh()) {
-//                Log.i("QuestionnaireActivity", "SendAnswers, getFeedbackRefresh() = " + MainActivity.storage.getFeedbackRefresh());
-                clearFeedback();
-            }
+//            if (MainActivity.storage.getFeedbackRefresh()) {
+////                Log.i("QuestionnaireActivity", "SendAnswers, getFeedbackRefresh() = " + MainActivity.storage.getFeedbackRefresh());
+//                clearFeedback();
+//            }
             startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
         } else {
             MainActivity.wiFiAlertDialog();
@@ -235,13 +241,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
-    public void writeData(String data) {
+    static public void writeData(String data) {
         try {
 //            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
             FileOutputStream fOut;
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE);
-            else fOut = context.openFileOutput("alarmFeedback.json", context.MODE_PRIVATE);
+                fOut = mContext.openFileOutput("feedback.json", mContext.MODE_PRIVATE);
+            else fOut = mContext.openFileOutput("alarmFeedback.json", mContext.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -273,15 +279,15 @@ public class QuestionnaireActivity extends AppCompatActivity {
         return datax.toString();
     }
 
-    public void clearFeedback() {
+    static public void clearFeedback() {
 //        Log.i("QQQ", "clearFeedback()");
         int respondsCount = MainActivity.feedback.getResponds().size();
         for (int i = respondsCount; i > 0; i--) {
             MainActivity.feedback.getResponds().remove(i - 1);
         }
         String jsonStr = "";
-        Gson json = new Gson();
-        jsonStr = json.toJson(MainActivity.feedback);
+//        Gson json = new Gson();
+//        jsonStr = json.toJson(MainActivity.feedback);
         writeData(jsonStr);
     }
 

@@ -63,7 +63,11 @@ public class FragmentRegisteredScreenSmallIcons extends Fragment {
                     break;
                 // Дневник давления
                 case 1:
-                    startActivity(new Intent(MainActivity.mContext, BloodPressureActivity.class));
+                    if (MainActivity.isNetworkAvailable(MainActivity.mContext)) {
+                        startActivity(new Intent(MainActivity.mContext, BloodPressureActivity.class));
+                    } else {
+                        MainActivity.wiFiAlertDialog();
+                    }
                     break;
                 // ЭКГ
                 case 2:

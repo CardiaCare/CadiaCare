@@ -24,8 +24,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     static public Feedback feedback;
     static public Feedback alarmFeedback;
     Toolbar toolbar;
+
     ViewPager viewPager;
     static FragmentTransaction fTrans;
     FragmentManager fManager;
@@ -399,5 +402,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         fTrans.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            event.startTracking();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
