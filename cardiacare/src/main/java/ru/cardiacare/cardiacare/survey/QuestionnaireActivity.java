@@ -58,6 +58,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         final FileInputStream fIn;
+        MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+        Log.i("FEEDBACK", MainActivity.feedback.getLang() + " " + MainActivity.feedback.getQuestionnaire_id());
         try {
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
                 fIn = openFileInput("feedback.json");
@@ -93,14 +95,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
         });
 
         if (!QuestionnaireHelper.questionnaireDownloadedFromFile) {
-            int respondsCount = MainActivity.feedback.getResponds().size();
-            for (int i = respondsCount; i > 0; i--) {
-                MainActivity.feedback.getResponds().remove(i - 1);
-            }
-            String jsonStr = "";
-            Gson json = new Gson();
-            jsonStr = json.toJson(MainActivity.feedback);
-            writeData(jsonStr);
+            Log.i("QuestionnaireActivity", "!QuestionnaireHelper.questionnaireDownloadedFromFile = " + QuestionnaireHelper.questionnaireDownloadedFromFile);
+            clearFeedback();
         }
 
         QuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -195,25 +191,33 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
     public void sendAnswers() {
-        String jsonStr;
-        Gson json = new Gson();
-        if (QuestionnaireHelper.questionnaireType.equals(periodic))
-            jsonStr = json.toJson(MainActivity.feedback);
-        else jsonStr = json.toJson(MainActivity.alarmFeedback);
-        System.out.println("feedback: " + jsonStr);
-        writeData(jsonStr);
-        if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
-            // To SIB
-            Long timestamp = System.currentTimeMillis() / 1000;
-            String ts = timestamp.toString();
-            MainActivity.storage.setLastQuestionnairePassDate(ts);
+        if (MainActivity.isNetworkAvailable(context)) {
+            String jsonStr;
+            Gson json = new Gson();
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                jsonStr = json.toJson(MainActivity.feedback);
+            else jsonStr = json.toJson(MainActivity.alarmFeedback);
+            System.out.println("feedback: " + jsonStr);
+            writeData(jsonStr);
+            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+                // To SIB
+                Long timestamp = System.currentTimeMillis() / 1000;
+                String ts = timestamp.toString();
+                MainActivity.storage.setLastQuestionnairePassDate(ts);
+            }
+            if (MainActivity.feedback.getResponds().size() > 0) {
+                FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+                feedbackPOST.execute();
+            }
+            sendFlag = true;
+            if (MainActivity.storage.getFeedbackRefresh()) {
+//                Log.i("QuestionnaireActivity", "SendAnswers, getFeedbackRefresh() = " + MainActivity.storage.getFeedbackRefresh());
+                clearFeedback();
+            }
+            startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+        } else {
+            MainActivity.wiFiAlertDialog();
         }
-        if (MainActivity.feedback.getResponds().size() > 0) {
-            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-            feedbackPOST.execute();
-        }
-        sendFlag = true;
-        startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
     }
 
     @Override
@@ -269,6 +273,18 @@ public class QuestionnaireActivity extends AppCompatActivity {
         return datax.toString();
     }
 
+    public void clearFeedback() {
+//        Log.i("QQQ", "clearFeedback()");
+        int respondsCount = MainActivity.feedback.getResponds().size();
+        for (int i = respondsCount; i > 0; i--) {
+            MainActivity.feedback.getResponds().remove(i - 1);
+        }
+        String jsonStr = "";
+        Gson json = new Gson();
+        jsonStr = json.toJson(MainActivity.feedback);
+        writeData(jsonStr);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -300,6 +316,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
         alertDialog.setNegativeButton(R.string.dialog_feedback_negative_button,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        String jsonStr = "";
+                        Gson json = new Gson();
+                        jsonStr = json.toJson(MainActivity.feedback);
+                        writeData(jsonStr);
                         startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
                     }
                 });

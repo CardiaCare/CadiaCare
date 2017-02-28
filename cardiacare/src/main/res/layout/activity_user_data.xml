@@ -396,7 +396,7 @@
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -409,11 +409,35 @@
 
                 <TextView
                     android:id="@+id/needGraphText"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Отображать графики на главном экране?" />
+                    android:text="Отображать графики на главном экране?"
+                    android:layout_toRightOf="@id/needGraphButton"
+                    android:layout_toEndOf="@id/needGraphButton"/>
 
-            </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/feedbackRefreshButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false" />
+
+                <TextView
+                    android:id="@+id/feedbackRefreshText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Обнулять ответы в опроснике после их отправки на сервер?"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_toRightOf="@id/feedbackRefreshButton"
+                    android:layout_toEndOf="@id/feedbackRefreshButton"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

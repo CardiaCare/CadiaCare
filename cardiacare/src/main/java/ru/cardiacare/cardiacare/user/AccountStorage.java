@@ -25,6 +25,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файлов для отправки на сервер
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity"; // Отображать ли PageView на главном экране
+    private static final String ACCOUNT_PREFERENCES_FEEDBACKREFRESH = "feedbackrefresh"; // Сбрасывать ли выбранные ответы после успешной отправки feedback’а на сервер
 
     private String strId;
     private String strToken;
@@ -41,8 +42,9 @@ public class AccountStorage {
     private String strPeriodECGSending;
     private String strECGFile;
     private Boolean blnPageViewOnMainactivity;
+    private Boolean blnFeedbackRefresh;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId,  String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId,  String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity, Boolean feedbackrefresh) {
         SharedPreferences.Editor editor = sPref.edit();
 
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
@@ -61,6 +63,7 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
         editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
         editor.putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, pageviewonmainactivity);
+        editor.putBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, feedbackrefresh);
 
         editor.apply();
     }
@@ -100,6 +103,12 @@ public class AccountStorage {
     public void setPageViewOnMainactivity (Boolean pageviewonmainactivity) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, pageviewonmainactivity);
+        editor.apply();
+    }
+
+    public void setFeedbackRefresh (Boolean feedbackrefresh) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, feedbackrefresh);
         editor.apply();
     }
 
@@ -221,5 +230,12 @@ public class AccountStorage {
             blnPageViewOnMainactivity = sPref.getBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, false);
         } else blnPageViewOnMainactivity = false;
         return blnPageViewOnMainactivity;
+    }
+
+    public Boolean getFeedbackRefresh() {
+        if (sPref.contains(ACCOUNT_PREFERENCES_FEEDBACKREFRESH)) {
+            blnFeedbackRefresh = sPref.getBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, false);
+        } else blnFeedbackRefresh = false;
+        return blnFeedbackRefresh;
     }
 }

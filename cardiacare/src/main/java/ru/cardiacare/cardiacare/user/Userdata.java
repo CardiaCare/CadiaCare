@@ -20,10 +20,6 @@ public class Userdata extends AppCompatActivity {
 
     public static final String ACCOUNT_PREFERENCES = "accountsettings";
 
-//    private static final String ACCOUNT_PREFERENCES_SIBNAME = "sibname";
-//    private static final String ACCOUNT_PREFERENCES_SIBIP = "sibip";
-//    private static final String ACCOUNT_PREFERENCES_SIBPORT = "sibport";
-
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
     public static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
@@ -35,6 +31,7 @@ public class Userdata extends AppCompatActivity {
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile";
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity";
+    private static final String ACCOUNT_PREFERENCES_FEEDBACKREFRESH = "feedbackrefresh";
 
     EditText etEmail;
     EditText etFirstName;
@@ -46,6 +43,7 @@ public class Userdata extends AppCompatActivity {
     EditText etPeriodPassServey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
+    CheckBox cbFeedbackRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +73,7 @@ public class Userdata extends AppCompatActivity {
         etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
         cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
+        cbFeedbackRefresh = (CheckBox) findViewById(R.id.feedbackRefreshButton);
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
     }
@@ -93,6 +92,7 @@ public class Userdata extends AppCompatActivity {
         sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, etPeriodECGSending.getText().toString()).commit();
         sPref.edit().putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, cbPageViewOnMainactivity.isChecked()).commit();
+        sPref.edit().putBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, cbFeedbackRefresh.isChecked()).commit();
 
         editor.apply();
 
@@ -130,6 +130,9 @@ public class Userdata extends AppCompatActivity {
         }
         if (sPref.contains(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY)) {
             cbPageViewOnMainactivity.setChecked(sPref.getBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, false));
+        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_FEEDBACKREFRESH)) {
+            cbFeedbackRefresh.setChecked(sPref.getBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, false));
         }
     }
 }

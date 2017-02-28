@@ -31,6 +31,7 @@ public class UserAccount extends AppCompatActivity {
     EditText etPeriodPassServey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
+    CheckBox cbFeedbackRefresh;
 
     AccountStorage storage;
 
@@ -62,6 +63,7 @@ public class UserAccount extends AppCompatActivity {
         etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
         cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
+        cbFeedbackRefresh = (CheckBox) findViewById(R.id.feedbackRefreshButton);
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
@@ -110,7 +112,8 @@ public class UserAccount extends AppCompatActivity {
                 periodpassservey,
                 periodecgsending,
                 ecgfile,
-                cbPageViewOnMainactivity.isChecked());
+                cbPageViewOnMainactivity.isChecked(),
+                cbFeedbackRefresh.isChecked());
     }
 
     protected void onResume() {
@@ -126,5 +129,6 @@ public class UserAccount extends AppCompatActivity {
         etPeriodPassServey.setText(storage.getPeriodPassServey());
         etPeriodECGSending.setText(storage.getPeriodECGSending());
         cbPageViewOnMainactivity.setChecked(storage.getPageViewOnMainactivity());
+        cbFeedbackRefresh.setChecked(storage.getFeedbackRefresh());
     }
 }

@@ -1,8 +1,12 @@
 package ru.cardiacare.cardiacare.survey;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Base64;
+
+import com.google.gson.Gson;
+import com.petrsu.cardiacare.smartcare.survey.Questionnaire;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,10 +92,17 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
                     MainActivity.storage.setVersion(version);
                     QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
                     questionnaireGET.execute();
+                    QuestionnaireHelper.questionnaireDownloadedFromFile = false;
                 }
                 else {
                     System.out.println("Test! == 0 ");
-                    // иначе отображать, что было загружено
+                    String jsonFromFile = QuestionnaireHelper.readSavedData(context);
+                    QuestionnaireHelper.questionnaireDownloadedFromFile = true;
+                    Gson json = new Gson();
+                    QuestionnaireHelper.questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
+                    Intent intent = new Intent(context, QuestionnaireActivity.class);
+                    intent.putExtra("questionnaireType", QuestionnaireHelper.questionnaireType);
+                    context.startActivity(intent);
                 }
             } catch (JSONException e) {
             }

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-        feedback = new Feedback(1, "");
+//        feedback = new Feedback(1, "");
 //        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
         activity = this;
         mContext = this;
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exitAccount:
                 //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
-                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false, false);
                 storage.setVersion("");
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, "", "", "", "", "", "", "", "0", "", "", "", false, false);
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();
