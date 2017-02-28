@@ -11,14 +11,12 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
 
 public class ECGActivity extends AppCompatActivity {
@@ -68,7 +66,7 @@ public class ECGActivity extends AppCompatActivity {
 
         EcgBleIdt.mHandler = ECGActivity.handler;
 
-        final Button StopButton = (Button) findViewById(R.id.stopButton);
+        final ImageView StopButton = (ImageView) findViewById(R.id.stopButton);
         StopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

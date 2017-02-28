@@ -12,8 +12,28 @@
         android:layout_width="match_parent"
         android:minHeight="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="@style/AppCompatActionBarStyle" />
+        android:theme="@style/AppCompatActionBarStyle" >
 
+        <ImageView
+            android:id="@+id/stopButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/picture_frame"
+            android:layout_gravity="right"
+            android:layout_marginRight="16px"
+            android:layout_marginLeft="24px" />
+
+        <ImageView
+            android:id="@+id/imageButton6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:src="@drawable/stop_ecg"
+            android:layout_gravity="right"
+            android:layout_marginRight="16px"
+            android:layout_marginLeft="24px" />
+
+        </android.support.v7.widget.Toolbar>
     <RelativeLayout
         android:id="@+id/ecg_view"
         android:layout_width="wrap_content"
@@ -33,31 +53,7 @@
         <!--android:layout_margin="20dp"-->
         <!--android:elevation="0dp" />-->
 
-    <Button
-        android:id="@+id/stopButton"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/stop_ecg"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/clean"
-        android:id="@+id/imageButton6"
-        android:layout_toLeftOf="@+id/stopButton"
-        android:layout_toStartOf="@+id/stopButton"
-
-        android:layout_gravity="right"
-        android:visibility="visible"
-        style="@style/Widget.AppCompat.ImageButton"
-        android:background="@drawable/stop_ecg"
-        android:contentDescription=""
-        tools:ignore="ContentDescription,RtlHardcoded"
-        android:layout_marginRight="4dp" />
 
     <!--    <ru.cardiacare.cardiacare.ECGView
             android:layout_width="wrap_content"

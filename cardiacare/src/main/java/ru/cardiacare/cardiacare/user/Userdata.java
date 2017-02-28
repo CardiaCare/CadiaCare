@@ -8,8 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Учётная запись" */
@@ -33,9 +33,10 @@ public class Userdata extends AppCompatActivity {
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity";
     private static final String ACCOUNT_PREFERENCES_FEEDBACKREFRESH = "feedbackrefresh";
 
-    EditText etEmail;
-    EditText etFirstName;
-    EditText etSecondName;
+    TextView etEmail;
+    TextView etFirstName;
+    TextView etSecondName;
+    
     EditText etPhoneNumber;
     EditText etHeight;
     EditText etWeight;
@@ -63,9 +64,10 @@ public class Userdata extends AppCompatActivity {
             }
         });
 
-        etEmail = (EditText) findViewById(R.id.etEmail);
-        etFirstName = (EditText) findViewById(R.id.etFirstName);
-        etSecondName = (EditText) findViewById(R.id.etSecondName);
+        etEmail = (TextView) findViewById(R.id.tvEmail);
+        etFirstName = (TextView) findViewById(R.id.tvFirstName);
+        etSecondName = (TextView) findViewById(R.id.tvSecondName);
+
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
@@ -101,15 +103,15 @@ public class Userdata extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
-//        if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
-//            etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
-//        }
-//        if (sPref.contains(ACCOUNT_PREFERENCES_FIRSTNAME)) {
-//            etFirstName.setText(sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
-//        }
-//        if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
-//            etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
-//        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
+            etEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_EMAIL, ""));
+        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_FIRSTNAME)) {
+            etFirstName.setText(sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
+        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
+            etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
+        }
 //        if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
 //            etPhoneNumber.setText(sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, ""));
 //        }
