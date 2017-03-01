@@ -8,7 +8,7 @@ import android.view.View;
 
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 
-/* Экран "Справка" */
+/* "About" */
 
 public class AboutActivity extends AppCompatActivity {
 
