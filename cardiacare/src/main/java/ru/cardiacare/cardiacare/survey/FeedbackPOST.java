@@ -46,7 +46,7 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 
             Gson json = new Gson();
             String jsonFeedback;
-            jsonFeedback = json.toJson(MainActivity.feedback);
+            jsonFeedback = json.toJson(QuestionnaireActivity.feedback);
 
 //                String str = "{" +" \"questionnaire_id\": 7," +
 //                        "  \"lang\": \"en\"," +

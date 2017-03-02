@@ -123,6 +123,7 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
 //                Log.i("ECGPost", "ecgFiles до удаления отправленого = " + ECGService.ecgFiles.toString());
                 ECGService.ecgFiles.removeFirst();
+                file.delete();
 //                Log.i("ECGPost", "ecgFiles после удаления отправленого = " + ECGService.ecgFiles.toString());
                 MainActivity.storage.setECGFile("");
                 System.out.println("Test! POST");

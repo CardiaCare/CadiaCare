@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private int[] TypesQuestions;
     private Context context;
 
-    private LinkedList<Respond> responds = MainActivity.feedback.getResponds();
+    private LinkedList<Respond> responds = QuestionnaireActivity.feedback.getResponds();;
 
     public RecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
         this.Questions = Questions;
@@ -173,25 +174,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             for (int j = 0; j < QuestionnaireHelper.questionnaire.getQuestions().size(); j++) {
                                 if (QuestionnaireHelper.questionnaire.getQuestions().get(j).getId().equals(questionId)) {
                                     int flag = 0;
-                                    for (int k = 0; k < MainActivity.feedback.getResponds().size(); k++) {
-                                        if (MainActivity.feedback.getResponds().get(k).getQuestionId().equals(questionId)) {
+                                    for (int k = 0; k < QuestionnaireActivity.feedback.getResponds().size(); k++) {
+                                        if (QuestionnaireActivity.feedback.getResponds().get(k).getQuestionId().equals(questionId)) {
                                             Question question = QuestionnaireHelper.questionnaire.getQuestions().get(j);
                                             LinkedList<Answer> answers = question.getAnswers();
                                             //for (int j = 0; j < answers.size(); j++) {
                                             //Answer answer = answers.get(j);
                                             Answer answer = answers.get(0);
                                             AnswerItem answerItem = answer.getItems().get(view.getId());
-                                            if (MainActivity.feedback.getResponds().get(k).getResponses().size() != 0) {
+                                            if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().size() != 0) {
                                                 int flag2 = 0;
-                                                int responseItemsCount = MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size();
+                                                int responseItemsCount = QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size();
                                                 for (int l = 0; l < responseItemsCount; l++) {
-                                                    if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
-                                                        if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size() == 1) {
-                                                            MainActivity.feedback.getResponds().remove(k);
+                                                    if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
+                                                        if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size() == 1) {
+                                                            QuestionnaireActivity.feedback.getResponds().remove(k);
                                                             flag2++;
                                                             break;
                                                         } else {
-                                                            MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().remove(l);
+                                                            QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().remove(l);
                                                             flag2++;
                                                             break;
                                                         }
@@ -199,7 +200,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                 }
                                                 if (flag2 == 0) {
                                                     ResponseItem responseItem = new ResponseItem(answerItem.getId());
-                                                    MainActivity.feedback.getResponds().get(k).getResponses().get(0).addResponseItem(responseItem);
+                                                    QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).addResponseItem(responseItem);
                                                 }
                                                 flag++;
                                             }
@@ -218,7 +219,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         ResponseItem responseItem = new ResponseItem(answerItem.getId());
                                         response.addResponseItem(responseItem);
                                         respond.addResponse(response);
-                                        MainActivity.feedback.addRespond(respond);
+                                        QuestionnaireActivity.feedback.addRespond(respond);
                                     }
                                 }
                             }
@@ -275,11 +276,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                         if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                             int flag = 0;
-                            for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                    int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                    int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                     for (int k = 0; k < responsesCount; k++) {
-                                        MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                        QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                     }
                                     Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     LinkedList<Answer> answers = question.getAnswers();
@@ -291,7 +292,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     Response response = new Response(answer.getId());
                                     ResponseItem responseItem = new ResponseItem(answerItem.getId());
                                     response.addResponseItem(responseItem);
-                                    MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                    QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                     flag++;
                                 }
                             }
@@ -308,7 +309,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 ResponseItem responseItem = new ResponseItem(answerItem.getId());
                                 response.addResponseItem(responseItem);
                                 respond.addResponse(response);
-                                MainActivity.feedback.addRespond(respond);
+                                QuestionnaireActivity.feedback.addRespond(respond);
                             }
                         }
                     }
@@ -335,11 +336,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                         if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                             int flag = 0;
-                            for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                    int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                    int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                     for (int k = 0; k < responsesCount; k++) {
-                                        MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                        QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                     }
                                     Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     LinkedList<Answer> answers = question.getAnswers();
@@ -349,7 +350,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     //Answer answer = question.getAnswer();
                                     Response response = new Response(answer.getId());
                                     response.setResponseText(TextFieldAnswer.getText().toString());
-                                    MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                    QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                     flag++;
                                 }
                             }
@@ -364,7 +365,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 Response response = new Response(answer.getId());
                                 response.setResponseText(TextFieldAnswer.getText().toString());
                                 respond.addResponse(response);
-                                MainActivity.feedback.addRespond(respond);
+                                QuestionnaireActivity.feedback.addRespond(respond);
                             }
                         }
                     }
@@ -418,6 +419,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.ScaleSeekBar.setOnSeekBarChangeListener(
                     new SeekBar.OnSeekBarChangeListener() {
                         int Step = 10;
+
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                             progress = ((int) Math.round(progress / Step)) * Step;
                             seekBar.setProgress(progress);
@@ -432,11 +434,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                                 if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                                     int flag = 0;
-                                    for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                        if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                            int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                                    for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                        if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                            int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                             for (int k = 0; k < responsesCount; k++) {
-                                                MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                                QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                             }
                                             Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                             LinkedList<Answer> answers = question.getAnswers();
@@ -447,7 +449,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             Response response = new Response(answer.getId());
                                             ResponseItem responseItem = new ResponseItem(ScaleValue.getText().toString());
                                             response.addResponseItem(responseItem);
-                                            MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                            QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                             flag++;
                                         }
                                     }
@@ -463,7 +465,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         ResponseItem responseItem = new ResponseItem(ScaleValue.getText().toString());
                                         response.addResponseItem(responseItem);
                                         respond.addResponse(response);
-                                        MainActivity.feedback.addRespond(respond);
+                                        QuestionnaireActivity.feedback.addRespond(respond);
                                     }
                                 }
                             }

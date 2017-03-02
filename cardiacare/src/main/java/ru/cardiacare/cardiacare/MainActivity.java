@@ -42,6 +42,8 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
+import ru.cardiacare.cardiacare.hisdocuments.BloodPressureGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
@@ -59,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
     static public String authorization_id_patient = "";
     static public String authorization_id_doctor = "";
     static public AccountStorage storage;
-    static public Feedback feedback;
-    static public Feedback alarmFeedback;
+    //    static public Feedback feedback;
+//    static public Feedback alarmFeedback;
     Toolbar toolbar;
 
     ViewPager viewPager;

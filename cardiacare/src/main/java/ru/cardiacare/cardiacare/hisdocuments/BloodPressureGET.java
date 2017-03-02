@@ -32,10 +32,10 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
+            String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
             Request request = new Request.Builder()
-                    .url("http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId()+"/bloodpressure")
+                    .url("http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/bloodpressure")
                     .addHeader("Authorization", credential)
                     .build();
 
@@ -43,7 +43,8 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             //System.out.println("Test! response " + response.body().string());
-            switch (ret = response.body().string()) {}
+            switch (ret = response.body().string()) {
+            }
             System.out.println("Test! response " + ret);
 //            ////////////////////////////////////////////////////////////////////////////////////////
 //            BloodPressureActivity.bp_data2 = new LinkedList<ResultBloodPressure>();
@@ -108,14 +109,13 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
         }
 
         //for (int i=0; i < jArray.length(); i++)
-        for (int i = jArray.length() - 1; i >= 0 ; i--)
-        {
+        for (int i = jArray.length() - 1; i >= 0; i--) {
             try {
                 JSONObject oneObject = jArray.getJSONObject(i);
                 // Pulling items from the array
                 //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
                 //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
-                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0", oneObject.getString("created_at").substring(0,16)));
+                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"), "0", oneObject.getString("created_at").substring(0, 16)));
             } catch (JSONException e) {
                 // Oops
             }

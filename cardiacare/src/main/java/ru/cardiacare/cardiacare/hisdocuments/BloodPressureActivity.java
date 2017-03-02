@@ -40,7 +40,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
     BPAdapter adapter;
-    static LinkedList<ResultBloodPressure> bp_data;
+    static public LinkedList<ResultBloodPressure> bp_data;
     static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
@@ -49,6 +49,7 @@ public class BloodPressureActivity extends AppCompatActivity {
     EditText DAText;
     SimpleDateFormat sdf;
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,27 +87,26 @@ public class BloodPressureActivity extends AppCompatActivity {
         bp_data = new LinkedList<ResultBloodPressure>();
 
 
-        LinkedList<ResultBloodPressure> bpl  = new LinkedList<ResultBloodPressure>();
+        LinkedList<ResultBloodPressure> bpl = new LinkedList<ResultBloodPressure>();
 
         bpl = readLastBPMeasuremetsFromFile();
-        if (bpl == null){
-            bp_data.add(new ResultBloodPressure("0","0","0","0:0:0"));
-        }
-        else bp_data = bpl;
+        if (bpl == null) {
+            bp_data.add(new ResultBloodPressure("0", "0", "0", "0:0:0"));
+        } else bp_data = bpl;
 
         SYSText = (EditText) findViewById(R.id.systolicEditText);
         DAText = (EditText) findViewById(R.id.diastolicEditText);
 
         adapter = new BPAdapter(this, R.layout.item_blood_pressure, bp_data);
 
-        listView1 = (ListView)findViewById(R.id.bpListView);
+        listView1 = (ListView) findViewById(R.id.bpListView);
         listView1.setAdapter(adapter);
 
         listView1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long arg3) {
 
-                itemRow  = position;
+                itemRow = position;
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle(R.string.dialog_bp_title);
                 alertDialog.setMessage(R.string.dialog_bp_del);
@@ -123,16 +123,17 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
         });
 
-        addButton = (FloatingActionButton)findViewById(R.id.addBPButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addBPButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
                 System.out.println("Test! blood ");
                 String currentDateandTime = sdf.format(new Date());
-                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString());
+                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString());
                 bp_data.addFirst(rbp);
                 if (bp_data.size() > 5)
                     bp_data.removeLast();
@@ -156,21 +157,19 @@ public class BloodPressureActivity extends AppCompatActivity {
             BloodPressurePOST bloodPost = new BloodPressurePOST();
             bloodPost.execute(json);
 
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
-    public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile(){
-        try
-        {
+    public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile() {
+        try {
             FileInputStream fin = openFileInput("lbp.txt");
             ObjectInputStream in = new ObjectInputStream(fin);
             LinkedList<ResultBloodPressure> myList = (LinkedList<ResultBloodPressure>) in.readObject();
             in.close();
             fin.close();
             return myList;
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -179,17 +178,15 @@ public class BloodPressureActivity extends AppCompatActivity {
         return null;
     }
 
-    public void writeLastBPMeasuremetsFromFile(LinkedList<ResultBloodPressure> myList){
-        try
-        {
-            FileOutputStream fout  = context.openFileOutput("lbp.txt", context.MODE_PRIVATE);
+    public void writeLastBPMeasuremetsFromFile(LinkedList<ResultBloodPressure> myList) {
+        try {
+            FileOutputStream fout = context.openFileOutput("lbp.txt", context.MODE_PRIVATE);
             ObjectOutputStream out = new ObjectOutputStream(fout);
             out.writeObject(myList);
             fout.close();
-            Log.i("TAG",myList.get(0)+"");
+            Log.i("TAG", myList.get(0) + "");
             out.close();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -220,54 +217,49 @@ public class BloodPressureActivity extends AppCompatActivity {
     }
 }
 
-    class BPAdapter extends ArrayAdapter<ResultBloodPressure> {
+class BPAdapter extends ArrayAdapter<ResultBloodPressure> {
 
-        Context context;
-        int layoutResourceId;
-        LinkedList<ResultBloodPressure> data;
+    Context context;
+    int layoutResourceId;
+    LinkedList<ResultBloodPressure> data;
 
-        public BPAdapter(Context context, int layoutResourceId, LinkedList<ResultBloodPressure> data) {
-            super(context, layoutResourceId, data);
-            this.layoutResourceId = layoutResourceId;
-            this.context = context;
-            this.data = data;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            ResultBloodPressureHolder holder = null;
-
-            if(row == null)
-            {
-                LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-                row = inflater.inflate(layoutResourceId, parent, false);
-
-                holder = new ResultBloodPressureHolder();
-                holder.sysTitle = (TextView) row.findViewById(R.id.sysTextList);
-                holder.daTitle = (TextView)row.findViewById(R.id.daTextList);
-                holder.dateTitle = (TextView)row.findViewById(R.id.dateTextList);
-
-                row.setTag(holder);
-            }
-            else
-            {
-                holder = (ResultBloodPressureHolder)row.getTag();
-            }
-
-            ResultBloodPressure resultBloodPressure = data.get(position);
-            holder.sysTitle.setText(resultBloodPressure.getSystolicPressure());
-            holder.daTitle.setText(resultBloodPressure.getDiastolicPressure());
-            holder.dateTitle.setText(resultBloodPressure.getTime());
-
-
-            return row;
-        }
-
-        class ResultBloodPressureHolder
-        {
-            TextView sysTitle;
-            TextView daTitle;
-            TextView dateTitle;
-        }
+    public BPAdapter(Context context, int layoutResourceId, LinkedList<ResultBloodPressure> data) {
+        super(context, layoutResourceId, data);
+        this.layoutResourceId = layoutResourceId;
+        this.context = context;
+        this.data = data;
     }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        ResultBloodPressureHolder holder = null;
+
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
+
+            holder = new ResultBloodPressureHolder();
+            holder.sysTitle = (TextView) row.findViewById(R.id.sysTextList);
+            holder.daTitle = (TextView) row.findViewById(R.id.daTextList);
+            holder.dateTitle = (TextView) row.findViewById(R.id.dateTextList);
+
+            row.setTag(holder);
+        } else {
+            holder = (ResultBloodPressureHolder) row.getTag();
+        }
+
+        ResultBloodPressure resultBloodPressure = data.get(position);
+        holder.sysTitle.setText(resultBloodPressure.getSystolicPressure());
+        holder.daTitle.setText(resultBloodPressure.getDiastolicPressure());
+        holder.dateTitle.setText(resultBloodPressure.getTime());
+
+        return row;
+    }
+
+    class ResultBloodPressureHolder {
+        TextView sysTitle;
+        TextView daTitle;
+        TextView dateTitle;
+    }
+}

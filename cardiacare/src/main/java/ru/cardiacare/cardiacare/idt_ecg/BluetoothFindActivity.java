@@ -43,6 +43,7 @@ public class BluetoothFindActivity extends AppCompatActivity {
     public static Activity activity;
     ProgressDialog dialog;
     private BluetoothAdapter myBluetoothAdapter;
+    String mac;
     private ListView myListView;
     String checkedDeviceName;
     private ArrayAdapter<String> BTArrayAdapter;
@@ -100,15 +101,14 @@ public class BluetoothFindActivity extends AppCompatActivity {
         if (myBluetoothAdapter == null) {
             Toast.makeText(getApplicationContext(), R.string.bluetooth_toast1,
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             on();
             BTArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             myListView = (ListView) findViewById(R.id.mListView);
             myListView.setAdapter(BTArrayAdapter);
 
             // Для версии андроида 6 и выше, нужны следующие разрешения
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 int permissionCheck = this.checkSelfPermission("Manifest.permission.ACCESS_FINE_LOCATION");
                 permissionCheck += this.checkSelfPermission("Manifest.permission.ACCESS_COARSE_LOCATION");
                 if (permissionCheck != 0) {
@@ -118,36 +118,36 @@ public class BluetoothFindActivity extends AppCompatActivity {
             myTimerExecute();
 //            myListView.setAdapter(BTArrayAdapter);
             myListView.setOnItemClickListener(new OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int position, long id) {
-                        checkedDeviceName = BTArrayAdapter.getItem(position);
-                        if (checkedDeviceName.contains("ECG")) {
-                            if (bound == false) {
-                                sConn = new ServiceConnection() {
-                                    public void onServiceConnected(ComponentName name, IBinder binder) {
-                                        Log.d("QQQ", "MainActivity onServiceConnected");
-                                        ecgService = ((ECGService.MyBinder) binder).getService();
-                                        bound = true;
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    checkedDeviceName = BTArrayAdapter.getItem(position);
+                    if (checkedDeviceName.contains("ECG")) {
+                        if (bound == false) {
+                            sConn = new ServiceConnection() {
+                                public void onServiceConnected(ComponentName name, IBinder binder) {
+                                    Log.d("QQQ", "MainActivity onServiceConnected");
+                                    ecgService = ((ECGService.MyBinder) binder).getService();
+                                    bound = true;
 //                    ECGService.location.Start(true); // Раньше находилось в onStart()
-                                    }
+                                }
 
-                                    public void onServiceDisconnected(ComponentName name) {
-                                        Log.d("QQQ", "MainActivity onServiceDisconnected");
-                                        bound = false;
+                                public void onServiceDisconnected(ComponentName name) {
+                                    Log.d("QQQ", "MainActivity onServiceDisconnected");
+                                    bound = false;
 //                    ECGService.location.Stop(); // Раньше находилось в onStop()
-                                    }
-                                };
-                                startService(intent);
-                                bindService(intent, sConn, 0);
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
-                                    Toast.LENGTH_LONG).show();
+                                }
+                            };
+                            startService(intent);
+                            bindService(intent, sConn, 0);
                         }
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
+                                Toast.LENGTH_LONG).show();
                     }
-                });
-            }
+                }
+            });
+        }
 //        }
     }
 
@@ -183,8 +183,21 @@ public class BluetoothFindActivity extends AppCompatActivity {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                BTArrayAdapter.notifyDataSetChanged();
+                if (BTArrayAdapter.getCount() < 1) {
+                    BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                    BTArrayAdapter.notifyDataSetChanged();
+                } else {
+                    boolean flag = true;
+                    for (int i = 0; i < BTArrayAdapter.getCount(); i++) {
+                        if (device.getAddress().equals(BTArrayAdapter.getItem(i).substring(BTArrayAdapter.getItem(i).length() - 17, BTArrayAdapter.getItem(i).length()))) {
+                            flag = false;
+                        }
+                    }
+                    if (flag) {
+                        BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                        BTArrayAdapter.notifyDataSetChanged();
+                    }
+                }
             }
         }
     };

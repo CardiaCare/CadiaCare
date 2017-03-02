@@ -6,7 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import java.io.File;
+
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
+import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 
 /* Экран "Справка" */
 

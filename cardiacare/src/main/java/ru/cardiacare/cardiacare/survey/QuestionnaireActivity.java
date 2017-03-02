@@ -44,6 +44,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public static final int Dichotomous = 7;
     public static final int DefaultValue = 8;
 
+    static public Feedback feedback;
+    static public Feedback alarmFeedback;
     RecyclerView QuestionnaireRecyclerView;
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
@@ -60,12 +62,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final FileInputStream fIn;
         mContext = this;
-        MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
-//        Gson json2 = new Gson();
-//        String jsonFeedback;
-//        jsonFeedback = json2.toJson(MainActivity.feedback);
-//        String str = jsonFeedback.replaceAll("\"", "\\\\\"");
-//        Log.i("QActivity", "feedback = " + str);
         try {
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
                 fIn = openFileInput("feedback.json");
@@ -73,9 +69,27 @@ public class QuestionnaireActivity extends AppCompatActivity {
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                MainActivity.feedback = qst;
-            else MainActivity.alarmFeedback = qst;
+            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+                if (qst != null) {
+                    feedback = qst;
+                    Gson json3 = new Gson();
+                    String jsonFeedback2;
+                    jsonFeedback2 = json3.toJson(feedback);
+                    Log.i("QActivity", "feedbackFromFile = " + jsonFeedback2);
+                } else {
+                    feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+                    Gson json2 = new Gson();
+                    String jsonFeedback;
+                    jsonFeedback = json2.toJson(feedback);
+                    Log.i("QActivity", "newFeedback = " + jsonFeedback);
+                }
+            } else {
+                if (qst != null) {
+                    alarmFeedback = qst;
+                } else {
+                    alarmFeedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+                }
+            }
         } catch (Exception e) {
 
         }
@@ -92,7 +106,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
 //                configIntent.setAction(" ");
 //                startActivity(configIntent);
-                if ((!sendFlag) && (MainActivity.feedback.getResponds().size() > 0)) {
+                if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
                     feedbackDialog();
                 } else {
                     onBackPressed();
@@ -170,13 +184,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 String jsonStr = "";
                 buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                    MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
-//                else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
+                    feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+//                else alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
 
                 Gson json = new Gson();
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                    jsonStr = json.toJson(MainActivity.feedback);
-                else jsonStr = json.toJson(MainActivity.alarmFeedback);
+                    jsonStr = json.toJson(feedback);
+                else jsonStr = json.toJson(alarmFeedback);
                 System.out.println(jsonStr);
                 writeData(jsonStr);
 
@@ -201,8 +215,8 @@ public class QuestionnaireActivity extends AppCompatActivity {
             String jsonStr;
             Gson json = new Gson();
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                jsonStr = json.toJson(MainActivity.feedback);
-            else jsonStr = json.toJson(MainActivity.alarmFeedback);
+                jsonStr = json.toJson(feedback);
+            else jsonStr = json.toJson(alarmFeedback);
             System.out.println("feedback: " + jsonStr);
             writeData(jsonStr);
             if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
@@ -211,7 +225,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 String ts = timestamp.toString();
                 MainActivity.storage.setLastQuestionnairePassDate(ts);
             }
-            if (MainActivity.feedback.getResponds().size() > 0) {
+            if (feedback.getResponds().size() > 0) {
                 FeedbackPOST feedbackPOST = new FeedbackPOST(context);
                 feedbackPOST.execute();
             }
@@ -232,13 +246,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //        if (QuestionnaireHelper.questionnaireType.equals(periodic))
 //            MainActivity.serveyButton.setEnabled(true);
 //        else {
-////            MainActivity.alarmButton.setEnabled(true);
-////            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
+////            alarmButton.setEnabled(true);
+////            alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
 //        }
 
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        buttonRefresh.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-//        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
     static public void writeData(String data) {
@@ -281,13 +295,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
 
     static public void clearFeedback() {
 //        Log.i("QQQ", "clearFeedback()");
-        int respondsCount = MainActivity.feedback.getResponds().size();
+        int respondsCount = feedback.getResponds().size();
         for (int i = respondsCount; i > 0; i--) {
-            MainActivity.feedback.getResponds().remove(i - 1);
+            feedback.getResponds().remove(i - 1);
         }
         String jsonStr = "";
 //        Gson json = new Gson();
-//        jsonStr = json.toJson(MainActivity.feedback);
+//        jsonStr = json.toJson(feedback);
         writeData(jsonStr);
     }
 
@@ -302,7 +316,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
 //        configIntent.setAction(" ");
 //        startActivity(configIntent);
-        if ((!sendFlag) && (MainActivity.feedback.getResponds().size() > 0)) {
+        if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
             feedbackDialog();
         } else {
             super.onBackPressed();
@@ -324,7 +338,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String jsonStr = "";
                         Gson json = new Gson();
-                        jsonStr = json.toJson(MainActivity.feedback);
+                        jsonStr = json.toJson(feedback);
                         writeData(jsonStr);
                         startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
                     }
