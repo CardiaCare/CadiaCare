@@ -63,12 +63,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
         final FileInputStream fIn;
         mContext = this;
         try {
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                fIn = openFileInput("feedback.json");
-            else fIn = openFileInput("alarmFeedback.json");
+//            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+//                fIn = openFileInput("feedback.json");
+//            else fIn = openFileInput("alarmFeedback.json");
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
+            Log.i("QActivity", "QuestionnaireHelper.questionnaireType = " + QuestionnaireHelper.questionnaireType);
             if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
                 if (qst != null) {
                     feedback = qst;
@@ -91,7 +92,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-
+            Log.i("QActivity", "CATCH");
         }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
