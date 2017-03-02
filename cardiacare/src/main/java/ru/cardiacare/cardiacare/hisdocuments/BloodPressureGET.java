@@ -15,6 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
@@ -115,11 +119,24 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
                 // Pulling items from the array
                 //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
                 //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
-                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0", oneObject.getString("created_at").substring(0,16)));
+                String date =  oneObject.getString("created_at").substring(0,16);
+                //date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) + Integer.parseInt(TimeZone.getTimeZone("GMT").toString())) + date.substring(13,16);
+
+                Calendar mCalendar = new GregorianCalendar();
+                TimeZone mTimeZone = mCalendar.getTimeZone();
+                int mGMTOffset = mTimeZone.getRawOffset();
+                //date = String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS));
+                int sm = Integer.parseInt(String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS)));
+
+                date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) -1 + sm) + date.substring(13,16);
+
+                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0",date, Integer.parseInt(oneObject.getString("id"))));
             } catch (JSONException e) {
                 // Oops
             }
         }
         ////////////////////////////////////////////////////////////////////////////////////////
+
+        BloodPressureActivity.refresh();
     }
 }

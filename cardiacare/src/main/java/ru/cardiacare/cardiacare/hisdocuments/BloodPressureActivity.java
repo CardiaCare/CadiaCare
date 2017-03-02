@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +39,7 @@ import ru.cardiacare.cardiacare.R;
 public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
-    BPAdapter adapter;
+    static BPAdapter adapter;
     static LinkedList<ResultBloodPressure> bp_data;
     static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
@@ -48,7 +48,18 @@ public class BloodPressureActivity extends AppCompatActivity {
     EditText SYSText;
     EditText DAText;
     SimpleDateFormat sdf;
-    Context context;
+    static Context context;
+    static Intent intent;
+
+    static void refresh(){
+        //Intent intent = context.getIntent();
+       // context.finish();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        context.startActivity(intent);
+        adapter.notifyDataSetChanged();
+      //  adapter = new BPAdapter(context, R.layout.item_blood_pressure, bp_data);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,10 +82,12 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
         });
 
-        sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+        //sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
 
         context = this;
+        intent = getIntent();
 
 //        bp_data = new LinkedList<ResultBloodPressure>();
 //        bp_data.add(new ResultBloodPressure("110", "80","70", currentDateandTime));
@@ -90,7 +103,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         bpl = readLastBPMeasuremetsFromFile();
         if (bpl == null){
-            bp_data.add(new ResultBloodPressure("0","0","0","0:0:0"));
+            bp_data.add(new ResultBloodPressure("0","0","0","0:0:0", 0));
         }
         else bp_data = bpl;
 
@@ -98,7 +111,7 @@ public class BloodPressureActivity extends AppCompatActivity {
         DAText = (EditText) findViewById(R.id.diastolicEditText);
 
         adapter = new BPAdapter(this, R.layout.item_blood_pressure, bp_data);
-
+        adapter.setNotifyOnChange(true);
         listView1 = (ListView)findViewById(R.id.bpListView);
         listView1.setAdapter(adapter);
 
@@ -113,8 +126,22 @@ public class BloodPressureActivity extends AppCompatActivity {
                 alertDialog.setNegativeButton(R.string.dialog_cancel, null);
                 alertDialog.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.remove(bp_data.get(itemRow));
-                        adapter.notifyDataSetChanged();
+
+                        /////////////delete
+                        JSONObject json = null;
+
+
+
+                        try {
+                            String str = "{\"id\":" + bp_data.get(itemRow).getIdPressure() + "}";
+                            json = new JSONObject(str);
+                            BloodPressureDELETE bloodDelete = new BloodPressureDELETE();
+                            bloodDelete.execute(json);
+                            adapter.remove(bp_data.get(itemRow));
+                            adapter.notifyDataSetChanged();
+                        }catch(Exception e){}
+
+
                     }
                 });
                 alertDialog.show();
@@ -132,10 +159,10 @@ public class BloodPressureActivity extends AppCompatActivity {
                 }catch (Exception e){}
                 System.out.println("Test! blood ");
                 String currentDateandTime = sdf.format(new Date());
-                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString());
+                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString(), 0);
                 bp_data.addFirst(rbp);
-                if (bp_data.size() > 5)
-                    bp_data.removeLast();
+//                if (bp_data.size() > 5)
+//                    bp_data.removeLast();
                 adapter.notifyDataSetChanged();
                 SYSText.setText("");
                 DAText.setText("");
@@ -155,7 +182,6 @@ public class BloodPressureActivity extends AppCompatActivity {
 
             BloodPressurePOST bloodPost = new BloodPressurePOST();
             bloodPost.execute(json);
-
         }
         catch (Exception e){}
     }
@@ -186,7 +212,7 @@ public class BloodPressureActivity extends AppCompatActivity {
             ObjectOutputStream out = new ObjectOutputStream(fout);
             out.writeObject(myList);
             fout.close();
-            Log.i("TAG",myList.get(0)+"");
+//            Log.i("TAG",myList.get(0)+"");
             out.close();
         }
         catch(IOException e){
@@ -231,6 +257,12 @@ public class BloodPressureActivity extends AppCompatActivity {
             this.layoutResourceId = layoutResourceId;
             this.context = context;
             this.data = data;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+            //_NotifyOnChange = true;
         }
 
         @Override
