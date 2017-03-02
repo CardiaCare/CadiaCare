@@ -9,14 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +20,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,9 +41,7 @@ import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 import ru.cardiacare.cardiacare.hisdocuments.BloodPressureGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
-import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
-import ru.cardiacare.cardiacare.user.Userdata;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     static public String authorization_token = "";
     static public String authorization_id_patient = "";
     static public String authorization_id_doctor = "";
+    static public String authorization_name = "";
+    static public String authorization_surname = "";
     static public AccountStorage storage;
     //    static public Feedback feedback;
 //    static public Feedback alarmFeedback;
@@ -200,23 +195,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             // Пройти опрос
-            case R.id.passSurvey:
-                if (isNetworkAvailable(context)) {
-                    QuestionnaireHelper.showQuestionnaire(context);
-                } else {
-                    wiFiAlertDialog();
-                }
-                break;
+//            case R.id.passSurvey:
+//                if (isNetworkAvailable(context)) {
+//                    QuestionnaireHelper.showQuestionnaire(context);
+//                } else {
+//                    wiFiAlertDialog();
+//                }
+//                break;
             // ЭКГ
             case R.id.ecg:
                 Intent intent4 = new Intent(this, ECGActivity.class);
                 startActivity(intent4);
                 break;
             // Учетная запись
-            case R.id.menuUserData:
-                //TODO Переделать (Откуда берутся настройки юзера БД?)
-                startActivity(new Intent(this, Userdata.class));
-                break;
+//            case R.id.menuUserData:
+//                //TODO Переделать (Откуда берутся настройки юзера БД?)
+//                startActivity(new Intent(this, Userdata.class));
+//                break;
             // Документы
 //            case R.id.documentsData:
 //                if (isNetworkAvailable(context)) {
@@ -335,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, "", "", "", "", "", "", "", "0", "", "", "", false, false);
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false);
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();

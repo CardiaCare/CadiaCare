@@ -67,6 +67,9 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
             dataPerson = new JSONObject(dataUser.getString("person"));
             MainActivity.authorization_id_patient = dataPerson.getString("id");
 
+            MainActivity.authorization_name = dataPerson.getString("name");
+            MainActivity.authorization_surname = dataPerson.getString("surname");
+
 //            Как появиться поле с идентификатором врача - расскоментировать и проверить поле "doctor" "id" или "person" "doctor_id"
 //            JSONObject dataDoctor = null;
 //            dataDoctor = new JSONObject(dataUser.getString("doctor"));
