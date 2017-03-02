@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     static public String authorization_token = "";
     static public String authorization_id_patient = "";
     static public String authorization_id_doctor = "";
+    static public String authorization_name = "";
+    static public String authorization_surname = "";
     static public AccountStorage storage;
     static public Feedback feedback;
     static public Feedback alarmFeedback;
@@ -326,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, "", "", "", "", "", "", "", "0", "", "", "", false, false);
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false);
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();
