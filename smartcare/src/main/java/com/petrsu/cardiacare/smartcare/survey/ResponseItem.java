@@ -7,7 +7,7 @@ import java.util.LinkedList;
  */
 public class ResponseItem {
     private String responseScore;
-    private Integer linkedItemId;
+    private Integer linkedItems_id;
     LinkedList<Response> subResponses;
 
 //    private String uri;
@@ -15,8 +15,8 @@ public class ResponseItem {
 //    private String textItem;
 //    private String fileUri;
 
-    public ResponseItem(Integer linkedItemId) {
-        this.linkedItemId = linkedItemId;
+    public ResponseItem(Integer linkedItems_id) {
+        this.linkedItems_id = linkedItems_id;
         subResponses = new LinkedList<>();
     }
 
@@ -33,12 +33,12 @@ public class ResponseItem {
         this.responseScore = responseScore;
     }
 
-    public Integer getLinkedItemId() {
-        return linkedItemId;
+    public Integer getLinkedItems_id() {
+        return linkedItems_id;
     }
 
-    public void setLinkedItemId(Integer linkedItemId) {
-        this.linkedItemId = linkedItemId;
+    public void setLinkedItems_id(Integer linkedItems_id) {
+        this.linkedItems_id = linkedItems_id;
     }
 
     public LinkedList<Response> getSubResponses() {

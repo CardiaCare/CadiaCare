@@ -52,18 +52,19 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 //                        "  \"lang\": \"en\"," +
 //                        "  \"data\":" + "\"new feedback\"" + "}";
 
-                String str = "{" +" \"questionnaire_id\": 7," +
-                        "  \"lang\": \"en\"," +
-                        "  \"data\": \"" + jsonFeedback.replaceAll("\"", "\\\\\"") + "\"}"; //\"new feedback\"}";
+//                String str = "{" +" \"questionnaire_id\": 7," +
+//                        "  \"lang\": \"en\"," +
+//                        "  \"data\": \"" + jsonFeedback.replaceAll("\"", "\\\\\"") + "\"}"; //\"new feedback\"}";
 
-//            String str = jsonFeedback.replaceAll("\"", "\\\\\"");
-            Log.i("FeedbackPOST", "feedback = " + str);
+//            jsonFeedback = jsonFeedback.replaceAll("\"", "\\\\\"");
+//            Log.i("FeedbackPOST", "token = " + MainActivity.storage.getAccountToken());
+//            Log.i("FeedbackPOST", "feedback = " + jsonFeedback);
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
             OkHttpClient client = new OkHttpClient();
 
-            RequestBody body = RequestBody.create(JSON, str);
+            RequestBody body = RequestBody.create(JSON, jsonFeedback);
 
             String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 

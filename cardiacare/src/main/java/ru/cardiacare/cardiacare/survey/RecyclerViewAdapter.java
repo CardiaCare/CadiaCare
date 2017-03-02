@@ -88,7 +88,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         if (question.getId().equals(responds.get(j).getQuestionId())) {
                             for (int k = 0; k < responds.get(j).getResponses().size(); k++) {
                                 for (int l = 0; l < responds.get(j).getResponses().get(k).getResponseItems().size(); l++) {
-                                    if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItemId())) {
+                                    if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItems_id())) {
                                         radioButtonsAnswers[i].setChecked(true);
                                     }
                                 }
@@ -155,7 +155,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     for (int j = 0; j < responds.size(); j++) {
                         if (question.getId().equals(responds.get(j).getQuestionId())) {
                             for (int k = 0; k < responds.get(j).getResponses().get(0).getResponseItems().size(); k++) {
-                                if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(0).getResponseItems().get(k).getLinkedItemId())) {
+                                if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(0).getResponseItems().get(k).getLinkedItems_id())) {
                                     CheckBoxesAnswers[i].setChecked(true);
                                 }
                             }
@@ -185,7 +185,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                 int flag2 = 0;
                                                 int responseItemsCount = MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size();
                                                 for (int l = 0; l < responseItemsCount; l++) {
-                                                    if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItemId().equals(answerItem.getId())) {
+                                                    if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
                                                         if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size() == 1) {
                                                             MainActivity.feedback.getResponds().remove(k);
                                                             flag2++;
