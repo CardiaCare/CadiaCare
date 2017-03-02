@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-
-import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 /* Экран "Справка" */
 
@@ -28,5 +28,15 @@ public class AboutActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        ListView lvLegal = (ListView) findViewById(R.id.legal);
+
+
+        String[] names = { getResources().getString(R.string.about_legal_osl),  getResources().getString(R.string.about_legal_pp) };
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, names);
+
+        lvLegal.setAdapter(adapter);
     }
 }
