@@ -121,10 +121,9 @@
     <string name="about_legal_osl_text">Open Source Licenses</string>
 
     <!--activity_help.xml-->
-    <string name="helpText_step1">Set up two electrodes to the chest </string>
-    <string name="helpText_step2">Switch heart monitor on </string>
-    <string name="helpText_step3">Run CardiaCare app </string>
-    <string name="helpText_step4">Watch your cardiogram</string>
+    <string name="helpText_step1">Questionnaire </string>
+    <string name="helpText_step2">BP diary </string>
+    <string name="helpText_step3">Watch your cardiogram</string>
 
     <!--activity_login.xml-->
     <string name="prompt_email">Email</string>

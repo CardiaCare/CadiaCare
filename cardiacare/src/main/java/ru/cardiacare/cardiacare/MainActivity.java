@@ -191,13 +191,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             // Пройти опрос
-//            case R.id.passSurvey:
-//                if (isNetworkAvailable(context)) {
-//                    QuestionnaireHelper.showQuestionnaire(context);
-//                } else {
-//                    wiFiAlertDialog();
-//                }
-//                break;
+            case R.id.menuHelp:
+                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                break;
             // ЭКГ
             case R.id.ecg:
                 Intent intent4 = new Intent(this, ECGActivity.class);

@@ -146,6 +146,10 @@
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:theme="@style/AppBaseTheme"></activity>
     </application>
 
 </manifest>

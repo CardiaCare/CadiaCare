@@ -14,10 +14,10 @@
         android:id="@+id/menuAbout"
         android:title="@string/about"
         app:showAsAction="never" />
-    <!--<item-->
-        <!--android:id="@+id/passSurvey"-->
-        <!--android:title="@string/pass_survey"-->
-        <!--app:showAsAction="never" />-->
+    <item
+        android:id="@+id/menuHelp"
+        android:title="@string/help"
+        app:showAsAction="never" />
     <!--<item-->
     <!--android:id="@+id/menuHelp"-->
     <!--android:orderInCategory="100"-->

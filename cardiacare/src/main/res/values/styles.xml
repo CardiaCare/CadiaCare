@@ -50,4 +50,6 @@
         <item name="android:textColor">@color/colorBackground</item>
     </style>
 
+    <style name="AppBaseTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
 </resources>

@@ -36,7 +36,6 @@ public class AboutActivity extends AppCompatActivity {
 
         ListView lvLegal = (ListView) findViewById(R.id.legal);
 
-
         String[] names = {getResources().getString(R.string.about_legal_osl), getResources().getString(R.string.about_legal_pp)};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
