@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import ru.cardiacare.cardiacare.hisdocuments.DoctorGET;
+
 /* Авторизация через сервер */
 
 public class AuthorizationService extends AsyncTask<JSONObject, String, String> {
@@ -92,5 +94,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         super.onPostExecute(result);
         result = "";
         token = "";
+
+        DoctorGET doctorGET = new DoctorGET();
+        doctorGET.execute();
     }
 }

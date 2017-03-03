@@ -11,6 +11,10 @@ public class AccountStorage {
 
     private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
     private static final String ACCOUNT_PREFERENCES_DOCTORID = "iddoctor"; // ид лечащего врача
+    private static final String ACCOUNT_PREFERENCES_DOCTOREMAIL = "emaildoctor";
+    private static final String ACCOUNT_PREFERENCES_DOCTORNAME = "namedoctor";
+    private static final String ACCOUNT_PREFERENCES_DOCTORPATR = "patronymicdoctor";
+    private static final String ACCOUNT_PREFERENCES_DOCTORSURNAME = "surnamedoctor";
     private static final String ACCOUNT_PREFERENCES_TOKEN = "token"; // Токен доступа, полученный с сервера
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     private static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
@@ -125,6 +129,57 @@ public class AccountStorage {
         } else strId = "";
         return strId;
     }
+    public String getDoctorEmail() {
+        String str;
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTOREMAIL)) {
+            str = sPref.getString(ACCOUNT_PREFERENCES_DOCTOREMAIL, "");
+        } else str = "";
+        return str;
+    }
+
+    public String getDoctorName() {
+        String str;
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORNAME)) {
+            str = sPref.getString(ACCOUNT_PREFERENCES_DOCTORNAME, "");
+        } else str = "";
+        return str;
+    }
+    public String getDoctorPatronumic() {
+        String str;
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORPATR)) {
+            str = sPref.getString(ACCOUNT_PREFERENCES_DOCTORPATR, "");
+        } else str = "";
+        return str;
+    }
+    public String getDoctorSurname() {
+        String str;
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORSURNAME)) {
+            str = sPref.getString(ACCOUNT_PREFERENCES_DOCTORSURNAME, "");
+        } else str = "";
+        return str;
+    }
+
+    public void setDoctorEmail(String email) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_DOCTOREMAIL, email);
+        editor.apply();
+    }
+    public void setDoctorName(String name) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORNAME, name);
+        editor.apply();
+    }
+    public void setDoctorPatronymic(String patronymic) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORPATR, patronymic);
+        editor.apply();
+    }
+    public void setDoctorSurname(String surname) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORSURNAME, surname);
+        editor.apply();
+    }
+
 
     public String getAccountToken() {
         if (sPref.contains(ACCOUNT_PREFERENCES_TOKEN)) {

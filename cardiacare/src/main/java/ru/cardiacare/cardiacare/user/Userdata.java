@@ -10,6 +10,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Учётная запись" */
@@ -23,6 +24,10 @@ public class Userdata extends AppCompatActivity {
     private static final String ACCOUNT_PREFERENCES_EMAIL = "email";
     public static final String ACCOUNT_PREFERENCES_FIRSTNAME = "firstname";
     public static final String ACCOUNT_PREFERENCES_SECONDNAME = "secondname";
+
+    private static final String ACCOUNT_PREFERENCES_DOCTOREMAIL = "emaildoctor";
+    private static final String ACCOUNT_PREFERENCES_DOCTORNAME = "namedoctor";
+
     public static final String ACCOUNT_PREFERENCES_PHONENUMBER = "phonenumber";
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
@@ -36,7 +41,10 @@ public class Userdata extends AppCompatActivity {
     TextView etEmail;
     TextView etFirstName;
     TextView etSecondName;
-    
+
+    TextView doctorEmail;
+    TextView doctorName;
+
     EditText etPhoneNumber;
     EditText etHeight;
     EditText etWeight;
@@ -67,6 +75,11 @@ public class Userdata extends AppCompatActivity {
         etEmail = (TextView) findViewById(R.id.tvEmail);
         etFirstName = (TextView) findViewById(R.id.tvFirstName);
         etSecondName = (TextView) findViewById(R.id.tvSecondName);
+
+        doctorEmail = (TextView) findViewById(R.id.doctorEmail);
+        //doctorEmail.setText(MainActivity.storage.getDoctorEmail());
+        doctorName = (TextView) findViewById(R.id.doctorName);
+        //doctorName.setText(MainActivity.storage.getDoctorName() + " " + MainActivity.storage.getDoctorSurname());
 
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
         etHeight = (EditText) findViewById(R.id.etHeight);
@@ -111,6 +124,12 @@ public class Userdata extends AppCompatActivity {
         }
         if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
             etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
+        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTOREMAIL)) {
+            doctorEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_DOCTOREMAIL, ""));
+        }
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORNAME)) {
+            doctorName.setText(MainActivity.storage.getDoctorName() + " "+ MainActivity.storage.getDoctorPatronumic() + " " + MainActivity.storage.getDoctorSurname());
         }
 //        if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
 //            etPhoneNumber.setText(sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, ""));

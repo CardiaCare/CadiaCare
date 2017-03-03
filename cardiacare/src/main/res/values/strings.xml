@@ -14,7 +14,7 @@
     <string name="download">Download</string>
     <string name="login_toast">Please, fill fields</string>
     <string name="widget_sos_text">SOS</string>
-
+    <string name="doctors">Doctors</string>
     <!--AndroidManifest.xml-->
     <string name="app_name">CardiaCare</string>
     <string name="title_activity_bluetooth_find">Find a device</string>

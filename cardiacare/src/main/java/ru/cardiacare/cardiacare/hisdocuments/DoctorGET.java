@@ -67,7 +67,21 @@ public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        System.out.println("Test! result " + result);
+        try {
+            result = result.substring(1, result.length()-1);
+            System.out.println("Test! result " + result);
+            JSONObject dataJsonObj = null;
+            dataJsonObj = new JSONObject(result);
+            //result = dataJsonObj.getString("token");
 
+            MainActivity.storage.setDoctorEmail(dataJsonObj.getString("email"));
+            MainActivity.storage.setDoctorName(dataJsonObj.getString("name"));
+            MainActivity.storage.setDoctorPatronymic(dataJsonObj.getString("patronymic"));
+            MainActivity.storage.setDoctorSurname(dataJsonObj.getString("surname"));
+
+        } catch (Exception e) {}
+        /////////////////////////////////
         ///обработать result - список докторов
     }
 }
