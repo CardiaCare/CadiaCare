@@ -27,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.petrsu.cardiacare.smartcare.survey.Feedback;
-
 import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
@@ -37,8 +35,6 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
-import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
-import ru.cardiacare.cardiacare.hisdocuments.BloodPressureGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.user.AccountStorage;
@@ -337,16 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 setMainScreenForAuthorizedUser();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
-                builder.setMessage(R.string.dialog_authorization_message)
-                        .setTitle(R.string.dialog_authorization_title)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        }).show();
+
             }
         }
     }

@@ -97,6 +97,15 @@
     <string name="action_settings">Settings</string>
 
     <!--activity_about.xml-->
+    <string name="about_text">CardiaCare is an application for blood pressure and heart function monitoring of a patient. It provides a connection between wearable cardiac monitor, patient and doctor.
+        \n\nCurrently the application works in connection with FRUCT ECG and Activity Monitor.  App provide a ability to control the state of health through regular surveys. All data is saved in CardiaCare.ru server.
+        \n\nDoctors will be able to monitor heart activity of their patients in real-time remotely, and receive advanced ECG analysis in conjunction with blood pressure, given the description of the state of health obtained from surveys.
+    </string>
+
+    <string name="about_version">Version 0.1.1</string>
+    <string name="about_home_page">Home page http://cardiacare.ru</string>
+    <string name="about_copyright">\u00A9 Petrozavodsk state university</string>
+
     <string name="about_dev">
     Developers:
     \n Iuliia Zavialova
@@ -104,11 +113,12 @@
     \n Kristina Shevcova
     \n Vasilii Fokin
     </string>
-    <string name="about_text">Long text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text,
-     text, text, text, text, text, text, text, text, text, text, text, text, text, text,</string>
-        <string name="about_legal_osl">Open Source Licenses</string>
+
+    <string name="about_legal_osl">Open Source Licenses</string>
     <string name="about_legal_pp">Privacy Police</string>
 
+    <string name="about_legal_pp_text">Privacy Police</string>
+    <string name="about_legal_osl_text">Open Source Licenses</string>
 
     <!--activity_help.xml-->
     <string name="helpText_step1">Set up two electrodes to the chest </string>
@@ -331,4 +341,5 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+
 </resources>

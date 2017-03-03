@@ -14,10 +14,10 @@
         android:id="@+id/menuAbout"
         android:title="@string/about"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/passSurvey"
-        android:title="@string/pass_survey"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/passSurvey"-->
+        <!--android:title="@string/pass_survey"-->
+        <!--app:showAsAction="never" />-->
     <!--<item-->
     <!--android:id="@+id/menuHelp"-->
     <!--android:orderInCategory="100"-->
@@ -28,11 +28,11 @@
            android:orderInCategory="100"
            app:showAsAction="never"
            android:title="@string/download"/> -->
-    <item
-        android:id="@+id/menuUserData"
-        android:orderInCategory="100"
-        android:title="@string/userdata"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/menuUserData"-->
+        <!--android:orderInCategory="100"-->
+        <!--android:title="@string/userdata"-->
+        <!--app:showAsAction="never" />-->
     <!--<item-->
     <!--android:id="@+id/documentsData"-->
     <!--android:orderInCategory="100"-->
