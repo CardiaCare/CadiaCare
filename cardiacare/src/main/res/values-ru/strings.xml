@@ -268,4 +268,9 @@
     <string name="dialog_feedback_message">Ответы не были отправлены на сервер. Отправить ответы?</string>
     <string name="dialog_feedback_positive_button">Да</string>
     <string name="dialog_feedback_negative_button">Нет</string>
+
+    <!--Диалог при вводе некорректных значений давления-->
+    <string name="dialog_bpdata_title">Ошибка ввода данных</string>
+    <string name="dialog_bpdata_message">Введите корректные значения</string>
+    <string name="dialog_bpdata_negative_button">ОК</string>
 </resources>

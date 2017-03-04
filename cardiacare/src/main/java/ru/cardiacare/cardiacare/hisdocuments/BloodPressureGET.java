@@ -120,7 +120,7 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
                 //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
                 //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
 
-                String date =  oneObject.getString("created_at").substring(0,16);
+                String date = oneObject.getString("created_at").substring(0, 16);
                 //date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) + Integer.parseInt(TimeZone.getTimeZone("GMT").toString())) + date.substring(13,16);
 
                 Calendar mCalendar = new GregorianCalendar();
@@ -129,9 +129,9 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
                 //date = String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS));
                 int sm = Integer.parseInt(String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS)));
 
-                date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) -1 + sm) + date.substring(13,16);
+                date = date.substring(0, 11) + (Integer.parseInt(date.substring(11, 13)) - 1 + sm) + date.substring(13, 16);
 
-                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"),"0",date, Integer.parseInt(oneObject.getString("id"))));
+                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"), "0", date, Integer.parseInt(oneObject.getString("id"))));
             } catch (JSONException e) {
                 // Oops
             }

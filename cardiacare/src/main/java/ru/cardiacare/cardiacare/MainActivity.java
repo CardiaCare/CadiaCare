@@ -27,7 +27,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
+
 import org.json.JSONObject;
+
+import java.util.LinkedList;
 
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
 import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph1;
@@ -35,6 +39,7 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.BloodPressureGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.user.AccountStorage;
@@ -55,14 +60,16 @@ public class MainActivity extends AppCompatActivity {
     //    static public Feedback feedback;
 //    static public Feedback alarmFeedback;
     Toolbar toolbar;
+    static public LinkedList<Integer> systolicBP;
+    static public LinkedList<Integer> diastolicBP;
 
     ViewPager viewPager;
-    static FragmentTransaction fTrans;
-    FragmentManager fManager;
+    static public FragmentTransaction fTrans;
+    static public FragmentManager fManager;
     static FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
     static FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
     FragmentAuthorizationScreen fragmentAuthorizationScreen;
-    FragmentExampleGraph1 fragmentExampleGraph1;
+    static public FragmentExampleGraph1 fragmentExampleGraph1;
     FragmentExampleGraph2 fragmentExampleGraph2;
 
     @Override
@@ -149,6 +156,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
+    }
+
+    @Override
     public void onBackPressed() {
         android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         alertDialog.setTitle(R.string.dialog_main_back_title);
@@ -217,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exitAccount:
                 //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
-                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false, false);
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false, false, "", "");
                 storage.setVersion("");
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
@@ -256,8 +268,8 @@ public class MainActivity extends AppCompatActivity {
 
                 case 0:
                     return FragmentExampleGraph1.newInstance();
-                case 1:
-                    return FragmentExampleGraph2.newInstance();
+//                case 1:
+//                    return FragmentExampleGraph2.newInstance();
                 default:
                     return FragmentExampleGraph1.newInstance();
             }
@@ -265,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 1;
         }
     }
 
@@ -322,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false);
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false, "", "");
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();
@@ -364,6 +376,8 @@ public class MainActivity extends AppCompatActivity {
         fTrans = fManager.beginTransaction();
         // Если установлена галочка "показывать графики" в личном кабинете
         if (storage.getPageViewOnMainactivity()) {
+            systolicBP = new LinkedList<>();
+            diastolicBP = new LinkedList<>();
             if (fManager.findFragmentByTag(FragmentRegisteredScreenBigIcons.TAG) != null) {
                 fTrans.remove(fragmentRegisteredScreenBigIcons);
             }

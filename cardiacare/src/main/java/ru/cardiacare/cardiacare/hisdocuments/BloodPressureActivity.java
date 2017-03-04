@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +35,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
+import ru.cardiacare.cardiacare.idt_ecg.ECGService;
+import ru.cardiacare.cardiacare.survey.QuestionnaireActivity;
 
 /* Экран "Результаты измерения артериального давления" */
 
@@ -40,7 +46,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
     static BPAdapter adapter;
-    static LinkedList<ResultBloodPressure> bp_data;
+    static public LinkedList<ResultBloodPressure> bp_data;
     static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
@@ -58,6 +64,32 @@ public class BloodPressureActivity extends AppCompatActivity {
 //        context.startActivity(intent);
         adapter.notifyDataSetChanged();
         //  adapter = new BPAdapter(context, R.layout.item_blood_pressure, bp_data);
+
+        MainActivity.systolicBP.clear();
+        MainActivity.diastolicBP.clear();
+        for (int j = 0; j < bp_data.size(); j++) {
+//            Log.i("BPActivity", "systolic = " + bp_data.get(j).getSystolicPressure() + ", diastolic = " + bp_data.get(j).getDiastolicPressure());
+        }
+
+        if (bp_data.size() >= 7) {
+            for (int i = 6; i >= 0; i--) {
+                MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+            }
+        } else {
+            for (int i = bp_data.size() - 1; i >= 0; i--) {
+                MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+            }
+            for (int i = bp_data.size(); i < 7; i++) {
+                MainActivity.systolicBP.add(0);
+                MainActivity.diastolicBP.add(0);
+            }
+        }
+        MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
+        MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
+//        Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
+//        Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
     }
 
     @Override
@@ -78,7 +110,7 @@ public class BloodPressureActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                startActivity(new Intent(BloodPressureActivity.this, MainActivity.class));
             }
         });
 
@@ -153,37 +185,57 @@ public class BloodPressureActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isBPcorrect = false;
                 try {
-                    POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                    isBPcorrect = POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
                 } catch (Exception e) {
                 }
-                System.out.println("Test! blood ");
-                String currentDateandTime = sdf.format(new Date());
-                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString(), 0);
-                bp_data.addFirst(rbp);
+                if (isBPcorrect) {
+                    System.out.println("Test! blood ");
+                    String currentDateandTime = sdf.format(new Date());
+                    ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString(), 0);
+                    bp_data.addFirst(rbp);
 //                if (bp_data.size() > 5)
 //                    bp_data.removeLast();
-                adapter.notifyDataSetChanged();
-                SYSText.setText("");
-                DAText.setText("");
+                    adapter.notifyDataSetChanged();
+                    SYSText.setText("");
+                    DAText.setText("");
+                } else {
+                    SYSText.setText("");
+                    DAText.setText("");
+                    android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                    alertDialog.setTitle(R.string.dialog_bpdata_title);
+                    alertDialog.setMessage(R.string.dialog_bpdata_message);
+                    alertDialog.setNegativeButton(R.string.dialog_bpdata_negative_button,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    alertDialog.show();
+                }
             }
         });
 
     }
 
-    void POSTsysdias(int systolic, int diastolic) {
+    boolean POSTsysdias(int systolic, int diastolic) {
         JSONObject json = null;
 
         String str = "{ \"systolic\":" + systolic + ", "
                 + "\"diastolic\":" + diastolic + "} ";
+        if ((systolic <= diastolic) || (systolic <= 10) || (diastolic <= 10) || (systolic > 300) || (diastolic > 300)) {
+            return false; // Некорректные значения давления
+        } else {
+            try {
+                json = new JSONObject(str);
 
-        try {
-            json = new JSONObject(str);
-
-            BloodPressurePOST bloodPost = new BloodPressurePOST();
-            bloodPost.execute(json);
-        } catch (Exception e) {
+                BloodPressurePOST bloodPost = new BloodPressurePOST();
+                bloodPost.execute(json);
+            } catch (Exception e) {
+            }
         }
+        return true;
     }
 
     public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile() {
@@ -238,7 +290,7 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         writeLastBPMeasuremetsFromFile(bp_data);
-        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
     }
 }
 

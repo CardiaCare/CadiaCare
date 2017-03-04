@@ -3,6 +3,8 @@ package ru.cardiacare.cardiacare.MainFragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 // Пример графика
@@ -25,43 +28,76 @@ public class FragmentExampleGraph1 extends Fragment {
 
         GraphView graph = (GraphView) view.findViewById(R.id.graph);
         graph.setTitle("График давления");
+        graph.setTitleColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
+        graph.setTitleTextSize(54);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(1);
         graph.getViewport().setMaxX(7);
         graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(10);
+        graph.getViewport().setMinY(10);
+        graph.getViewport().setMaxY(300);
         graph.getGridLabelRenderer().setNumHorizontalLabels(7);
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(1, 7),
-                new DataPoint(2, 4),
-                new DataPoint(3, 6),
-                new DataPoint(4, 3),
-                new DataPoint(5, 7),
-                new DataPoint(6, 4),
-                new DataPoint(7, 6)
-        });
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(getSystolicData());
         graph.addSeries(series);
 
-        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(new DataPoint[]{
-                new DataPoint(1, 4),
-                new DataPoint(2, 6),
-                new DataPoint(3, 3),
-                new DataPoint(4, 7),
-                new DataPoint(5, 4),
-                new DataPoint(6, 6),
-                new DataPoint(7, 5)
-        });
+        LineGraphSeries<DataPoint> series2 = new LineGraphSeries<>(getDiastolicData());
         series2.setColor(Color.GREEN);
         graph.addSeries(series2);
         return view;
     }
 
-    public FragmentExampleGraph1() {}
+    public FragmentExampleGraph1() {
+    }
 
     public static FragmentExampleGraph1 newInstance() {
         FragmentExampleGraph1 f = new FragmentExampleGraph1();
         return f;
+    }
+
+    private DataPoint[] getSystolicData() {
+//        Log.i("QQQ", "getSystolicBP() = " + MainActivity.storage.getSystolicBP());
+        String[] items = MainActivity.storage.getSystolicBP().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+
+        int[] results = new int[items.length];
+
+        for (int i = 0; i < items.length; i++) {
+            try {
+                results[i] = Integer.parseInt(items[i]);
+//                Log.i("QQQ", "result[i] = " + results[i]);
+            } catch (NumberFormatException nfe) {
+            }
+        }
+
+        DataPoint[] values = new DataPoint[results.length];
+        for (int i = 0; i < results.length; i++) {
+            DataPoint v = new DataPoint(i + 1, results[i]);
+            values[i] = v;
+//            Log.i("QQQ", "valuesSystolic = " + values[i].toString());
+        }
+        return values;
+    }
+
+    private DataPoint[] getDiastolicData() {
+//        Log.i("QQQ", "getDiastolicBP() = " + MainActivity.storage.getDiastolicBP());
+        String[] items = MainActivity.storage.getDiastolicBP().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
+
+        int[] results = new int[items.length];
+
+        for (int i = 0; i < items.length; i++) {
+            try {
+                results[i] = Integer.parseInt(items[i]);
+//                Log.i("QQQ", "result[i] = " + results[i]);
+            } catch (NumberFormatException nfe) {
+            }
+        }
+
+        DataPoint[] values = new DataPoint[results.length];
+        for (int i = 0; i < results.length; i++) {
+            DataPoint v = new DataPoint(i + 1, results[i]);
+            values[i] = v;
+//            Log.i("QQQ", "valuesDiastolic = " + values[i].toString());
+        }
+        return values;
     }
 }

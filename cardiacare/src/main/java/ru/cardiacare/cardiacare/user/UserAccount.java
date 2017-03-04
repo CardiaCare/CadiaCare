@@ -93,6 +93,8 @@ public class UserAccount extends AppCompatActivity {
         String periodpassservey = storage.getPeriodPassServey();
         String periodecgsending = storage.getPeriodECGSending();
         String ecgfile = storage.getECGFile();
+        String systolicbp = storage.getSystolicBP();
+        String diastolicbp = storage.getDiastolicBP();
         storage.setAccountPreferences(
                 etSibName.getText().toString(),
                 etSibIp.getText().toString(),
@@ -113,7 +115,9 @@ public class UserAccount extends AppCompatActivity {
                 periodecgsending,
                 ecgfile,
                 cbPageViewOnMainactivity.isChecked(),
-                cbFeedbackRefresh.isChecked());
+                cbFeedbackRefresh.isChecked(),
+                systolicbp,
+                diastolicbp);
     }
 
     protected void onResume() {
