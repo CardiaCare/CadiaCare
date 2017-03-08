@@ -5,10 +5,16 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
@@ -42,8 +48,8 @@ public class Userdata extends AppCompatActivity {
     TextView etFirstName;
     TextView etSecondName;
 
-    TextView doctorEmail;
-    TextView doctorName;
+//    TextView doctorEmail;
+//    TextView doctorName;
 
     EditText etPhoneNumber;
     EditText etHeight;
@@ -76,9 +82,9 @@ public class Userdata extends AppCompatActivity {
         etFirstName = (TextView) findViewById(R.id.tvFirstName);
         etSecondName = (TextView) findViewById(R.id.tvSecondName);
 
-        doctorEmail = (TextView) findViewById(R.id.doctorEmail);
+//        doctorEmail = (TextView) findViewById(R.id.doctorEmail);
         //doctorEmail.setText(MainActivity.storage.getDoctorEmail());
-        doctorName = (TextView) findViewById(R.id.doctorName);
+//        doctorName = (TextView) findViewById(R.id.doctorName);
         //doctorName.setText(MainActivity.storage.getDoctorName() + " " + MainActivity.storage.getDoctorSurname());
 
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
@@ -91,6 +97,41 @@ public class Userdata extends AppCompatActivity {
         cbFeedbackRefresh = (CheckBox) findViewById(R.id.feedbackRefreshButton);
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
+
+        ///////////////////////////////////////////////////////////////////////////////////
+        LinearLayout mainLayout = (LinearLayout)findViewById(R.id.doctors);
+
+        JSONArray jArray = null;
+        try {
+            jArray = new JSONArray(MainActivity.storage.getDoctors());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < jArray.length(); i++) {
+            try {
+                JSONObject oneObject = jArray.getJSONObject(i);
+
+                String email = oneObject.getString("email");
+                String name = oneObject.getString("name") + " " +
+                oneObject.getString("patronymic") + " " +
+                oneObject.getString("surname");
+
+                LayoutInflater inflater = getLayoutInflater();
+                View doctors_card = inflater.inflate(R.layout.doctors_card, null);
+
+                TextView doctorEmail = (TextView) doctors_card.findViewById(R.id.doctorEmail);
+                doctorEmail.setText(email);
+                TextView doctorName = (TextView) doctors_card.findViewById(R.id.doctorName);
+                doctorName.setText(name);
+
+                mainLayout.addView(doctors_card);
+
+            } catch (JSONException e) {
+                // Oops
+            }
+        }
+        ///////////////////////////////////////////////////////////////////////////////////
     }
 
     protected void onPause() {
@@ -125,12 +166,12 @@ public class Userdata extends AppCompatActivity {
         if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
             etSecondName.setText(sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, ""));
         }
-        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTOREMAIL)) {
-            doctorEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_DOCTOREMAIL, ""));
-        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORNAME)) {
-            doctorName.setText(MainActivity.storage.getDoctorName() + " "+ MainActivity.storage.getDoctorPatronumic() + " " + MainActivity.storage.getDoctorSurname());
-        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTOREMAIL)) {
+//            doctorEmail.setText(sPref.getString(ACCOUNT_PREFERENCES_DOCTOREMAIL, ""));
+//        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORNAME)) {
+//            doctorName.setText(MainActivity.storage.getDoctorName() + " "+ MainActivity.storage.getDoctorPatronumic() + " " + MainActivity.storage.getDoctorSurname());
+//        }
 //        if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
 //            etPhoneNumber.setText(sPref.getString(ACCOUNT_PREFERENCES_PHONENUMBER, ""));
 //        }
