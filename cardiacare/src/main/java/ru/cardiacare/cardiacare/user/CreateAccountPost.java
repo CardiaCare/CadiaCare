@@ -1,11 +1,11 @@
 package ru.cardiacare.cardiacare.user;
 
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -16,7 +16,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
+import ru.cardiacare.cardiacare.R;
 
 public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
 
@@ -29,7 +30,7 @@ public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
 
     @Override
     protected String doInBackground(JSONObject... params) {
-
+        String flag = "true";
         try {
             OkHttpClient client = new OkHttpClient();
 
@@ -69,12 +70,33 @@ public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
         } catch (Exception e) {
             System.out.println("Test! exc " + e.getMessage());
             e.printStackTrace();
+            flag = "false";
         }
-        return null;
+        return flag;
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+
+        System.out.println("Test! res create " + result);
+
+        if("false".equals(result)) {
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(CreateAccountActivity.mContextCreateAccountActivity, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+        }else{
+            //надо тестить
+            FragmentAuthorizationScreen.emailFragmentAuthorizationScreen = CreateAccountActivity.emailCreateAccountActivity;
+            FragmentAuthorizationScreen.passwordFragmentAuthorizationScreen = CreateAccountActivity.passwordCreateAccountActivity;
+            //должен быть back, но не протестировать
+        }
     }
 }

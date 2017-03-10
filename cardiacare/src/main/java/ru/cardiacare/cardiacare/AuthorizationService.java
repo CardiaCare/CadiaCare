@@ -96,7 +96,7 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         //result = "";
         token = "";
 
-        System.out.println("Test! res doc " + result);
+       // System.out.println("Test! res doc " + result);
 
         if(!"error_authorization".equals(result) && !"".equals(result)) {
             DoctorGET doctorGET = new DoctorGET();

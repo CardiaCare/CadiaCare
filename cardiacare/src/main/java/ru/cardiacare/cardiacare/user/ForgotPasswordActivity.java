@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare.user;
 
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -47,21 +48,24 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                TextInputLayout1.setVisibility(View.VISIBLE);
-                TextInputLayout2.setVisibility(View.VISIBLE);
-                TextInputLayout3.setVisibility(View.VISIBLE);
-                etPassword.setVisibility(View.VISIBLE);
-                etPassword2.setVisibility(View.VISIBLE);
-                etInviteCode.setVisibility(View.VISIBLE);
-                Send2.setVisibility(View.VISIBLE);
-                ForgotPassword1(etLogin.getText().toString());
+//                TextInputLayout1.setVisibility(View.VISIBLE);
+//                TextInputLayout2.setVisibility(View.VISIBLE);
+//                TextInputLayout3.setVisibility(View.VISIBLE);
+//                etPassword.setVisibility(View.VISIBLE);
+//                etPassword2.setVisibility(View.VISIBLE);
+//                etInviteCode.setVisibility(View.VISIBLE);
+//                Send2.setVisibility(View.VISIBLE);
+
+                if(emptyCheck(etLogin.getText().toString()))
+                    ForgotPassword1(etLogin.getText().toString());
             }
         });
 
         Send2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ForgotPassword2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString());
+                if(emptyCheck2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString()))
+                    ForgotPassword2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString());
             }
         });
     }
@@ -93,5 +97,49 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             forgotPut.execute(json);
         }
         catch (Exception e){}
+    }
+
+    private boolean emptyCheck(String login) {
+        if (login.equals("") || (login.indexOf("@") == -1)) {
+            //Toast.makeText(getApplicationContext(), "Please, fill fields", Toast.LENGTH_LONG).show();
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+            return false;
+        } else {
+            TextInputLayout1.setVisibility(View.VISIBLE);
+            TextInputLayout2.setVisibility(View.VISIBLE);
+            TextInputLayout3.setVisibility(View.VISIBLE);
+            etPassword.setVisibility(View.VISIBLE);
+            etPassword2.setVisibility(View.VISIBLE);
+            etInviteCode.setVisibility(View.VISIBLE);
+            Send2.setVisibility(View.VISIBLE);
+            return true;
+        }
+    }
+
+    private boolean emptyCheck2(String code, String password, String password2) {
+        if (password.equals("") || (!password.equals(password2)) || code.equals("")) {
+            //Toast.makeText(getApplicationContext(), "Please, fill fields", Toast.LENGTH_LONG).show();
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+            return false;
+        } else
+            return true;
     }
 }
