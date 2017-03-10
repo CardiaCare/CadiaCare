@@ -96,6 +96,8 @@
 
     <!--action_settings.xml-->
     <string name="action_settings">Настройки</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_change">Изменить пароль</string>
 
     <!--activity_about.xml-->
 
@@ -262,6 +264,9 @@
     <string name="action_registration">Регистрация</string>
     <string name="prompt_password2">Повторите пароль</string>
     <string name="prompt_invite_code">Код приглашения</string>
+
+    <string name="prompt_code">Код</string>
+    <string name="prompt_new_password">Новый пароль</string>
 
     <!--Диалог при закрытии опросника без отправки ответов-->
     <string name="dialog_feedback_title">Отправка результатов опроса</string>

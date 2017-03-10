@@ -9,6 +9,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -67,21 +69,48 @@ public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        System.out.println("Test! result " + result);
-        try {
-            result = result.substring(1, result.length()-1);
-            System.out.println("Test! result " + result);
-            JSONObject dataJsonObj = null;
-            dataJsonObj = new JSONObject(result);
-            //result = dataJsonObj.getString("token");
 
-            MainActivity.storage.setDoctorEmail(dataJsonObj.getString("email"));
-            MainActivity.storage.setDoctorName(dataJsonObj.getString("name"));
-            MainActivity.storage.setDoctorPatronymic(dataJsonObj.getString("patronymic"));
-            MainActivity.storage.setDoctorSurname(dataJsonObj.getString("surname"));
+//        result = result.substring(0, result.length()-1);
+//        result = result + ", {\"email\":\"email\", \"name\":\"name\", \"patronymic\":\"patronymic\", \"surname\":\"surname\"}]";
 
-        } catch (Exception e) {}
+//        System.out.println("Test! result " + result);
+//        try {
+//            result = result.substring(1, result.length()-1);
+//            System.out.println("Test! result " + result);
+//            JSONObject dataJsonObj = null;
+//            dataJsonObj = new JSONObject(result);
+//            //result = dataJsonObj.getString("token");
+//
+//            MainActivity.storage.setDoctorEmail(dataJsonObj.getString("email"));
+//            MainActivity.storage.setDoctorName(dataJsonObj.getString("name"));
+//            MainActivity.storage.setDoctorPatronymic(dataJsonObj.getString("patronymic"));
+//            MainActivity.storage.setDoctorSurname(dataJsonObj.getString("surname"));
+//
+//        } catch (Exception e) {}
         /////////////////////////////////
         ///обработать result - список докторов
+
+        MainActivity.storage.setDoctors(result);
+
+        JSONArray jArray = null;
+        try {
+            jArray = new JSONArray(result);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < jArray.length(); i++) {
+            try {
+                JSONObject oneObject = jArray.getJSONObject(i);
+
+                MainActivity.storage.setDoctorEmail(oneObject.getString("email"));
+                MainActivity.storage.setDoctorName(oneObject.getString("name"));
+                MainActivity.storage.setDoctorPatronymic(oneObject.getString("patronymic"));
+                MainActivity.storage.setDoctorSurname(oneObject.getString("surname"));
+
+            } catch (JSONException e) {
+                // Oops
+            }
+        }
     }
 }

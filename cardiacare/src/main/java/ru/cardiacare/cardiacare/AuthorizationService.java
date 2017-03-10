@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
@@ -92,10 +93,26 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        result = "";
+        //result = "";
         token = "";
 
-        DoctorGET doctorGET = new DoctorGET();
-        doctorGET.execute();
+       // System.out.println("Test! res doc " + result);
+
+        if(!"error_authorization".equals(result) && !"".equals(result)) {
+            DoctorGET doctorGET = new DoctorGET();
+            doctorGET.execute();
+        }else{
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
+            builder.setMessage(R.string.dialog_authorization_message)
+                    .setTitle(R.string.dialog_authorization_title)
+                    .setCancelable(true)
+                    .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).show();
+        }
+        result = "";
     }
 }

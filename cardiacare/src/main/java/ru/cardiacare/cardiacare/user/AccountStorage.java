@@ -11,6 +11,7 @@ public class AccountStorage {
 
     private static final String ACCOUNT_PREFERENCES_PATIENTID = "id";
     private static final String ACCOUNT_PREFERENCES_DOCTORID = "iddoctor"; // ид лечащего врача
+    private static final String ACCOUNT_PREFERENCES_DOCTORSJSON = "jsondoctor"; // ид лечащего врача
     private static final String ACCOUNT_PREFERENCES_DOCTOREMAIL = "emaildoctor";
     private static final String ACCOUNT_PREFERENCES_DOCTORNAME = "namedoctor";
     private static final String ACCOUNT_PREFERENCES_DOCTORPATR = "patronymicdoctor";
@@ -156,6 +157,14 @@ public class AccountStorage {
         return str;
     }
 
+    public String getDoctors() {
+        String str;
+        if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORSJSON)) {
+            str = sPref.getString(ACCOUNT_PREFERENCES_DOCTORSJSON, "");
+        } else str = "";
+        return str;
+    }
+
     public String getDoctorName() {
         String str;
         if (sPref.contains(ACCOUNT_PREFERENCES_DOCTORNAME)) {
@@ -183,6 +192,12 @@ public class AccountStorage {
     public void setDoctorEmail(String email) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_DOCTOREMAIL, email);
+        editor.apply();
+    }
+
+    public void setDoctors(String doctors) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_DOCTORSJSON, doctors);
         editor.apply();
     }
 
