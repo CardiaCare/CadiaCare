@@ -65,31 +65,34 @@ public class BloodPressureActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         //  adapter = new BPAdapter(context, R.layout.item_blood_pressure, bp_data);
 
-        MainActivity.systolicBP.clear();
-        MainActivity.diastolicBP.clear();
-        for (int j = 0; j < bp_data.size(); j++) {
-//            Log.i("BPActivity", "systolic = " + bp_data.get(j).getSystolicPressure() + ", diastolic = " + bp_data.get(j).getDiastolicPressure());
-        }
+        if ((MainActivity.systolicBP != null) && (MainActivity.diastolicBP != null)) {
+            MainActivity.systolicBP.clear();
+            MainActivity.diastolicBP.clear();
 
-        if (bp_data.size() >= 7) {
-            for (int i = 6; i >= 0; i--) {
-                MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
-                MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+            for (int j = 0; j < bp_data.size(); j++) {
+//            Log.i("BPActivity", "systolic = " + bp_data.get(j).getSystolicPressure() + ", diastolic = " + bp_data.get(j).getDiastolicPressure());
             }
-        } else {
-            for (int i = bp_data.size() - 1; i >= 0; i--) {
-                MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
-                MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+
+            if (bp_data.size() >= 7) {
+                for (int i = 6; i >= 0; i--) {
+                    MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                    MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+                }
+            } else {
+                for (int i = bp_data.size() - 1; i >= 0; i--) {
+                    MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                    MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+                }
+                for (int i = bp_data.size(); i < 7; i++) {
+                    MainActivity.systolicBP.add(0);
+                    MainActivity.diastolicBP.add(0);
+                }
             }
-            for (int i = bp_data.size(); i < 7; i++) {
-                MainActivity.systolicBP.add(0);
-                MainActivity.diastolicBP.add(0);
-            }
-        }
-        MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
-        MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
+            MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
+            MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
 //        Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
 //        Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
+        }
     }
 
     @Override

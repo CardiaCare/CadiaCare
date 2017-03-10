@@ -161,7 +161,6 @@ public class EcgBleIdt extends EcgBleDevice {
                                 ECGService.bw.write(Integer.toString(val));
                                 ECGService.bw.write(",");
                             } catch (IOException e) {
-                                e.printStackTrace();
                             }
 //                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                             ECGService.ecgValue = intdata[arrayPos];
