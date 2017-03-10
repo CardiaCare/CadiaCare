@@ -27,8 +27,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
-
 import org.json.JSONObject;
 
 import java.util.LinkedList;
@@ -39,7 +37,6 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
-import ru.cardiacare.cardiacare.hisdocuments.BloodPressureGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.user.AccountStorage;
@@ -308,7 +305,7 @@ public class MainActivity extends AppCompatActivity {
     // Авторизация
     public void authorization(String email, String password) {
         // Если не все поля заполнены, то выводим диалог об ошибке
-        if ((email.isEmpty()) || (password.isEmpty())) {
+        if ((email.isEmpty()) || (password.isEmpty()) || (email.indexOf("@") == -1)) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -333,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
-            if (!authorization_token.equals("error_authorization")) {
+            if (!authorization_token.equals("error_authorization") && !authorization_token.equals("")) {
                 storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false, "", "");
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
