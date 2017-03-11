@@ -186,6 +186,7 @@ public class EcgBle {
 
     static public void onDeviceDisconnected() {
         mBluetoothGatt = null;
+        ECGService.connected_flag = false;
 
         // Закрываю файл
         if (ECGService.bw != null) {
@@ -212,7 +213,6 @@ public class EcgBle {
             }
         }
 
-        ECGService.connected_flag = false;
         ECGService.myService.stopSelf();
         ECGService.notificationManager.cancel(1);
 

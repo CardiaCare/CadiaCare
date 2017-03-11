@@ -154,13 +154,23 @@ public class EcgBleIdt extends EcgBleDevice {
 
 //                        Log.i("ECGBELT", "Receive Hr=" + String.format("%d", hr));
 
+//                        if (ECGService.bw != null) {
+//                            Log.i("QQQ", "bw is open = " + ECGService.bw);
+//                        } else {
+//                            Log.i("QQQ", "bw is close");
+//                        }
+
+//                        Log.i("QQQ", "ecgFileName = " + ECGService.ecgFileName);
+
                         for (int i = 2; i < 12; i++) {
                             val = byteToUnsignedInt(array[i]);
                             intdata[arrayPos] = val;
                             try {
+//                                Log.i("QQQ", "TRY, пишем");
                                 ECGService.bw.write(Integer.toString(val));
                                 ECGService.bw.write(",");
                             } catch (IOException e) {
+//                                Log.i("QQQ", "CATCH, не пишем");
                             }
 //                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                             ECGService.ecgValue = intdata[arrayPos];

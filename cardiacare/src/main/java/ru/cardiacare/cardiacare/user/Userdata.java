@@ -99,7 +99,7 @@ public class Userdata extends AppCompatActivity {
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
 
         ///////////////////////////////////////////////////////////////////////////////////
-        LinearLayout mainLayout = (LinearLayout)findViewById(R.id.doctors);
+        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.doctors);
 
         JSONArray jArray = null;
         try {
@@ -108,27 +108,29 @@ public class Userdata extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < jArray.length(); i++) {
-            try {
-                JSONObject oneObject = jArray.getJSONObject(i);
+        if (jArray != null) {
+            for (int i = 0; i < jArray.length(); i++) {
+                try {
+                    JSONObject oneObject = jArray.getJSONObject(i);
 
-                String email = oneObject.getString("email");
-                String name = oneObject.getString("name") + " " +
-                oneObject.getString("patronymic") + " " +
-                oneObject.getString("surname");
+                    String email = oneObject.getString("email");
+                    String name = oneObject.getString("name") + " " +
+                            oneObject.getString("patronymic") + " " +
+                            oneObject.getString("surname");
 
-                LayoutInflater inflater = getLayoutInflater();
-                View doctors_card = inflater.inflate(R.layout.doctors_card, null);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View doctors_card = inflater.inflate(R.layout.doctors_card, null);
 
-                TextView doctorEmail = (TextView) doctors_card.findViewById(R.id.doctorEmail);
-                doctorEmail.setText(email);
-                TextView doctorName = (TextView) doctors_card.findViewById(R.id.doctorName);
-                doctorName.setText(name);
+                    TextView doctorEmail = (TextView) doctors_card.findViewById(R.id.doctorEmail);
+                    doctorEmail.setText(email);
+                    TextView doctorName = (TextView) doctors_card.findViewById(R.id.doctorName);
+                    doctorName.setText(name);
 
-                mainLayout.addView(doctors_card);
+                    mainLayout.addView(doctors_card);
 
-            } catch (JSONException e) {
-                // Oops
+                } catch (JSONException e) {
+                    // Oops
+                }
             }
         }
         ///////////////////////////////////////////////////////////////////////////////////

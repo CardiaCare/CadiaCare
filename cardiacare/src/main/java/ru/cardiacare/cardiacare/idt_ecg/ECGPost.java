@@ -5,8 +5,11 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -59,10 +62,29 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
             // Проверяем, есть ли в массиве ECGService.ecgFiles неотправленные файлы
             // Если они есть, то отправляем их все
 //            Log.i("ECGPost", "ecgFiles.size() = " + ECGService.ecgFiles.size());
-            int ecgFilesSize = ECGService.ecgFiles.size();
+            int ecgFilesSize;
+            if (ECGService.connected_flag) {
+                ecgFilesSize = ECGService.ecgFiles.size() - 1;
+            } else {
+                ecgFilesSize = ECGService.ecgFiles.size();
+            }
+
             for (int i = 0; i < ecgFilesSize; i++) {
 //                Log.i("ECGPost", "ecgFiles.getFirst() = " + ECGService.ecgFiles.getFirst());
                 File file = new File(MainActivity.mContext.getFilesDir(), ECGService.ecgFiles.getFirst());
+
+//                try {
+//                    BufferedReader br = new BufferedReader(new InputStreamReader(
+//                            ECGService.mContext.openFileInput(ECGService.ecgFiles.getFirst())));
+//                    String str = "";
+//                    while ((str = br.readLine()) != null) {
+//                        Log.d("ECGService", ECGService.ecgFiles.getFirst() + " = " + str);
+//                    }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
 
                 System.out.println("Test! file " + file.toString());
 
