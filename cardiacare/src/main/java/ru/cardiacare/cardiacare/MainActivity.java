@@ -37,9 +37,11 @@ import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.DoctorGET;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 import ru.cardiacare.cardiacare.user.AccountStorage;
+import ru.cardiacare.cardiacare.user.PatientsGET;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -89,12 +91,49 @@ public class MainActivity extends AppCompatActivity {
         fragmentExampleGraph1 = new FragmentExampleGraph1();
         fragmentExampleGraph2 = new FragmentExampleGraph2();
         fTrans = fManager.beginTransaction();
-        // Если нет токена, то открываем экран авторизации, иначе - экран авторизированного пользователя
-        if (storage.getAccountToken().equals("")) {
+
+        // Перед отображением
+        //Если есть токен, то проверяем корректность всех данных и открываем экран авторизированного пользователя, иначе - экран авторизации
+        if (!storage.getAccountToken().equals("")){
+            CheckAll();
+        } else {
             fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
             fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
         }
+
+//         //Если нет токена, то открываем экран авторизации, иначе - экран авторизированного пользователя
+//        if (storage.getAccountToken().equals("")) {
+//            fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
+//            fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
+//        }
         fTrans.commit();
+    }
+
+    // Проверка всех параметров из storage обязательно расширять список при обновлении приложения
+    void CheckAll() {
+        if(storage.getDoctors().equals("")){
+            DoctorGET doctorGET = new DoctorGET();
+            doctorGET.execute();
+        }
+
+        // Нет API для получения почты, сбрсываю токен для выброса на экран авторизации
+        if(storage.getAccountEmail().equals("")){
+            storage.setAccountToken("");
+        }
+
+        if(storage.getAccountFirstName().equals("")){
+            PatientsGET patientsGET = new PatientsGET();
+            patientsGET.execute();
+        }
+
+        if(storage.getAccountSecondName().equals("")){
+            PatientsGET patientsGET = new PatientsGET();
+            patientsGET.execute();
+        }
+        // Крайняя мера проверки, если оказалось что есть токен, но нет идентификатора пользователя, то выбрасываю на экран авторизации
+        if(storage.getAccountId().equals("")){
+            storage.setAccountToken("");
+        }
     }
 
     @Override
