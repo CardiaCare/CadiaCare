@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import ru.cardiacare.cardiacare.hisdocuments.DoctorGET;
+import ru.cardiacare.cardiacare.user.AuthorizationBloodPressureGET;
 
 /* Авторизация через сервер */
 
@@ -101,6 +102,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         if(!"error_authorization".equals(result) && !"".equals(result)) {
             DoctorGET doctorGET = new DoctorGET();
             doctorGET.execute();
+            AuthorizationBloodPressureGET authorizationbloodGet = new AuthorizationBloodPressureGET();
+            authorizationbloodGet.execute();
         }else{
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)

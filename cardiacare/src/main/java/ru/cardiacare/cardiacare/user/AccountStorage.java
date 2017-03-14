@@ -227,6 +227,12 @@ public class AccountStorage {
         return strToken;
     }
 
+    public void setAccountToken(String token) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_TOKEN, token);
+        editor.apply();
+    }
+
     public String getAccountEmail() {
         if (sPref.contains(ACCOUNT_PREFERENCES_EMAIL)) {
             strEmail = sPref.getString(ACCOUNT_PREFERENCES_EMAIL, "");
@@ -241,12 +247,25 @@ public class AccountStorage {
         return strFirstName;
     }
 
+    public void setAccountFirstName( String firstname) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
+        editor.apply();
+    }
+
     public String getAccountSecondName() {
         if (sPref.contains(ACCOUNT_PREFERENCES_SECONDNAME)) {
             strSecondName = sPref.getString(ACCOUNT_PREFERENCES_SECONDNAME, "");
         } else strSecondName = "";
         return strSecondName;
     }
+
+    public void setAccountSecondName( String secondname) {
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString(ACCOUNT_PREFERENCES_SECONDNAME, secondname);
+        editor.apply();
+    }
+
 
     String getAccountPhoneNumber() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PHONENUMBER)) {
