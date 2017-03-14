@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,13 +91,13 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         ecgFiles = new LinkedList<>();
         // Если приод отправки ответов на сервер задан пользователем, то отправляем согласно данному периоду
         if (!MainActivity.storage.getPeriodECGSending().equals("")) {
-            periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending());
+            periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending()) * 60;
 //            Log.i("ECGService", "Есть период в ЛК, periodECGSending = " + periodECGSending);
         }
-        // Если период < 10 секунд и > 5 минут, то ставим период по умолчанию (1 минута)
-        if ((periodECGSending < 10) || (periodECGSending > 300)) {
+        // Если период < 1 минуты и > 5 минут, то ставим период по умолчанию (1 минута)
+        if ((periodECGSending < 60) || (periodECGSending > 300)) {
             periodECGSending = 60;
-            MainActivity.storage.setPeriodECGSending("60");
+            MainActivity.storage.setPeriodECGSending("1");
 //            Log.i("ECGService", "Нет периода в ЛК, periodECGSending = " + periodECGSending);
         }
     }
@@ -138,11 +139,25 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
             timerTask = new TimerTask() {
                 public void run() {
                     long totalTime = System.currentTimeMillis() - startTime;
+                    Log.i("ECGService", "System.currentTimeMillis() = " + System.currentTimeMillis());
+                    Log.i("ECGService", "startTime = " + startTime);
                     Calendar cal = Calendar.getInstance();
+
                     cal.setTimeInMillis(totalTime);
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+                    String test = sdf.format(cal.getTime());
+                    Log.e("TEST", test);
+
+                    int pastHours = cal.get(Calendar.HOUR_OF_DAY);
                     int pastMinutes = cal.get(Calendar.MINUTE);
                     int pastSeconds = cal.get(Calendar.SECOND);
-                    pastTime = pastMinutes + ":" + pastSeconds;
+//                    if (pastHours > 0) {
+//                        pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
+//                    } else {
+//                        pastTime = pastMinutes + ":" + pastSeconds;
+//                    }
+                    pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
+
                     totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
 //                    Log.i("ECGService", "totalTime = " + totalTime + ", periodECGSending = " + periodECGSending);
                     // Если пора отправлять ответы на сервер

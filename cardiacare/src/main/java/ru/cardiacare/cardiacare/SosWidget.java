@@ -93,11 +93,11 @@ import android.widget.RemoteViews;
 //        Integer period;
 //        // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
 //        // Иначе ставим период по умолчанию (1 минута)
-//        if (!storage.getPeriodPassServey().equals("")) {
-//        period = Integer.parseInt(storage.getPeriodPassServey());
+//        if (!storage.getPeriodPassSurvey().equals("")) {
+//        period = Integer.parseInt(storage.getPeriodPassSurvey());
 //        } else {
 //        period = 60;
-//        storage.setPeriodPassServey("60");
+//        storage.setPeriodPassSurvey("60");
 //        }
 //        if (time >= period) {
 //        serveyButton.setBackgroundResource(R.drawable.servey);

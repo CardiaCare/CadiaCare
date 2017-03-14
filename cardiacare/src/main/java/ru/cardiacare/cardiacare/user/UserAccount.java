@@ -28,7 +28,7 @@ public class UserAccount extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
-    EditText etPeriodPassServey;
+//    EditText etPeriodPassSurvey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
     CheckBox cbFeedbackRefresh;
@@ -60,7 +60,7 @@ public class UserAccount extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
-        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+//        etPeriodPassSurvey = (EditText) findViewById(R.id.etPeriodPassSurvey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
         cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
         cbFeedbackRefresh = (CheckBox) findViewById(R.id.feedbackRefreshButton);
@@ -90,7 +90,7 @@ public class UserAccount extends AppCompatActivity {
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
         String version = storage.getQuestionnaireVersion();
         String lastquestionnairepassdate = storage.getLastQuestionnairePassDate();
-        String periodpassservey = storage.getPeriodPassServey();
+//        String periodpasssurvey = storage.getPeriodPassSurvey();
         String periodecgsending = storage.getPeriodECGSending();
         String ecgfile = storage.getECGFile();
         String systolicbp = storage.getSystolicBP();
@@ -111,7 +111,7 @@ public class UserAccount extends AppCompatActivity {
                 etAge.getText().toString(),
                 version,
                 lastquestionnairepassdate,
-                periodpassservey,
+//                periodpasssurvey,
                 periodecgsending,
                 ecgfile,
                 cbPageViewOnMainactivity.isChecked(),
@@ -130,7 +130,7 @@ public class UserAccount extends AppCompatActivity {
         etHeight.setText(storage.getAccountHeight());
         etWeight.setText(storage.getAccountWeight());
         etAge.setText(storage.getAccountAge());
-        etPeriodPassServey.setText(storage.getPeriodPassServey());
+//        etPeriodPassSurvey.setText(storage.getPeriodPassSurvey());
         etPeriodECGSending.setText(storage.getPeriodECGSending());
         cbPageViewOnMainactivity.setChecked(storage.getPageViewOnMainactivity());
         cbFeedbackRefresh.setChecked(storage.getFeedbackRefresh());

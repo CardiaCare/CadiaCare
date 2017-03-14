@@ -135,14 +135,14 @@ public class MainActivity extends AppCompatActivity {
             String ts = timestamp.toString();
             Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
             Integer period;
-            // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
+            // Если период прохождения опроса задан пользователем, то обновляем согласно данному периоду
             // Иначе ставим период по умолчанию (1 минута)
-            if (!storage.getPeriodPassServey().equals("")) {
-                period = Integer.parseInt(storage.getPeriodPassServey());
-            } else {
-                period = 60;
-                storage.setPeriodPassServey("60");
-            }
+//            if (!storage.getPeriodPassSurvey().equals("")) {
+//                period = Integer.parseInt(storage.getPeriodPassSurvey());
+//            } else {
+//                period = 60;
+//                storage.setPeriodPassSurvey("60");
+//            }
             //TODO Восстановить изменение цвета иконки опросника по истечению заданного интервала
 //            if (time >= period) {
 //                serveyButton.setBackgroundResource(R.drawable.servey);
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exitAccount:
                 //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
-                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", "", "", "", false, false, "", "");
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", /*"",*/ "", "", false, false, "", "");
                 storage.setVersion("");
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
             if (!authorization_token.equals("error_authorization") && !authorization_token.equals("")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", "", "", "", false, false, "", "");
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", /*"",*/ "", "", false, false, "", "");
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();

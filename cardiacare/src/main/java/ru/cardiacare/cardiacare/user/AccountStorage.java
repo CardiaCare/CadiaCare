@@ -26,7 +26,7 @@ public class AccountStorage {
     private static final String ACCOUNT_PREFERENCES_AGE = "age";
     private static final String ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION = "questionnaireversion"; // Версия последней загруженной анкеты
     private static final String ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE = "date"; // Дата последнего прохождения периодического опроса
-    private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
+    private static final String ACCOUNT_PREFERENCES_PERIODPASSSURVEY = "time"; // Период прохождения периодического опроса (например, 1 раз в 30 дней), в секундах
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime"; // Период отправки данных с кардиомонитора на сервер, в секундах
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile"; // Имя файлов для отправки на сервер
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity"; // Отображать ли PageView на главном экране
@@ -45,7 +45,7 @@ public class AccountStorage {
     private String strAge;
     private String strQuestionnaireVersion;
     private String strLastQuestionnairePassDate;
-    private String strPeriodPassServey;
+    private String strPeriodPassSurvey;
     private String strPeriodECGSending;
     private String strECGFile;
     private Boolean blnPageViewOnMainactivity;
@@ -53,7 +53,7 @@ public class AccountStorage {
     private String strSystolicBP;
     private String strDiastolicBP;
 
-    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, String periodpassservey, String periodecgsending, String ecgfile, Boolean pageviewonmainactivity, Boolean feedbackrefresh, String systolicbp, String diastolicbp) {
+    public void setAccountPreferences(String sibName, String sibIp, String sibPort, String patientId, String token, String doctorId, String email, String firstname, String secondname, String phonenumber, String height, String weight, String age, String questionnaireversion, String lastquestionnairepassdate, /*String periodpasssurvey,*/ String periodecgsending, String ecgfile, Boolean pageviewonmainactivity, Boolean feedbackrefresh, String systolicbp, String diastolicbp) {
         SharedPreferences.Editor editor = sPref.edit();
 
         editor.putString(ACCOUNT_PREFERENCES_PATIENTID, patientId);
@@ -68,7 +68,7 @@ public class AccountStorage {
         editor.putString(ACCOUNT_PREFERENCES_AGE, age);
         editor.putString(ACCOUNT_PREFERENCES_QUESTIONNAIREVERSION, questionnaireversion);
         editor.putString(ACCOUNT_PREFERENCES_LASTQUESTIONNAIREPASSDATE, lastquestionnairepassdate);
-        editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
+//        editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSURVEY, periodpasssurvey);
         editor.putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, periodecgsending);
         editor.putString(ACCOUNT_PREFERENCES_ECGFILE, ecgfile);
         editor.putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, pageviewonmainactivity);
@@ -93,11 +93,11 @@ public class AccountStorage {
         editor.apply();
     }
 
-    public void setPeriodPassServey(String periodpassservey) {
-        SharedPreferences.Editor editor = sPref.edit();
-        editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, periodpassservey);
-        editor.apply();
-    }
+//    public void setPeriodPassSurvey(String periodpasssurvey) {
+//        SharedPreferences.Editor editor = sPref.edit();
+//        editor.putString(ACCOUNT_PREFERENCES_PERIODPASSSURVEY, periodpasssurvey);
+//        editor.apply();
+//    }
 
     public void setPeriodECGSending(String periodecgsending) {
         SharedPreferences.Editor editor = sPref.edit();
@@ -298,12 +298,12 @@ public class AccountStorage {
         return strLastQuestionnairePassDate;
     }
 
-    public String getPeriodPassServey() {
-        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
-            strPeriodPassServey = sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, "");
-        } else strPeriodPassServey = "";
-        return strPeriodPassServey;
-    }
+//    public String getPeriodPassSurvey() {
+//        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSURVEY)) {
+//            strPeriodPassSurvey = sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSURVEY, "");
+//        } else strPeriodPassSurvey = "";
+//        return strPeriodPassSurvey;
+//    }
 
     public String getPeriodECGSending() {
         if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {

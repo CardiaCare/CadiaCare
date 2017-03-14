@@ -38,7 +38,7 @@ public class Userdata extends AppCompatActivity {
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
-    private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
+//    private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile";
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity";
@@ -55,7 +55,7 @@ public class Userdata extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
-    EditText etPeriodPassServey;
+//    EditText etPeriodPassSurvey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
     CheckBox cbFeedbackRefresh;
@@ -91,7 +91,7 @@ public class Userdata extends AppCompatActivity {
         etHeight = (EditText) findViewById(R.id.etHeight);
         etWeight = (EditText) findViewById(R.id.etWeight);
         etAge = (EditText) findViewById(R.id.etAge);
-        etPeriodPassServey = (EditText) findViewById(R.id.etPeriodPassServey);
+//        etPeriodPassSurvey = (EditText) findViewById(R.id.etPeriodPassSurvey);
         etPeriodECGSending = (EditText) findViewById(R.id.etPeriodECGSending);
         cbPageViewOnMainactivity = (CheckBox) findViewById(R.id.needGraphButton);
         cbFeedbackRefresh = (CheckBox) findViewById(R.id.feedbackRefreshButton);
@@ -147,7 +147,7 @@ public class Userdata extends AppCompatActivity {
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_HEIGHT, etHeight.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_WEIGHT, etWeight.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_AGE, etAge.getText().toString()).commit();
-        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassServey.getText().toString()).commit();
+//        sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, etPeriodPassSurvey.getText().toString()).commit();
         sPref.edit().putString(ACCOUNT_PREFERENCES_PERIODECGSENDING, etPeriodECGSending.getText().toString()).commit();
         sPref.edit().putBoolean(ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY, cbPageViewOnMainactivity.isChecked()).commit();
         sPref.edit().putBoolean(ACCOUNT_PREFERENCES_FEEDBACKREFRESH, cbFeedbackRefresh.isChecked()).commit();
@@ -186,9 +186,9 @@ public class Userdata extends AppCompatActivity {
 //        if (sPref.contains(ACCOUNT_PREFERENCES_AGE)) {
 //            etAge.setText(sPref.getString(ACCOUNT_PREFERENCES_AGE, ""));
 //        }
-        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
-            etPeriodPassServey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
-        }
+//        if (sPref.contains(ACCOUNT_PREFERENCES_PERIODPASSSERVEY)) {
+//            etPeriodPassSurvey.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODPASSSERVEY, ""));
+//        }
         if (sPref.contains(ACCOUNT_PREFERENCES_PERIODECGSENDING)) {
             etPeriodECGSending.setText(sPref.getString(ACCOUNT_PREFERENCES_PERIODECGSENDING, ""));
         }
