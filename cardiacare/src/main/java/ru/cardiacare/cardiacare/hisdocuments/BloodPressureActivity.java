@@ -7,12 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +34,6 @@ import java.util.LinkedList;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.idt_ecg.ECGService;
-import ru.cardiacare.cardiacare.survey.QuestionnaireActivity;
 
 /* Экран "Результаты измерения артериального давления" */
 
@@ -46,7 +41,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
     static BPAdapter adapter;
-    static public LinkedList<ResultBloodPressure> bp_data;
+    static public LinkedList<ResultBloodPressure> bp_data = new LinkedList<ResultBloodPressure>();
     static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
@@ -131,7 +126,7 @@ public class BloodPressureActivity extends AppCompatActivity {
 //        bp_data.add(new ResultBloodPressure("125", "80","70", currentDateandTime));
 //        bp_data.add(new ResultBloodPressure("130", "80","70", currentDateandTime));
 
-        bp_data = new LinkedList<ResultBloodPressure>();
+//        bp_data = new LinkedList<ResultBloodPressure>();
 
 
         LinkedList<ResultBloodPressure> bpl = new LinkedList<ResultBloodPressure>();

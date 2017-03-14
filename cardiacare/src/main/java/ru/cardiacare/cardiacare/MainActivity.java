@@ -96,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
         //Если есть токен, то проверяем корректность всех данных и открываем экран авторизированного пользователя, иначе - экран авторизации
         if (!storage.getAccountToken().equals("")){
             CheckAll();
-        } else {
+        }
+
+        if (storage.getAccountToken().equals("")) {
             fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
             fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
         }
@@ -134,6 +136,17 @@ public class MainActivity extends AppCompatActivity {
         if(storage.getAccountId().equals("")){
             storage.setAccountToken("");
         }
+
+//        try {
+//            if (BloodPressureActivity.bp_data.size() == 0) {
+//                BloodPressureGET bloodGet = new BloodPressureGET();
+//                bloodGet.execute();
+//            }
+//        }catch (Exception e){
+//            BloodPressureGET bloodGet = new BloodPressureGET();
+//            bloodGet.execute();
+//        }
+
     }
 
     @Override
