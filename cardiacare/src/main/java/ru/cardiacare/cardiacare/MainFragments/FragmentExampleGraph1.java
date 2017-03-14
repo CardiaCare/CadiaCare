@@ -56,6 +56,7 @@ public class FragmentExampleGraph1 extends Fragment {
     }
 
     private DataPoint[] getSystolicData() {
+        Log.i("QQQ", "qqqqqqqqqqqq");
 //        Log.i("QQQ", "getSystolicBP() = " + MainActivity.storage.getSystolicBP());
         String[] items = MainActivity.storage.getSystolicBP().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 

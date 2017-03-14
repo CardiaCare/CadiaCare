@@ -1,7 +1,11 @@
 package ru.cardiacare.cardiacare.user;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
 import com.squareup.okhttp.Callback;
@@ -20,10 +24,20 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import ru.cardiacare.cardiacare.AboutActivity;
 import ru.cardiacare.cardiacare.MainActivity;
+import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
+import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
+import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
 
 public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String, String> {
+
+    private Context context;
+
+    public AuthorizationBloodPressureGET(Context context) {
+        this.context = context;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -166,8 +180,11 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
             }
             MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
             MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
-//        Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
-//        Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
+            Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
+            Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
+            if (MainActivity.storage.getPageViewOnMainactivity()) {
+                context.startActivity(new Intent(context, MainActivity.class));
+            }
         }
     }
 }

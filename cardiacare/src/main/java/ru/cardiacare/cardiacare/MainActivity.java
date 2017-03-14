@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
     static public LinkedList<Integer> systolicBP;
     static public LinkedList<Integer> diastolicBP;
 
-    ViewPager viewPager;
+    static public ViewPager viewPager;
     static public FragmentTransaction fTrans;
     static public FragmentManager fManager;
-    static FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
-    static FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
+    static public FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
+    static public FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
     FragmentAuthorizationScreen fragmentAuthorizationScreen;
     static public FragmentExampleGraph1 fragmentExampleGraph1;
     FragmentExampleGraph2 fragmentExampleGraph2;
@@ -84,6 +84,9 @@ public class MainActivity extends AppCompatActivity {
 //        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
         activity = this;
         mContext = this;
+
+        systolicBP = new LinkedList<>();
+        diastolicBP = new LinkedList<>();
 
         fManager = getSupportFragmentManager();
         fragmentRegisteredScreenSmallIcons = new FragmentRegisteredScreenSmallIcons();
@@ -305,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    public class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -372,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             JSONGenerator jsonGen = new JSONGenerator();
             JSONObject json = jsonGen.generateAuthJSON(email, password);
-            AuthorizationService intServ = new AuthorizationService();
+            AuthorizationService intServ = new AuthorizationService(this);
             intServ.execute(json);
 
             // Получаем ответ от сервера
@@ -425,8 +428,6 @@ public class MainActivity extends AppCompatActivity {
         fTrans = fManager.beginTransaction();
         // Если установлена галочка "показывать графики" в личном кабинете
         if (storage.getPageViewOnMainactivity()) {
-            systolicBP = new LinkedList<>();
-            diastolicBP = new LinkedList<>();
             if (fManager.findFragmentByTag(FragmentRegisteredScreenBigIcons.TAG) != null) {
                 fTrans.remove(fragmentRegisteredScreenBigIcons);
             }

@@ -48,6 +48,7 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
     long startTime;                               // Время начала работы сервиса
     static public long connectedTime;             // Время подключения к кардиомонитору
     static String pastTime;                       // Прошедшее время с начала работы сервиса
+    int pastHours = 0;                            // Количество часов, прошедшее с начала работы сервиса
     static public int ecgValue;                   // Значения ЭКГ (с кардиомонитора)
     static public int heartRate = 0;              // Пульс (с кардиомонитора)
     static public int charge = 0;                 // Уровень заряда батареи кардиомонитора
@@ -139,25 +140,18 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
             timerTask = new TimerTask() {
                 public void run() {
                     long totalTime = System.currentTimeMillis() - startTime;
-                    Log.i("ECGService", "System.currentTimeMillis() = " + System.currentTimeMillis());
-                    Log.i("ECGService", "startTime = " + startTime);
                     Calendar cal = Calendar.getInstance();
-
                     cal.setTimeInMillis(totalTime);
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-                    String test = sdf.format(cal.getTime());
-                    Log.e("TEST", test);
-
-                    int pastHours = cal.get(Calendar.HOUR_OF_DAY);
                     int pastMinutes = cal.get(Calendar.MINUTE);
                     int pastSeconds = cal.get(Calendar.SECOND);
-//                    if (pastHours > 0) {
-//                        pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
-//                    } else {
-//                        pastTime = pastMinutes + ":" + pastSeconds;
-//                    }
-                    pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
-
+                    if ((pastMinutes == 59) && (pastSeconds == 59)) {
+                        pastHours++;
+                    }
+                    if (pastHours > 0) {
+                        pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
+                    } else {
+                        pastTime = pastMinutes + ":" + pastSeconds;
+                    }
                     totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
 //                    Log.i("ECGService", "totalTime = " + totalTime + ", periodECGSending = " + periodECGSending);
                     // Если пора отправлять ответы на сервер

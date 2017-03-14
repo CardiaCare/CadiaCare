@@ -1,5 +1,6 @@
 package ru.cardiacare.cardiacare;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 
@@ -20,6 +21,11 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
 
     public static String result = "";
     public static String token = "";
+    private Context context;
+
+    public AuthorizationService(Context context) {
+        this.context = context;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -56,7 +62,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
             token = sb.toString();
             result = con.getResponseMessage();
             System.out.println("Test!" + token);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         /////////////////////////////////////////////
         try {
@@ -79,7 +86,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
 //            dataDoctor = new JSONObject(dataUser.getString("doctor"));
 //            MainActivity.authorization_id_doctor = dataDoctor.getString("id");
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
         /////////////////////////////////
 
         //System.out.println("Test!" + token + result + json.toString());
@@ -97,14 +105,14 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         //result = "";
         token = "";
 
-       // System.out.println("Test! res doc " + result);
+        // System.out.println("Test! res doc " + result);
 
-        if(!"error_authorization".equals(result) && !"".equals(result)) {
+        if (!"error_authorization".equals(result) && !"".equals(result)) {
             DoctorGET doctorGET = new DoctorGET();
             doctorGET.execute();
-            AuthorizationBloodPressureGET authorizationbloodGet = new AuthorizationBloodPressureGET();
+            AuthorizationBloodPressureGET authorizationbloodGet = new AuthorizationBloodPressureGET(context);
             authorizationbloodGet.execute();
-        }else{
+        } else {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
