@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -155,22 +157,20 @@ public class BloodPressureActivity extends AppCompatActivity {
                 alertDialog.setNegativeButton(R.string.dialog_cancel, null);
                 alertDialog.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
-                        /////////////delete
-                        JSONObject json = null;
-
-
-                        try {
-                            String str = "{\"id\":" + bp_data.get(itemRow).getIdPressure() + "}";
-                            json = new JSONObject(str);
-                            BloodPressureDELETE bloodDelete = new BloodPressureDELETE();
-                            bloodDelete.execute(json);
-                            adapter.remove(bp_data.get(itemRow));
-                            adapter.notifyDataSetChanged();
-                        } catch (Exception e) {
+                        if (MainActivity.isNetworkAvailable(context)) {
+                            JSONObject json = null;
+                            try {
+                                String str = "{\"id\":" + bp_data.get(itemRow).getIdPressure() + "}";
+                                json = new JSONObject(str);
+                                BloodPressureDELETE bloodDelete = new BloodPressureDELETE();
+                                bloodDelete.execute(json);
+                                adapter.remove(bp_data.get(itemRow));
+                                adapter.notifyDataSetChanged();
+                            } catch (Exception e) {
+                            }
+                        } else {
+                            wiFiAlertDialog();
                         }
-
-
                     }
                 });
                 alertDialog.show();
@@ -183,34 +183,38 @@ public class BloodPressureActivity extends AppCompatActivity {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean isBPcorrect = false;
-                try {
-                    isBPcorrect = POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
-                } catch (Exception e) {
-                }
-                if (isBPcorrect) {
-                    System.out.println("Test! blood ");
-                    String currentDateandTime = sdf.format(new Date());
-                    ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString(), 0);
-                    bp_data.addFirst(rbp);
+                if (MainActivity.isNetworkAvailable(context)) {
+                    boolean isBPcorrect = false;
+                    try {
+                        isBPcorrect = POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                    } catch (Exception e) {
+                    }
+                    if (isBPcorrect) {
+                        System.out.println("Test! blood ");
+                        String currentDateandTime = sdf.format(new Date());
+                        ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString(), 0);
+                        bp_data.addFirst(rbp);
 //                if (bp_data.size() > 5)
 //                    bp_data.removeLast();
-                    adapter.notifyDataSetChanged();
-                    SYSText.setText("");
-                    DAText.setText("");
+                        adapter.notifyDataSetChanged();
+                        SYSText.setText("");
+                        DAText.setText("");
+                    } else {
+                        SYSText.setText("");
+                        DAText.setText("");
+                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                        alertDialog.setTitle(R.string.dialog_bpdata_title);
+                        alertDialog.setMessage(R.string.dialog_bpdata_message);
+                        alertDialog.setNegativeButton(R.string.dialog_bpdata_negative_button,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
                 } else {
-                    SYSText.setText("");
-                    DAText.setText("");
-                    android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
-                    alertDialog.setTitle(R.string.dialog_bpdata_title);
-                    alertDialog.setMessage(R.string.dialog_bpdata_message);
-                    alertDialog.setNegativeButton(R.string.dialog_bpdata_negative_button,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    alertDialog.show();
+                    wiFiAlertDialog();
                 }
             }
         });
@@ -289,6 +293,28 @@ public class BloodPressureActivity extends AppCompatActivity {
     public void onBackPressed() {
         writeLastBPMeasuremetsFromFile(bp_data);
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    // WiFi диалог
+    public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
     }
 }
 
