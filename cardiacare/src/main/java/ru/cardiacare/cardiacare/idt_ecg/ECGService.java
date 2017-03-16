@@ -1,16 +1,12 @@
 package ru.cardiacare.cardiacare.idt_ecg;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -25,20 +21,17 @@ import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
 
 import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.idt_ecg.common.DateTimeUtl;
-import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
-import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
-import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
 
-public class ECGService extends Service /*implements EcgReceiveHandler*/ {
+/* Сервис по работе с кардиомонитором */
+
+public class ECGService extends Service {
 
     static public Context mContext;
     static public ECGService myService;
@@ -75,7 +68,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     public void onCreate() {
         super.onCreate();
-        Log.d("ECGService", "ECGService onCreate");
         mContext = this;
         myService = this;
         this.ecg = new EcgBle(MainActivity.activity, EcgBle.bpReceiveHandler);
@@ -93,13 +85,11 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         // Если приод отправки ответов на сервер задан пользователем, то отправляем согласно данному периоду
         if (!MainActivity.storage.getPeriodECGSending().equals("")) {
             periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending()) * 60;
-//            Log.i("ECGService", "Есть период в ЛК, periodECGSending = " + periodECGSending);
         }
         // Если период < 1 минуты и > 5 минут, то ставим период по умолчанию (1 минута)
         if ((periodECGSending < 60) || (periodECGSending > 300)) {
             periodECGSending = 60;
             MainActivity.storage.setPeriodECGSending("1");
-//            Log.i("ECGService", "Нет периода в ЛК, periodECGSending = " + periodECGSending);
         }
     }
 
@@ -110,7 +100,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     public boolean onUnbind(Intent intent) {
         Log.d("ECGService", "ECGService onUnbind");
-//        return super.onUnbind(intent);
         return true;
     }
 
@@ -125,7 +114,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         pastTimeTimer.cancel();
         timerTask.cancel();
         doStop();
-        Log.d("ECGService", "ECGService onDestroy");
         super.onDestroy();
     }
 
@@ -153,10 +141,8 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                         pastTime = pastMinutes + ":" + pastSeconds;
                     }
                     totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
-//                    Log.i("ECGService", "totalTime = " + totalTime + ", periodECGSending = " + periodECGSending);
                     // Если пора отправлять ответы на сервер
                     if (totalTime >= periodECGSending) {
-//                        Log.i("ECGService", "ТАЙМЕР");
                         // Закрываю файл
                         if (bw != null) {
                             try {
@@ -169,14 +155,10 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                         }
                         // Создаю новый файл и продолжаем запись данных ЭКГ уже в него
                         ecgFileName = "ecg" + System.currentTimeMillis();
-//                        Log.i("EcgBleIdt", "ecgFileName = " + ecgFileName);
                         ecgFiles.add(ecgFileName);
-//                        Log.i("EcgBleIdt", "ecgFiles = " + ecgFiles.toString());
                         try {
-//                            Log.i("ECGService", "Создаём буффер, TRY");
                             bw = new BufferedWriter(new OutputStreamWriter(mContext.openFileOutput(ecgFileName, MODE_PRIVATE)));
                         } catch (IOException e) {
-//                            Log.i("ECGService", "Создаём буффер, CATCH");
                             e.printStackTrace();
                         }
                         // Если есть доступ к сети

@@ -1,6 +1,5 @@
 package ru.cardiacare.cardiacare.user;
 
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,7 +18,9 @@ import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
 import ru.cardiacare.cardiacare.R;
 
-public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
+/* Запрос на регистрацию */
+
+public class CreateAccountPost extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -34,9 +35,9 @@ public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String json =  params[0].toString();
+            String json = params[0].toString();
             System.out.println("Test! json " + json);
-           // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
+            // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
 
             RequestBody body = RequestBody.create(JSON, json);
 
@@ -81,7 +82,7 @@ public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
 
         System.out.println("Test! res create " + result);
 
-        if("false".equals(result)) {
+        if ("false".equals(result)) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(CreateAccountActivity.mContextCreateAccountActivity, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -92,14 +93,16 @@ public class CreateAccountPost  extends AsyncTask<JSONObject, String, String> {
                             dialog.cancel();
                         }
                     }).show();
-        }else{
-            //надо тестить
+        } else {
             FragmentAuthorizationScreen.emailFragmentAuthorizationScreen = CreateAccountActivity.emailCreateAccountActivity;
             FragmentAuthorizationScreen.passwordFragmentAuthorizationScreen = CreateAccountActivity.passwordCreateAccountActivity;
+<<<<<<< HEAD
 
         Intent intent = new Intent(CreateAccountActivity.CreateAccountActivityContext, MainActivity.class);
         CreateAccountActivity.CreateAccountActivityContext.startActivity(intent);
             //должен быть back, но не протестировать
+=======
+>>>>>>> origin/students
         }
     }
 }

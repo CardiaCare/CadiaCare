@@ -6,8 +6,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -16,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.idt_ecg.ECGActivity;
 import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
@@ -24,7 +21,6 @@ import ru.cardiacare.cardiacare.idt_ecg.ECGService;
 public class EcgBle {
 
     private static final int REQUEST_ENABLE_BT = 1;
-    //    private static final long SCAN_PERIOD = 90000; // reconnect device constant TODO
     private static final long SCAN_PERIOD = 1000;
 
     static private BluetoothManager bluetoothManager;
@@ -192,7 +188,6 @@ public class EcgBle {
         if (ECGService.bw != null) {
             try {
                 ECGService.bw.close();
-//                Log.i("EcgBle", "Закрываем последний файл, TRY");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -208,7 +203,7 @@ public class EcgBle {
             // Если доступа к сети нет, но есть неотправленные файлы, записываем их имена в SharedPreferences
             if (ECGService.ecgFiles.size() > 0) {
                 MainActivity.storage.setECGFile(ECGService.ecgFiles.toString());
-                MainActivity.storage.setECGFile(MainActivity.storage.getECGFile().replace( "[", "" ).replace( "]", "" ));
+                MainActivity.storage.setECGFile(MainActivity.storage.getECGFile().replace("[", "").replace("]", ""));
                 ECGService.ecgFiles.clear();
             }
         }

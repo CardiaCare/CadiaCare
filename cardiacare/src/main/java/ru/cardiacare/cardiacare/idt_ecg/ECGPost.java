@@ -5,11 +5,8 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -21,14 +18,6 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import ru.cardiacare.cardiacare.MainActivity;
-
-//import com.squareup.okhttp.Callback;
-//import com.squareup.okhttp.Credentials;
-//import com.squareup.okhttp.MediaType;
-//import com.squareup.okhttp.OkHttpClient;
-//import com.squareup.okhttp.Request;
-//import com.squareup.okhttp.RequestBody;
-//import com.squareup.okhttp.Response;
 
 /* Отправка данных ЭКГ на сервер */
 
@@ -61,7 +50,6 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
             // Проверяем, есть ли в массиве ECGService.ecgFiles неотправленные файлы
             // Если они есть, то отправляем их все
-//            Log.i("ECGPost", "ecgFiles.size() = " + ECGService.ecgFiles.size());
             int ecgFilesSize;
             if (ECGService.connected_flag) {
                 ecgFilesSize = ECGService.ecgFiles.size() - 1;
@@ -70,7 +58,6 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
             }
 
             for (int i = 0; i < ecgFilesSize; i++) {
-//                Log.i("ECGPost", "ecgFiles.getFirst() = " + ECGService.ecgFiles.getFirst());
                 File file = new File(MainActivity.mContext.getFilesDir(), ECGService.ecgFiles.getFirst());
 
 //                try {
@@ -97,11 +84,8 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
                                 RequestBody.create(MediaType.parse("text/plain"), file))
                         .build();
 
-//                System.out.println("Test! body " + body.toString());
-
                 String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
-//                System.out.println("Test! token " + credential);
 
                 Request request = new Request.Builder()
                         .url("http://api.cardiacare.ru/biosignals")
@@ -117,14 +101,9 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
                 Response response = client.newCall(request).execute();
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-//                System.out.println("Test! response " + response.body().string());
-
-//                System.out.println("Test! request " + request.body().toString());
-
                 client.newCall(request).enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        //Log.e("Request", request.body().toString());
                     }
 
                     @Override
@@ -143,10 +122,8 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 //                }
                 });
 
-//                Log.i("ECGPost", "ecgFiles до удаления отправленого = " + ECGService.ecgFiles.toString());
                 ECGService.ecgFiles.removeFirst();
                 file.delete();
-//                Log.i("ECGPost", "ecgFiles после удаления отправленого = " + ECGService.ecgFiles.toString());
                 MainActivity.storage.setECGFile("");
                 System.out.println("Test! POST");
             }

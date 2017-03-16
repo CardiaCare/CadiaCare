@@ -54,9 +54,6 @@ public class EcgBleIdt extends EcgBleDevice {
                     private int intdata[] = new int[30];
 
                     private int arrayPos = 0;
-                    //private byte rdata[] = new byte[20];
-                    //private int arrayAbsPos = 0;
-
 
                     @Override
                     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
@@ -66,14 +63,10 @@ public class EcgBleIdt extends EcgBleDevice {
                         ECGService.connectedTime = timestamp;
                         Log.i("ECGBELT", "onDescriptorWrite.");
                         ECGService.ecgFileName = "ecg" + System.currentTimeMillis();
-//        Log.i("EcgBleIdt", "ecgFileName = " + ecgFileName);
                         ECGService.ecgFiles.add(ECGService.ecgFileName);
-//        Log.i("EcgBleIdt", "ecgFiles = " + ecgFiles.toString());
                         try {
-//                            Log.i("EcgBleIdt", "Создаём буффер, TRY");
                             ECGService.bw = new BufferedWriter(new OutputStreamWriter(ECGService.mContext.openFileOutput(ECGService.ecgFileName, MODE_PRIVATE)));
                         } catch (IOException e) {
-//                            Log.i("EcgBleIdt", "Создаём буффер, CATCH");
                             e.printStackTrace();
                         }
                     }
@@ -87,9 +80,7 @@ public class EcgBleIdt extends EcgBleDevice {
                     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                         if (newState == BluetoothProfile.STATE_CONNECTED) {
 
-                            if (isFirstTime) { // bug - call Connect after .disconnect()
-                                Log.i("ECGBELT", "Connected to GATT server.");
-
+                            if (isFirstTime) {
                                 if (EcgBle.mBluetoothGatt != null)
                                     EcgBle.mBluetoothGatt.discoverServices();
                             }
@@ -152,30 +143,16 @@ public class EcgBleIdt extends EcgBleDevice {
                         BatteryLevel = array[0] & 0xff;
                         ECGService.charge = BatteryLevel - 100;
 
-//                        Log.i("ECGBELT", "Receive Hr=" + String.format("%d", hr));
-
-//                        if (ECGService.bw != null) {
-//                            Log.i("QQQ", "bw is open = " + ECGService.bw);
-//                        } else {
-//                            Log.i("QQQ", "bw is close");
-//                        }
-
-//                        Log.i("QQQ", "ecgFileName = " + ECGService.ecgFileName);
-
                         for (int i = 2; i < 12; i++) {
                             val = byteToUnsignedInt(array[i]);
                             intdata[arrayPos] = val;
                             try {
-//                                Log.i("QQQ", "TRY, пишем");
                                 ECGService.bw.write(Integer.toString(val));
                                 ECGService.bw.write(",");
                             } catch (IOException e) {
-//                                Log.i("QQQ", "CATCH, не пишем");
                             }
-//                                Log.i("QQQ", "Отправляю на отрисовку: " + intdata[arrayPos]);
                             ECGService.ecgValue = intdata[arrayPos];
 
-                            // Shift and reamp signal
                             val = val - 127;
                             val = (val * 687) / 10;
 
@@ -185,8 +162,6 @@ public class EcgBleIdt extends EcgBleDevice {
                                 ECGService.sendECGNotification(ECGService.ecgValue, ECGService.heartRate, ECGService.charge);
                                 arrayPos = 0;
                                 mHandler.obtainMessage(1, intdata).sendToTarget();
-//                                Log.i("EcgBleIdt", "Отправляем данные на отрисовку");
-//                                EcgBle.onEcgReceived(hr, sdata, 200); // 200 Hz
                             }
                         }
                     }

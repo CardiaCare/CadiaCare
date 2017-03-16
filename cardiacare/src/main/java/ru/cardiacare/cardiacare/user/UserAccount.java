@@ -28,7 +28,7 @@ public class UserAccount extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
-//    EditText etPeriodPassSurvey;
+    //    EditText etPeriodPassSurvey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
     CheckBox cbFeedbackRefresh;

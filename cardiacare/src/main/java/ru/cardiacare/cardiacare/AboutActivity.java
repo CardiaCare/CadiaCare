@@ -18,7 +18,7 @@ public class AboutActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final  Context ctx = this;
+        final Context ctx = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Toolbar toolbar = (Toolbar) findViewById(R.id.about_activity_toolbar);
@@ -58,7 +58,7 @@ public class AboutActivity extends AppCompatActivity {
                             }).show();
                 }
 
-                if(position == 1){
+                if (position == 1) {
                     android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(ctx, R.style.AppCompatAlertDialogStyle);
                     builder.setMessage(R.string.about_legal_pp_text)
                             .setTitle(R.string.about_legal_pp)

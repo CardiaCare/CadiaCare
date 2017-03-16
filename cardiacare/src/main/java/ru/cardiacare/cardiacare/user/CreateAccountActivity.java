@@ -19,7 +19,7 @@ import ru.cardiacare.cardiacare.R;
 
 /* Экран "Создать аккаунт" */
 
-public class CreateAccountActivity extends AppCompatActivity{
+public class CreateAccountActivity extends AppCompatActivity {
 
     static public Context mContextCreateAccountActivity;
     EditText etLogin;
@@ -49,7 +49,7 @@ public class CreateAccountActivity extends AppCompatActivity{
         Registration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(emptyCheck(etLogin.getText().toString(), etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString()))
+                if (emptyCheck(etLogin.getText().toString(), etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString()))
                     extractLogPass(etLogin.getText().toString(), etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString());
             }
         });
@@ -73,9 +73,9 @@ public class CreateAccountActivity extends AppCompatActivity{
 //        String code = "";
 //        code = etInviteCode.getText().toString();
 
-            String str = "{ \"email\":\"" + login + "\", "
-                    + "\"password\":\"" + password + "\", "
-                    + "\"inviteCode\":\"" + code + "\"}";
+        String str = "{ \"email\":\"" + login + "\", "
+                + "\"password\":\"" + password + "\", "
+                + "\"inviteCode\":\"" + code + "\"}";
 
         try {
             json = new JSONObject(str);
@@ -83,8 +83,8 @@ public class CreateAccountActivity extends AppCompatActivity{
             CreateAccountPost ecgPost = new CreateAccountPost();
             ecgPost.execute(json);
 
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
     private boolean emptyCheck(String login, String password, String password2, String code) {

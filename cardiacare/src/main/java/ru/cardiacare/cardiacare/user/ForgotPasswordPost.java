@@ -12,7 +12,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class ForgotPasswordPost   extends AsyncTask<JSONObject, String, String> {
+/* Запрос на восстановление пароля */
+
+public class ForgotPasswordPost extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -27,7 +29,7 @@ public class ForgotPasswordPost   extends AsyncTask<JSONObject, String, String> 
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String json =  params[0].toString();
+            String json = params[0].toString();
             System.out.println("Test! json " + json);
             // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
 

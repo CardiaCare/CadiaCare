@@ -64,7 +64,6 @@ public class Login extends AppCompatActivity implements OnClickListener {
         UserLogin = etLogin.getText().toString();
         UserPass = etPassword.getText().toString();
         if (etLogin.getText().toString().trim() == "") {
-            // TODO доделать - для этих логина и пароля получить юзера. Пока заглушка
             startActivity(new Intent(this, Userdata.class));
         } else {
 //            JSONGenerator jsonGen = new JSONGenerator();

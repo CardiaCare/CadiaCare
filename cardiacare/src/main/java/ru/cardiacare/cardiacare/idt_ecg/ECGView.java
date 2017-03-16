@@ -13,6 +13,8 @@ import java.util.TimerTask;
 
 import ru.cardiacare.cardiacare.R;
 
+/* Визуализация ЭКГ */
+
 public class ECGView extends View {
 
     Paint paint;
@@ -93,9 +95,9 @@ public class ECGView extends View {
 //                    Double rr = RRIntervals.remove();
 //                    if ((60.0 / rr) > 40 && (60.0 / rr < 200))
 //                        pulse = (int) Math.round(60.0 / rr);
-                        pulse = ECGService.heartRate;
+                pulse = ECGService.heartRate;
 //                    Log.i("TAG","pulse " + pulse+ " ecgForHeartRate " + rr);
-                    postInvalidate();
+                postInvalidate();
 //                }
             }
         }, 1000, 500);
@@ -135,7 +137,6 @@ public class ECGView extends View {
 //        context.beginPath();
 
         double x0 = gridOrigin[0];
-        // TODO убрать 1000
 //        double y0 = gridBaselinePosition - s[0] * 2 * squareSize / 1000.0;
         double y0 = gridBaselinePosition - (s[0] - 127) * 32 * 2 * squareSize / 1000.0;
 //        context.moveTo(x, y)

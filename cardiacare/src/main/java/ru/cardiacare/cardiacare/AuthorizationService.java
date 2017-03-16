@@ -36,7 +36,6 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
     protected String doInBackground(JSONObject... data) {
         JSONObject json = data[0];
         String url = "http://api.cardiacare.ru/tokens";
-        //String url = "http://platov.cardiacare.ru/emr/web/index.php/tokens";
         try {
             URL object = new URL(url);
             HttpURLConnection con = (HttpURLConnection) object.openConnection();
@@ -57,15 +56,12 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
                 sb.append(line).append("\n");
             }
             br.close();
-//            Log.i("LOG", "token = " + sb.toString());
-//            Log.i("LOG", "status = " + con.getResponseMessage());
             token = sb.toString();
             result = con.getResponseMessage();
             System.out.println("Test!" + token);
         } catch (Exception e) {
         }
 
-        /////////////////////////////////////////////
         try {
             JSONObject dataJsonObj = null;
             dataJsonObj = new JSONObject(token);
@@ -88,9 +84,6 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
 
         } catch (Exception e) {
         }
-        /////////////////////////////////
-
-        //System.out.println("Test!" + token + result + json.toString());
 
         if (result.equals("Created")) {
             return token;
@@ -102,10 +95,8 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        //result = "";
         token = "";
 
-        // System.out.println("Test! res doc " + result);
         if (!MainActivity.isNetworkAvailable(context)) {
             MainActivity.wiFiAlertDialog();
         } else if (!"error_authorization".equals(result) && !"".equals(result)) {
