@@ -17,6 +17,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
@@ -60,6 +61,8 @@ public class ECGService extends Service {
     TimerTask timerTask;
     long timerInterval = 1000;
 
+    static Resources resources;
+
     static Time beginTime = new Time();
     static public boolean beStarted = false;
 
@@ -91,6 +94,7 @@ public class ECGService extends Service {
             periodECGSending = 60;
             MainActivity.storage.setPeriodECGSending("1");
         }
+        resources = getResources();
     }
 
     public IBinder onBind(Intent arg0) {
@@ -177,21 +181,21 @@ public class ECGService extends Service {
 
     // Отправка уведомлений с показаниями, полученными с монитора
     static public void sendECGNotification(int ecgValue, int heartrate, int charge) {
-        String notificationText = "Показания с монитора: " + ecgValue + "\nПульс: " + heartrate + "\nЗаряд: " + charge + "%\nПрошло: " + pastTime;
+        String notificationText = /*"Показания с монитора: " + ecgValue + "\n*/ resources.getText(R.string.widget_pulse) + ": " + heartrate + "\n" + resources.getText(R.string.widget_charge) + ": " + charge + "%\n" + resources.getText(R.string.widget_time_passed) + ": " + pastTime;
 
         Intent intent = new Intent(mContext, ECGActivity.class);
         PendingIntent pIntentOpenECG = PendingIntent.getActivity(mContext, 0, intent, 0);
 
         Notification.Builder builder = new Notification.Builder(mContext);
         if (connected_flag == false) {
-            builder.setContentTitle("CardiaCare. ECG disconnected");
+            builder.setContentTitle(resources.getText(R.string.widget_cardiomonitor_disconnected));
         } else {
-            builder.setContentTitle("CardiaCare. ECG connected");
+            builder.setContentTitle(resources.getText(R.string.widget_cardiomonitor_connected));
         }
-        builder.setTicker("ECG state change");
+        builder.setTicker(resources.getText(R.string.widget_state_change));
         builder.setPriority(Notification.PRIORITY_MAX);
         builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.addAction(R.drawable.ic_launcher, "Открыть ЭКГ",
+        builder.addAction(R.drawable.ic_launcher, resources.getText(R.string.widget_open_ecg),
                 pIntentOpenECG);
         builder.build();
         ecgNotification = builder.getNotification();

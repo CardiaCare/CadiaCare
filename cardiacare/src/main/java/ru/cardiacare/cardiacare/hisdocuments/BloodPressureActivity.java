@@ -141,9 +141,9 @@ public class BloodPressureActivity extends AppCompatActivity {
                 itemRow = position;
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle(R.string.dialog_bp_title);
-                alertDialog.setMessage(R.string.dialog_bp_del);
-                alertDialog.setNegativeButton(R.string.dialog_cancel, null);
-                alertDialog.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                alertDialog.setMessage(R.string.dialog_bp_message);
+                alertDialog.setNegativeButton(R.string.dialog_bp_negative_button, null);
+                alertDialog.setPositiveButton(R.string.dialog_bp_positive_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (MainActivity.isNetworkAvailable(context)) {
                             JSONObject json = null;

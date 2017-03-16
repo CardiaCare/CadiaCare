@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,10 +31,12 @@ public class FragmentRegisteredScreenSmallIcons extends Fragment {
 
     public static final String TAG = "FragmentRegisteredScreenSmallIcons";
 
-    static final String[] textArray = new String[]{"Пройти опрос", "Дневник давления", "ЭКГ", "Личный кабинет"};
-
+    String[] textArray;
+    public static Resources resources;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        resources = getResources();
+        textArray = new String[]{resources.getText(R.string.pass_survey).toString(), resources.getText(R.string.bp).toString(), resources.getText(R.string.ecg).toString(), resources.getText(R.string.account).toString()};
         View view = inflater.inflate(R.layout.fragment_menu_icons, null);
         GridView gridview = (GridView) view.findViewById(R.id.gridview);
         gridview.setAdapter(new AdapterSmallIcons(MainActivity.mContext, textArray));

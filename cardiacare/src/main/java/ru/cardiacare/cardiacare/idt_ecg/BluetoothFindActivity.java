@@ -14,9 +14,11 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -120,49 +122,74 @@ public class BluetoothFindActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    MainActivity.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (MainActivity.myBluetoothAdapter == null || !MainActivity.myBluetoothAdapter.isEnabled()) {
-                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
-                        alertDialog.setTitle(R.string.dialog_bluetooth_title);
-                        alertDialog.setMessage(R.string.dialog_bluetooth_message);
-                        alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        MainActivity.myBluetoothAdapter.enable();
-                                    }
-                                });
+                    boolean isGPS = true;
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                        final LocationManager manager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+                        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            isGPS = false;
+                            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                            alertDialog.setTitle(R.string.dialog_gps_title);
+                            alertDialog.setMessage(R.string.dialog_gps_message);
+                            alertDialog.setPositiveButton(R.string.dialog_gps_positive_button, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Переход к настройкам GPS
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    mContext.startActivity(intent);
+                                }
+                            });
+                            alertDialog.setNegativeButton(R.string.dialog_gps_negative_button, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            alertDialog.show();
+                        } else isGPS = true;
+                    }
+                    if (isGPS) {
+                        MainActivity.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        if (MainActivity.myBluetoothAdapter == null || !MainActivity.myBluetoothAdapter.isEnabled()) {
+                            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                            alertDialog.setTitle(R.string.dialog_bluetooth_title);
+                            alertDialog.setMessage(R.string.dialog_bluetooth_message);
+                            alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            MainActivity.myBluetoothAdapter.enable();
+                                        }
+                                    });
 
-                        alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        alertDialog.show();
-                    } else {
-                        checkedDeviceName = BTArrayAdapter.getItem(position);
-                        if (checkedDeviceName.contains("ECG")) {
-                            if (bound == false) {
-                                sConn = new ServiceConnection() {
-                                    public void onServiceConnected(ComponentName name, IBinder binder) {
-                                        Log.d("QQQ", "MainActivity onServiceConnected");
-                                        ecgService = ((ECGService.MyBinder) binder).getService();
-                                        bound = true;
-//                    ECGService.location.Start(true); // Раньше находилось в onStart()
-                                    }
-
-                                    public void onServiceDisconnected(ComponentName name) {
-                                        Log.d("QQQ", "MainActivity onServiceDisconnected");
-                                        bound = false;
-//                    ECGService.location.Stop(); // Раньше находилось в onStop()
-                                    }
-                                };
-                                startService(intent);
-                                bindService(intent, sConn, 0);
-                            }
+                            alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            alertDialog.show();
                         } else {
-                            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
-                                    Toast.LENGTH_LONG).show();
+                            checkedDeviceName = BTArrayAdapter.getItem(position);
+                            if (checkedDeviceName.contains("ECG")) {
+                                if (bound == false) {
+                                    sConn = new ServiceConnection() {
+                                        public void onServiceConnected(ComponentName name, IBinder binder) {
+                                            Log.d("QQQ", "MainActivity onServiceConnected");
+                                            ecgService = ((ECGService.MyBinder) binder).getService();
+                                            bound = true;
+//                    ECGService.location.Start(true); // Раньше находилось в onStart()
+                                        }
+
+                                        public void onServiceDisconnected(ComponentName name) {
+                                            Log.d("QQQ", "MainActivity onServiceDisconnected");
+                                            bound = false;
+//                    ECGService.location.Stop(); // Раньше находилось в onStop()
+                                        }
+                                    };
+                                    startService(intent);
+                                    bindService(intent, sConn, 0);
+                                }
+                            } else {
+                                Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
                 }

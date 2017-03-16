@@ -26,7 +26,7 @@ public class FragmentBPGraph extends Fragment {
         View view = inflater.inflate(R.layout.fragment_graph, null);
 
         GraphView graph = (GraphView) view.findViewById(R.id.graph);
-        graph.setTitle("График давления");
+        graph.setTitle(getResources().getText(R.string.pressure_graph).toString());
         graph.setTitleColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
         graph.setTitleTextSize(54);
         graph.getViewport().setXAxisBoundsManual(true);

@@ -81,7 +81,7 @@
         <activity
             android:name=".ecgviewer_old.ECGActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/fake_ecg"
+            android:label="@string/ecg_demonstration"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
         <activity
