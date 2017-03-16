@@ -1,16 +1,23 @@
 package ru.cardiacare.cardiacare.MainFragments;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
@@ -70,34 +77,60 @@ public class FragmentRegisteredScreenBigIcons extends Fragment {
                     break;
                 // ЭКГ
                 case 2:
-                    MainActivity.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-                    if (MainActivity.myBluetoothAdapter == null || !MainActivity.myBluetoothAdapter.isEnabled()) {
-
-                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
-                        alertDialog.setTitle(R.string.dialog_bluetooth_title);
-                        alertDialog.setMessage(R.string.dialog_bluetooth_message);
-                        alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        MainActivity.myBluetoothAdapter.enable();
-                                    }
-                                });
-
-                        alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-                        alertDialog.show();
-                    } else {
-                        // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
-                        if (MainActivity.isMyServiceRunning(ECGService.class)) {
-                            Intent intent = new Intent(MainActivity.mContext, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
-                            startActivity(intent);
+                    boolean isGPS = true;
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                        final LocationManager manager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE );
+                        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            isGPS = false;
+                            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
+                            alertDialog.setTitle(R.string.dialog_sos_title);
+                            alertDialog.setMessage(R.string.dialog_sos_message);
+                            alertDialog.setPositiveButton(R.string.dialog_sos_positive_button, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // Переход к настройкам GPS
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    MainActivity.mContext.startActivity(intent);
+                                }
+                            });
+                            alertDialog.setNegativeButton(R.string.dialog_sos_negative_button, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            alertDialog.show();
                         } else {
-                            Intent intentBluetoothFind = new Intent(MainActivity.mContext, ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
-                            startActivity(intentBluetoothFind);
+                            isGPS = true;
+                        }
+                    }
+                    if (isGPS) {
+                        MainActivity.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                        if (MainActivity.myBluetoothAdapter == null || !MainActivity.myBluetoothAdapter.isEnabled()) {
+                            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
+                            alertDialog.setTitle(R.string.dialog_bluetooth_title);
+                            alertDialog.setMessage(R.string.dialog_bluetooth_message);
+                            alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            MainActivity.myBluetoothAdapter.enable();
+                                        }
+                                    });
+
+                            alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                            alertDialog.show();
+                        } else {
+                            // Если монитор уже работает в фоновом режиме, то сразу открываем ECGActivity, иначе BluetoothFindActivity
+                            if (MainActivity.isMyServiceRunning(ECGService.class)) {
+                                Intent intent = new Intent(MainActivity.mContext, ru.cardiacare.cardiacare.idt_ecg.ECGActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Intent intentBluetoothFind = new Intent(MainActivity.mContext, ru.cardiacare.cardiacare.idt_ecg.BluetoothFindActivity.class);
+                                startActivity(intentBluetoothFind);
+                            }
                         }
                     }
                     break;
