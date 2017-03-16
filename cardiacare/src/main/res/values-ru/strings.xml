@@ -41,7 +41,7 @@
 
     <!--Диалог при запуске приложения с выключенным Wi-Fi-->
     <string name="dialog_wifi_title">Отсутствует подключение к сети</string>
-    <string name="dialog_wifi_message">Вы хотите включить Wi-Fi?</string>
+    <string name="dialog_wifi_message">Желаете перейти к настройкам, чтобы включить Wi-Fi?</string>
     <string name="dialog_wifi_positive_button">Да</string>
     <string name="dialog_wifi_negative_button">Нет</string>
 
@@ -51,13 +51,13 @@
     <string name="dialog_sos_positive_button">Перейти к настройкам GPS</string>
     <string name="dialog_sos_negative_button">Отмена</string>
 
-    <!--Диалог при запуске приложения с выключенным GPS-->
+    <!--Диалог при нажатии на ЭКГ с выключенным GPS-->
     <string name="dialog_gps_title">Не удалось получить геоданные</string>
-    <string name="dialog_gps_message">Функция GPS отключена. Некоторые функции могут быть недоступны. Желаете перейти к настройкам, чтобы включить GPS?</string>
-    <string name="dialog_gps_positive_button">Перейти к настройкам GPS</string>
-    <string name="dialog_gps_negative_button">Отмена</string>
+    <string name="dialog_gps_message">Желаете перейти к настройкам, чтобы включить GPS?</string>
+    <string name="dialog_gps_positive_button">Да</string>
+    <string name="dialog_gps_negative_button">Нет</string>
 
-    <!--Диалог при нажатии на Alive Bluetooth Monitor c выключенным Bluetooth-->
+    <!--Диалог при нажатии на ЭКГ c выключенным Bluetooth-->
     <string name="dialog_bluetooth_title">Bluetooth выключен</string>
     <string name="dialog_bluetooth_message">Вы хотите включить Bluetooth?</string>
     <string name="dialog_bluetooth_positive_button">Да</string>
