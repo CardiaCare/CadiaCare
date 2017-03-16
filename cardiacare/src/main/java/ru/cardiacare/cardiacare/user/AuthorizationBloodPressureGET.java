@@ -3,9 +3,7 @@ package ru.cardiacare.cardiacare.user;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.View;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultBloodPressure;
 import com.squareup.okhttp.Callback;
@@ -24,12 +22,10 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import ru.cardiacare.cardiacare.AboutActivity;
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
-import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
-import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity;
+
+/* Получение данных давления при авторизации */
 
 public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String, String> {
 
@@ -61,11 +57,10 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            //System.out.println("Test! response " + response.body().string());
             switch (ret = response.body().string()) {
             }
             System.out.println("Test! response " + ret);
-//            ////////////////////////////////////////////////////////////////////////////////////////
+
 //            BloodPressureActivity.bp_data2 = new LinkedList<ResultBloodPressure>();
 //            BloodPressureActivity.bp_data2.add(new ResultBloodPressure("", "","0", ""));
 //
@@ -85,8 +80,6 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
 //                    // Oops
 //                }
 //            }
-//            ////////////////////////////////////////////////////////////////////////////////////////
-            //System.out.println("Test! request " + request.body().toString());
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -105,14 +98,13 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
             System.out.println("Test! exc " + e.getMessage());
             e.printStackTrace();
         }
-        //return null;
         return ret;
     }
 
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        ////////////////////////////////////////////////////////////////////////////////////////
+
         //BloodPressureActivity.bp_data.remove();
 
         BloodPressureActivity.bp_data.clear();
@@ -156,14 +148,12 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
         } catch (Exception e) {
             // Oops
         }
-        ////////////////////////////////////////////////////////////////////////////////////////
 
         if ((MainActivity.systolicBP != null) && (MainActivity.diastolicBP != null)) {
             MainActivity.systolicBP.clear();
             MainActivity.diastolicBP.clear();
 
             for (int j = 0; j < BloodPressureActivity.bp_data.size(); j++) {
-//            Log.i("BPActivity", "systolic = " + bp_data.get(j).getSystolicPressure() + ", diastolic = " + bp_data.get(j).getDiastolicPressure());
             }
 
             if (BloodPressureActivity.bp_data.size() >= 7) {
@@ -183,8 +173,6 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
             }
             MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
             MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
-            Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
-            Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
             if (MainActivity.storage.getPageViewOnMainactivity()) {
                 context.startActivity(new Intent(context, MainActivity.class));
             }

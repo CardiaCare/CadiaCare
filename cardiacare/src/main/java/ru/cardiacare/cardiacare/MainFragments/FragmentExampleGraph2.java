@@ -53,7 +53,8 @@ public class FragmentExampleGraph2 extends Fragment {
         return view;
     }
 
-    public FragmentExampleGraph2() {}
+    public FragmentExampleGraph2() {
+    }
 
     public static FragmentExampleGraph2 newInstance() {
         FragmentExampleGraph2 f = new FragmentExampleGraph2();

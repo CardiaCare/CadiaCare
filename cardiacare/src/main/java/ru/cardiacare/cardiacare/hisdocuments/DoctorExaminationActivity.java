@@ -9,14 +9,13 @@ import android.widget.EditText;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.ResultDoctorExamination;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Результаты обследования врачом */
 
 public class DoctorExaminationActivity extends AppCompatActivity {
 
-      ResultDoctorExamination rde;
+    ResultDoctorExamination rde;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +33,7 @@ public class DoctorExaminationActivity extends AppCompatActivity {
             }
         });
 
-                rde = new ResultDoctorExamination("Examination reason", "Visit order",
+        rde = new ResultDoctorExamination("Examination reason", "Visit order",
                 "Diagnoses", "Medications", "true", "No", "h", "w", "Diagnoses");
 
         EditText etExaminationReason = (EditText) findViewById(R.id.etExaminationReason);

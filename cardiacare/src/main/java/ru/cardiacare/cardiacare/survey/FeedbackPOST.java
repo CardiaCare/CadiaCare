@@ -57,8 +57,6 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
 //                        "  \"data\": \"" + jsonFeedback.replaceAll("\"", "\\\\\"") + "\"}"; //\"new feedback\"}";
 
 //            jsonFeedback = jsonFeedback.replaceAll("\"", "\\\\\"");
-//            Log.i("FeedbackPOST", "token = " + MainActivity.storage.getAccountToken());
-//            Log.i("FeedbackPOST", "feedback = " + jsonFeedback);
 
             MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -88,7 +86,6 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
             });
 
             if (MainActivity.storage.getFeedbackRefresh()) {
-//                Log.i("QuestionnaireActivity", "SendAnswers, getFeedbackRefresh() = " + MainActivity.storage.getFeedbackRefresh());
                 QuestionnaireActivity.clearFeedback();
             }
 

@@ -33,8 +33,8 @@ public class QuestionnaireHelper {
     // Отображение опросника
     static public void showQuestionnaire(Context context) {
         questionnaireType = "periodic";
-            QuestionnaireVersionGET questionnaireVersionGET = new QuestionnaireVersionGET(context);
-            questionnaireVersionGET.execute();
+        QuestionnaireVersionGET questionnaireVersionGET = new QuestionnaireVersionGET(context);
+        questionnaireVersionGET.execute();
     }
 
     static public void showAlarmQuestionnaire(Context context) {
@@ -42,7 +42,6 @@ public class QuestionnaireHelper {
         // Если опросник ещё не был загружен, то загружаем опросник
         if (readSavedData(context).isEmpty()) {
             serverUri = "http://api.cardiacare.ru/survey/2";
-            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {
@@ -52,7 +51,6 @@ public class QuestionnaireHelper {
             Gson json = new Gson();
             alarmQuestionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
 //            printQuestionnaire(alarmQuestionnaire);
-//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(context, QuestionnaireActivity.class);
             intent.putExtra("questionnaireType", questionnaireType);
             context.startActivity(intent);
@@ -65,9 +63,9 @@ public class QuestionnaireHelper {
         for (int i = 0; i < q.size(); i++) {
             Question qst = q.get(i);
             Log.i(MainActivity.TAG, qst.getDescription());
-            LinkedList <Answer> a = qst.getAnswers();
+            LinkedList<Answer> a = qst.getAnswers();
             if (a.size() > 0) {
-                for(int h = 0; h < a.size(); h++) {
+                for (int h = 0; h < a.size(); h++) {
                     Answer answer = a.get(h);
                     Log.i(MainActivity.TAG, answer.getType());
                     LinkedList<AnswerItem> ai = answer.getItems();

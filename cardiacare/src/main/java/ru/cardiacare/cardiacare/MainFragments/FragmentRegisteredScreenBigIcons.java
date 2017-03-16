@@ -9,15 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
@@ -79,7 +76,7 @@ public class FragmentRegisteredScreenBigIcons extends Fragment {
                 case 2:
                     boolean isGPS = true;
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                        final LocationManager manager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE );
+                        final LocationManager manager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE);
                         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             isGPS = false;
                             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);

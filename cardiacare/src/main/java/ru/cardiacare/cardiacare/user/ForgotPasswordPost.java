@@ -1,9 +1,7 @@
 package ru.cardiacare.cardiacare.user;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -14,7 +12,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class ForgotPasswordPost   extends AsyncTask<JSONObject, String, String> {
+/* Запрос на восстановление пароля */
+
+public class ForgotPasswordPost extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -29,7 +29,7 @@ public class ForgotPasswordPost   extends AsyncTask<JSONObject, String, String> 
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String json =  params[0].toString();
+            String json = params[0].toString();
             System.out.println("Test! json " + json);
             // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
 
@@ -49,17 +49,17 @@ public class ForgotPasswordPost   extends AsyncTask<JSONObject, String, String> 
 
             System.out.println("Test! request " + request.body().toString());
 
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Request request, IOException e) {
-                    Log.e("Request", request.body().toString());
-                }
-
-                @Override
-                public void onResponse(Response response) throws IOException {
-                    Log.i("Response", response.body().string());
-                }
-            });
+//            client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//                    Log.e("Request", request.body().toString());
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) throws IOException {
+//                    Log.i("Response", response.body().string());
+//                }
+//            });
 
             System.out.println("Test! POST");
         } catch (Exception e) {

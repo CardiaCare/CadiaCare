@@ -37,7 +37,7 @@ import java.util.LinkedList;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/* Экран "Результаты измерения артериального давления" */
+/* Экран "Дневник давления" */
 
 public class BloodPressureActivity extends AppCompatActivity {
 
@@ -87,8 +87,6 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
             MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
             MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
-//        Log.i("BPActivity", "systolic = " + MainActivity.systolicBP.toString() + "\n diastolic = " + MainActivity.diastolicBP.toString());
-//        Log.i("BPActivity", "storageSystolic = " + MainActivity.storage.getSystolicBP() + "\n storageDiastolic = " + MainActivity.storage.getDiastolicBP());
         }
     }
 
@@ -120,16 +118,6 @@ public class BloodPressureActivity extends AppCompatActivity {
 
         context = this;
         intent = getIntent();
-
-//        bp_data = new LinkedList<ResultBloodPressure>();
-//        bp_data.add(new ResultBloodPressure("110", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("115", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("120", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("125", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("130", "80","70", currentDateandTime));
-
-//        bp_data = new LinkedList<ResultBloodPressure>();
-
 
         LinkedList<ResultBloodPressure> bpl = new LinkedList<ResultBloodPressure>();
 
@@ -263,7 +251,6 @@ public class BloodPressureActivity extends AppCompatActivity {
             ObjectOutputStream out = new ObjectOutputStream(fout);
             out.writeObject(myList);
             fout.close();
-//            Log.i("TAG",myList.get(0)+"");
             out.close();
         } catch (IOException e) {
             e.printStackTrace();

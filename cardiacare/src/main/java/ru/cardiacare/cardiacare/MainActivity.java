@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.LinkedList;
 
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
-import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph1;
+import ru.cardiacare.cardiacare.MainFragments.FragmentBPGraph;
 import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
     static public String authorization_name = "";
     static public String authorization_surname = "";
     static public AccountStorage storage;
-    //    static public Feedback feedback;
-//    static public Feedback alarmFeedback;
     Toolbar toolbar;
     static public LinkedList<Integer> systolicBP;
     static public LinkedList<Integer> diastolicBP;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     static public FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
     static public FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
     FragmentAuthorizationScreen fragmentAuthorizationScreen;
-    static public FragmentExampleGraph1 fragmentExampleGraph1;
+    static public FragmentBPGraph fragmentBPGraph;
     FragmentExampleGraph2 fragmentExampleGraph2;
 
     @Override
@@ -80,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
-//        feedback = new Feedback(1, "");
-//        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
         activity = this;
         mContext = this;
 
@@ -91,13 +87,12 @@ public class MainActivity extends AppCompatActivity {
         fManager = getSupportFragmentManager();
         fragmentRegisteredScreenSmallIcons = new FragmentRegisteredScreenSmallIcons();
         fragmentRegisteredScreenBigIcons = new FragmentRegisteredScreenBigIcons();
-        fragmentExampleGraph1 = new FragmentExampleGraph1();
+        fragmentBPGraph = new FragmentBPGraph();
         fragmentExampleGraph2 = new FragmentExampleGraph2();
         fTrans = fManager.beginTransaction();
 
-        // Перед отображением
         //Если есть токен, то проверяем корректность всех данных и открываем экран авторизированного пользователя, иначе - экран авторизации
-        if (!storage.getAccountToken().equals("")){
+        if (!storage.getAccountToken().equals("")) {
             CheckAll();
         }
 
@@ -106,79 +101,56 @@ public class MainActivity extends AppCompatActivity {
             fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
         }
 
-//         //Если нет токена, то открываем экран авторизации, иначе - экран авторизированного пользователя
-//        if (storage.getAccountToken().equals("")) {
-//            fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
-//            fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
-//        }
         fTrans.commit();
     }
 
-    // Проверка всех параметров из storage обязательно расширять список при обновлении приложения
+    // Проверка всех параметров из storage
+    // Обязательно расширять список при обновлении приложения
     void CheckAll() {
-        if(storage.getDoctors().equals("")){
+        if (storage.getDoctors().equals("")) {
             DoctorGET doctorGET = new DoctorGET();
             doctorGET.execute();
         }
 
         // Нет API для получения почты, сбрсываю токен для выброса на экран авторизации
-        if(storage.getAccountEmail().equals("")){
+        if (storage.getAccountEmail().equals("")) {
             storage.setAccountToken("");
         }
 
-        if(storage.getAccountFirstName().equals("")){
+        if (storage.getAccountFirstName().equals("")) {
             PatientsGET patientsGET = new PatientsGET();
             patientsGET.execute();
         }
 
-        if(storage.getAccountSecondName().equals("")){
+        if (storage.getAccountSecondName().equals("")) {
             PatientsGET patientsGET = new PatientsGET();
             patientsGET.execute();
         }
         // Крайняя мера проверки, если оказалось что есть токен, но нет идентификатора пользователя, то выбрасываю на экран авторизации
-        if(storage.getAccountId().equals("")){
+        if (storage.getAccountId().equals("")) {
             storage.setAccountToken("");
         }
-
-//        try {
-//            if (BloodPressureActivity.bp_data.size() == 0) {
-//                BloodPressureGET bloodGet = new BloodPressureGET();
-//                bloodGet.execute();
-//            }
-//        }catch (Exception e){
-//            BloodPressureGET bloodGet = new BloodPressureGET();
-//            bloodGet.execute();
-//        }
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-//        Log.i(TAG, "onStart()");
         // Условия выполняются только для авторизированного пользователя
         if (!storage.getAccountToken().equals("")) {
-//            Log.i(TAG, "Авторизированный пользователь");
             setMainScreenForAuthorizedUser();
             // Если есть файлы с данными ЭКГ, которые не были отправлены, то пытаемся их отправить
             if ((!storage.getECGFile().equals(""))) {
                 if (isNetworkAvailable(context)) {
                     String ecgFiles = storage.getECGFile();
-//                    ECGService.ecgFiles.clear();
-//                    String ecgFiles = MainActivity.storage.getECGFile().replace("[", "").replace("]", "");
-//                    String ecgFiles = "ecg1111111111111, ecg2222222222222, ecg3333333333333, ecg4444444444444";
-
                     Log.i(TAG, "ECGFile = " + ecgFiles);
                     String ecgFileName;
+                    ECGService.ecgFiles = new LinkedList<>();
                     while (ecgFiles.length() > 16) {
                         ecgFileName = ecgFiles.substring(0, 16);
-//                        Log.i(TAG, "ecgFileName = " + ecgFileName);
                         ECGService.ecgFiles.add(ecgFileName);
                         ecgFiles = ecgFiles.substring(18, ecgFiles.length());
-//                        Log.i(TAG, "ecgFiles = " + ecgFiles);
                     }
                     ECGService.ecgFiles.add(ecgFiles);
-//                    Log.i(TAG, "ecgFiles = " + ECGService.ecgFiles.toString());
                     ECGPost ecgPost = new ECGPost();
                     ecgPost.execute();
                 }
@@ -265,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             // Учетная запись
 //            case R.id.menuUserData:
-//                //TODO Переделать (Откуда берутся настройки юзера БД?)
 //                startActivity(new Intent(this, Userdata.class));
 //                break;
             // Документы
@@ -279,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
 //                break;
             // Выход
             case R.id.exitAccount:
-                //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
                 storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", /*"",*/ "", "", false, false, "", "");
                 storage.setVersion("");
@@ -319,11 +289,11 @@ public class MainActivity extends AppCompatActivity {
             switch (pos) {
 
                 case 0:
-                    return FragmentExampleGraph1.newInstance();
+                    return FragmentBPGraph.newInstance();
 //                case 1:
 //                    return FragmentExampleGraph2.newInstance();
                 default:
-                    return FragmentExampleGraph1.newInstance();
+                    return FragmentBPGraph.newInstance();
             }
         }
 

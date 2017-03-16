@@ -17,7 +17,9 @@ import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
-public class BloodPressureDELETE  extends AsyncTask<JSONObject, String, String> {
+/* Удаление данных о давлении на сервере */
+
+public class BloodPressureDELETE extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -32,7 +34,7 @@ public class BloodPressureDELETE  extends AsyncTask<JSONObject, String, String> 
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String json =  params[0].toString();
+            String json = params[0].toString();
             System.out.println("Test! json " + json);
             // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
 
@@ -40,12 +42,12 @@ public class BloodPressureDELETE  extends AsyncTask<JSONObject, String, String> 
 
             String id = params[0].getString("id");
 
-            String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
+            String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
             System.out.println("Test! body " + body.toString());
 
             Request request = new Request.Builder()
-                    .url("http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId()+"/bloodpressure/" + id)
+                    .url("http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/bloodpressure/" + id)
                     //.url("http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId()+"/bloodpressure")
                     .addHeader("Authorization", credential)
                     .addHeader("Content-Type", "application/json")

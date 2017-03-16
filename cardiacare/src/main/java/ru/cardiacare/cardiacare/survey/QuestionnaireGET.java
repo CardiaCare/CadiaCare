@@ -14,10 +14,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import android.util.Base64;
-import android.util.Log;
 
-import org.json.JSONObject;
+import android.util.Base64;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
@@ -50,11 +48,9 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.setDoInput(true);
-            urlConnection.setRequestProperty("Authorization", "Basic "+ Base64.encodeToString((MainActivity.storage.getAccountToken()+":").getBytes("UTF-8"), Base64.DEFAULT) );//MainActivity.authorization_token);///
+            urlConnection.setRequestProperty("Authorization", "Basic " + Base64.encodeToString((MainActivity.storage.getAccountToken() + ":").getBytes("UTF-8"), Base64.DEFAULT));//MainActivity.authorization_token);///
             urlConnection.connect();
-           // urlConnection.getResponseCode();
-           // System.out.println("Test! url " + urlConnection.getResponseCode());
-            // System.out.println("Test! base64 " + Base64.encodeToString(MainActivity.storage.getAccountToken().getBytes("UTF-8"), Base64.DEFAULT));
+            // urlConnection.getResponseCode();
 
             InputStream inputStream = urlConnection.getInputStream();
             StringBuilder buffer = new StringBuilder();
@@ -90,7 +86,8 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             OutputStreamWriter writer;
             if (QuestionnaireHelper.questionnaireType.equals("periodic"))
                 writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.questionnaireFile, Context.MODE_PRIVATE));
-            else writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.alarmQuestionnaireFile, Context.MODE_PRIVATE));
+            else
+                writer = new OutputStreamWriter(context.openFileOutput(QuestionnaireHelper.alarmQuestionnaireFile, Context.MODE_PRIVATE));
             writer.write(resultJson);
             writer.flush();
             writer.close();
@@ -99,7 +96,6 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
             return -1;
         }
 //        QuestionnaireHelper.printQuestionnaire(QuestionnaireHelper.questionnaire);
-        //System.out.println("Test! resultJson" + MainActivity.storage.getAccountToken() + " " + resultJson);
         return 0;
     }
 
@@ -114,13 +110,11 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-//                            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
                         }
                     });
             alertDialog.show();
         } else {
             QuestionnaireActivity.clearFeedback();
-//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(context, QuestionnaireActivity.class);
             intent.putExtra("questionnaireType", QuestionnaireHelper.questionnaireType);
             context.startActivity(intent);

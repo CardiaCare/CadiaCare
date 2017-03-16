@@ -33,9 +33,8 @@ import java.util.TimerTask;
 
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
-import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
-import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 
+/* Экран "Поиск устройств" */
 
 public class BluetoothFindActivity extends AppCompatActivity {
 
@@ -121,29 +120,50 @@ public class BluetoothFindActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    checkedDeviceName = BTArrayAdapter.getItem(position);
-                    if (checkedDeviceName.contains("ECG")) {
-                        if (bound == false) {
-                            sConn = new ServiceConnection() {
-                                public void onServiceConnected(ComponentName name, IBinder binder) {
-                                    Log.d("QQQ", "MainActivity onServiceConnected");
-                                    ecgService = ((ECGService.MyBinder) binder).getService();
-                                    bound = true;
-//                    ECGService.location.Start(true); // Раньше находилось в onStart()
-                                }
+                    MainActivity.myBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (MainActivity.myBluetoothAdapter == null || !MainActivity.myBluetoothAdapter.isEnabled()) {
+                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+                        alertDialog.setTitle(R.string.dialog_bluetooth_title);
+                        alertDialog.setMessage(R.string.dialog_bluetooth_message);
+                        alertDialog.setPositiveButton(R.string.dialog_bluetooth_positive_button,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        MainActivity.myBluetoothAdapter.enable();
+                                    }
+                                });
 
-                                public void onServiceDisconnected(ComponentName name) {
-                                    Log.d("QQQ", "MainActivity onServiceDisconnected");
-                                    bound = false;
-//                    ECGService.location.Stop(); // Раньше находилось в onStop()
-                                }
-                            };
-                            startService(intent);
-                            bindService(intent, sConn, 0);
-                        }
+                        alertDialog.setNegativeButton(R.string.dialog_bluetooth_negative_button,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        alertDialog.show();
                     } else {
-                        Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
-                                Toast.LENGTH_LONG).show();
+                        checkedDeviceName = BTArrayAdapter.getItem(position);
+                        if (checkedDeviceName.contains("ECG")) {
+                            if (bound == false) {
+                                sConn = new ServiceConnection() {
+                                    public void onServiceConnected(ComponentName name, IBinder binder) {
+                                        Log.d("QQQ", "MainActivity onServiceConnected");
+                                        ecgService = ((ECGService.MyBinder) binder).getService();
+                                        bound = true;
+//                    ECGService.location.Start(true); // Раньше находилось в onStart()
+                                    }
+
+                                    public void onServiceDisconnected(ComponentName name) {
+                                        Log.d("QQQ", "MainActivity onServiceDisconnected");
+                                        bound = false;
+//                    ECGService.location.Stop(); // Раньше находилось в onStop()
+                                    }
+                                };
+                                startService(intent);
+                                bindService(intent, sConn, 0);
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), R.string.bluetooth_toast6,
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             });
@@ -168,11 +188,6 @@ public class BluetoothFindActivity extends AppCompatActivity {
     }
 
     public void on() {
-//        if (!myBluetoothAdapter.isEnabled()) {
-//            Log.i(MainActivity.TAG, "dialog");
-//            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-//            startActivityForResult(enableBtIntent, 1);
-//        }
         myBluetoothAdapter.startDiscovery();
         dialog.show();
         registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
