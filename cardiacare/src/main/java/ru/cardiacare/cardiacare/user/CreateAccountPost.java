@@ -96,13 +96,8 @@ public class CreateAccountPost extends AsyncTask<JSONObject, String, String> {
         } else {
             FragmentAuthorizationScreen.emailFragmentAuthorizationScreen = CreateAccountActivity.emailCreateAccountActivity;
             FragmentAuthorizationScreen.passwordFragmentAuthorizationScreen = CreateAccountActivity.passwordCreateAccountActivity;
-<<<<<<< HEAD
-
-        Intent intent = new Intent(CreateAccountActivity.CreateAccountActivityContext, MainActivity.class);
-        CreateAccountActivity.CreateAccountActivityContext.startActivity(intent);
-            //должен быть back, но не протестировать
-=======
->>>>>>> origin/students
+            Intent intent = new Intent(CreateAccountActivity.CreateAccountActivityContext, MainActivity.class);
+            CreateAccountActivity.CreateAccountActivityContext.startActivity(intent);
         }
     }
 }
