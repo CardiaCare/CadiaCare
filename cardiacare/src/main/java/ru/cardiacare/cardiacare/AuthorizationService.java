@@ -106,8 +106,9 @@ public class AuthorizationService extends AsyncTask<JSONObject, String, String> 
         token = "";
 
         // System.out.println("Test! res doc " + result);
-
-        if (!"error_authorization".equals(result) && !"".equals(result)) {
+        if (!MainActivity.isNetworkAvailable(context)) {
+            MainActivity.wiFiAlertDialog();
+        } else if (!"error_authorization".equals(result) && !"".equals(result)) {
             DoctorGET doctorGET = new DoctorGET();
             doctorGET.execute();
             AuthorizationBloodPressureGET authorizationbloodGet = new AuthorizationBloodPressureGET(context);

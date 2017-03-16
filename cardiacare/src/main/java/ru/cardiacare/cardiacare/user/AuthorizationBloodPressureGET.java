@@ -128,30 +128,33 @@ public class AuthorizationBloodPressureGET extends AsyncTask<JSONObject, String,
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        try {
+            //for (int i=0; i < jArray.length(); i++)
+            for (int i = jArray.length() - 1; i >= 0; i--) {
+                try {
+                    JSONObject oneObject = jArray.getJSONObject(i);
+                    // Pulling items from the array
+                    //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
+                    //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
 
-        //for (int i=0; i < jArray.length(); i++)
-        for (int i = jArray.length() - 1; i >= 0; i--) {
-            try {
-                JSONObject oneObject = jArray.getJSONObject(i);
-                // Pulling items from the array
-                //String oneObjectsItem = oneObject.getString("STRINGNAMEinTHEarray");
-                //String oneObjectsItem2 = oneObject.getString("anotherSTRINGNAMEINtheARRAY");
+                    String date = oneObject.getString("created_at").substring(0, 16);
+                    //date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) + Integer.parseInt(TimeZone.getTimeZone("GMT").toString())) + date.substring(13,16);
 
-                String date = oneObject.getString("created_at").substring(0, 16);
-                //date = date.substring(0,11) + (Integer.parseInt(date.substring(11,13)) + Integer.parseInt(TimeZone.getTimeZone("GMT").toString())) + date.substring(13,16);
+                    Calendar mCalendar = new GregorianCalendar();
+                    TimeZone mTimeZone = mCalendar.getTimeZone();
+                    int mGMTOffset = mTimeZone.getRawOffset();
+                    //date = String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS));
+                    int sm = Integer.parseInt(String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS)));
 
-                Calendar mCalendar = new GregorianCalendar();
-                TimeZone mTimeZone = mCalendar.getTimeZone();
-                int mGMTOffset = mTimeZone.getRawOffset();
-                //date = String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS));
-                int sm = Integer.parseInt(String.valueOf(TimeUnit.HOURS.convert(mGMTOffset, TimeUnit.MILLISECONDS)));
+                    date = date.substring(0, 11) + (Integer.parseInt(date.substring(11, 13)) - 1 + sm) + date.substring(13, 16);
 
-                date = date.substring(0, 11) + (Integer.parseInt(date.substring(11, 13)) - 1 + sm) + date.substring(13, 16);
-
-                BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"), "0", date, Integer.parseInt(oneObject.getString("id"))));
-            } catch (JSONException e) {
-                // Oops
+                    BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"), "0", date, Integer.parseInt(oneObject.getString("id"))));
+                } catch (Exception e) {
+                    // Oops
+                }
             }
+        } catch (Exception e) {
+            // Oops
         }
         ////////////////////////////////////////////////////////////////////////////////////////
 
