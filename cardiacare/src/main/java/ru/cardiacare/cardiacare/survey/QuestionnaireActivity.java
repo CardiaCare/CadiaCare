@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
+import ru.cardiacare.cardiacare.HelpActivity;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
@@ -110,7 +112,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
                     feedbackDialog();
                 } else {
-                    onBackPressed();
+                    startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
                 }
             }
         });
@@ -237,7 +239,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //            }
             startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
         } else {
-            MainActivity.wiFiAlertDialog();
+            wiFiAlertDialog();
         }
     }
 
@@ -320,7 +322,7 @@ public class QuestionnaireActivity extends AppCompatActivity {
         if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
             feedbackDialog();
         } else {
-            super.onBackPressed();
+            startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
         }
     }
 
@@ -342,6 +344,28 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         jsonStr = json.toJson(feedback);
                         writeData(jsonStr);
                         startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+                    }
+                });
+        alertDialog.show();
+    }
+
+    // WiFi диалог
+    static public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
                     }
                 });
         alertDialog.show();
