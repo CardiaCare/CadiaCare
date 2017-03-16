@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.i(TAG, "ECGFile = " + ecgFiles);
                     String ecgFileName;
+                    ECGService.ecgFiles = new LinkedList<>();
                     while (ecgFiles.length() > 16) {
                         ecgFileName = ecgFiles.substring(0, 16);
 //                        Log.i(TAG, "ecgFileName = " + ecgFileName);
