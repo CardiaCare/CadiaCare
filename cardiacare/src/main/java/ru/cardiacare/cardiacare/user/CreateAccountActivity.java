@@ -29,10 +29,12 @@ public class CreateAccountActivity extends AppCompatActivity{
     Button Registration;
     public static String emailCreateAccountActivity = "";
     public static String passwordCreateAccountActivity = "";
+    public static Context CreateAccountActivityContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CreateAccountActivityContext = this;
         setContentView(R.layout.activity_create_account);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
