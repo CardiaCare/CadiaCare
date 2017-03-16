@@ -1,8 +1,12 @@
 package ru.cardiacare.cardiacare.user;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,6 +15,7 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Забыли пароль" */
@@ -100,6 +105,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private boolean emptyCheck(String login) {
+        if (!MainActivity.isNetworkAvailable(this)) {
+            wiFiAlertDialog();
+            return false;
+        }
         if (login.equals("") || (login.indexOf("@") == -1)) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
@@ -125,6 +134,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private boolean emptyCheck2(String code, String password, String password2) {
+        if (!MainActivity.isNetworkAvailable(this)) {
+            wiFiAlertDialog();
+            return false;
+        }
         if (password.equals("") || (!password.equals(password2)) || code.equals("")) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
@@ -139,5 +152,26 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return false;
         } else
             return true;
+    }
+
+    public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
     }
 }

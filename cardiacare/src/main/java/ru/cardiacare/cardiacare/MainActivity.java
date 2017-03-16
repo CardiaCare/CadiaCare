@@ -144,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
                     String ecgFiles = storage.getECGFile();
                     Log.i(TAG, "ECGFile = " + ecgFiles);
                     String ecgFileName;
+                    ECGService.ecgFiles = new LinkedList<>();
                     while (ecgFiles.length() > 16) {
                         ecgFileName = ecgFiles.substring(0, 16);
                         ECGService.ecgFiles.add(ecgFileName);

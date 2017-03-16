@@ -2,8 +2,11 @@ package ru.cardiacare.cardiacare.user;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +14,7 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Создать аккаунт" */
@@ -82,7 +86,27 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     private boolean emptyCheck(String login, String password, String password2, String code) {
-        if (login.equals("") || password.equals("") || (!password.equals(password2)) || code.equals("") || (login.indexOf("@") == -1)) {
+        if (!MainActivity.isNetworkAvailable(this)) {
+            final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            alertDialog.setTitle(R.string.dialog_wifi_title);
+            alertDialog.setMessage(R.string.dialog_wifi_message);
+            alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            wifiManager.setWifiEnabled(true);
+                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        }
+                    });
+            alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+            alertDialog.show();
+            return false;
+        } else if (login.equals("") || password.equals("") || (!password.equals(password2)) || code.equals("") || (login.indexOf("@") == -1)) {
             //Toast.makeText(getApplicationContext(), "Please, fill fields", Toast.LENGTH_LONG).show();
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
