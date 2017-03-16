@@ -1,10 +1,9 @@
 package ru.cardiacare.cardiacare.user;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
 import ru.cardiacare.cardiacare.R;
 
@@ -55,17 +55,17 @@ public class CreateAccountPost extends AsyncTask<JSONObject, String, String> {
 
             System.out.println("Test! request " + request.body().toString());
 
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Request request, IOException e) {
-                    Log.e("Request", request.body().toString());
-                }
-
-                @Override
-                public void onResponse(Response response) throws IOException {
-                    Log.i("Response", response.body().string());
-                }
-            });
+//            client.newCall(request).enqueue(new Callback() {
+//                @Override
+//                public void onFailure(Request request, IOException e) {
+//                    Log.e("Request", request.body().toString());
+//                }
+//
+//                @Override
+//                public void onResponse(Response response) throws IOException {
+//                    Log.i("Response", response.body().string());
+//                }
+//            });
 
             System.out.println("Test! POST");
         } catch (Exception e) {
@@ -96,6 +96,8 @@ public class CreateAccountPost extends AsyncTask<JSONObject, String, String> {
         } else {
             FragmentAuthorizationScreen.emailFragmentAuthorizationScreen = CreateAccountActivity.emailCreateAccountActivity;
             FragmentAuthorizationScreen.passwordFragmentAuthorizationScreen = CreateAccountActivity.passwordCreateAccountActivity;
+            Intent intent = new Intent(CreateAccountActivity.CreateAccountActivityContext, MainActivity.class);
+            CreateAccountActivity.CreateAccountActivityContext.startActivity(intent);
         }
     }
 }

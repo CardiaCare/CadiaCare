@@ -28,12 +28,17 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     EditText etPassword2;
     EditText etInviteCode;
     Button Send, Send2;
+    static public Context mContextForgotPasswordActivity;
+    public static String emailForgotPasswordActivity = "";
+    public static String passwordForgotPasswordActivity = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        mContextForgotPasswordActivity = this;
 
         etLogin = (EditText) this.findViewById(R.id.etEmail);
 
@@ -77,7 +82,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     void ForgotPassword1(String login) {
         JSONObject json = null;
-
+        emailForgotPasswordActivity = login;
         String str = "{ \"email\":\"" + login + "\"}";
 
         try {
@@ -134,6 +139,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private boolean emptyCheck2(String code, String password, String password2) {
+        passwordForgotPasswordActivity = password;
         if (!MainActivity.isNetworkAvailable(this)) {
             wiFiAlertDialog();
             return false;

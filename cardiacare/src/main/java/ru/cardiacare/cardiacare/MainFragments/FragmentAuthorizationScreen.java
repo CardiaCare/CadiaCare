@@ -29,8 +29,8 @@ public class FragmentAuthorizationScreen extends Fragment {
     EditText etEmail;
     EditText etPassword;
 
-    public static String emailFragmentAuthorizationScreen = "";
-    public static String passwordFragmentAuthorizationScreen = "";
+    public static String emailFragmentAuthorizationScreen;
+    public static String passwordFragmentAuthorizationScreen;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_authorization_screen, null);
@@ -39,8 +39,10 @@ public class FragmentAuthorizationScreen extends Fragment {
         etEmail = (EditText) view.findViewById(R.id.etEmail);
         etPassword = (EditText) view.findViewById(R.id.etPassword);
 
-        etEmail.setText(emailFragmentAuthorizationScreen);
-        etPassword.setText(passwordFragmentAuthorizationScreen);
+        if(emailFragmentAuthorizationScreen != null)
+            etEmail.setText(emailFragmentAuthorizationScreen);
+        if(passwordFragmentAuthorizationScreen != null)
+            etPassword.setText(passwordFragmentAuthorizationScreen);
 
         nextButton = (Button) view.findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
@@ -75,4 +77,12 @@ public class FragmentAuthorizationScreen extends Fragment {
     public FragmentAuthorizationScreen() {
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(emailFragmentAuthorizationScreen != null)
+            etEmail.setText(emailFragmentAuthorizationScreen);
+        if(passwordFragmentAuthorizationScreen != null)
+            etPassword.setText(passwordFragmentAuthorizationScreen);
+    }
 }
