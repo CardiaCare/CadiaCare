@@ -28,7 +28,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 
-import ru.cardiacare.cardiacare.HelpActivity;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
@@ -94,7 +93,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            Log.i("QActivity", "CATCH");
         }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -223,7 +221,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
             System.out.println("feedback: " + jsonStr);
             writeData(jsonStr);
             if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
-                // To SIB
                 Long timestamp = System.currentTimeMillis() / 1000;
                 String ts = timestamp.toString();
                 MainActivity.storage.setLastQuestionnairePassDate(ts);
@@ -297,7 +294,6 @@ public class QuestionnaireActivity extends AppCompatActivity {
     }
 
     static public void clearFeedback() {
-//        Log.i("QQQ", "clearFeedback()");
         int respondsCount = feedback.getResponds().size();
         for (int i = respondsCount; i > 0; i--) {
             feedback.getResponds().remove(i - 1);

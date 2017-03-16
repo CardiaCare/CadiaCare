@@ -19,6 +19,8 @@ import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
 
+/* Экран "Визуализация ЭКГ" */
+
 public class ECGActivity extends AppCompatActivity {
 
     ECGView myView;

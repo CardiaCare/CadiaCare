@@ -22,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
+/* Получение данных о давлении */
+
 public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
 
     @Override
@@ -50,7 +52,7 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
             switch (ret = response.body().string()) {
             }
             System.out.println("Test! response " + ret);
-//            ////////////////////////////////////////////////////////////////////////////////////////
+
 //            BloodPressureActivity.bp_data2 = new LinkedList<ResultBloodPressure>();
 //            BloodPressureActivity.bp_data2.add(new ResultBloodPressure("", "","0", ""));
 //
@@ -70,13 +72,10 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
 //                    // Oops
 //                }
 //            }
-//            ////////////////////////////////////////////////////////////////////////////////////////
-            //System.out.println("Test! request " + request.body().toString());
 
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    //Log.e("Request", request.body().toString());
                 }
 
                 @Override
@@ -97,7 +96,6 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        ////////////////////////////////////////////////////////////////////////////////////////
         //BloodPressureActivity.bp_data.remove();
         BloodPressureActivity.bp_data.clear();
         //BloodPressureActivity.bp_data = new LinkedList<ResultBloodPressure>();
@@ -133,11 +131,8 @@ public class BloodPressureGET extends AsyncTask<JSONObject, String, String> {
 
                 BloodPressureActivity.bp_data.add(new ResultBloodPressure(oneObject.getString("systolic"), oneObject.getString("diastolic"), "0", date, Integer.parseInt(oneObject.getString("id"))));
             } catch (JSONException e) {
-                // Oops
             }
         }
-        ////////////////////////////////////////////////////////////////////////////////////////
-
         BloodPressureActivity.refresh();
     }
 }

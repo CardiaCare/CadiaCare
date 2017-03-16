@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
-public class PatientsGET  extends AsyncTask<JSONObject, String, String> {
+public class PatientsGET extends AsyncTask<JSONObject, String, String> {
 
     @Override
     protected void onPreExecute() {
@@ -39,7 +39,6 @@ public class PatientsGET  extends AsyncTask<JSONObject, String, String> {
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            //System.out.println("Test! response " + response.body().string());
             switch (ret = response.body().string()) {
             }
             System.out.println("Test! response " + ret);
@@ -47,7 +46,6 @@ public class PatientsGET  extends AsyncTask<JSONObject, String, String> {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    //Log.e("Request", request.body().toString());
                 }
 
                 @Override
@@ -61,7 +59,6 @@ public class PatientsGET  extends AsyncTask<JSONObject, String, String> {
             System.out.println("Test! exc " + e.getMessage());
             e.printStackTrace();
         }
-        //return null;
         return ret;
     }
 
@@ -78,6 +75,7 @@ public class PatientsGET  extends AsyncTask<JSONObject, String, String> {
             MainActivity.storage.setAccountFirstName(dataJsonObj.getString("name"));
             MainActivity.storage.setAccountSecondName(dataJsonObj.getString("surname"));
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 }

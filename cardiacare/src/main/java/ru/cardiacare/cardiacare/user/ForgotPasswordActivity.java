@@ -35,10 +35,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         TextInputLayout1 = (TextInputLayout) this.findViewById(R.id.TextInputLayout1);
         etPassword = (EditText) this.findViewById(R.id.etPassword);
 
-        TextInputLayout2  = (TextInputLayout) this.findViewById(R.id.TextInputLayout2);
+        TextInputLayout2 = (TextInputLayout) this.findViewById(R.id.TextInputLayout2);
         etPassword2 = (EditText) this.findViewById(R.id.etPassword2);
 
-        TextInputLayout3  = (TextInputLayout) this.findViewById(R.id.TextInputLayout3);
+        TextInputLayout3 = (TextInputLayout) this.findViewById(R.id.TextInputLayout3);
         etInviteCode = (EditText) this.findViewById(R.id.etInviteCode);
 
         Send2 = (Button) findViewById(R.id.nextButton);
@@ -56,7 +56,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 //                etInviteCode.setVisibility(View.VISIBLE);
 //                Send2.setVisibility(View.VISIBLE);
 
-                if(emptyCheck(etLogin.getText().toString()))
+                if (emptyCheck(etLogin.getText().toString()))
                     ForgotPassword1(etLogin.getText().toString());
             }
         });
@@ -64,7 +64,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         Send2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(emptyCheck2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString()))
+                if (emptyCheck2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString()))
                     ForgotPassword2(etPassword.getText().toString(), etPassword2.getText().toString(), etInviteCode.getText().toString());
             }
         });
@@ -80,28 +80,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
             ForgotPasswordPost forgotPost = new ForgotPasswordPost();
             forgotPost.execute(json);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
     void ForgotPassword2(String code, String password1, String password2) {
         JSONObject json = null;
 
         String str = "{ \"password\":\"" + password1 + "\", "
-                + "\"code\":\"" + code +"\"}";
+                + "\"code\":\"" + code + "\"}";
 
         try {
             json = new JSONObject(str);
 
             ForgotPasswordPUT forgotPut = new ForgotPasswordPUT();
             forgotPut.execute(json);
+        } catch (Exception e) {
         }
-        catch (Exception e){}
     }
 
     private boolean emptyCheck(String login) {
         if (login.equals("") || (login.indexOf("@") == -1)) {
-            //Toast.makeText(getApplicationContext(), "Please, fill fields", Toast.LENGTH_LONG).show();
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -127,7 +126,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private boolean emptyCheck2(String code, String password, String password2) {
         if (password.equals("") || (!password.equals(password2)) || code.equals("")) {
-            //Toast.makeText(getApplicationContext(), "Please, fill fields", Toast.LENGTH_LONG).show();
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)

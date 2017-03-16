@@ -20,6 +20,8 @@ import java.net.URL;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
+/* Запрос на получение версии опросника */
+
 public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
 
     private Context context;
@@ -32,7 +34,9 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
     }
 
     @Override
-    protected void onPreExecute() {super.onPreExecute();}
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
 
     @Override
     public String doInBackground(Void... params) {
@@ -41,8 +45,8 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
             URL url = new URL("http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/questionnaires");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(10000);
+            urlConnection.setConnectTimeout(15000);
             urlConnection.setDoInput(true);
             urlConnection.setRequestProperty("Authorization", "Basic " + Base64.encodeToString((MainActivity.storage.getAccountToken() + ":").getBytes("UTF-8"), Base64.DEFAULT));//MainActivity.authorization_token);///
             urlConnection.connect();
@@ -57,7 +61,8 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
             }
             resultJson = buffer.toString();
 
-        }catch(Exception e){}
+        } catch (Exception e) {
+        }
 
 
         return resultJson;
@@ -68,7 +73,6 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
         super.onPostExecute(result);
         System.out.println("Test! resultversion " + result);
         JSONArray jArray = null;
-        //JSONArray jArray = new JSONArray(result);
 
         try {
             jArray = new JSONArray(result);
@@ -76,26 +80,21 @@ public class QuestionnaireVersionGET extends AsyncTask<Void, String, String> {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < jArray.length() ; i++)
-        {
+        for (int i = 0; i < jArray.length(); i++) {
             try {
                 JSONObject oneObject = jArray.getJSONObject(i);
                 String id = oneObject.getString("id");
                 String version = oneObject.getString("version");
 
-                System.out.println("Test! " + version + " ? " + MainActivity.storage.getQuestionnaireVersion());
-                if(version.compareTo(MainActivity.storage.getQuestionnaireVersion()) != 0){
-
-                    System.out.println("Test! != 0 ");
+//                System.out.println("Test! " + version + " ? " + MainActivity.storage.getQuestionnaireVersion());
+                if (version.compareTo(MainActivity.storage.getQuestionnaireVersion()) != 0) {
 
                     QuestionnaireHelper.serverUri = "http://api.cardiacare.ru/questionnaire/" + id;
                     MainActivity.storage.setVersion(version);
                     QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
                     questionnaireGET.execute();
                     QuestionnaireHelper.questionnaireDownloadedFromFile = false;
-                }
-                else {
-                    System.out.println("Test! == 0 ");
+                } else {
                     String jsonFromFile = QuestionnaireHelper.readSavedData(context);
                     QuestionnaireHelper.questionnaireDownloadedFromFile = true;
                     Gson json = new Gson();

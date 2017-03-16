@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,11 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-// Пример графика
+// График давления по данным из дневника давления
 // Используется, как часть ViewPager
 // Документация по графикам: http://www.android-graphview.org/
 
-public class FragmentExampleGraph1 extends Fragment {
+public class FragmentBPGraph extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,17 +46,15 @@ public class FragmentExampleGraph1 extends Fragment {
         return view;
     }
 
-    public FragmentExampleGraph1() {
+    public FragmentBPGraph() {
     }
 
-    public static FragmentExampleGraph1 newInstance() {
-        FragmentExampleGraph1 f = new FragmentExampleGraph1();
+    public static FragmentBPGraph newInstance() {
+        FragmentBPGraph f = new FragmentBPGraph();
         return f;
     }
 
     private DataPoint[] getSystolicData() {
-        Log.i("QQQ", "qqqqqqqqqqqq");
-//        Log.i("QQQ", "getSystolicBP() = " + MainActivity.storage.getSystolicBP());
         String[] items = MainActivity.storage.getSystolicBP().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 
         int[] results = new int[items.length];
@@ -65,7 +62,6 @@ public class FragmentExampleGraph1 extends Fragment {
         for (int i = 0; i < items.length; i++) {
             try {
                 results[i] = Integer.parseInt(items[i]);
-//                Log.i("QQQ", "result[i] = " + results[i]);
             } catch (NumberFormatException nfe) {
             }
         }
@@ -74,13 +70,11 @@ public class FragmentExampleGraph1 extends Fragment {
         for (int i = 0; i < results.length; i++) {
             DataPoint v = new DataPoint(i + 1, results[i]);
             values[i] = v;
-//            Log.i("QQQ", "valuesSystolic = " + values[i].toString());
         }
         return values;
     }
 
     private DataPoint[] getDiastolicData() {
-//        Log.i("QQQ", "getDiastolicBP() = " + MainActivity.storage.getDiastolicBP());
         String[] items = MainActivity.storage.getDiastolicBP().replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\s", "").split(",");
 
         int[] results = new int[items.length];
@@ -88,7 +82,6 @@ public class FragmentExampleGraph1 extends Fragment {
         for (int i = 0; i < items.length; i++) {
             try {
                 results[i] = Integer.parseInt(items[i]);
-//                Log.i("QQQ", "result[i] = " + results[i]);
             } catch (NumberFormatException nfe) {
             }
         }
@@ -97,7 +90,6 @@ public class FragmentExampleGraph1 extends Fragment {
         for (int i = 0; i < results.length; i++) {
             DataPoint v = new DataPoint(i + 1, results[i]);
             values[i] = v;
-//            Log.i("QQQ", "valuesDiastolic = " + values[i].toString());
         }
         return values;
     }

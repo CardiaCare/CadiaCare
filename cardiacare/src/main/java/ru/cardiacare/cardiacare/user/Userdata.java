@@ -38,7 +38,7 @@ public class Userdata extends AppCompatActivity {
     public static final String ACCOUNT_PREFERENCES_HEIGHT = "height";
     public static final String ACCOUNT_PREFERENCES_WEIGHT = "weight";
     public static final String ACCOUNT_PREFERENCES_AGE = "age";
-//    private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
+    //    private static final String ACCOUNT_PREFERENCES_PERIODPASSSERVEY = "time";
     private static final String ACCOUNT_PREFERENCES_PERIODECGSENDING = "ecgtime";
     private static final String ACCOUNT_PREFERENCES_ECGFILE = "ecgfile";
     private static final String ACCOUNT_PREFERENCES_PAGEVIEWONMAINACTIVITY = "pageviewonmainactivity";
@@ -55,7 +55,7 @@ public class Userdata extends AppCompatActivity {
     EditText etHeight;
     EditText etWeight;
     EditText etAge;
-//    EditText etPeriodPassSurvey;
+    //    EditText etPeriodPassSurvey;
     EditText etPeriodECGSending;
     CheckBox cbPageViewOnMainactivity;
     CheckBox cbFeedbackRefresh;
@@ -98,7 +98,6 @@ public class Userdata extends AppCompatActivity {
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
 
-        ///////////////////////////////////////////////////////////////////////////////////
         LinearLayout mainLayout = (LinearLayout) findViewById(R.id.doctors);
 
         JSONArray jArray = null;
@@ -129,11 +128,9 @@ public class Userdata extends AppCompatActivity {
                     mainLayout.addView(doctors_card);
 
                 } catch (JSONException e) {
-                    // Oops
                 }
             }
         }
-        ///////////////////////////////////////////////////////////////////////////////////
     }
 
     protected void onPause() {
@@ -141,7 +138,6 @@ public class Userdata extends AppCompatActivity {
         SharedPreferences.Editor editor = sPref.edit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_EMAIL, etEmail.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_FIRSTNAME, etFirstName.getText().toString()).commit();
-////        Log.i("TAG", "1 " + sPref.getString(ACCOUNT_PREFERENCES_FIRSTNAME, ""));
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_SECONDNAME, etSecondName.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_PHONENUMBER, etPhoneNumber.getText().toString()).commit();
 //        sPref.edit().putString(ACCOUNT_PREFERENCES_HEIGHT, etHeight.getText().toString()).commit();

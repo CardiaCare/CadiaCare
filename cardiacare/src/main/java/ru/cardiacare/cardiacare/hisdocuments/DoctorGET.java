@@ -17,7 +17,9 @@ import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
-public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
+/* Запрос на получение списка врачей */
+
+public class DoctorGET extends AsyncTask<JSONObject, String, String> {
 
     @Override
     protected void onPreExecute() {
@@ -32,23 +34,22 @@ public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
+            String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
             Request request = new Request.Builder()
-                    .url("http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId()+"/doctors")
+                    .url("http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/doctors")
                     .addHeader("Authorization", credential)
                     .build();
 
             Response response = client.newCall(request).execute();
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-            //System.out.println("Test! response " + response.body().string());
-            switch (ret = response.body().string()) {}
+            switch (ret = response.body().string()) {
+            }
             System.out.println("Test! response " + ret);
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
-                    //Log.e("Request", request.body().toString());
                 }
 
                 @Override
@@ -87,8 +88,6 @@ public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
 //            MainActivity.storage.setDoctorSurname(dataJsonObj.getString("surname"));
 //
 //        } catch (Exception e) {}
-        /////////////////////////////////
-        ///обработать result - список докторов
 
         MainActivity.storage.setDoctors(result);
 
@@ -109,7 +108,6 @@ public class DoctorGET  extends AsyncTask<JSONObject, String, String> {
                 MainActivity.storage.setDoctorSurname(oneObject.getString("surname"));
 
             } catch (JSONException e) {
-                // Oops
             }
         }
     }

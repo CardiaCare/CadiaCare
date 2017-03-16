@@ -247,7 +247,7 @@ public class AccountStorage {
         return strFirstName;
     }
 
-    public void setAccountFirstName( String firstname) {
+    public void setAccountFirstName(String firstname) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_FIRSTNAME, firstname);
         editor.apply();
@@ -260,7 +260,7 @@ public class AccountStorage {
         return strSecondName;
     }
 
-    public void setAccountSecondName( String secondname) {
+    public void setAccountSecondName(String secondname) {
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString(ACCOUNT_PREFERENCES_SECONDNAME, secondname);
         editor.apply();

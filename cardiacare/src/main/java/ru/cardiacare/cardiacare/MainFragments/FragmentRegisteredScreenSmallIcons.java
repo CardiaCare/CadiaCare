@@ -77,7 +77,7 @@ public class FragmentRegisteredScreenSmallIcons extends Fragment {
                 case 2:
                     boolean isGPS = true;
                     if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                        final LocationManager manager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE );
+                        final LocationManager manager = (LocationManager) MainActivity.mContext.getSystemService(Context.LOCATION_SERVICE);
                         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             isGPS = false;
                             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(MainActivity.mContext, R.style.AppCompatAlertDialogStyle);
