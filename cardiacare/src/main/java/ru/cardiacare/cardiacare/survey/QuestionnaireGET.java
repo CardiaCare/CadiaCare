@@ -119,6 +119,7 @@ public class QuestionnaireGET extends AsyncTask<Void, Integer, Integer> {
                     });
             alertDialog.show();
         } else {
+            QuestionnaireActivity.clearFeedback();
 //            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(context, QuestionnaireActivity.class);
             intent.putExtra("questionnaireType", QuestionnaireHelper.questionnaireType);
