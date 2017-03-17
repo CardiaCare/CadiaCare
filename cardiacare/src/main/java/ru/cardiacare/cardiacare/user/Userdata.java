@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -98,7 +99,7 @@ public class Userdata extends AppCompatActivity {
 
         sPref = getSharedPreferences(ACCOUNT_PREFERENCES, MODE_ENABLE_WRITE_AHEAD_LOGGING);
 
-        LinearLayout mainLayout = (LinearLayout) findViewById(R.id.doctors);
+        RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.doctors);
 
         JSONArray jArray = null;
         try {

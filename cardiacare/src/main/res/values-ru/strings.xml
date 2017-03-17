@@ -123,6 +123,7 @@
     <string name="about_legal_osl">Лицензии открытого ПО</string>
     <string name="about_legal_pp">Политика конфеденциальности</string>
 
+
     <!--activity_help.xml-->
     <string name="helpText_step1">Опрос</string>
     <string name="helpText_step2">Дневник давления</string>
