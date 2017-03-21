@@ -32,7 +32,7 @@ public class AdapterBigIcons extends BaseAdapter {
             gridView = inflater.inflate(R.layout.item_menu_icons_big, null);
             TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
             textView.setText(textArrayValues[position]);
-            textView.setTextSize(18);
+//            textView.setTextSize(18);
             imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
 
             String textArray = textArrayValues[position];

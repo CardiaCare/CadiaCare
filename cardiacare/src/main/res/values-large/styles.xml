@@ -32,7 +32,7 @@
 
     <style name="AppCompatActionBarMenuTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/toolbarMenuTextColor</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="UserAuthorizationPageTheme" parent="Theme.AppCompat.Light.NoActionBar">
