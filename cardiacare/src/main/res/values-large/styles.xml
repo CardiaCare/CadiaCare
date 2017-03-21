@@ -1,0 +1,66 @@
+<resources>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:itemBackground">@color/colorItemBackground</item>
+        <item name="android:textColorTertiary">@color/textColorTertiary</item>
+        <!--<item name="android:textAppearance">@android:style/TextAppearance.Large</item>-->
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="AppBaseTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:textColorPrimary">@color/dialogTextColorPrimary</item>
+        <item name="colorPrimary">@color/dialogColorPrimary</item>
+        <item name="android:background">@color/dialogColorBackground</item>
+        <item name="android:textColorSecondary">@color/dialogTextColorSecondary</item>
+        <item name="colorAccent">@color/dialogColorAccent</item>
+    </style>
+
+    <style name="AppCompatActionBarStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="android:itemTextAppearance">@style/AppCompatActionBarMenuTextStyle</item>
+    </style>
+
+    <style name="AppCompatActionBarMenuTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/toolbarMenuTextColor</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="UserAuthorizationPageTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/userAuthorizationColorPrimary</item>
+        <item name="colorAccent">@color/userAuthorizationColorAccent</item>
+        <item name="android:textColorPrimary">@color/userAuthorizationTextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/userAuthorizationTextColorSecondary</item>
+        <item name="android:textColorHint">@color/userAuthorizationTextColorHint</item>
+    </style>
+
+    <style name="AppCompatButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/colorBackground</item>
+    </style>
+
+    <style name="BloodPressureActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="colorPrimary">@color/bloodPressureColorPrimary</item>
+        <item name="colorAccent">@color/bloodPressureColorAccent</item>
+        <item name="android:colorBackground">@color/bloodPressureColorBackground</item>
+        <item name="android:textColorPrimary">@color/bloodPressureTextColorPrimary</item>
+        <item name="android:textColorSecondary">@color/bloodPressureTextColorSecondary</item>
+        <item name="android:textColorTertiary">@color/bloodPressureTextColorTertiary</item>
+    </style>
+
+    <style name="AppBaseTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+</resources>
