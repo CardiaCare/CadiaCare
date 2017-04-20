@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -33,9 +34,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LinkedList<Question> Questions;
     private int[] TypesQuestions;
     private Context context;
+    private boolean isFirstRunning = false;
 
     private LinkedList<Respond> responds = QuestionnaireActivity.feedback.getResponds();
-    ;
 
     public RecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
         this.Questions = Questions;
@@ -89,6 +90,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 for (int l = 0; l < responds.get(j).getResponses().get(k).getResponseItems().size(); l++) {
                                     if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItems_id())) {
                                         radioButtonsAnswers[i].setChecked(true);
+                                        for (int m = 0; m < responds.get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().size(); m++) {
+                                            holder.radioButtonsSubAnswer = new EditText(context);
+                                            holder.radioButtonsSubAnswer.setText(responds.get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().get(m).getResponseText());
+                                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                            layoutParams.addRule(RelativeLayout.BELOW, R.id.RadioButtonsAnswers);
+                                            holder.radioButtonsSubAnswer.setLayoutParams(layoutParams);
+                                            holder.radioButtonsRelativeLayout.addView(holder.radioButtonsSubAnswer);
+                                            holder.radioButtonsSubAnswer.setVisibility(View.VISIBLE);
+                                            isFirstRunning = true;
+                                        }
                                     }
                                 }
                             }
@@ -259,18 +270,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView radioButtonsQuestion;
         RadioGroup radioButtonsGroup;
         RadioButton radioButtonsAnswer;
+        RelativeLayout radioButtonsRelativeLayout;
         Integer questionId;
+        EditText radioButtonsSubAnswer;
+        Answer answer;
+        AnswerItem answerItem;
+        ResponseItem responseItem;
+        boolean isSubAnswerTextChanged = false;
 
         public RadioButtonsViewHolder(View v) {
             super(v);
             this.radioButtonsQuestion = (TextView) v.findViewById(R.id.RadioButtonsQuestion);
             this.radioButtonsGroup = (RadioGroup) v.findViewById(R.id.RadioButtonsAnswers);
+            this.radioButtonsRelativeLayout = (RelativeLayout) v.findViewById(R.id.RadioButtonsRelativeLayout);
             this.radioButtonsAnswer = (RadioButton) v.getParent();
 
             radioButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    System.out.println("Touch! Dichotomous " + checkedId + " " + questionId);
+                public void onCheckedChanged(RadioGroup group, final int checkedId) {
+                    if (radioButtonsSubAnswer != null) {
+                        radioButtonsSubAnswer.setVisibility(View.GONE);
+                    }
+                    System.out.println("Touch! RadioButtons " + checkedId + " " + questionId);
                     for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                         if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                             int flag = 0;
@@ -284,11 +305,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     LinkedList<Answer> answers = question.getAnswers();
                                     //for (int j = 0; j < answers.size(); j++) {
                                     //Answer answer = answers.get(j);
-                                    Answer answer = answers.get(0);
+                                    answer = answers.get(0);
                                     //Answer answer = question.getAnswer();
-                                    AnswerItem answerItem = answer.getItems().get(checkedId);
+                                    answerItem = answer.getItems().get(checkedId);
                                     Response response = new Response(answer.getId());
-                                    ResponseItem responseItem = new ResponseItem(answerItem.getId());
+                                    responseItem = new ResponseItem(answerItem.getId());
                                     response.addResponseItem(responseItem);
                                     QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                     flag++;
@@ -299,23 +320,87 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 LinkedList<Answer> answers = question.getAnswers();
                                 //for (int j = 0; j < answers.size(); j++) {
                                 //Answer answer = answers.get(j);
-                                Answer answer = answers.get(0);
+                                answer = answers.get(0);
                                 //Answer answer = question.getAnswer();
-                                AnswerItem answerItem = answer.getItems().get(checkedId);
+                                answerItem = answer.getItems().get(checkedId);
                                 Respond respond = new Respond(question.getId());
                                 Response response = new Response(answer.getId());
-                                ResponseItem responseItem = new ResponseItem(answerItem.getId());
+                                responseItem = new ResponseItem(answerItem.getId());
                                 response.addResponseItem(responseItem);
                                 respond.addResponse(response);
                                 QuestionnaireActivity.feedback.addRespond(respond);
+                            }
+
+
+                            if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getAnswers().get(0).getItems().get(checkedId).getSubAnswers().size() > 0) {
+                                if (radioButtonsSubAnswer == null) {
+                                    radioButtonsSubAnswer = new EditText(context);
+                                } else if (!isFirstRunning){
+                                    radioButtonsSubAnswer.setText("");
+                                    radioButtonsSubAnswer.setVisibility(View.GONE);
+                                }
+                                radioButtonsRelativeLayout.removeView(radioButtonsSubAnswer);
+
+                                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                layoutParams.addRule(RelativeLayout.BELOW, R.id.RadioButtonsAnswers);
+                                radioButtonsSubAnswer.setLayoutParams(layoutParams);
+                                radioButtonsRelativeLayout.addView(radioButtonsSubAnswer);
+                                radioButtonsSubAnswer.setVisibility(View.VISIBLE);
+                                isFirstRunning = false;
+
+                                radioButtonsSubAnswer.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                            if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                                int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
+                                                for (int k = 0; k < responsesCount; k++) {
+                                                    if (QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getAnswer_id().equals(answer.getId())) {
+                                                        for (int l = 0; l < QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().size(); l++) {
+                                                            if (QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
+                                                                int subAnswersCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().size();
+                                                                for (int m = 0; m < subAnswersCount; m++) {
+                                                                    QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().remove(m);
+                                                                }
+                                                                Answer subAnswer = answerItem.getSubAnswers().get(0);
+                                                                Response subResponse = new Response(subAnswer.getId());
+                                                                subResponse.setResponseText(radioButtonsSubAnswer.getText().toString());
+                                                                responseItem.addSubResponse(subResponse);
+                                                                isSubAnswerTextChanged = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+                                });
+
+                                if ((!isSubAnswerTextChanged) && (radioButtonsSubAnswer != null)) {
+                                    if (radioButtonsSubAnswer.getText().length() > 0) {
+                                        Answer subAnswer = answerItem.getSubAnswers().get(0);
+                                        Response subResponse = new Response(subAnswer.getId());
+                                        subResponse.setResponseText(radioButtonsSubAnswer.getText().toString());
+                                        responseItem.addSubResponse(subResponse);
+                                    }
+                                }
+
                             }
                         }
                     }
                 }
             });
         }
-    }
 
+    }
 
     private class TextFieldViewHolder extends ViewHolder {
         TextView TextFieldQuestion;
