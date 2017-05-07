@@ -1,11 +1,15 @@
 package ru.cardiacare.cardiacare.survey;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.survey.Answer;
@@ -43,7 +48,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public static final int Likertscale = 5;
     public static final int Continuousscale = 6;
     public static final int Dichotomous = 7;
-    public static final int DefaultValue = 8;
+    public static final int AttachFile = 8;
+    public static final int DefaultValue = 9;
+    public static final int READ_REQUEST_CODE = 0;
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
 
     static public Feedback feedback;
     static public Feedback alarmFeedback;
@@ -56,10 +64,13 @@ public class QuestionnaireActivity extends AppCompatActivity {
     static ImageButton buttonRefresh;
     static ImageButton buttonSend;
     static String periodic = "periodic";
+    static Activity activity;
+    static String filePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         Intent intent = getIntent();
         final FileInputStream fIn;
         mContext = this;
@@ -162,6 +173,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
                         break;
                     case "ContinuousScale":
                         Types[i] = Continuousscale;
+                        break;
+                    case "File":
+                        Types[i] = AttachFile;
                         break;
                     default:
                         Types[i] = DefaultValue;
@@ -367,5 +381,51 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     }
                 });
         alertDialog.show();
+    }
+
+    public static void performFileSearch() {
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT,null);
+        galleryIntent.setType("image/* video/*");
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
+        audioIntent.setType("audio/*");
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
+        chooser.putExtra(Intent.EXTRA_TITLE, R.string.attach_file);
+
+        Intent[] intentArray =  {cameraIntent, audioIntent};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+        activity.startActivityForResult(chooser,READ_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == READ_REQUEST_CODE) {
+                Uri uri;
+                if (resultData != null) {
+                    uri = resultData.getData();
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    if (cursor == null) {
+                        filePath = uri.getPath();
+                    } else {
+                        cursor.moveToFirst();
+                        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                        filePath = cursor.getString(idx);
+                        cursor.close();
+                    }
+                    TextView AttachFilePath = (TextView) findViewById(R.id.AttachFilePath);
+                    AttachFilePath.setText(filePath);
+                    AttachFilePath.setVisibility(View.VISIBLE);
+                    RecyclerViewAdapter.AttachFileViewHolder.attachFileSaveToFeedback();
+                }
+            }
+        }
     }
 }

@@ -207,6 +207,9 @@ Last Revised: March 13, 2017
     <!--activity_bluetooth_find.xml-->
     <string name="refresh">Refresh</string>
 
+    <!--card_attach_file.xml-->
+    <string name="attach_file">Attach file&#8230;</string>
+
     <!--content_demographic_data.xml-->
     <string name="name">Name</string>
     <string name="surname">Surname</string>

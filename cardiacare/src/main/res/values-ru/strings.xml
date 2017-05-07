@@ -197,6 +197,9 @@
     <!--activity_bluetooth_find.xml-->
     <string name="refresh">Обновить</string>
 
+    <!--card_attach_file.xml-->
+    <string name="attach_file">Прикрепить файл&#8230;</string>
+
     <!--content_demographic_data.xml-->
     <string name="name">Имя</string>
     <string name="surname">Фамилия</string>

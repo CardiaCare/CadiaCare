@@ -35,18 +35,18 @@ public class ECGPost extends AsyncTask<JSONObject, String, String> {
 
         try {
             String dirPath = "/";
-            File fileq = MainActivity.mContext.getFilesDir();//new File(dirPath);
+            File fileq = MainActivity.mContext.getFilesDir();//new AttachFile(dirPath);
             File[] files = fileq.listFiles();
 //            for (int i = 0; i < files.length; i++)
 //                System.out.println("Test! files " + files[i].toString());
 
             OkHttpClient client = new OkHttpClient();
 
-//            File file = new File("feedback.json"); // MainActivity.storage.getECGFile() //questionnaire.json
+//            AttachFile file = new AttachFile("feedback.json"); // MainActivity.storage.getECGFile() //questionnaire.json
 
-//            File file = new File(MainActivity.mContext.getFilesDir(), MainActivity.storage.getECGFile());
-//            File file = new File(MainActivity.mContext.getFilesDir(), "ecgfile1");
-//            File file = new File(MainActivity.mContext.getFilesDir(), "lbp.txt");
+//            AttachFile file = new AttachFile(MainActivity.mContext.getFilesDir(), MainActivity.storage.getECGFile());
+//            AttachFile file = new AttachFile(MainActivity.mContext.getFilesDir(), "ecgfile1");
+//            AttachFile file = new AttachFile(MainActivity.mContext.getFilesDir(), "lbp.txt");
 
             // Проверяем, есть ли в массиве ECGService.ecgFiles неотправленные файлы
             // Если они есть, то отправляем их все

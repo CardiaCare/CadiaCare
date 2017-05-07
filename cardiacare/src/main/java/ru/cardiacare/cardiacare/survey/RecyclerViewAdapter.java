@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -59,6 +61,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else if (Type == QuestionnaireActivity.Multiplechoice) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_check_boxes, viewGroup, false);
             return new CheckBoxesViewHolder(v);
+        } else if (Type == QuestionnaireActivity.AttachFile) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_attach_file, viewGroup, false);
+            return new AttachFileViewHolder(v);
         } else {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_radio_buttons, viewGroup, false);
             return new RadioButtonsViewHolder(v);
@@ -247,6 +252,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.TextFieldAnswer.setText(responds.get(j).getResponses().get(0).getResponseText());
                 }
             }
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.AttachFile) {
+            Question question = Questions.get(position);
+            AttachFileViewHolder holder = (AttachFileViewHolder) viewHolder;
+            holder.AttachFileQuestion.setText(question.getDescription());
+            holder.questionId = question.getId();
         }
     }
 
@@ -335,7 +345,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getAnswers().get(0).getItems().get(checkedId).getSubAnswers().size() > 0) {
                                 if (radioButtonsSubAnswer == null) {
                                     radioButtonsSubAnswer = new EditText(context);
-                                } else if (!isFirstRunning){
+                                } else if (!isFirstRunning) {
                                     radioButtonsSubAnswer.setText("");
                                     radioButtonsSubAnswer.setVisibility(View.GONE);
                                 }
@@ -555,6 +565,65 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
                     }
             );
+        }
+    }
+
+    public static class AttachFileViewHolder extends ViewHolder {
+        TextView AttachFileQuestion;
+        Button AttachFileButton;
+        static TextView AttachFilePath;
+        static Integer questionId;
+
+        public AttachFileViewHolder(View v) {
+            super(v);
+            this.AttachFileQuestion = (TextView) v.findViewById(R.id.AttachFileQuestion);
+            this.AttachFileButton = (Button) v.findViewById(R.id.AttachFileButton);
+            this.AttachFilePath = (TextView) v.findViewById(R.id.AttachFilePath);
+            AttachFileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QuestionnaireActivity.performFileSearch();
+                }
+            });
+        }
+
+        public static void attachFileSaveToFeedback() {
+            for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
+                    int flag = 0;
+                    for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                        if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                            int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int k = 0; k < responsesCount; k++) {
+                                QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                            }
+                            Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
+                            LinkedList<Answer> answers = question.getAnswers();
+                            //for (int j = 0; j < answers.size(); j++) {
+                            //Answer answer = answers.get(j);
+                            Answer answer = answers.get(0);
+                            //Answer answer = question.getAnswer();
+                            Response response = new Response(answer.getId());
+                            response.setResponseFile(AttachFilePath.getText().toString());
+                            QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
+                            flag++;
+                        }
+                    }
+                    if (flag == 0) {
+                        Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
+                        LinkedList<Answer> answers = question.getAnswers();
+                        //for (int j = 0; j < answers.size(); j++) {
+                        //Answer answer = answers.get(j);
+                        Answer answer = answers.get(0);
+                        //Answer answer = question.getAnswer();
+                        Respond respond = new Respond(question.getId());
+                        Response response = new Response(answer.getId());
+                        response.setResponseFile(AttachFilePath.getText().toString());
+                        respond.addResponse(response);
+                        QuestionnaireActivity.feedback.addRespond(respond);
+                    }
+                }
+            }
         }
     }
 }
