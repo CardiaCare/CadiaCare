@@ -20,8 +20,9 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -36,6 +37,7 @@
             android:theme="@style/AppBaseTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -80,7 +82,7 @@
         <activity
             android:name=".ecgviewer_old.ECGActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:label="@string/fake_ecg"
+            android:label="@string/ecg_demonstration"
             android:screenOrientation="portrait"
             android:theme="@style/AppBaseTheme" />
         <activity
@@ -135,6 +137,10 @@
             android:name=".user.ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:theme="@style/AppBaseTheme" />
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"
+            android:theme="@style/AppBaseTheme" />
 
         <service
             android:name=".idt_ecg.ECGService"
@@ -144,5 +150,7 @@
                 <action android:name="ru.cardiacare.cardiacare.idt_ecg.ECGService" />
             </intent-filter>
         </service>
+
     </application>
+
 </manifest>

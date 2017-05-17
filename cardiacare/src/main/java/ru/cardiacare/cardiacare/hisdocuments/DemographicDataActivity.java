@@ -9,7 +9,6 @@ import android.widget.EditText;
 
 import com.petrsu.cardiacare.smartcare.hisdocuments.DemographicData;
 
-import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
 /* Экран "Демографические данные" */

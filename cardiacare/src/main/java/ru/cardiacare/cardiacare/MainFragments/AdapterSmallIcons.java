@@ -32,16 +32,16 @@ public class AdapterSmallIcons extends BaseAdapter {
             gridView = inflater.inflate(R.layout.item_menu_icons_small, null);
             TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
             textView.setText(textArrayValues[position]);
-            textView.setTextSize(18);
+//            textView.setTextSize(18);
             imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
 
             String textArray = textArrayValues[position];
 
-            if (textArray.equals("Пройти опрос")) {
+            if (textArray.equals(FragmentRegisteredScreenSmallIcons.resources.getText(R.string.pass_survey).toString())) {
                 imageView.setImageResource(R.drawable.servey_white);
-            } else if (textArray.equals("Дневник давления")) {
+            } else if (textArray.equals(FragmentRegisteredScreenSmallIcons.resources.getText(R.string.bp).toString())) {
                 imageView.setImageResource(R.drawable.bpresure);
-            } else if (textArray.equals("ЭКГ")) {
+            } else if (textArray.equals(FragmentRegisteredScreenSmallIcons.resources.getText(R.string.ecg).toString())) {
                 imageView.setImageResource(R.drawable.monitor);
             } else {
                 imageView.setImageResource(R.drawable.documents);

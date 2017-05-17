@@ -22,22 +22,26 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import org.json.JSONObject;
 
+import java.util.LinkedList;
+
 import ru.cardiacare.cardiacare.MainFragments.FragmentAuthorizationScreen;
-import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph1;
+import ru.cardiacare.cardiacare.MainFragments.FragmentBPGraph;
 import ru.cardiacare.cardiacare.MainFragments.FragmentExampleGraph2;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenBigIcons;
 import ru.cardiacare.cardiacare.MainFragments.FragmentRegisteredScreenSmallIcons;
 import ru.cardiacare.cardiacare.ecgviewer_old.ECGActivity;
+import ru.cardiacare.cardiacare.hisdocuments.DoctorGET;
+import ru.cardiacare.cardiacare.idt_ecg.ECGPost;
 import ru.cardiacare.cardiacare.idt_ecg.ECGService;
-import ru.cardiacare.cardiacare.survey.QuestionnaireHelper;
 import ru.cardiacare.cardiacare.user.AccountStorage;
-import ru.cardiacare.cardiacare.user.Userdata;
+import ru.cardiacare.cardiacare.user.PatientsGET;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,16 +53,21 @@ public class MainActivity extends AppCompatActivity {
     static public String authorization_token = "";
     static public String authorization_id_patient = "";
     static public String authorization_id_doctor = "";
+    static public String authorization_name = "";
+    static public String authorization_surname = "";
     static public AccountStorage storage;
 
     Toolbar toolbar;
-    ViewPager viewPager;
-    static FragmentTransaction fTrans;
-    FragmentManager fManager;
-    static FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
-    static FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
+    static public LinkedList<Integer> systolicBP;
+    static public LinkedList<Integer> diastolicBP;
+
+    static public ViewPager viewPager;
+    static public FragmentTransaction fTrans;
+    static public FragmentManager fManager;
+    static public FragmentRegisteredScreenBigIcons fragmentRegisteredScreenBigIcons;
+    static public FragmentRegisteredScreenSmallIcons fragmentRegisteredScreenSmallIcons;
     FragmentAuthorizationScreen fragmentAuthorizationScreen;
-    FragmentExampleGraph1 fragmentExampleGraph1;
+    static public FragmentBPGraph fragmentBPGraph;
     FragmentExampleGraph2 fragmentExampleGraph2;
 
     @Override
@@ -71,22 +80,59 @@ public class MainActivity extends AppCompatActivity {
         storage = new AccountStorage();
         storage.sPref = getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, MODE_PRIVATE);
 
-//        alarmFeedback = new Feedback("", "Student", "alarmFeedback");
+
         activity = this;
         mContext = this;
+
+        systolicBP = new LinkedList<>();
+        diastolicBP = new LinkedList<>();
 
         fManager = getSupportFragmentManager();
         fragmentRegisteredScreenSmallIcons = new FragmentRegisteredScreenSmallIcons();
         fragmentRegisteredScreenBigIcons = new FragmentRegisteredScreenBigIcons();
-        fragmentExampleGraph1 = new FragmentExampleGraph1();
+        fragmentBPGraph = new FragmentBPGraph();
         fragmentExampleGraph2 = new FragmentExampleGraph2();
         fTrans = fManager.beginTransaction();
-        // Если нет токена, то открываем экран авторизации, иначе - экран авторизированного пользователя
+
+        //Если есть токен, то проверяем корректность всех данных и открываем экран авторизированного пользователя, иначе - экран авторизации
+        if (!storage.getAccountToken().equals("")) {
+            CheckAll();
+        }
+
         if (storage.getAccountToken().equals("")) {
             fragmentAuthorizationScreen = new FragmentAuthorizationScreen();
             fTrans.add(R.id.frgmCont, fragmentAuthorizationScreen, FragmentAuthorizationScreen.TAG);
         }
+
         fTrans.commit();
+    }
+
+    // Проверка всех параметров из storage
+    // Обязательно расширять список при обновлении приложения
+    void CheckAll() {
+        if (storage.getDoctors().equals("")) {
+            DoctorGET doctorGET = new DoctorGET();
+            doctorGET.execute();
+        }
+
+        // Нет API для получения почты, сбрсываю токен для выброса на экран авторизации
+        if (storage.getAccountEmail().equals("")) {
+            storage.setAccountToken("");
+        }
+
+        if (storage.getAccountFirstName().equals("")) {
+            PatientsGET patientsGET = new PatientsGET();
+            patientsGET.execute();
+        }
+
+        if (storage.getAccountSecondName().equals("")) {
+            PatientsGET patientsGET = new PatientsGET();
+            patientsGET.execute();
+        }
+        // Крайняя мера проверки, если оказалось что есть токен, но нет идентификатора пользователя, то выбрасываю на экран авторизации
+        if (storage.getAccountId().equals("")) {
+            storage.setAccountToken("");
+        }
     }
 
     @Override
@@ -95,15 +141,21 @@ public class MainActivity extends AppCompatActivity {
         // Условия выполняются только для авторизированного пользователя
         if (!storage.getAccountToken().equals("")) {
             setMainScreenForAuthorizedUser();
-            // Если файл с данными ЭКГ не был отправлен во время последнего сеанса, то отправляем его
+            // Если есть файлы с данными ЭКГ, которые не были отправлены, то пытаемся их отправить
             if ((!storage.getECGFile().equals(""))) {
                 if (isNetworkAvailable(context)) {
-                    // Отправляем данные на сервер
-                    Log.d(TAG, "Отправляем данные на сервер");
-                    // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
-                    Log.d(TAG, "Обнуляем файл с данными ЭКГ");
-                    // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
-                    MainActivity.storage.setECGFile("");
+                    String ecgFiles = storage.getECGFile();
+                    Log.i(TAG, "ECGFile = " + ecgFiles);
+                    String ecgFileName;
+                    ECGService.ecgFiles = new LinkedList<>();
+                    while (ecgFiles.length() > 16) {
+                        ecgFileName = ecgFiles.substring(0, 16);
+                        ECGService.ecgFiles.add(ecgFileName);
+                        ecgFiles = ecgFiles.substring(18, ecgFiles.length());
+                    }
+                    ECGService.ecgFiles.add(ecgFiles);
+                    ECGPost ecgPost = new ECGPost();
+                    ecgPost.execute();
                 }
             }
 
@@ -113,14 +165,14 @@ public class MainActivity extends AppCompatActivity {
             String ts = timestamp.toString();
             Integer time = Integer.parseInt(ts) - Integer.parseInt(storage.getLastQuestionnairePassDate());
             Integer period;
-            // Если приод прохождения опроса задан пользователем, то обновляем согласно данному периоду
+            // Если период прохождения опроса задан пользователем, то обновляем согласно данному периоду
             // Иначе ставим период по умолчанию (1 минута)
-            if (!storage.getPeriodPassServey().equals("")) {
-                period = Integer.parseInt(storage.getPeriodPassServey());
-            } else {
-                period = 60;
-                storage.setPeriodPassServey("60");
-            }
+//            if (!storage.getPeriodPassSurvey().equals("")) {
+//                period = Integer.parseInt(storage.getPeriodPassSurvey());
+//            } else {
+//                period = 60;
+//                storage.setPeriodPassSurvey("60");
+//            }
             //TODO Восстановить изменение цвета иконки опросника по истечению заданного интервала
 //            if (time >= period) {
 //                serveyButton.setBackgroundResource(R.drawable.servey);
@@ -128,6 +180,11 @@ public class MainActivity extends AppCompatActivity {
 //                serveyButton.setBackgroundResource(R.drawable.servey_white);
 //            }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //No call for super(). Bug on API Level > 11.
     }
 
     @Override
@@ -173,12 +230,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             // Пройти опрос
-            case R.id.passSurvey:
-                if (isNetworkAvailable(context)) {
-                    QuestionnaireHelper.showQuestionnaire(context);
-                } else {
-                    wiFiAlertDialog();
-                }
+            case R.id.menuHelp:
+                startActivity(new Intent(MainActivity.this, HelpActivity.class));
                 break;
             // ЭКГ
             case R.id.ecg:
@@ -186,10 +239,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent4);
                 break;
             // Учетная запись
-            case R.id.menuUserData:
-                //TODO Переделать (Откуда берутся настройки юзера БД?)
-                startActivity(new Intent(this, Userdata.class));
-                break;
+//            case R.id.menuUserData:
+//                startActivity(new Intent(this, Userdata.class));
+//                break;
             // Документы
 //            case R.id.documentsData:
 //                if (isNetworkAvailable(context)) {
@@ -201,9 +253,9 @@ public class MainActivity extends AppCompatActivity {
 //                break;
             // Выход
             case R.id.exitAccount:
-                //TODO Переделать (Как выходить из аккаунта без доступа к сети? Мы можем удалять токен в приложении, но не на сервере.)
                 authorization_token = MainActivity.storage.getAccountToken();
-                storage.setAccountPreferences("", "", "", "", "", "","", "", "", "", "", "", "", "", "0", "", "", "", false);
+                storage.setAccountPreferences("", "", "", "", "", "", "", "", "", "", "", "", "", "", "0", /*"",*/ "", "", false, false, "", "");
+                storage.setVersion("");
                 fTrans = fManager.beginTransaction();
                 if (fragmentRegisteredScreenBigIcons != null) {
                     fTrans.remove(fragmentRegisteredScreenBigIcons);
@@ -229,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class MyPagerAdapter extends FragmentPagerAdapter {
+    public class MyPagerAdapter extends FragmentPagerAdapter {
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -240,17 +292,17 @@ public class MainActivity extends AppCompatActivity {
             switch (pos) {
 
                 case 0:
-                    return FragmentExampleGraph1.newInstance();
-                case 1:
-                    return FragmentExampleGraph2.newInstance();
+                    return FragmentBPGraph.newInstance();
+//                case 1:
+//                    return FragmentExampleGraph2.newInstance();
                 default:
-                    return FragmentExampleGraph1.newInstance();
+                    return FragmentBPGraph.newInstance();
             }
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 1;
         }
     }
 
@@ -281,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
     // Авторизация
     public void authorization(String email, String password) {
         // Если не все поля заполнены, то выводим диалог об ошибке
-        if ((email.isEmpty()) || (password.isEmpty())) {
+        if ((email.isEmpty()) || (password.isEmpty()) || (email.indexOf("@") == -1)) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
             builder.setMessage(R.string.dialog_authorization_message)
                     .setTitle(R.string.dialog_authorization_title)
@@ -296,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             JSONGenerator jsonGen = new JSONGenerator();
             JSONObject json = jsonGen.generateAuthJSON(email, password);
-            AuthorizationService intServ = new AuthorizationService();
+            AuthorizationService intServ = new AuthorizationService(this);
             intServ.execute(json);
 
             // Получаем ответ от сервера
@@ -306,24 +358,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Если авторизация успешна, то сохраняем пользовательские данные и открываем основной экран
-            if (!authorization_token.equals("error_authorization")) {
-                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor,email, "", "", "", "", "", "", "", "0", "", "", "", false);
+            if (!authorization_token.equals("error_authorization") && !authorization_token.equals("")) {
+                storage.setAccountPreferences("", "", "", authorization_id_patient, authorization_token, authorization_id_doctor, email, authorization_name, authorization_surname, "", "", "", "", "", "0", /*"",*/ "", "", false, false, "", "");
                 fTrans = fManager.beginTransaction();
                 fTrans.remove(fragmentAuthorizationScreen);
                 fTrans.commit();
                 setMainScreenForAuthorizedUser();
                 // Если авторизация не успешна, то выводим диалог об ошибке
             } else {
-                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
-                builder.setMessage(R.string.dialog_authorization_message)
-                        .setTitle(R.string.dialog_authorization_title)
-                        .setCancelable(true)
-                        .setPositiveButton(R.string.dialog_authorization_positive_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        }).show();
+
             }
         }
     }
@@ -376,5 +419,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         fTrans.commit();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            event.startTracking();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

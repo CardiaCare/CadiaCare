@@ -1,9 +1,16 @@
 package ru.cardiacare.cardiacare.survey;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.petrsu.cardiacare.smartcare.survey.Answer;
@@ -40,33 +48,62 @@ public class QuestionnaireActivity extends AppCompatActivity {
     public static final int Likertscale = 5;
     public static final int Continuousscale = 6;
     public static final int Dichotomous = 7;
-    public static final int DefaultValue = 8;
+    public static final int AttachFile = 8;
+    public static final int DefaultValue = 9;
+    public static final int READ_REQUEST_CODE = 0;
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
 
+    static public Feedback feedback;
+    static public Feedback alarmFeedback;
     RecyclerView QuestionnaireRecyclerView;
     RecyclerView.Adapter QuestionnaireAdapter;
     RecyclerView.LayoutManager QuestionnaireLayoutManager;
     public Context context = this;
-    boolean refreshFlag = false; // Была ли нажата кнопка "Обновить", true - была нажата / false - не была
+    static public Context mContext;
+    boolean sendFlag = false; // Была ли нажата кнопка "Отправить", true - была нажата / false - не была
     static ImageButton buttonRefresh;
-    String periodic = "periodic";
+    static ImageButton buttonSend;
+    static String periodic = "periodic";
+    static Activity activity;
+    static String filePath = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         Intent intent = getIntent();
-        FileInputStream fIn;
+        final FileInputStream fIn;
+        mContext = this;
         try {
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                 fIn = openFileInput("feedback.json");
-            else fIn = openFileInput("alarmFeedback.json");
+//            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+//                fIn = openFileInput("feedback.json");
+//            else fIn = openFileInput("alarmFeedback.json");
             String jsonFromFile = readSavedData();
             Gson json = new Gson();
             Feedback qst = json.fromJson(jsonFromFile, Feedback.class);
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                MainActivity.feedback = qst;
-            else MainActivity.alarmFeedback = qst;
+            Log.i("QActivity", "QuestionnaireHelper.questionnaireType = " + QuestionnaireHelper.questionnaireType);
+            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+                if (qst != null) {
+                    feedback = qst;
+                    Gson json3 = new Gson();
+                    String jsonFeedback2;
+                    jsonFeedback2 = json3.toJson(feedback);
+                    Log.i("QActivity", "feedbackFromFile = " + jsonFeedback2);
+                } else {
+                    feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+                    Gson json2 = new Gson();
+                    String jsonFeedback;
+                    jsonFeedback = json2.toJson(feedback);
+                    Log.i("QActivity", "newFeedback = " + jsonFeedback);
+                }
+            } else {
+                if (qst != null) {
+                    alarmFeedback = qst;
+                } else {
+                    alarmFeedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+                }
+            }
         } catch (Exception e) {
-
         }
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -78,21 +115,20 @@ public class QuestionnaireActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
-                configIntent.setAction(" ");
-                startActivity(configIntent);
+//                Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+//                configIntent.setAction(" ");
+//                startActivity(configIntent);
+                if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
+                    feedbackDialog();
+                } else {
+                    startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+                }
             }
         });
 
         if (!QuestionnaireHelper.questionnaireDownloadedFromFile) {
-            int respondsCount = MainActivity.feedback.getResponds().size();
-            for (int i = respondsCount; i > 0; i--) {
-                MainActivity.feedback.getResponds().remove(i - 1);
-            }
-            String jsonStr = "";
-            Gson json = new Gson();
-            jsonStr = json.toJson(MainActivity.feedback);
-            writeData(jsonStr);
+            Log.i("QuestionnaireActivity", "!QuestionnaireHelper.questionnaireDownloadedFromFile = " + QuestionnaireHelper.questionnaireDownloadedFromFile);
+            clearFeedback();
         }
 
         QuestionnaireRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -109,10 +145,10 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //            Question question = questionnaire.get(i);
 //            Answer answer = question.getAnswer();
             Question question = questionnaire.get(i);
-            LinkedList <Answer> answers = question.getAnswers();
+            LinkedList<Answer> answers = question.getAnswers();
             for (int j = 0; j < answers.size(); j++) {
                 Answer answer = answers.get(j);
-                Log.i("Questionnaire", i + " question, " + j+ " answer, " + answer.getType());
+                Log.i("Questionnaire", i + " question, " + j + " answer, " + answer.getType());
                 switch (answer.getType()) {
                     case "Text":
                         Types[i] = TextField;
@@ -138,6 +174,9 @@ public class QuestionnaireActivity extends AppCompatActivity {
                     case "ContinuousScale":
                         Types[i] = Continuousscale;
                         break;
+                    case "File":
+                        Types[i] = AttachFile;
+                        break;
                     default:
                         Types[i] = DefaultValue;
                 }
@@ -158,16 +197,15 @@ public class QuestionnaireActivity extends AppCompatActivity {
             @Override // Clean
             public void onClick(View v) {
                 String jsonStr = "";
-                refreshFlag = true;
                 buttonRefresh.setEnabled(false);
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                    MainActivity.feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
-//                else MainActivity.alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
+                    feedback = new Feedback(QuestionnaireHelper.questionnaire.getId(), QuestionnaireHelper.questionnaire.getLang());
+//                else alarmFeedback = new Feedback("2 test", "Student", "alarmFeedback");
 
                 Gson json = new Gson();
                 if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                    jsonStr = json.toJson(MainActivity.feedback);
-                else jsonStr = json.toJson(MainActivity.alarmFeedback);
+                    jsonStr = json.toJson(feedback);
+                else jsonStr = json.toJson(alarmFeedback);
                 System.out.println(jsonStr);
                 writeData(jsonStr);
 
@@ -177,6 +215,43 @@ public class QuestionnaireActivity extends AppCompatActivity {
                 startActivity(intent);
             }// Clean
         });
+
+        buttonSend = (ImageButton) findViewById(R.id.buttonSend);
+        buttonSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendAnswers();
+            }
+        });
+    }
+
+    public void sendAnswers() {
+        if (MainActivity.isNetworkAvailable(context)) {
+            String jsonStr;
+            Gson json = new Gson();
+            if (QuestionnaireHelper.questionnaireType.equals(periodic))
+                jsonStr = json.toJson(feedback);
+            else jsonStr = json.toJson(alarmFeedback);
+            System.out.println("feedback: " + jsonStr);
+            writeData(jsonStr);
+            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
+                Long timestamp = System.currentTimeMillis() / 1000;
+                String ts = timestamp.toString();
+                MainActivity.storage.setLastQuestionnairePassDate(ts);
+            }
+            if (feedback.getResponds().size() > 0) {
+                FeedbackPOST feedbackPOST = new FeedbackPOST(context);
+                feedbackPOST.execute();
+            }
+            sendFlag = true;
+//            if (MainActivity.storage.getFeedbackRefresh()) {
+////                Log.i("QuestionnaireActivity", "SendAnswers, getFeedbackRefresh() = " + MainActivity.storage.getFeedbackRefresh());
+//                clearFeedback();
+//            }
+            startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+        } else {
+            wiFiAlertDialog();
+        }
     }
 
     @Override
@@ -185,22 +260,22 @@ public class QuestionnaireActivity extends AppCompatActivity {
 //        if (QuestionnaireHelper.questionnaireType.equals(periodic))
 //            MainActivity.serveyButton.setEnabled(true);
 //        else {
-////            MainActivity.alarmButton.setEnabled(true);
-////            MainActivity.alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
+////            alarmButton.setEnabled(true);
+////            alarmButton.setBackgroundResource(R.color.alarm_button_standard_color);
 //        }
 
 //        MainActivity.QuestionnaireButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
 //        buttonRefresh.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
-//        MainActivity.alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
+//        alarmButton.setEnabled(true);//возвращаем состояние нажатия от повторного нажатия
     }
 
-    public void writeData(String data) {
+    static public void writeData(String data) {
         try {
 //            FileOutputStream fOut = openFileOutput (filename , MODE_PRIVATE );
             FileOutputStream fOut;
             if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                fOut = context.openFileOutput("feedback.json", context.MODE_PRIVATE);
-            else fOut = context.openFileOutput("alarmFeedback.json", context.MODE_PRIVATE);
+                fOut = mContext.openFileOutput("feedback.json", mContext.MODE_PRIVATE);
+            else fOut = mContext.openFileOutput("alarmFeedback.json", mContext.MODE_PRIVATE);
             OutputStreamWriter osw = new OutputStreamWriter(fOut);
             osw.write(data);
             osw.flush();
@@ -232,34 +307,125 @@ public class QuestionnaireActivity extends AppCompatActivity {
         return datax.toString();
     }
 
+    static public void clearFeedback() {
+        if (feedback != null) {
+            int respondsCount = feedback.getResponds().size();
+            for (int i = respondsCount; i > 0; i--) {
+                feedback.getResponds().remove(i - 1);
+            }
+            String jsonStr = "";
+//        Gson json = new Gson();
+//        jsonStr = json.toJson(feedback);
+            writeData(jsonStr);
+        }
+    }
+
     @Override
     public void onPause() {
-        if (refreshFlag == false) {
-            String jsonStr;
-            Gson json = new Gson();
-            if (QuestionnaireHelper.questionnaireType.equals(periodic))
-                jsonStr = json.toJson(MainActivity.feedback);
-            else jsonStr = json.toJson(MainActivity.alarmFeedback);
-            System.out.println("feedback: " + jsonStr);
-            writeData(jsonStr);
-            if (QuestionnaireHelper.questionnaireType.equals(periodic)) {
-                // To SIB
-                Long timestamp = System.currentTimeMillis() / 1000;
-                String ts = timestamp.toString();
-                MainActivity.storage.setLastQuestionnairePassDate(ts);
-            }
-            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-            feedbackPOST.execute();
-        }
         super.onPause();
-        refreshFlag = false;
+        sendFlag = false;
     }
 
     @Override
     public void onBackPressed() {
-        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
-        configIntent.setAction(" ");
-        startActivity(configIntent);
-//        super.onBackPressed();
+//        Intent configIntent = new Intent(getApplicationContext(), MainActivity.class);
+//        configIntent.setAction(" ");
+//        startActivity(configIntent);
+        if ((!sendFlag) && (feedback.getResponds().size() > 0)) {
+            feedbackDialog();
+        } else {
+            startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+        }
+    }
+
+    public void feedbackDialog() {
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_feedback_title);
+        alertDialog.setMessage(R.string.dialog_feedback_message);
+        alertDialog.setPositiveButton(R.string.dialog_feedback_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendAnswers();
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_feedback_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String jsonStr = "";
+                        Gson json = new Gson();
+                        jsonStr = json.toJson(feedback);
+                        writeData(jsonStr);
+                        startActivity(new Intent(QuestionnaireActivity.this, MainActivity.class));
+                    }
+                });
+        alertDialog.show();
+    }
+
+    // WiFi диалог
+    static public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(mContext, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        mContext.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public static void performFileSearch() {
+
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT,null);
+        galleryIntent.setType("image/* video/*");
+
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+
+        Intent audioIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
+        audioIntent.setType("audio/*");
+
+        Intent chooser = new Intent(Intent.ACTION_CHOOSER);
+        chooser.putExtra(Intent.EXTRA_INTENT, galleryIntent);
+        chooser.putExtra(Intent.EXTRA_TITLE, R.string.attach_file);
+
+        Intent[] intentArray =  {cameraIntent, audioIntent};
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+        activity.startActivityForResult(chooser,READ_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+
+        super.onActivityResult(requestCode, resultCode, resultData);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == READ_REQUEST_CODE) {
+                Uri uri;
+                if (resultData != null) {
+                    uri = resultData.getData();
+                    Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+                    if (cursor == null) {
+                        filePath = uri.getPath();
+                    } else {
+                        cursor.moveToFirst();
+                        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                        filePath = cursor.getString(idx);
+                        cursor.close();
+                    }
+                    TextView AttachFilePath = (TextView) findViewById(R.id.AttachFilePath);
+                    AttachFilePath.setText(filePath);
+                    AttachFilePath.setVisibility(View.VISIBLE);
+                    RecyclerViewAdapter.AttachFileViewHolder.attachFileSaveToFeedback();
+                }
+            }
+        }
     }
 }

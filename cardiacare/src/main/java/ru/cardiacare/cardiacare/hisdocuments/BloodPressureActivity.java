@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +34,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 
+import ru.cardiacare.cardiacare.MainActivity;
 import ru.cardiacare.cardiacare.R;
 
-/* Экран "Результаты измерения артериального давления" */
+/* Экран "Дневник давления" */
 
 public class BloodPressureActivity extends AppCompatActivity {
 
     ListView listView1;
-    BPAdapter adapter;
-    static LinkedList<ResultBloodPressure> bp_data;
+    static BPAdapter adapter;
+    static public LinkedList<ResultBloodPressure> bp_data = new LinkedList<ResultBloodPressure>();
     static LinkedList<ResultBloodPressure> bp_data2;
     FloatingActionButton addButton;
     int itemRow;
@@ -48,7 +51,45 @@ public class BloodPressureActivity extends AppCompatActivity {
     EditText SYSText;
     EditText DAText;
     SimpleDateFormat sdf;
-    Context context;
+    static Context context;
+    static Intent intent;
+
+    static void refresh() {
+        //Intent intent = context.getIntent();
+        // context.finish();
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        context.startActivity(intent);
+        adapter.notifyDataSetChanged();
+        //  adapter = new BPAdapter(context, R.layout.item_blood_pressure, bp_data);
+
+        if ((MainActivity.systolicBP != null) && (MainActivity.diastolicBP != null)) {
+            MainActivity.systolicBP.clear();
+            MainActivity.diastolicBP.clear();
+
+            for (int j = 0; j < bp_data.size(); j++) {
+//            Log.i("BPActivity", "systolic = " + bp_data.get(j).getSystolicPressure() + ", diastolic = " + bp_data.get(j).getDiastolicPressure());
+            }
+
+            if (bp_data.size() >= 7) {
+                for (int i = 6; i >= 0; i--) {
+                    MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                    MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+                }
+            } else {
+                for (int i = bp_data.size() - 1; i >= 0; i--) {
+                    MainActivity.systolicBP.add(Integer.parseInt(bp_data.get(i).getSystolicPressure()));
+                    MainActivity.diastolicBP.add(Integer.parseInt(bp_data.get(i).getDiastolicPressure()));
+                }
+                for (int i = bp_data.size(); i < 7; i++) {
+                    MainActivity.systolicBP.add(0);
+                    MainActivity.diastolicBP.add(0);
+                }
+            }
+            MainActivity.storage.setSystolicBP(MainActivity.systolicBP.toString());
+            MainActivity.storage.setDiastolicBP(MainActivity.diastolicBP.toString());
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,54 +108,57 @@ public class BloodPressureActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                startActivity(new Intent(BloodPressureActivity.this, MainActivity.class));
             }
         });
 
-        sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+        //sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
+        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String currentDateandTime = sdf.format(new Date());
 
         context = this;
+        intent = getIntent();
 
-//        bp_data = new LinkedList<ResultBloodPressure>();
-//        bp_data.add(new ResultBloodPressure("110", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("115", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("120", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("125", "80","70", currentDateandTime));
-//        bp_data.add(new ResultBloodPressure("130", "80","70", currentDateandTime));
-
-        bp_data = new LinkedList<ResultBloodPressure>();
-
-
-        LinkedList<ResultBloodPressure> bpl  = new LinkedList<ResultBloodPressure>();
+        LinkedList<ResultBloodPressure> bpl = new LinkedList<ResultBloodPressure>();
 
         bpl = readLastBPMeasuremetsFromFile();
-        if (bpl == null){
-            bp_data.add(new ResultBloodPressure("0","0","0","0:0:0"));
-        }
-        else bp_data = bpl;
+        if (bpl == null) {
+            bp_data.add(new ResultBloodPressure("0", "0", "0", "0:0:0", 0));
+        } else bp_data = bpl;
 
         SYSText = (EditText) findViewById(R.id.systolicEditText);
         DAText = (EditText) findViewById(R.id.diastolicEditText);
 
         adapter = new BPAdapter(this, R.layout.item_blood_pressure, bp_data);
-
-        listView1 = (ListView)findViewById(R.id.bpListView);
+        adapter.setNotifyOnChange(true);
+        listView1 = (ListView) findViewById(R.id.bpListView);
         listView1.setAdapter(adapter);
 
         listView1.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long arg3) {
 
-                itemRow  = position;
+                itemRow = position;
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
                 alertDialog.setTitle(R.string.dialog_bp_title);
-                alertDialog.setMessage(R.string.dialog_bp_del);
-                alertDialog.setNegativeButton(R.string.dialog_cancel, null);
-                alertDialog.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+                alertDialog.setMessage(R.string.dialog_bp_message);
+                alertDialog.setNegativeButton(R.string.dialog_bp_negative_button, null);
+                alertDialog.setPositiveButton(R.string.dialog_bp_positive_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        adapter.remove(bp_data.get(itemRow));
-                        adapter.notifyDataSetChanged();
+                        if (MainActivity.isNetworkAvailable(context)) {
+                            JSONObject json = null;
+                            try {
+                                String str = "{\"id\":" + bp_data.get(itemRow).getIdPressure() + "}";
+                                json = new JSONObject(str);
+                                BloodPressureDELETE bloodDelete = new BloodPressureDELETE();
+                                bloodDelete.execute(json);
+                                adapter.remove(bp_data.get(itemRow));
+                                adapter.notifyDataSetChanged();
+                            } catch (Exception e) {
+                            }
+                        } else {
+                            wiFiAlertDialog();
+                        }
                     }
                 });
                 alertDialog.show();
@@ -123,54 +167,76 @@ public class BloodPressureActivity extends AppCompatActivity {
             }
         });
 
-        addButton = (FloatingActionButton)findViewById(R.id.addBPButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addBPButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    extractLogPass(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
-                }catch (Exception e){}
-                System.out.println("Test! blood ");
-                String currentDateandTime = sdf.format(new Date());
-                ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(),DAText.getText().toString(),"",currentDateandTime.toString());
-                bp_data.addFirst(rbp);
-                if (bp_data.size() > 5)
-                    bp_data.removeLast();
-                adapter.notifyDataSetChanged();
-                SYSText.setText("");
-                DAText.setText("");
+                if (MainActivity.isNetworkAvailable(context)) {
+                    boolean isBPcorrect = false;
+                    try {
+                        isBPcorrect = POSTsysdias(Integer.parseInt(SYSText.getText().toString()), Integer.parseInt(DAText.getText().toString()));
+                    } catch (Exception e) {
+                    }
+                    if (isBPcorrect) {
+                        System.out.println("Test! blood ");
+                        String currentDateandTime = sdf.format(new Date());
+                        ResultBloodPressure rbp = new ResultBloodPressure(SYSText.getText().toString(), DAText.getText().toString(), "", currentDateandTime.toString(), 0);
+                        bp_data.addFirst(rbp);
+//                if (bp_data.size() > 5)
+//                    bp_data.removeLast();
+                        adapter.notifyDataSetChanged();
+                        SYSText.setText("");
+                        DAText.setText("");
+                    } else {
+                        SYSText.setText("");
+                        DAText.setText("");
+                        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                        alertDialog.setTitle(R.string.dialog_bpdata_title);
+                        alertDialog.setMessage(R.string.dialog_bpdata_message);
+                        alertDialog.setNegativeButton(R.string.dialog_bpdata_negative_button,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                } else {
+                    wiFiAlertDialog();
+                }
             }
         });
 
     }
 
-    void extractLogPass(int systolic, int diastolic) {
+    boolean POSTsysdias(int systolic, int diastolic) {
         JSONObject json = null;
 
         String str = "{ \"systolic\":" + systolic + ", "
                 + "\"diastolic\":" + diastolic + "} ";
+        if ((systolic <= diastolic) || (systolic <= 10) || (diastolic <= 10) || (systolic > 300) || (diastolic > 300)) {
+            return false; // Некорректные значения давления
+        } else {
+            try {
+                json = new JSONObject(str);
 
-        try {
-            json = new JSONObject(str);
-
-            BloodPressurePOST bloodPost = new BloodPressurePOST();
-            bloodPost.execute(json);
-
+                BloodPressurePOST bloodPost = new BloodPressurePOST();
+                bloodPost.execute(json);
+            } catch (Exception e) {
+            }
         }
-        catch (Exception e){}
+        return true;
     }
 
-    public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile(){
-        try
-        {
+    public LinkedList<ResultBloodPressure> readLastBPMeasuremetsFromFile() {
+        try {
             FileInputStream fin = openFileInput("lbp.txt");
             ObjectInputStream in = new ObjectInputStream(fin);
             LinkedList<ResultBloodPressure> myList = (LinkedList<ResultBloodPressure>) in.readObject();
             in.close();
             fin.close();
             return myList;
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -179,17 +245,14 @@ public class BloodPressureActivity extends AppCompatActivity {
         return null;
     }
 
-    public void writeLastBPMeasuremetsFromFile(LinkedList<ResultBloodPressure> myList){
-        try
-        {
-            FileOutputStream fout  = context.openFileOutput("lbp.txt", context.MODE_PRIVATE);
+    public void writeLastBPMeasuremetsFromFile(LinkedList<ResultBloodPressure> myList) {
+        try {
+            FileOutputStream fout = context.openFileOutput("lbp.txt", context.MODE_PRIVATE);
             ObjectOutputStream out = new ObjectOutputStream(fout);
             out.writeObject(myList);
             fout.close();
-            Log.i("TAG",myList.get(0)+"");
             out.close();
-        }
-        catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -216,58 +279,82 @@ public class BloodPressureActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         writeLastBPMeasuremetsFromFile(bp_data);
-        super.onBackPressed();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    // WiFi диалог
+    public void wiFiAlertDialog() {
+        final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+        alertDialog.setTitle(R.string.dialog_wifi_title);
+        alertDialog.setMessage(R.string.dialog_wifi_message);
+        alertDialog.setPositiveButton(R.string.dialog_wifi_positive_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        wifiManager.setWifiEnabled(true);
+                        context.startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                });
+        alertDialog.setNegativeButton(R.string.dialog_wifi_negative_button,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialog.show();
     }
 }
 
-    class BPAdapter extends ArrayAdapter<ResultBloodPressure> {
+class BPAdapter extends ArrayAdapter<ResultBloodPressure> {
 
-        Context context;
-        int layoutResourceId;
-        LinkedList<ResultBloodPressure> data;
+    Context context;
+    int layoutResourceId;
+    LinkedList<ResultBloodPressure> data;
 
-        public BPAdapter(Context context, int layoutResourceId, LinkedList<ResultBloodPressure> data) {
-            super(context, layoutResourceId, data);
-            this.layoutResourceId = layoutResourceId;
-            this.context = context;
-            this.data = data;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            ResultBloodPressureHolder holder = null;
-
-            if(row == null)
-            {
-                LayoutInflater inflater = ((Activity)context).getLayoutInflater();
-                row = inflater.inflate(layoutResourceId, parent, false);
-
-                holder = new ResultBloodPressureHolder();
-                holder.sysTitle = (TextView) row.findViewById(R.id.sysTextList);
-                holder.daTitle = (TextView)row.findViewById(R.id.daTextList);
-                holder.dateTitle = (TextView)row.findViewById(R.id.dateTextList);
-
-                row.setTag(holder);
-            }
-            else
-            {
-                holder = (ResultBloodPressureHolder)row.getTag();
-            }
-
-            ResultBloodPressure resultBloodPressure = data.get(position);
-            holder.sysTitle.setText(resultBloodPressure.getSystolicPressure());
-            holder.daTitle.setText(resultBloodPressure.getDiastolicPressure());
-            holder.dateTitle.setText(resultBloodPressure.getTime());
-
-
-            return row;
-        }
-
-        class ResultBloodPressureHolder
-        {
-            TextView sysTitle;
-            TextView daTitle;
-            TextView dateTitle;
-        }
+    public BPAdapter(Context context, int layoutResourceId, LinkedList<ResultBloodPressure> data) {
+        super(context, layoutResourceId, data);
+        this.layoutResourceId = layoutResourceId;
+        this.context = context;
+        this.data = data;
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        //_NotifyOnChange = true;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row = convertView;
+        ResultBloodPressureHolder holder = null;
+
+        if (row == null) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+            row = inflater.inflate(layoutResourceId, parent, false);
+
+            holder = new ResultBloodPressureHolder();
+            holder.sysTitle = (TextView) row.findViewById(R.id.sysTextList);
+            holder.daTitle = (TextView) row.findViewById(R.id.daTextList);
+            holder.dateTitle = (TextView) row.findViewById(R.id.dateTextList);
+
+            row.setTag(holder);
+        } else {
+            holder = (ResultBloodPressureHolder) row.getTag();
+        }
+
+        ResultBloodPressure resultBloodPressure = data.get(position);
+        holder.sysTitle.setText(resultBloodPressure.getSystolicPressure());
+        holder.daTitle.setText(resultBloodPressure.getDiastolicPressure());
+        holder.dateTitle.setText(resultBloodPressure.getTime());
+
+
+        return row;
+    }
+
+    class ResultBloodPressureHolder {
+        TextView sysTitle;
+        TextView daTitle;
+        TextView dateTitle;
+    }
+}

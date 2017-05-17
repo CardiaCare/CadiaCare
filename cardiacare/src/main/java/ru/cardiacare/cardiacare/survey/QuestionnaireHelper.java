@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 
-import ru.cardiacare.cardiacare.user.AccountStorage;
 import ru.cardiacare.cardiacare.MainActivity;
 
 /* Работа с периодическим опросником */
@@ -26,7 +25,7 @@ public class QuestionnaireHelper {
     static public String questionnaireFile = "questionnaire.json";
     static public String alarmQuestionnaireFile = "alarmQuestionnaire.json";
     static public String questionnaireType;
-    static public Boolean questionnaireDownloadedFromFile;
+    static public Boolean questionnaireDownloadedFromFile = false;
 
     static public Questionnaire questionnaire;
     static public Questionnaire alarmQuestionnaire;
@@ -34,35 +33,8 @@ public class QuestionnaireHelper {
     // Отображение опросника
     static public void showQuestionnaire(Context context) {
         questionnaireType = "periodic";
-        String QuestionnaireVersion = MainActivity.storage.getQuestionnaireVersion();
-
-        String QuestionnaireServerVersion = "1.0";
-
-        // Если опросник ещё не был загружен или его версия ниже версии на сервере, то загружаем опросник
-        if ((QuestionnaireVersion.equals("")) || (!QuestionnaireServerVersion.equals(QuestionnaireVersion)) || (readSavedData(context).isEmpty())) {
-            questionnaireDownloadedFromFile = false;
-            serverUri = "http://api.cardiacare.ru/questionnaire/7";
-            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=1";
-            Log.i("serverUri = ", serverUri);
-            //System.out.println("Test! token in main " + MainActivity.storage.getAccountToken());
-            MainActivity.storage.sPref = context.getSharedPreferences(AccountStorage.ACCOUNT_PREFERENCES, Context.MODE_PRIVATE);
-            MainActivity.storage.setVersion(QuestionnaireServerVersion);
-
-            QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
-            questionnaireGET.execute();
-        } else {
-//            FeedbackPOST feedbackPOST = new FeedbackPOST(context);
-//            feedbackPOST.execute();
-            String jsonFromFile = readSavedData(context);
-            questionnaireDownloadedFromFile = true;
-            Gson json = new Gson();
-            questionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
-//            printQuestionnaire(questionnaire);
-//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
-            Intent intent = new Intent(context, QuestionnaireActivity.class);
-            intent.putExtra("questionnaireType", questionnaireType);
-            context.startActivity(intent);
-        }
+        QuestionnaireVersionGET questionnaireVersionGET = new QuestionnaireVersionGET(context);
+        questionnaireVersionGET.execute();
     }
 
     static public void showAlarmQuestionnaire(Context context) {
@@ -70,7 +42,6 @@ public class QuestionnaireHelper {
         // Если опросник ещё не был загружен, то загружаем опросник
         if (readSavedData(context).isEmpty()) {
             serverUri = "http://api.cardiacare.ru/survey/2";
-            //serverUri = "http://api.cardiacare.ru/index.php?r=questionnaire/read&id=2";
             QuestionnaireGET questionnaireGET = new QuestionnaireGET(context);
             questionnaireGET.execute();
         } else {
@@ -80,7 +51,6 @@ public class QuestionnaireHelper {
             Gson json = new Gson();
             alarmQuestionnaire = json.fromJson(jsonFromFile, Questionnaire.class);
 //            printQuestionnaire(alarmQuestionnaire);
-//            MainActivity.mProgressBar.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(context, QuestionnaireActivity.class);
             intent.putExtra("questionnaireType", questionnaireType);
             context.startActivity(intent);
@@ -93,9 +63,9 @@ public class QuestionnaireHelper {
         for (int i = 0; i < q.size(); i++) {
             Question qst = q.get(i);
             Log.i(MainActivity.TAG, qst.getDescription());
-            LinkedList <Answer> a = qst.getAnswers();
+            LinkedList<Answer> a = qst.getAnswers();
             if (a.size() > 0) {
-                for(int h = 0; h < a.size(); h++) {
+                for (int h = 0; h < a.size(); h++) {
                     Answer answer = a.get(h);
                     Log.i(MainActivity.TAG, answer.getType());
                     LinkedList<AnswerItem> ai = answer.getItems();
@@ -120,7 +90,7 @@ public class QuestionnaireHelper {
     }
 
     // Чтение из файла
-    private static String readSavedData(Context context) {
+    public static String readSavedData(Context context) {
         StringBuilder datax = new StringBuilder("");
         try {
             FileInputStream fIn;

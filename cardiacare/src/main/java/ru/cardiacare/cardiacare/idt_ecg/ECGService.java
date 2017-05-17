@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,24 +17,22 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
 
 import ru.cardiacare.cardiacare.R;
 import ru.cardiacare.cardiacare.MainActivity;
-import ru.cardiacare.cardiacare.idt_ecg.common.DateTimeUtl;
-import ru.cardiacare.cardiacare.idt_ecg.common.LocationUtils;
 import ru.cardiacare.cardiacare.idt_ecg.common.SensorsUtils;
 import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBle;
-import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgBleIdt;
-import ru.cardiacare.cardiacare.idt_ecg.drivers.EcgReceiveHandler;
 
-public class ECGService extends Service /*implements EcgReceiveHandler*/ {
+/* Сервис по работе с кардиомонитором */
+
+public class ECGService extends Service {
 
     static public Context mContext;
     static public ECGService myService;
@@ -43,11 +42,15 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
     long startTime;                               // Время начала работы сервиса
     static public long connectedTime;             // Время подключения к кардиомонитору
     static String pastTime;                       // Прошедшее время с начала работы сервиса
+    int pastHours = 0;                            // Количество часов, прошедшее с начала работы сервиса
     static public int ecgValue;                   // Значения ЭКГ (с кардиомонитора)
     static public int heartRate = 0;              // Пульс (с кардиомонитора)
     static public int charge = 0;                 // Уровень заряда батареи кардиомонитора
-    static public int periodECGSending;           // Период отправки ЭКГ на сервер
+    static public int periodECGSending = 0;       // Период отправки ЭКГ на сервер
 
+    static public LinkedList<String> ecgFiles;    // Массив, с названиями неотправленных файлов ЭКГ
+    static public BufferedWriter bw;              // Буфер для работы с файлами ЭКГ
+    static public String ecgFileName;             // Название текущего файла ЭКГ
 
     static public NotificationManager notificationManager;
     static public Notification ecgNotification;
@@ -58,6 +61,8 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
     TimerTask timerTask;
     long timerInterval = 1000;
 
+    static Resources resources;
+
     static Time beginTime = new Time();
     static public boolean beStarted = false;
 
@@ -66,7 +71,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     public void onCreate() {
         super.onCreate();
-        Log.d("ECGService", "ECGService onCreate");
         mContext = this;
         myService = this;
         this.ecg = new EcgBle(MainActivity.activity, EcgBle.bpReceiveHandler);
@@ -77,16 +81,20 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         pastTimeTimer = new Timer();
         startTime = System.currentTimeMillis(); // Фиксируем время начала работы сервиса
+        connectedTime = System.currentTimeMillis() / 1000;
         pastTimeCounter();
         doStart();
+        ecgFiles = new LinkedList<>();
         // Если приод отправки ответов на сервер задан пользователем, то отправляем согласно данному периоду
-        // Иначе ставим период по умолчанию (1 минута)
         if (!MainActivity.storage.getPeriodECGSending().equals("")) {
-            periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending());
-        } else {
-            periodECGSending = 60;
-            MainActivity.storage.setPeriodECGSending("60");
+            periodECGSending = Integer.parseInt(MainActivity.storage.getPeriodECGSending()) * 60;
         }
+        // Если период < 1 минуты и > 5 минут, то ставим период по умолчанию (1 минута)
+        if ((periodECGSending < 60) || (periodECGSending > 300)) {
+            periodECGSending = 60;
+            MainActivity.storage.setPeriodECGSending("1");
+        }
+        resources = getResources();
     }
 
     public IBinder onBind(Intent arg0) {
@@ -96,7 +104,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     public boolean onUnbind(Intent intent) {
         Log.d("ECGService", "ECGService onUnbind");
-//        return super.onUnbind(intent);
         return true;
     }
 
@@ -111,7 +118,6 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         pastTimeTimer.cancel();
         timerTask.cancel();
         doStop();
-        Log.d("ECGService", "ECGService onDestroy");
         super.onDestroy();
     }
 
@@ -130,27 +136,42 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
                     cal.setTimeInMillis(totalTime);
                     int pastMinutes = cal.get(Calendar.MINUTE);
                     int pastSeconds = cal.get(Calendar.SECOND);
-                    pastTime = pastMinutes + ":" + pastSeconds;
+                    if ((pastMinutes == 59) && (pastSeconds == 59)) {
+                        pastHours++;
+                    }
+                    if (pastHours > 0) {
+                        pastTime = pastHours + ":" + pastMinutes + ":" + pastSeconds;
+                    } else {
+                        pastTime = pastMinutes + ":" + pastSeconds;
+                    }
                     totalTime = (System.currentTimeMillis() / 1000) - connectedTime;
-                    // Если пора отправлять ответы на сервер и есть что отправлять
-                    if ((totalTime >= periodECGSending) && (!MainActivity.storage.getECGFile().equals(""))) {
-                        // Если есть доступ к сети
-                        if (MainActivity.isNetworkAvailable(mContext)) {
-                            // Отправляем данные на сервер
-                            Log.d("ECGService", "Отправляем данные на сервер");
-                            ECGPost ecgPost = new ECGPost();
-                            ecgPost.execute();
-                            // Обнуляем файл с данными ЭКГ (или создаём новый и начинаем писать в него?)
-                            Log.d("ECGService", "Обнуляем файл с данными ЭКГ");
-                            // Индикатор отправки на сервер в SharedPreferences устанавливаем равным ""
-                            MainActivity.storage.setECGFile("");
-                            connectedTime = System.currentTimeMillis() / 1000;
-                        } else {
-                            // Устанавливаем индикатор отправки на сервер в SharedPreferences устанавливаем равным "имя_файла"
-                            if (!MainActivity.storage.getECGFile().equals("ecgfile")) {
-                                MainActivity.storage.setECGFile("ecgfile");
+                    // Если пора отправлять ответы на сервер
+                    if (totalTime >= periodECGSending) {
+                        // Закрываю файл
+                        if (bw != null) {
+                            try {
+                                bw.close();
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
+                        // Создаю новый файл и продолжаем запись данных ЭКГ уже в него
+                        ecgFileName = "ecg" + System.currentTimeMillis();
+                        ecgFiles.add(ecgFileName);
+                        try {
+                            bw = new BufferedWriter(new OutputStreamWriter(mContext.openFileOutput(ecgFileName, MODE_PRIVATE)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        // Если есть доступ к сети
+                        if (MainActivity.isNetworkAvailable(mContext)) {
+                            // Отправляем файл(ы) на сервер
+                            ECGPost ecgPost = new ECGPost();
+                            ecgPost.execute();
+                        }
+                        connectedTime = System.currentTimeMillis() / 1000;
                     }
                 }
             };
@@ -160,21 +181,21 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
 
     // Отправка уведомлений с показаниями, полученными с монитора
     static public void sendECGNotification(int ecgValue, int heartrate, int charge) {
-        String notificationText = "Показания с монитора: " + ecgValue + "\nПульс: " + heartrate + "\nЗаряд: " + charge + "%\nПрошло: " + pastTime;
+        String notificationText = /*"Показания с монитора: " + ecgValue + "\n*/ resources.getText(R.string.widget_pulse) + ": " + heartrate + "\n" + resources.getText(R.string.widget_charge) + ": " + charge + "%\n" + resources.getText(R.string.widget_time_passed) + ": " + pastTime;
 
         Intent intent = new Intent(mContext, ECGActivity.class);
         PendingIntent pIntentOpenECG = PendingIntent.getActivity(mContext, 0, intent, 0);
 
         Notification.Builder builder = new Notification.Builder(mContext);
         if (connected_flag == false) {
-            builder.setContentTitle("CardiaCare. ECG disconnected");
+            builder.setContentTitle(resources.getText(R.string.widget_cardiomonitor_disconnected));
         } else {
-            builder.setContentTitle("CardiaCare. ECG connected");
+            builder.setContentTitle(resources.getText(R.string.widget_cardiomonitor_connected));
         }
-        builder.setTicker("ECG state change");
+        builder.setTicker(resources.getText(R.string.widget_state_change));
         builder.setPriority(Notification.PRIORITY_MAX);
         builder.setSmallIcon(R.drawable.ic_launcher);
-        builder.addAction(R.drawable.ic_launcher, "Открыть ЭКГ",
+        builder.addAction(R.drawable.ic_launcher, resources.getText(R.string.widget_open_ecg),
                 pIntentOpenECG);
         builder.build();
         ecgNotification = builder.getNotification();
@@ -213,48 +234,4 @@ public class ECGService extends Service /*implements EcgReceiveHandler*/ {
         }
         return true;
     }
-
-    // Формирование файлов для отправки на сервер
-//    static public void updateOnServer(/*String filename, String path, String fileid, int hr*/) {
-//        // Записывать не в JSON, а в файл
-//        String ecgdata = EcgBleIdt.getJSONPart();
-//        String ecgjson = "{ \"id\":\"1\", \"patient_id\":\"1\", \"data\": {[\"";
-//        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append(ecgdata).append("\"]},").toString();
-//        ecgjson = new StringBuilder(String.valueOf(ecgjson)).append("\"created_at\":\"09122016\"}").toString();
-//        Log.i("ECGBELT", "ECGJSON=" + ecgjson);
-//
-////        String context = this.location.getJSONPart();
-////        String sensdata = this.sensors.getJSONPart();
-////        String systemdata = this.sensors.getSystemJSONPart();
-////        if (context == "") {
-////            context = sensdata;
-////        } else if (sensdata != "") {
-////            context = new StringBuilder(String.valueOf(context)).append(",").append(sensdata).toString();
-////        }
-////        String json = "{ \"app\": \"ecgsend\", ";
-////        if (context != "") {
-////            json = new StringBuilder(String.valueOf(json)).append("\"context\": {").append(context).append("},").toString();
-////        }
-////        if (systemdata != "") {
-////            json = new StringBuilder(String.valueOf(json)).append("\"system\": {").append(systemdata).append("},").toString();
-////        }
-////        json = new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(new StringBuilder(String.valueOf(json)).append("\"object\": {").toString())).append("\"timestamp\": \"").append(DateFormat.format("yyyy-MM-dd'T'HH:mm:ssZ", this.beginTime.toMillis(true))).append("\",").toString())).append("\"utc_offset\": \"").append(DateTimeUtl.getCurrentUTCOffset()).append("\",").toString())).append("\"namespace\": \"ecg\",").toString())).append("\"channels\": \"1\",").toString())).append("\"format\": \"cds\",").toString())).append("\"filename\":\"").append(fileid).append("\",").toString())).append("\"pulse\":\"").append(String.format("%d", new Object[]{Integer.valueOf(hr)})).append("\"").toString())).append("}}").toString();
-////        Log.i("ECGBELT", "JSON=" + json);
-//    }
-
-//    public void measurementReceived(int heartrate, short[] array, int Frequency) {
-//        this.heartRate = heartrate;
-//    }
-//    public void measurementEnd() {
-//        Log.i("ECGBELT", "measurementEnd()");
-//        if (this.location.isActive()) {
-//            this.location.Stop();
-//        }
-//        updateOnServer(this.ecg.StorageFileName, "", this.ecg.StorageFileId, this.heartRate);
-//    }
-//    public void measurementStart(String mac) {
-//        this.beStarted = true;
-//        this.timerHandler.postDelayed(this.timerRunnable, 500);
-//        this.beginTime.setToNow();
-//    }
 }

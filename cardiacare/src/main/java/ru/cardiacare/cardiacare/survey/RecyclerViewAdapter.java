@@ -4,15 +4,18 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -25,8 +28,6 @@ import com.petrsu.cardiacare.smartcare.survey.ResponseItem;
 
 import java.util.LinkedList;
 
-
-import ru.cardiacare.cardiacare.*;
 import ru.cardiacare.cardiacare.R;
 
 /* Расстановка вопросов по карточкам */
@@ -35,8 +36,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private LinkedList<Question> Questions;
     private int[] TypesQuestions;
     private Context context;
+    private boolean isFirstRunning = false;
 
-    private LinkedList<Respond> responds = MainActivity.feedback.getResponds();
+    private LinkedList<Respond> responds = QuestionnaireActivity.feedback.getResponds();
 
     public RecyclerViewAdapter(LinkedList<Question> Questions, int[] Types, Context context) {
         this.Questions = Questions;
@@ -59,6 +61,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else if (Type == QuestionnaireActivity.Multiplechoice) {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_check_boxes, viewGroup, false);
             return new CheckBoxesViewHolder(v);
+        } else if (Type == QuestionnaireActivity.AttachFile) {
+            v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_attach_file, viewGroup, false);
+            return new AttachFileViewHolder(v);
         } else {
             v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_radio_buttons, viewGroup, false);
             return new RadioButtonsViewHolder(v);
@@ -88,8 +93,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         if (question.getId().equals(responds.get(j).getQuestionId())) {
                             for (int k = 0; k < responds.get(j).getResponses().size(); k++) {
                                 for (int l = 0; l < responds.get(j).getResponses().get(k).getResponseItems().size(); l++) {
-                                    if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItemId())) {
+                                    if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItems_id())) {
                                         radioButtonsAnswers[i].setChecked(true);
+                                        for (int m = 0; m < responds.get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().size(); m++) {
+                                            holder.radioButtonsSubAnswer = new EditText(context);
+                                            holder.radioButtonsSubAnswer.setText(responds.get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().get(m).getResponseText());
+                                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                            layoutParams.addRule(RelativeLayout.BELOW, R.id.RadioButtonsAnswers);
+                                            holder.radioButtonsSubAnswer.setLayoutParams(layoutParams);
+                                            holder.radioButtonsRelativeLayout.addView(holder.radioButtonsSubAnswer);
+                                            holder.radioButtonsSubAnswer.setVisibility(View.VISIBLE);
+                                            isFirstRunning = true;
+                                        }
                                     }
                                 }
                             }
@@ -155,7 +170,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     for (int j = 0; j < responds.size(); j++) {
                         if (question.getId().equals(responds.get(j).getQuestionId())) {
                             for (int k = 0; k < responds.get(j).getResponses().get(0).getResponseItems().size(); k++) {
-                                if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(0).getResponseItems().get(k).getLinkedItemId())) {
+                                if (question.getAnswers().get(0).getItems().get(i).getId().equals(responds.get(j).getResponses().get(0).getResponseItems().get(k).getLinkedItems_id())) {
                                     CheckBoxesAnswers[i].setChecked(true);
                                 }
                             }
@@ -173,25 +188,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             for (int j = 0; j < QuestionnaireHelper.questionnaire.getQuestions().size(); j++) {
                                 if (QuestionnaireHelper.questionnaire.getQuestions().get(j).getId().equals(questionId)) {
                                     int flag = 0;
-                                    for (int k = 0; k < MainActivity.feedback.getResponds().size(); k++) {
-                                        if (MainActivity.feedback.getResponds().get(k).getQuestionId().equals(questionId)) {
+                                    for (int k = 0; k < QuestionnaireActivity.feedback.getResponds().size(); k++) {
+                                        if (QuestionnaireActivity.feedback.getResponds().get(k).getQuestionId().equals(questionId)) {
                                             Question question = QuestionnaireHelper.questionnaire.getQuestions().get(j);
                                             LinkedList<Answer> answers = question.getAnswers();
                                             //for (int j = 0; j < answers.size(); j++) {
                                             //Answer answer = answers.get(j);
                                             Answer answer = answers.get(0);
                                             AnswerItem answerItem = answer.getItems().get(view.getId());
-                                            if (MainActivity.feedback.getResponds().get(k).getResponses().size() != 0) {
+                                            if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().size() != 0) {
                                                 int flag2 = 0;
-                                                int responseItemsCount = MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size();
+                                                int responseItemsCount = QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size();
                                                 for (int l = 0; l < responseItemsCount; l++) {
-                                                    if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItemId().equals(answerItem.getId())) {
-                                                        if (MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size() == 1) {
-                                                            MainActivity.feedback.getResponds().remove(k);
+                                                    if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
+                                                        if (QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().size() == 1) {
+                                                            QuestionnaireActivity.feedback.getResponds().remove(k);
                                                             flag2++;
                                                             break;
                                                         } else {
-                                                            MainActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().remove(l);
+                                                            QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).getResponseItems().remove(l);
                                                             flag2++;
                                                             break;
                                                         }
@@ -199,7 +214,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                                 }
                                                 if (flag2 == 0) {
                                                     ResponseItem responseItem = new ResponseItem(answerItem.getId());
-                                                    MainActivity.feedback.getResponds().get(k).getResponses().get(0).addResponseItem(responseItem);
+                                                    QuestionnaireActivity.feedback.getResponds().get(k).getResponses().get(0).addResponseItem(responseItem);
                                                 }
                                                 flag++;
                                             }
@@ -218,7 +233,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         ResponseItem responseItem = new ResponseItem(answerItem.getId());
                                         response.addResponseItem(responseItem);
                                         respond.addResponse(response);
-                                        MainActivity.feedback.addRespond(respond);
+                                        QuestionnaireActivity.feedback.addRespond(respond);
                                     }
                                 }
                             }
@@ -237,6 +252,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     holder.TextFieldAnswer.setText(responds.get(j).getResponses().get(0).getResponseText());
                 }
             }
+        } else if (viewHolder.getItemViewType() == QuestionnaireActivity.AttachFile) {
+            Question question = Questions.get(position);
+            AttachFileViewHolder holder = (AttachFileViewHolder) viewHolder;
+            holder.AttachFileQuestion.setText(question.getDescription());
+            holder.questionId = question.getId();
         }
     }
 
@@ -260,38 +280,48 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView radioButtonsQuestion;
         RadioGroup radioButtonsGroup;
         RadioButton radioButtonsAnswer;
+        RelativeLayout radioButtonsRelativeLayout;
         Integer questionId;
+        EditText radioButtonsSubAnswer;
+        Answer answer;
+        AnswerItem answerItem;
+        ResponseItem responseItem;
+        boolean isSubAnswerTextChanged = false;
 
         public RadioButtonsViewHolder(View v) {
             super(v);
             this.radioButtonsQuestion = (TextView) v.findViewById(R.id.RadioButtonsQuestion);
             this.radioButtonsGroup = (RadioGroup) v.findViewById(R.id.RadioButtonsAnswers);
+            this.radioButtonsRelativeLayout = (RelativeLayout) v.findViewById(R.id.RadioButtonsRelativeLayout);
             this.radioButtonsAnswer = (RadioButton) v.getParent();
 
             radioButtonsGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    System.out.println("Touch! Dichotomous " + checkedId + " " + questionId);
+                public void onCheckedChanged(RadioGroup group, final int checkedId) {
+                    if (radioButtonsSubAnswer != null) {
+                        radioButtonsSubAnswer.setVisibility(View.GONE);
+                    }
+                    System.out.println("Touch! RadioButtons " + checkedId + " " + questionId);
                     for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                         if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                             int flag = 0;
-                            for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                    int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                    int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                     for (int k = 0; k < responsesCount; k++) {
-                                        MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                        QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                     }
                                     Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     LinkedList<Answer> answers = question.getAnswers();
                                     //for (int j = 0; j < answers.size(); j++) {
                                     //Answer answer = answers.get(j);
-                                    Answer answer = answers.get(0);
+                                    answer = answers.get(0);
                                     //Answer answer = question.getAnswer();
-                                    AnswerItem answerItem = answer.getItems().get(checkedId);
+                                    answerItem = answer.getItems().get(checkedId);
                                     Response response = new Response(answer.getId());
-                                    ResponseItem responseItem = new ResponseItem(answerItem.getId());
+                                    responseItem = new ResponseItem(answerItem.getId());
                                     response.addResponseItem(responseItem);
-                                    MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                    QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                     flag++;
                                 }
                             }
@@ -300,23 +330,87 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 LinkedList<Answer> answers = question.getAnswers();
                                 //for (int j = 0; j < answers.size(); j++) {
                                 //Answer answer = answers.get(j);
-                                Answer answer = answers.get(0);
+                                answer = answers.get(0);
                                 //Answer answer = question.getAnswer();
-                                AnswerItem answerItem = answer.getItems().get(checkedId);
+                                answerItem = answer.getItems().get(checkedId);
                                 Respond respond = new Respond(question.getId());
                                 Response response = new Response(answer.getId());
-                                ResponseItem responseItem = new ResponseItem(answerItem.getId());
+                                responseItem = new ResponseItem(answerItem.getId());
                                 response.addResponseItem(responseItem);
                                 respond.addResponse(response);
-                                MainActivity.feedback.addRespond(respond);
+                                QuestionnaireActivity.feedback.addRespond(respond);
+                            }
+
+
+                            if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getAnswers().get(0).getItems().get(checkedId).getSubAnswers().size() > 0) {
+                                if (radioButtonsSubAnswer == null) {
+                                    radioButtonsSubAnswer = new EditText(context);
+                                } else if (!isFirstRunning) {
+                                    radioButtonsSubAnswer.setText("");
+                                    radioButtonsSubAnswer.setVisibility(View.GONE);
+                                }
+                                radioButtonsRelativeLayout.removeView(radioButtonsSubAnswer);
+
+                                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                layoutParams.addRule(RelativeLayout.BELOW, R.id.RadioButtonsAnswers);
+                                radioButtonsSubAnswer.setLayoutParams(layoutParams);
+                                radioButtonsRelativeLayout.addView(radioButtonsSubAnswer);
+                                radioButtonsSubAnswer.setVisibility(View.VISIBLE);
+                                isFirstRunning = false;
+
+                                radioButtonsSubAnswer.addTextChangedListener(new TextWatcher() {
+                                    @Override
+                                    public void afterTextChanged(Editable s) {
+                                        for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                            if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                                int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
+                                                for (int k = 0; k < responsesCount; k++) {
+                                                    if (QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getAnswer_id().equals(answer.getId())) {
+                                                        for (int l = 0; l < QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().size(); l++) {
+                                                            if (QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getLinkedItems_id().equals(answerItem.getId())) {
+                                                                int subAnswersCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().size();
+                                                                for (int m = 0; m < subAnswersCount; m++) {
+                                                                    QuestionnaireActivity.feedback.getResponds().get(j).getResponses().get(k).getResponseItems().get(l).getSubResponses().remove(m);
+                                                                }
+                                                                Answer subAnswer = answerItem.getSubAnswers().get(0);
+                                                                Response subResponse = new Response(subAnswer.getId());
+                                                                subResponse.setResponseText(radioButtonsSubAnswer.getText().toString());
+                                                                responseItem.addSubResponse(subResponse);
+                                                                isSubAnswerTextChanged = true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                    }
+
+                                    @Override
+                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                    }
+                                });
+
+                                if ((!isSubAnswerTextChanged) && (radioButtonsSubAnswer != null)) {
+                                    if (radioButtonsSubAnswer.getText().length() > 0) {
+                                        Answer subAnswer = answerItem.getSubAnswers().get(0);
+                                        Response subResponse = new Response(subAnswer.getId());
+                                        subResponse.setResponseText(radioButtonsSubAnswer.getText().toString());
+                                        responseItem.addSubResponse(subResponse);
+                                    }
+                                }
+
                             }
                         }
                     }
                 }
             });
         }
-    }
 
+    }
 
     private class TextFieldViewHolder extends ViewHolder {
         TextView TextFieldQuestion;
@@ -335,11 +429,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                         if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                             int flag = 0;
-                            for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                    int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                    int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                     for (int k = 0; k < responsesCount; k++) {
-                                        MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                        QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                     }
                                     Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                     LinkedList<Answer> answers = question.getAnswers();
@@ -349,7 +443,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                     //Answer answer = question.getAnswer();
                                     Response response = new Response(answer.getId());
                                     response.setResponseText(TextFieldAnswer.getText().toString());
-                                    MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                    QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                     flag++;
                                 }
                             }
@@ -364,7 +458,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 Response response = new Response(answer.getId());
                                 response.setResponseText(TextFieldAnswer.getText().toString());
                                 respond.addResponse(response);
-                                MainActivity.feedback.addRespond(respond);
+                                QuestionnaireActivity.feedback.addRespond(respond);
                             }
                         }
                     }
@@ -418,6 +512,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             this.ScaleSeekBar.setOnSeekBarChangeListener(
                     new SeekBar.OnSeekBarChangeListener() {
                         int Step = 10;
+
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                             progress = ((int) Math.round(progress / Step)) * Step;
                             seekBar.setProgress(progress);
@@ -432,11 +527,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                             for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
                                 if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
                                     int flag = 0;
-                                    for (int j = 0; j < MainActivity.feedback.getResponds().size(); j++) {
-                                        if (MainActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
-                                            int responsesCount = MainActivity.feedback.getResponds().get(j).getResponses().size();
+                                    for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                                        if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                                            int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
                                             for (int k = 0; k < responsesCount; k++) {
-                                                MainActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                                                QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
                                             }
                                             Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
                                             LinkedList<Answer> answers = question.getAnswers();
@@ -447,7 +542,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             Response response = new Response(answer.getId());
                                             ResponseItem responseItem = new ResponseItem(ScaleValue.getText().toString());
                                             response.addResponseItem(responseItem);
-                                            MainActivity.feedback.getResponds().get(j).addResponse(response);
+                                            QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
                                             flag++;
                                         }
                                     }
@@ -463,13 +558,72 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         ResponseItem responseItem = new ResponseItem(ScaleValue.getText().toString());
                                         response.addResponseItem(responseItem);
                                         respond.addResponse(response);
-                                        MainActivity.feedback.addRespond(respond);
+                                        QuestionnaireActivity.feedback.addRespond(respond);
                                     }
                                 }
                             }
                         }
                     }
             );
+        }
+    }
+
+    public static class AttachFileViewHolder extends ViewHolder {
+        TextView AttachFileQuestion;
+        Button AttachFileButton;
+        static TextView AttachFilePath;
+        static Integer questionId;
+
+        public AttachFileViewHolder(View v) {
+            super(v);
+            this.AttachFileQuestion = (TextView) v.findViewById(R.id.AttachFileQuestion);
+            this.AttachFileButton = (Button) v.findViewById(R.id.AttachFileButton);
+            this.AttachFilePath = (TextView) v.findViewById(R.id.AttachFilePath);
+            AttachFileButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    QuestionnaireActivity.performFileSearch();
+                }
+            });
+        }
+
+        public static void attachFileSaveToFeedback() {
+            for (int i = 0; i < QuestionnaireHelper.questionnaire.getQuestions().size(); i++) {
+                if (QuestionnaireHelper.questionnaire.getQuestions().get(i).getId().equals(questionId)) {
+                    int flag = 0;
+                    for (int j = 0; j < QuestionnaireActivity.feedback.getResponds().size(); j++) {
+                        if (QuestionnaireActivity.feedback.getResponds().get(j).getQuestionId().equals(questionId)) {
+                            int responsesCount = QuestionnaireActivity.feedback.getResponds().get(j).getResponses().size();
+                            for (int k = 0; k < responsesCount; k++) {
+                                QuestionnaireActivity.feedback.getResponds().get(j).getResponses().remove(k);
+                            }
+                            Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
+                            LinkedList<Answer> answers = question.getAnswers();
+                            //for (int j = 0; j < answers.size(); j++) {
+                            //Answer answer = answers.get(j);
+                            Answer answer = answers.get(0);
+                            //Answer answer = question.getAnswer();
+                            Response response = new Response(answer.getId());
+                            response.setResponseFile(AttachFilePath.getText().toString());
+                            QuestionnaireActivity.feedback.getResponds().get(j).addResponse(response);
+                            flag++;
+                        }
+                    }
+                    if (flag == 0) {
+                        Question question = QuestionnaireHelper.questionnaire.getQuestions().get(i);
+                        LinkedList<Answer> answers = question.getAnswers();
+                        //for (int j = 0; j < answers.size(); j++) {
+                        //Answer answer = answers.get(j);
+                        Answer answer = answers.get(0);
+                        //Answer answer = question.getAnswer();
+                        Respond respond = new Respond(question.getId());
+                        Response response = new Response(answer.getId());
+                        response.setResponseFile(AttachFilePath.getText().toString());
+                        respond.addResponse(response);
+                        QuestionnaireActivity.feedback.addRespond(respond);
+                    }
+                }
+            }
         }
     }
 }

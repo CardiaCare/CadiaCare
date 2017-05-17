@@ -35,4 +35,13 @@
     <color name="userAuthorizationTextColorSecondary">#f6f3ec</color>
     <color name="userAuthorizationTextColorHint">#f6f3ec</color>
 
+    // Colors for theme BloodPressureActivityTheme
+    <color name="bloodPressureColorPrimary">#0288ad</color>
+    <color name="bloodPressureColorAccent">#763a7a</color>
+    <color name="bloodPressureTextColorPrimary">#f6f3ec</color>
+    <color name="bloodPressureColorBackground">#f6f3ec</color>
+    <color name="bloodPressureTextColorSecondary">#763a7a</color>
+    <color name="bloodPressureStatusBarColor">#015870</color>
+    <color name="bloodPressureTextColorTertiary">#763a7a</color>
+
 </resources>

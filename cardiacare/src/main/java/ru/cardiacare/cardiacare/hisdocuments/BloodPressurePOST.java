@@ -17,6 +17,8 @@ import java.io.IOException;
 
 import ru.cardiacare.cardiacare.MainActivity;
 
+/* Отправка данных из дневника давления на сервер */
+
 public class BloodPressurePOST extends AsyncTask<JSONObject, String, String> {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -32,27 +34,25 @@ public class BloodPressurePOST extends AsyncTask<JSONObject, String, String> {
         try {
             OkHttpClient client = new OkHttpClient();
 
-            String json =  params[0].toString();
+            String json = params[0].toString();
             System.out.println("Test! json " + json);
             // String json = "{ \"email\":" + CreateAccountActivity.etLogin.getText().toString();
 
             RequestBody body = RequestBody.create(JSON, json);
 
-            String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
+            String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
             System.out.println("Test! body " + body.toString());
 
             Request request = new Request.Builder()
-                    .url("http://api.cardiacare.ru/patients/"+ MainActivity.storage.getAccountId()+"/bloodpressure")
+                    .url("http://api.cardiacare.ru/patients/" + MainActivity.storage.getAccountId() + "/bloodpressure")
                     .addHeader("Authorization", credential)
                     .addHeader("Content-Type", "application/json")
                     .post(body)
                     .build();
 
-            Response response = client.newCall(request).execute();
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            System.out.println("Test! response " + response.body().string());
+            //   Response response = client.newCall(request).execute();
+            //   if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
             System.out.println("Test! request " + request.body().toString());
 
@@ -79,5 +79,8 @@ public class BloodPressurePOST extends AsyncTask<JSONObject, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        BloodPressureGET bloodGet = new BloodPressureGET();
+        bloodGet.execute();
+        BloodPressureActivity.refresh();
     }
 }

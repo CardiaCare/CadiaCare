@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/clean"
-                android:id="@+id/buttonOk"
+                android:id="@+id/buttonSend"
                 android:src="@android:drawable/ic_menu_send"
                 android:layout_gravity="right"
                 android:visibility="visible"

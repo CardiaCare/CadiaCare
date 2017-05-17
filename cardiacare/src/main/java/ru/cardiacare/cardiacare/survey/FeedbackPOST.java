@@ -42,50 +42,56 @@ public class FeedbackPOST extends AsyncTask<Void, Integer, Integer> {
     @Override
     public Integer doInBackground(Void... params) {
         //System.out.println("Test! post in background ");
-            try {
+        try {
 
-//                Gson json = new Gson();
-//                String jsonFeedback;
-//                jsonFeedback = json.toJson(MainActivity.feedback);
-
-                String str = "{" +" \"questionnaire_id\": 7," +
-                        "  \"lang\": \"en\"," +
-                        "  \"data\":" + "\"new feedback\"" + "}";
+            Gson json = new Gson();
+            String jsonFeedback;
+            jsonFeedback = json.toJson(QuestionnaireActivity.feedback);
 
 //                String str = "{" +" \"questionnaire_id\": 7," +
 //                        "  \"lang\": \"en\"," +
-//                        "  \"data\": [" + jsonFeedback.replaceAll("/", "") + "]}"; //\"new feedback\"}";
+//                        "  \"data\":" + "\"new feedback\"" + "}";
 
-                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//                String str = "{" +" \"questionnaire_id\": 7," +
+//                        "  \"lang\": \"en\"," +
+//                        "  \"data\": \"" + jsonFeedback.replaceAll("\"", "\\\\\"") + "\"}"; //\"new feedback\"}";
 
-                OkHttpClient client = new OkHttpClient();
+//            jsonFeedback = jsonFeedback.replaceAll("\"", "\\\\\"");
 
-                RequestBody body = RequestBody.create(JSON, str);
+            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-                String credential = Credentials.basic(MainActivity.storage.getAccountToken(),"");
+            OkHttpClient client = new OkHttpClient();
 
-                Request request = new Request.Builder()
-                        .url("http://api.cardiacare.ru/feedback")
-                        .addHeader("Authorization", credential )
-                        .addHeader("Content-Type", "application/json")
-                        .post(body)
-                        .build();
+            RequestBody body = RequestBody.create(JSON, jsonFeedback);
 
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Request request, IOException e) {
-                        Log.e("Request", request.body().toString());
-                    }
+            String credential = Credentials.basic(MainActivity.storage.getAccountToken(), "");
 
-                    @Override
-                    public void onResponse(Response response) throws IOException {
-                        Log.i("Response", response.body().string());
-                    }
-                });
+            Request request = new Request.Builder()
+                    .url("http://api.cardiacare.ru/feedback")
+                    .addHeader("Authorization", credential)
+                    .addHeader("Content-Type", "application/json")
+                    .post(body)
+                    .build();
 
-            } catch (Exception e) {
-                Log.e("Exception", e.getMessage());
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Request request, IOException e) {
+                    Log.e("Request", request.body().toString());
+                }
+
+                @Override
+                public void onResponse(Response response) throws IOException {
+                    Log.i("Response", response.body().string());
+                }
+            });
+
+            if (MainActivity.storage.getFeedbackRefresh()) {
+                QuestionnaireActivity.clearFeedback();
             }
+
+        } catch (Exception e) {
+            Log.e("Exception", e.getMessage());
+        }
 
         return 0;
     }

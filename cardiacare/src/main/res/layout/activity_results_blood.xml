@@ -5,15 +5,17 @@
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:theme="@style/BloodPressureActivityTheme"
     tools:context="ru.cardiacare.cardiacare.hisdocuments.BloodPressureActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:theme="@style/AppBaseTheme.AppBarOverlay"
         android:layout_gravity="@+id/toolBlood"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        >
+        <!--android:theme="@style/AppBaseTheme.AppBarOverlay"-->
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -52,7 +54,8 @@
                         android:id="@+id/systolicEditText"
                         android:layout_width="match_parent"
                         android:textSize="40dp"
-                        android:hint="..."/>
+                        android:hint="..."
+                        android:textColorHint="@color/toolbarTextColor"/>
 
                     <TextView
                         android:text="SYS"
@@ -81,7 +84,8 @@
                         android:ems="3"
                         android:id="@+id/diastolicEditText"
                         android:textSize="40dp"
-                        android:hint="..."/>
+                        android:hint="..."
+                        android:textColorHint="@color/toolbarTextColor"/>
 
                     <TextView
                         android:text="DIA"
@@ -99,13 +103,12 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_margin="10dp"
         android:fillViewport="true">
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/bpListView">
-        </ListView>
-
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:nestedScrollingEnabled="true"
+                android:id="@+id/bpListView">
+            </ListView>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton

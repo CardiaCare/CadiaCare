@@ -2,9 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_user_data"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorBackground"
     tools:context="ru.cardiacare.cardiacare.user.Userdata">
 
     <android.support.design.widget.AppBarLayout
@@ -13,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="@+id/toolBlood"
         android:fitsSystemWindows="true"
-        android:theme="@style/AppBaseTheme.AppBarOverlay">
+        >
+        <!--android:theme="@style/AppBaseTheme.AppBarOverlay"-->
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -43,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/tvFirstName"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorBackground" />
 
                 <TextView
                     android:id="@+id/tvSecondName"
@@ -51,7 +54,8 @@
                     android:layout_height="wrap_content"
                     android:padding="8dp"
                     android:text="@string/tvSecondName"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/colorBackground" />
             </LinearLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -109,205 +113,32 @@
                     android:text="Email"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-                <!--<ToggleButton-->
-                <!--android:id="@+id/chkState"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="24dp"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-                <!--android:background="@drawable/toggle_selector"-->
-                <!--android:checked="false"-->
-                <!--android:padding="6dp"-->
-                <!--android:textOff=""-->
-                <!--android:textOn="" />-->
-
             </RelativeLayout>
+            <include layout="@layout/item_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
                 android:padding="@dimen/activity_horizontal_margin">
 
-                <ImageView
-                    android:id="@+id/imNumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:src="@android:drawable/ic_menu_call" />
-
                 <TextView
-                    android:id="@+id/tvNumber"
+                    android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_toEndOf="@id/imNumber"
-                    android:layout_toRightOf="@id/imNumber"
-                    android:text="1234556789"
+                    android:text="@string/doctors"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textColor="@color/colorPrimaryDark" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvNumber"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="8dp"
-                    android:layout_toEndOf="@id/imNumber"
-                    android:layout_toRightOf="@id/imNumber"
-                    android:text="@string/phoneNumber"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            </RelativeLayout>
-
-            <include layout="@layout/item_divider" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:padding="@dimen/activity_horizontal_margin">
-
                 <RelativeLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:padding="@dimen/activity_horizontal_margin">
-
-                    <ImageView
-                        android:id="@+id/imHeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
-                    <!--android:src="@drawable/ic_phone_black_24dp" />-->
-
-                    <TextView
-                        android:id="@+id/tvHeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_toEndOf="@id/imHeight"
-                        android:layout_toRightOf="@id/imHeight"
-                        android:text="170"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorPrimaryDark" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvHeight"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="8dp"
-                        android:layout_toEndOf="@id/imHeight"
-                        android:layout_toRightOf="@id/imHeight"
-                        android:text="@string/height"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
+                    android:layout_marginTop="8dp"
+                    android:orientation="vertical"
+                    android:id="@+id/doctors">
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:padding="@dimen/activity_horizontal_margin">
-
-                    <ImageView
-                        android:id="@+id/imWeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin" />
-                    <!--android:src="@drawable/ic_phone_black_24dp" />-->
-
-                    <TextView
-                        android:id="@+id/tvWeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_toEndOf="@id/imWeight"
-                        android:layout_toRightOf="@id/imWeight"
-                        android:text="123"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/colorPrimaryDark" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/tvWeight"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginStart="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="8dp"
-                        android:layout_toEndOf="@id/imWeight"
-                        android:layout_toRightOf="@id/imWeight"
-                        android:text="@string/weight"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-                </RelativeLayout>
-            </LinearLayout>
-
-
-            <include layout="@layout/item_divider" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:padding="@dimen/activity_horizontal_margin">
-
-                <ImageView
-                    android:id="@+id/imAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
-                <!--android:src="@drawable/ic_phone_black_24dp" />-->
-
-                <TextView
-                    android:id="@+id/tvAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_toEndOf="@id/imAge"
-                    android:layout_toRightOf="@id/imAge"
-                    android:text="65"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorPrimaryDark" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvAge"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="8dp"
-                    android:layout_toEndOf="@id/imAge"
-                    android:layout_toRightOf="@id/imAge"
-                    android:text="@string/age"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
             </RelativeLayout>
 
             <include layout="@layout/item_divider" />
@@ -315,105 +146,87 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
+                android:orientation="vertical"
                 android:padding="@dimen/activity_horizontal_margin">
 
-                <ImageView
-                    android:id="@+id/imPeriodPassServey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
-                <!--android:src="@drawable/ic_phone_black_24dp" />-->
-
-                <EditText
-                    android:id="@+id/etPeriodPassServey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_toEndOf="@id/imPeriodPassServey"
-                    android:layout_toRightOf="@id/imPeriodPassServey"
-                    android:inputType="number"
-                    android:maxLines="1" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/etPeriodPassServey"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="8dp"
-                    android:layout_toEndOf="@id/imPeriodPassServey"
-                    android:layout_toRightOf="@id/imPeriodPassServey"
-                    android:text="Периодичность опросов, сек"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
-
-            </RelativeLayout>
-
-            <include layout="@layout/item_divider" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:padding="@dimen/activity_horizontal_margin">
-
-                <ImageView
-                    android:id="@+id/imPeriodECGSending"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvPeriodECGSending"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin" />
-                <!--android:src="@drawable/ic_phone_black_24dp" />-->
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:text="@string/period_ecg_sending"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
                 <EditText
                     android:id="@+id/etPeriodECGSending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/tvPeriodECGSending"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_toEndOf="@id/imPeriodECGSending"
-                    android:layout_toRightOf="@id/imPeriodECGSending"
-                    android:inputType="number"
-                    android:maxLines="1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/etPeriodECGSending"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginStart="@dimen/activity_horizontal_margin"
-                    android:layout_marginTop="8dp"
-                    android:layout_toEndOf="@id/imPeriodECGSending"
-                    android:layout_toRightOf="@id/imPeriodECGSending"
-                    android:text="Периодичность отправки данных ЭКГ на сервер, сек"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                    android:layout_marginTop="20dp"
+                    android:hint="..."
+                    android:inputType="number"/>
 
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <CheckBox
                     android:id="@+id/needGraphButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:checked="false" />
 
                 <TextView
                     android:id="@+id/needGraphText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Отображать графики на главном экране?" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@+id/needGraphButton"
+                    android:layout_toRightOf="@+id/needGraphButton"
+                    android:text="@string/display_graphs"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-            </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <CheckBox
+                    android:id="@+id/feedbackRefreshButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:checked="false" />
+
+                <TextView
+                    android:id="@+id/feedbackRefreshText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear_responses"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:layout_toRightOf="@id/feedbackRefreshButton"
+                    android:layout_toEndOf="@id/feedbackRefreshButton"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -429,45 +242,3 @@
     <!--app:srcCompat="@drawable/ic_add_white_24dp" />-->
 
 </android.support.design.widget.CoordinatorLayout>
-
-
-    <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/help_layout"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--tools:context="ru.cardiacare.cardiacare.user.Userdata">-->
-
-    <!--<android.support.v7.widget.Toolbar--><!--android:id="@+id/account_activity_toolbar"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:background="?attr/colorPrimary"--><!--android:minHeight="?attr/actionBarSize" />-->
-
-    <!--<ScrollView--><!--android:id="@+id/scrollView2"--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:layout_below="@+id/account_activity_toolbar">-->
-
-    <!--<LinearLayout--><!--android:layout_width="match_parent"--><!--android:layout_height="match_parent"--><!--android:layout_below="@+id/account_activity_toolbar"--><!--android:layout_centerHorizontal="true"--><!--android:gravity="left"--><!--android:orientation="vertical"--><!--android:padding="8dp">--><!----><!--<TextView--><!--android:id="@+id/tvFirstName"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/tvFirstName"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etFirstName"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp"--><!--android:paddingLeft="0dp"--><!--android:paddingRight="0dp" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvSecondName"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/tvSecondName"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etSecondName"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvEmail"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="E-mail"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etEmail"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="text"--><!--android:padding="8dp" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvPhoneNumber"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/phoneNumber"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etPhoneNumber"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="phone" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvHeight"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/height"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etHeight"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvWeight"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/weight"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etWeight"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
-
-    <!--<TextView--><!--android:id="@+id/tvAge"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="@string/age"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etAge"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
-
-
-    <!--<TextView--><!--android:id="@+id/tvPeriodPassServey"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:padding="8dp"--><!--android:text="Периодичность опросов, сек"--><!--android:textAppearance="?android:attr/textAppearanceLarge" />-->
-
-    <!--<EditText--><!--android:id="@+id/etPeriodPassServey"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:inputType="number"--><!--android:padding="8dp" />-->
-
-    <!--</LinearLayout>--><!--</ScrollView>--><!--</RelativeLayout>-->
