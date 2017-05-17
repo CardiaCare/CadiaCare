@@ -161,7 +161,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     public void wiFiAlertDialog() {
-        final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        final WifiManager wifiManager = (WifiManager)  getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         alertDialog.setTitle(R.string.dialog_wifi_title);
         alertDialog.setMessage(R.string.dialog_wifi_message);

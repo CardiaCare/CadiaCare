@@ -121,6 +121,12 @@
     </string>
 
     <string name="about_legal_osl">Лицензии открытого ПО</string>
+    <string name="about_legal_osl_text">
+        OkHttp <a href="https://square.github.io/okhttp/#license">https://square.github.io/okhttp</a>
+        \n\nGraphView <a href="http://www.android-graphview.org/">http://www.android-graphview.org</a>
+        \n\nGson  <a href="https://github.com/google/gson">https://github.com/google/gson</a>
+    </string>
+
     <string name="about_legal_pp">Политика конфеденциальности</string>
     <string name="about_legal_pp_text">
         Дата последней редакции: 13 марта 2017 г.
@@ -197,8 +203,6 @@
     <!--activity_bluetooth_find.xml-->
     <string name="refresh">Обновить</string>
 
-    <!--card_attach_file.xml-->
-    <string name="attach_file">Прикрепить файл&#8230;</string>
 
     <!--content_demographic_data.xml-->
     <string name="name">Имя</string>
@@ -330,6 +334,9 @@
     <string name="dialog_bp_positive_button">Да</string>
     <string name="dialog_bp_negative_button">Нет</string>
 
+
+    <string name="attach_file">Файл&#8230;</string>
+
     <!--Справка по модулю "Пройти опрос"-->
     <string name="about_pass_survey_short">Модуль “Пройти опрос” предназначен для прохождения периодических опросов с целью регулярного контроля за здоровьем. Все опросы формируются врачами индивидуально для каждого пациента. Для работы с модулем требуется доступ к сети Интернет.▼</string>
     <string name="about_pass_survey_long">Модуль “Пройти опрос” предназначен для прохождение периодических опросов с целью регулярного контроля за здоровьем. Все опросы формируются врачами индивидуально для каждого пациента. Для работы с модулем требуется доступ к сети Интернет.
@@ -385,6 +392,8 @@
     <string name="widget_cardiomonitor_connected">CardiaCare. Кардиомонитор подключён</string>
     <string name="widget_state_change">Состояние подключения изменено</string>
     <string name="widget_open_ecg">Открыть ЭКГ</string>
+
+
 
 
 </resources>

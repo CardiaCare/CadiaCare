@@ -89,7 +89,7 @@ public class CreateAccountActivity extends AppCompatActivity {
 
     private boolean emptyCheck(String login, String password, String password2, String code) {
         if (!MainActivity.isNetworkAvailable(this)) {
-            final WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+            final WifiManager wifiManager = (WifiManager)  getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
             alertDialog.setTitle(R.string.dialog_wifi_title);
             alertDialog.setMessage(R.string.dialog_wifi_message);
